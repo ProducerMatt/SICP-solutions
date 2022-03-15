@@ -55,7 +55,8 @@ A solution I liked the most that chooses based on the smallest number:
 
 
 ;;;; Abandoned. Trying to force my normal ways of solving problems when I should
-;;;;   start by learning the tools the book has introduced.
+;;;;   start by learning the tools the book has introduced. Not sure what I was
+;;;;   thinking with the local variables.
 ;; (define (sum-square-larger x y z)
 ;;   ((define a 0)(define b 0)
 ;;    (if (> x y)
