@@ -7,7 +7,8 @@
   (* x x))
 
 (check (square 5) => 25)
-
+#|
+;; Solution 1, without consulting guides
 ;; Inelegant solution trying to stick by what's been covered so far
 ;; Definitely could be better
 (define (sum-square-larger x y z)
@@ -24,6 +25,28 @@
      (if (> x z)
          (returnanswer x y)
          (returnanswer y z)))))
+|#
+#|
+MattsDiary
+I called "returnanswer" which was a nondescriptive name. Online solutions
+ use "squareSum" which makes more sense, and is more in line with
+ SICP's emphasis on modularity.
+In S1 I thought very procedurally. Good solutions identify three cases:
+ x & y, x & z, and y & z. Then select among those.
+
+A solution I liked the most that chooses based on the smallest number:
+ IF (x <= y) AND (x <= z) then x is smallest, therefore RETURN y z
+ IF (y <= x) AND (y <= z) then y is smallest, RETURN x z
+ ELSE z must be smallest, RETURN x y
+|#
+
+;; Solution 2, consulting the internet.
+(define (squareSum a b)
+  (+ (square a)(square b)))
+(define (sum-square-larger x y z)
+  (cond ((and (<= x y)(<= x z)) (squareSum y z))
+        ((and (<= y x)(<= y z)) (squareSum x z))
+        (else (squareSum x y))))
 
 (check (sum-square-larger 5 6 7) => 85)
 (check (sum-square-larger 7 6 5) => 85)
@@ -31,7 +54,8 @@
 (check (sum-square-larger 5 7 6) => 85)
 
 
-;;;; Abandoned. Trying to force my normal ways of solving problems when I should start by learning the tools the book has introduced.
+;;;; Abandoned. Trying to force my normal ways of solving problems when I should
+;;;;   start by learning the tools the book has introduced.
 ;; (define (sum-square-larger x y z)
 ;;   ((define a 0)(define b 0)
 ;;    (if (> x y)
