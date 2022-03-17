@@ -66,3 +66,4 @@
 
 ;; No infinite loop!
 (check (new-sqrt 10000000000000) => 3162277.6601683795)
+;; Also does arbitrarily small numbers!
