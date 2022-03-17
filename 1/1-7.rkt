@@ -10,6 +10,7 @@
 
 #lang sicp
 (#%require racket/trace)
+(#%require srfi/78)
 ;; DEFINITIONS {{
 (define (average x y)
   (/ (+ x y) 2))
@@ -35,17 +36,33 @@
 ;; }}
 
 ;; Demonstrating decreasing accuracy with smaller numbers.
-(map sqrt '(0.1 0.01 0.001 0.0001 0.00001))
+;(map sqrt '(0.1 0.01 0.001 0.0001 0.00001))
 
-;; TODO: print % of error against a "real" function
-(map sqrt '(10000000 100000000 1000000000 10000000000 10000000000))
+;; 12 zeros can pass, but 13 loops forever because the threshold can't be
+;; reached. I didn't try enough zeroes at first.
+;(sqrt '(1000000000000 10000000000000))
 
+;; Okay. New good enough should stop when the last guess and the new guess are
+;; less than 1.0000000000001 times different. This will return appropriately
+;; when there's floating point nonsense going on
+(define (new-good-enough? guess lastguess)
+  (<=
+   (abs (-
+         (/ lastguess guess)
+         1))
+   0.0000000000001))
 
-(define (new-good-enough? guess x)
-  (<
-   (abs
-    (- (square guess) x))
-   0.001))
+;; (trace good-enough?)
+;; (trace new-good-enough?)
 
-(trace good-enough?)
-(trace new-good-enough?)
+;; (check (new-good-enough? 1000000.0000000054 1000000) => #t)
+
+(define (new-sqrt-iter guess x lastguess)
+  (if (new-good-enough? guess lastguess)
+      guess
+      (new-sqrt-iter (improve guess x) x guess)))
+(define (new-sqrt x)
+  (new-sqrt-iter 1.0 x 0))
+
+;; No infinite loop!
+(check (new-sqrt 10000000000000) => 3162277.6601683795)
