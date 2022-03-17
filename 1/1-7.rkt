@@ -67,3 +67,14 @@
 ;; No infinite loop!
 (check (new-sqrt 10000000000000) => 3162277.6601683795)
 ;; Also does arbitrarily small numbers!
+
+#|
+MattsDiary: Upon looking at the solution online they proposed this:
+(define (good-enough? guess x)
+   (= (improve guess x) guess)) 
+
+This automatically continues until it reaches the system precision.
+
+This in comparison to my above version which has an arbitrary threshhold and
+needs to keep track of the last guess. This is much better.
+|#
