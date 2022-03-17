@@ -37,7 +37,7 @@
 ;; Demonstrating decreasing accuracy with smaller numbers.
 (map sqrt '(0.1 0.01 0.001 0.0001 0.00001))
 
-;; Weird behavior with larger numbers
+;; TODO: print % of error against a "real" function
 (map sqrt '(10000000 100000000 1000000000 10000000000 10000000000))
 
 
