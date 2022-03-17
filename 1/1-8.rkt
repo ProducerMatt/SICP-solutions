@@ -33,3 +33,19 @@ procedures.)
 (define (sqrt x)
   (sqrt-iter 1.0 x))
 ;; }}
+
+;; Try 1. This works as intended, except for "100" which hangs forever??
+(define (cb-good-enough? guess x)
+  (= (cb-improve guess x) guess)) 
+(define (cb-improve guess x)
+  (/
+   (+
+    (/ x (square guess))
+    (* guess 2))
+   3))
+(define (cbrt-iter guess x)
+  (if (cb-good-enough? guess x)
+      guess
+      (cbrt-iter (cb-improve guess x) x)))
+(define (cbrt x)
+  (cbrt-iter 1.0 x))
