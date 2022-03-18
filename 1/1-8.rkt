@@ -34,7 +34,8 @@ procedures.)
   (sqrt-iter 1.0 x))
 ;; }}
 
-;; Try 1. This works as intended, except for "100" which hangs forever??
+;; Try 1 with limiter
+(define counter 0)
 (define (cb-good-enough? guess x)
   (= (cb-improve guess x) guess)) 
 (define (cb-improve guess x)
@@ -44,16 +45,26 @@ procedures.)
     (* guess 2))
    3))
 (define (cbrt-iter guess x)
-  (if (cb-good-enough? guess x)
+  (if (or (cb-good-enough? guess x) (> counter 100))
       guess
-      (cbrt-iter (cb-improve guess x) x)))
+      (begin
+        (set! counter (+ counter 1))
+        (cbrt-iter (cb-improve guess x) x))))
 (define (cbrt x)
+  (set! counter 0)
   (cbrt-iter 1.0 x))
 
-#| MattsDiary: Looking more at this, the operation gets stuck in an infinite loop on (cbrt 100), I'm going to guess that the equation in cb-improve takes more precision than is possible, so it begins to output inconsistent results. Of course some floating point problems will never have a great solution, but does this one?
+#| MattsDiary: Looking more at this, the operation gets stuck in an infinite
+loop on (cbrt 100), I'm going to guess that the equation in cb-improve takes
+more precision than is possible, so it begins to output inconsistent results. Of
+course some floating point problems will never have a great solution, but does
+this one?
 
 Potential solutions:
-- I could implement an arbitrary threshold like my 1st solution to 1-7, that would prevent the issue, but then it would no longer be possible to reach perfect precision.
-- I could keep track of the guess before the last, and if it occurs again, we'll know we've entered a loop.
+- I could implement an arbitrary threshold like my 1st solution to 1-7, that
+would prevent the issue, but then it would no longer be possible to reach
+perfect precision.
+- I could keep track of the guess before the last, and if it occurs again, we'll
+know we've entered a loop.
 - Something more big brained I haven't thought of.
 |#
