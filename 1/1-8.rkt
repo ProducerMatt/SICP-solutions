@@ -91,3 +91,21 @@ solution. |#
       (cbrt-iter nextguess guess x)))
 (define (cbrt x)
   (cbrt-iter 1.1 9999 x))
+
+#| MattsDiary: looking online, the solutions I see use the arbitrary threshold
+solution which I didn't care for. Pleased to note that this "two iteration"
+solution keeps the max precision property without problems.
+
+I changed the initial guess to 1.1, apparently this avoids an infinite loop
+with (cbrt -2). I wonder if that just moved the infinite loop to a more obscure
+number. |#
+
+;; ;; Tests!
+;; (trace cbrt)
+;; (cbrt 1)
+;; (cbrt -2)
+;; (cbrt -8)
+;; (cbrt 27)
+;; (cbrt -1000)
+;; (cbrt 1e-30)
+;; (cbrt 1e60)
