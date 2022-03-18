@@ -49,3 +49,11 @@ procedures.)
       (cbrt-iter (cb-improve guess x) x)))
 (define (cbrt x)
   (cbrt-iter 1.0 x))
+
+#| MattsDiary: Looking more at this, the operation gets stuck in an infinite loop on (cbrt 100), I'm going to guess that the equation in cb-improve takes more precision than is possible, so it begins to output inconsistent results. Of course some floating point problems will never have a great solution, but does this one?
+
+Potential solutions:
+- I could implement an arbitrary threshold like my 1st solution to 1-7, that would prevent the issue, but then it would no longer be possible to reach perfect precision.
+- I could keep track of the guess before the last, and if it occurs again, we'll know we've entered a loop.
+- Something more big brained I haven't thought of.
+|#
