@@ -34,7 +34,9 @@ procedures.)
   (sqrt-iter 1.0 x))
 ;; }}
 
-;; Try 1 with limiter
+;; Try 1 with limiter to stop infinite loops
+;; here be hacks
+#|
 (define counter 0)
 (define (cb-good-enough? guess x)
   (= (cb-improve guess x) guess)) 
@@ -53,6 +55,7 @@ procedures.)
 (define (cbrt x)
   (set! counter 0)
   (cbrt-iter 1.0 x))
+|#
 
 #| MattsDiary: Looking more at this, the operation gets stuck in an infinite
 loop on (cbrt 100), I'm going to guess that the equation in cb-improve takes
@@ -67,4 +70,24 @@ perfect precision.
 - I could keep track of the guess before the last, and if it occurs again, we'll
 know we've entered a loop.
 - Something more big brained I haven't thought of.
-|#
+
+MattsDiary: I guess the 2nd solution is best. I'll give that a shot though I'm
+sure there's a better way to do it, which I'll find out when I look up the
+solution. |#
+
+(define (cb-good-enough? guess lastguess x)
+  (or (= (cb-improve guess x) guess)
+      (= (cb-improve guess x) lastguess)))
+  ;; TODO remove the wasted cb-improve calls
+(define (cb-improve guess x)
+  (/
+   (+
+    (/ x (square guess))
+    (* guess 2))
+   3))
+(define (cbrt-iter guess lastguess x)
+  (if (cb-good-enough? guess lastguess x)
+      guess
+      (cbrt-iter (cb-improve guess x) guess x)))
+(define (cbrt x)
+  (cbrt-iter 1.0 9999 x))
