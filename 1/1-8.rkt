@@ -75,10 +75,9 @@ MattsDiary: I guess the 2nd solution is best. I'll give that a shot though I'm
 sure there's a better way to do it, which I'll find out when I look up the
 solution. |#
 
-(define (cb-good-enough? guess lastguess x)
-  (or (= (cb-improve guess x) guess)
-      (= (cb-improve guess x) lastguess)))
-  ;; TODO remove the wasted cb-improve calls
+(define (cb-good-enough? nextguess guess lastguess x)
+  (or (= nextguess guess)
+      (= nextguess lastguess)))
 (define (cb-improve guess x)
   (/
    (+
@@ -86,8 +85,9 @@ solution. |#
     (* guess 2))
    3))
 (define (cbrt-iter guess lastguess x)
-  (if (cb-good-enough? guess lastguess x)
-      guess
-      (cbrt-iter (cb-improve guess x) guess x)))
+  (define nextguess (cb-improve guess x))
+  (if (cb-good-enough? nextguess guess lastguess x)
+      nextguess
+      (cbrt-iter nextguess guess x)))
 (define (cbrt x)
   (cbrt-iter 1.0 9999 x))
