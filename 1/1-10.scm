@@ -74,3 +74,35 @@ without running headfirst into it. |#
 ;; Give concise mathematical definitions for the functions computed by the
 ;; procedures f, g, and h for positive integer values of n. For example, (k n)
 ;; computes 5n^2.
+
+#|
+
+(f n) => 2n
+(g n) => 2^n
+(h n) => oh god. okay lets back up.
+
+(map h '(1 2 3 4))
+  => (2 4 16 65536)
+
+These are each powers of the last one. So maybe it's raise 2 to the power of 2
+as many times as n. I'm not sure how this is phrased.
+
+multiplication is to exponentiation
+as
+exponentiation is to ... what?
+
+TETRATION. Thank you internet.
+
+Traditional notation is to put the superscript to the left but since there is no
+superscript... |#
+
+(define (tetra b p)
+  (define (tetra-iter x c)
+    (if (= c p)
+        x
+        (tetra-iter (expt b x) (+ c 1))))
+  (cond ((= b 0) 0)
+        ((= p 1) b)
+        (else
+         (tetra-iter b 1))))
+;; (h n) => (tetra 2 n)
