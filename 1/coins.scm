@@ -15,8 +15,6 @@
                            kinds-of-coins))
                 kinds-of-coins)))))
 
-;; MattsDiary: Not sure I have the tools to make an iterative version yet.
-
 (define (first-denomination kinds-of-coins)
   (cond ((= kinds-of-coins 1) 1)
         ((= kinds-of-coins 2) 5)
@@ -24,11 +22,25 @@
         ((= kinds-of-coins 4) 25)
         ((= kinds-of-coins 5) 50)))
 
-;; Tests!
-(newline)
-(display "(count-change 100) (should be 292): ")
-(write (count-change 100))
-(newline)
-(display "(count-change 200) (should be 2435): ")
-(write (count-change 200))
-(newline)
+;; ;; ITERATION TIME
+;; ;;   ATTEMPT 1
+;; (define (count-change-iter amount)
+;;   (cc amount 5 0 1))
+
+#|Start with 1 kind of coin and add until it matches or
+overflows. Then add 1 of second kind and increment 1st kind. How do I do this
+without some kind of index dependent on the coin set length?|#
+;; (define (cci target-amount target-kinds ways kinds)
+;;  ())
+;; ;; Tests!
+;; (newline)
+;; (display "(count-change 100) (should be 292): ")
+;; (write (count-change 100))
+;; (display "(count-change-iter 100) (should be 292): ")
+;; (write (count-change-iter 100))
+;; (newline)
+;; (display "(count-change 200) (should be 2435): ")
+;; (write (count-change 200))
+;; (display "(count-change-iter 200) (should be 2435): ")
+;; (write (count-change-iter 200))
+;; (newline)
