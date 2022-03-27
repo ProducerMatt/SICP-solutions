@@ -4,10 +4,11 @@
 ;; Returns # of ways change can be made
 ;; "Helper" for (cc)
 (define (count-change amount)
-  (set! output-port (open-file "out.txt" "a"))
+  (set! output-port (open-file "out.txt" "w"))
   (display "digraph {\n" output-port)
   (cc amount 5 0)
-  (display "}\n" output-port))
+  (display "}\n" output-port)
+  (set! bubblecounter 0))
 
 ;; ;; Split recursive definition. Can you write an iterative version?
 ;; (define (cc amount kinds-of-coins)
@@ -74,4 +75,4 @@ without some kind of index dependent on the coin set length?|#
 ;; (write (count-change-iter 200))
 ;; (newline)
 
-(count-change 15)
+(count-change 1)
