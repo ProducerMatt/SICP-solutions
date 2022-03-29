@@ -56,4 +56,4 @@ without some kind of index dependent on the coin set length?|#
 
 (display "money,ways,nodes")
 (newline)
-(map count-change (cdr (iota 101)))
+(map count-change (cdr (iota 1001)))
