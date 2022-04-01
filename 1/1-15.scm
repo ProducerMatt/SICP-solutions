@@ -28,3 +28,24 @@ ideas are incorporated in the following procedures: |#
   (if (not (> (abs angle) 0.1))
       1
       (+ 1 (mock (/ angle 3.0)))))
+
+;; This function gives the number of times sine will be called.
+;; Graphing the function makes it clear this is logarithmic:
+;; - 0.1 to 0.2 are divided once
+;; - 0.3 to 0.8 are divided twice
+;; - 0.9 to 2.6 are divided three times
+;; - 2.7 to 8 are divided four times
+;; - 8.5 to 23.8 are divided five times
+;;
+;; I'm able to make a matching curve with this formula:
+;; (3.1 + log3(x))
+;;
+;; From this I think it's ressonable to say the time used is
+;; Theta(log3(n))
+;;
+;; Wait, make that Theta(log(n)). A regular log can also be fit, it doesn't have
+;; to be log3 specifically.
+;;
+;; Codology provides more insight then I could: iteration stops when
+;; (angle/0.1 < 3^n) where n is the number of iterations. That can be rearranged
+;; to ((log(a) - log(0.1))/(log(3)) < n)
