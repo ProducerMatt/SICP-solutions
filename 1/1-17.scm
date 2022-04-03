@@ -28,3 +28,10 @@
         (else (fast-mult a (- b 1) (+ a c)))))
 
 ;; MattsDiary: I enjoy seeing these mathematically-related sibling functions.
+
+;; Addendum: I accidentally did 1-18 instead. Oops. Here's 1-17:
+
+(define (recurse-mult a b)
+  (cond ((= b 0) 0)
+        ((even? b) (recurse-mult (double a) (halve b)))
+        (else (+ a (recurse-mult a (- b 1))))))
