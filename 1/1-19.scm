@@ -25,3 +25,59 @@
   (if (= n 0)
       (car l)
       (Tr-iter f (- n 1) (f l))))
+
+;; Ok, here's the actual exercise...
+
+(define (fib n)
+  (fib-iter 1 0 0 1 n))
+
+;; (define (fib-iter a b p q count)
+;;   (cond ((= count 0)
+;;          b)
+;;         ((even? count)
+;;          (fib-iter a
+;;                    b
+;;                    (+ (* p p)
+;;                       (* q q))
+;;                    (+ (* p q)
+;;                       (* q q)
+;;                       (* q p))
+;;                    (/ count 2)))
+;;         (else
+;;          (fib-iter (+ (* b q)
+;;                       (* a q)
+;;                       (* a p))
+;;                    (+ (* b p)
+;;                       (* a q))
+;;                    p
+;;                    q
+;;                    (- count 1)))))
+
+;; MattsDiary: Ok, this one felt really satisfying to solve. Although I was hung
+;; up for a little bit because I assumed I had to recurse *in the even call*
+;; which is leads to infinite loops.
+
+;; Overall I'd rather refactor this code so it doesn't repeat itself, and also doesn't waste an extra cycle computing a fib it'll throw away.
+
+(define (fib-iter a b p q count)
+  (define (calc-a a b)
+    (+ (* b q)
+       (* a q)
+       (* a p)))
+  (define (calc-b a b)
+    (+ (* b p)
+       (* a q)))
+  (cond ((= count 1)
+         (calc-b a b))
+        ((even? count)
+         (fib-iter a
+                   b
+                   (calc-b q p)
+                   (calc-a q p)
+                   (/ count 2)))
+        (else
+         (fib-iter (calc-a a b)
+                   (calc-b a b)
+                   p
+                   q
+                   (- count 1)))))
