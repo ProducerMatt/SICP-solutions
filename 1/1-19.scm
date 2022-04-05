@@ -81,3 +81,29 @@
                    p
                    q
                    (- count 1)))))
+
+#|
+;; MattsDiary: one more note... I didn't have to look up any solution this time!
+;; Checking, I see the codology solution may save a few calculations. My
+;; solution:
+(define p-prime
+  (+ (* p p)
+     (* q q)))
+(define q-prime
+    (+ (* p q)
+       (* q q)
+       (* q p)))
+;; codology solution:
+(define p-prime
+  (+ (* p p)
+     (* q q))) ;; this is identical to mine
+(define q-prime
+  (+ (* 2 q p)
+     (* q q))) ;; technically identical, but consolidates (* p q) and (* q p) into
+               ;; (* 2 q p). If I keep a better lookout, maybe I'll spot stuff
+               ;; like this more often.
+
+|#
+;; I found mine by applying the fibonacci functions to p & q, where he found his
+;; by reducing to an equation and solving it. I wonder if he could have missed
+;; the fibonacci aspect of p & q by doing this.
