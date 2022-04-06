@@ -45,11 +45,14 @@
 ;; 100,000; larger than 1,000,000.
 
 (define (search-for-primes minimum goal)
-  (search-for-primes-iter (+ minimum 1) '() goal))
+  (define m (if (even? minimum)
+                (+ minimum 1)
+                (minimum)))
+  (search-for-primes-iter m '() goal))
 (define (search-for-primes-iter n lst goal)
   (if (= goal 0)
       lst
       (let ((x (timed-prime-test n)))
         (if (equal? x #t)
-            (search-for-primes-iter (+ n 1) (cons n lst) (- goal 1))
-            (search-for-primes-iter (+ n 1) lst goal)))))
+            (search-for-primes-iter (+ n 2) (cons n lst) (- goal 1))
+            (search-for-primes-iter (+ n 2) lst goal)))))
