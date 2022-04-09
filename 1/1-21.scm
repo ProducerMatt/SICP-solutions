@@ -23,7 +23,7 @@
 (define (prime? n)
   (= n (smallest-divisor n)))
 
-(list 199 (smallest-divisor 199) 1999 (smallest-divisor 1999) 19999 (smallest-divisor 19999))
+;(list 199 (smallest-divisor 199) 1999 (smallest-divisor 1999) 19999 (smallest-divisor 19999))
 
 ;; 199 is prime, 1999 is prime, 19999 is divisible by 7.
 
@@ -89,15 +89,16 @@
   (if (= n 2)
       3
       (+ n 2)))
+#|
 (define (find-divisor n test-divisor)
   (cond ((> (square test-divisor) n)
          n)
         ((divides? test-divisor n)
          test-divisor)
-        (else (find-divisor
+        (#t (find-divisor
                n
                (next test-divisor)))))
-
+|#
 ;; With timed-prime-test incorporating this modified version of
 ;; smallest-divisor, run the test for each of the 12 primes found in Exercise
 ;; 1.22. Since this modification halves the number of test steps, you should
@@ -123,3 +124,58 @@
 
 ;; I don't get it, this looks about the same, though the 1mils are actually
 ;; *more* in line with the square root. I think I'd have to average it out.
+
+;;
+
+(define timestoavg 100000)
+
+(define (avg-timed-prime-test n)
+  (newline)
+  (display n)
+  (avg-start-prime-test n (get-internal-real-time) 0 timestoavg))
+
+(define (avg-start-prime-test n start-time total-time iter)
+  (if (prime? n)
+      (let* ((this-time (- (get-internal-real-time)
+                          start-time))
+            (new-total-time (+ total-time this-time)))
+        (if (> iter 0)
+          (avg-start-prime-test n (get-internal-real-time) new-total-time (- iter 1))
+          (avg-report-prime (* 1.0 (/ new-total-time timestoavg)))))
+      #f))
+(define (avg-report-prime elapsed-time)
+  (display " *** ")
+  (display elapsed-time)
+  #t)
+
+(define (avg-search-for-primes minimum goal)
+  (define m (if (even? minimum)
+                (+ minimum 1)
+                (minimum)))
+  (avg-search-for-primes-iter m '() goal)
+  (newline))
+(define (avg-search-for-primes-iter n lst goal)
+  (if (= goal 0)
+      lst
+      (let ((x (avg-timed-prime-test n)))
+        (if (equal? x #t)
+            (avg-search-for-primes-iter (+ n 2) (cons n lst) (- goal 1))
+            (avg-search-for-primes-iter (+ n 2) lst goal)))))
+
+;; Ok, here's some average versions.
+;;
+;; 1009 *** 5058.44172
+;; 1013 *** 5058.90973
+;; 1019 *** 5071.91576
+;;
+;; 10007 *** 14443.40599
+;; 10009 *** 14020.86404
+;; 10037 *** 14018.11238
+;;
+;; 100003 *** 43956.09551
+;; 100019 *** 43602.3748
+;; 100043 *** 43610.79204
+;;
+;; 1000003 *** 137759.10875
+;; 1000033 *** 137318.92012
+;; 1000037 *** 137322.27745
