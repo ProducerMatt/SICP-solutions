@@ -4,7 +4,8 @@
   (* x x))
 
 (define (smallest-divisor n)
-  (find-divisor n 2))
+  ;(find-divisor n 2)) ; stock method
+  (find-divisor-integrated n 2)) ; hopefully faster
 
 #|
 (define (find-divisor n test-divisor)
@@ -168,4 +169,37 @@
 ;; conditionals involved slow it down enough to be noticeable. Doesn't seem
 ;; likely. I'm going to look at what others say about this.
 ;;
-;; Apparently it was the conditonal. I'll try combining the code.
+;; Apparently it *was* the conditonal. I'll try combining the code.
+
+(define (find-divisor-integrated n test-divisor)
+  ; when first run, runs logic for test-divisor = 2, then proceeds to odd looping
+  (define (fdi-iter test-divisor)
+    (cond ((> (square test-divisor) n)
+           n)
+          ((divides? test-divisor n)
+           test-divisor)
+          (#t (fdi-iter
+               (+ test-divisor 2)))))
+  (if (divides? test-divisor n)
+      test-divisor
+      (fdi-iter (+ test-divisor 1))))
+
+;; Times with integrated logic:
+;; 1009 *** 2968.30273
+;; 1013 *** 2539.86559
+;; 1019 *** 2609.69303
+;;
+;; 10007 *** 7966.91024
+;; 10009 *** 7672.78922
+;; 10037 *** 7427.04931
+;;
+;; 100003 *** 23687.75075
+;; 100019 *** 23191.939
+;; 100043 *** 23148.50673
+;;
+;; 1000003 *** 72418.78033
+;; 1000033 *** 72429.03604
+;; 1000037 *** 72425.89424
+
+;; Wait, what? That can't be right, that's 3.48 times faster than the original
+;; algorithm.
