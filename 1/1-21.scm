@@ -33,7 +33,7 @@
   (display n)
   (start-prime-test n (get-internal-real-time)))
 (define (start-prime-test n start-time)
-  (if (prime? n)
+  (if (prime-method n)
       (begin (report-prime (- (get-internal-real-time)
                               start-time))
              #t)
@@ -69,7 +69,7 @@
   (avg-start-prime-test n (get-internal-real-time) 0 timestoavg))
 
 (define (avg-start-prime-test n start-time total-time iter)
-  (if (prime? n)
+  (if (prime-method n)
       (let* ((this-time (- (get-internal-real-time)
                           start-time))
             (new-total-time (+ total-time this-time)))
@@ -169,7 +169,7 @@
 ;; conditionals involved slow it down enough to be noticeable. Doesn't seem
 ;; likely. I'm going to look at what others say about this.
 ;;
-;; Apparently it *was* the conditonal. I'll try combining the code.
+;; I was wrong, it *was* the conditonal. I'll try combining the code.
 
 (define (find-divisor-integrated n test-divisor)
   ; when first run, runs logic for test-divisor = 2, then proceeds to odd looping
@@ -180,7 +180,7 @@
            test-divisor)
           (#t (fdi-iter
                (+ test-divisor 2)))))
-  (if (divides? test-divisor n)
+(if (divides? test-divisor n) ;; Assuming test-divisor is 2
       test-divisor
       (fdi-iter (+ test-divisor 1))))
 
@@ -202,4 +202,72 @@
 ;; 1000037 *** 72425.89424
 
 ;; Wait, what? That can't be right, that's 3.48 times faster than the original
-;; algorithm.
+;; algorithm. I either accidentally made a great optimization, or a great
+;; mistake.
+;;
+;; Observations: I skip the square check for 2, which breaks testing primes less
+;; than 5 but we aren't doing that anyway. I also keep n and don't need to pass
+;; it on each iteration, which I thought Scheme would be optimizing somehow for
+;; that stuff. So I don't imagine that's it, but maybe it is.
+;;
+;; LATER. Just realized, the inlined code is 1/2 the time of the previous
+;; iteration, which is 3/5 the time of the original, which is why the inlined is
+;; 3/10ths the original. I guess that conditional took up half the time.
+
+;; Exercise 1.24: Modify the timed-prime-test procedure of Exercise 1.22 to use
+;; fast-prime? (the Fermat method), and test each of the 12 primes you found in
+;; that exercise. Since the Fermat test has Θ(log n) growth, how would you expect
+;; the time to test primes near 1,000,000 to compare with the time needed to
+;; test primes near 1000? Do your data bear this out? Can you explain any
+;; discrepancy you find?
+
+(define (prime-method x)
+;;  (prime? x))
+  (fast-prime? x 5))
+(define (expmod base exp m)
+  (cond ((= exp 0) 1)
+        ((even? exp)
+         (remainder
+          (square (expmod base (/ exp 2) m))
+          m))
+        (else
+         (remainder
+          (* base (expmod base (- exp 1) m))
+          m))))
+(define (fermat-test n)
+  (define (try-it a)
+    (= (expmod a n n) a))
+  (try-it (+ 1 (random (- n 1)))))
+
+(define (fast-prime? n times)
+  (cond ((= times 0) #t)
+        ((fermat-test n)
+         (fast-prime? n (- times 1)))
+        (else #f)))
+
+
+;; 1009 *** 16463.97096
+;; 1013 *** 17222.66219
+;; 1019 *** 17960.93245
+;; * 1.151
+;; 10007 *** 21173.67232
+;; 10009 *** 19983.38119
+;; 10037 *** 20672.05039
+;; * 1.160
+;; 100003 *** 23448.58842
+;; 100019 *** 23982.70097
+;; 100043 *** 24412.16589
+;; * 1.138
+;; 1000003 *** 27308.10268
+;; 1000033 *** 26877.27847
+;; 1000037 *** 27711.29949
+;;
+;; Growth of time is certainly much slower here.
+;;
+;; 1000000007 *** 42455.87824
+;; 1000000009 *** 42236.69831
+;; 1000000021 *** 42025.3306
+;;
+;; 1000000000039 *** 91734.66884
+;; 1000000000061 *** 92712.81946
+;; 1000000000063 *** 94876.69355
