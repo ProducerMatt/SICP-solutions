@@ -44,9 +44,11 @@
   (start-prime-test n (get-internal-real-time)))
 (define (start-prime-test n start-time)
   (if (prime-method n)
-      (begin (report-prime (- (get-internal-real-time)
-                              start-time))
-             #t)
+      (let
+          ((elapsed-time (- (get-internal-real-time)
+                            start-time)))
+        (report-prime elapsed-time)
+        (list n elapsed-time))
       #f))
 (define (report-prime elapsed-time)
   (display " *** ")
@@ -66,8 +68,8 @@
   (if (= goal 0)
       lst
       (let ((x (timed-prime-test n)))
-        (if (equal? x #t)
-            (search-for-primes-iter (+ n 2) (cons n lst) (- goal 1))
+        (if (not (equal? x #f))
+            (search-for-primes-iter (+ n 2) (cons x lst) (- goal 1))
             (search-for-primes-iter (+ n 2) lst goal)))))
 
 ;; Modified version that averages multiple runs!
@@ -83,25 +85,26 @@
             (new-total-time (+ total-time this-time)))
         (if (> iter 0)
           (avg-start-prime-test n (get-internal-real-time) new-total-time (- iter 1))
-          (avg-report-prime (* 1.0 (/ new-total-time timestoavg)))))
+          (list n (avg-report-prime (* 1.0 (/ new-total-time timestoavg))))))
       #f))
 (define (avg-report-prime elapsed-time)
   (display " *** ")
   (display elapsed-time)
-  #t)
+  elapsed-time)
 
 (define (avg-search-for-primes minimum goal)
   (define m (if (even? minimum)
                 (+ minimum 1)
                 (minimum)))
-  (avg-search-for-primes-iter m '() goal)
-  (newline))
+  (define answer (avg-search-for-primes-iter m '() goal))
+  (newline)
+  answer)
 (define (avg-search-for-primes-iter n lst goal)
   (if (= goal 0)
       lst
       (let ((x (avg-timed-prime-test n)))
-        (if (equal? x #t)
-            (avg-search-for-primes-iter (+ n 2) (cons n lst) (- goal 1))
+        (if (not (equal? x #f))
+            (avg-search-for-primes-iter (+ n 2) (cons x lst) (- goal 1))
             (avg-search-for-primes-iter (+ n 2) lst goal)))))
 
 
@@ -271,3 +274,10 @@
 ;; Looking online, apparently the algorithm should roughly double in time when
 ;; doubling the number of digits involved, and increase by a constant with every
 ;; single digit added.
+#|
+(define cool-numbers '(1009 1013 1019 10007 10009 10037 100003 100019
+100043 1000003 1000033 1000037 1000000007 1000000009 1000000021 10000000019
+10000000033 10000000061 100000000003 100000000019 100000000057 1000000000039
+1000000000061 1000000000063))
+(map avg-timed-prime-test cool-numbers)
+|#
