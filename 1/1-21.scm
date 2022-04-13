@@ -1,28 +1,38 @@
+;; constants
+(define timestoavg 100000)
+
+(define fermat-times 25)
+
+;; switches
+(define (smallest-divisor n)
+  ;(find-divisor n 2)) ; stock method
+  (find-divisor-integrated n 2)) ; hopefully faster
+(define (prime-method x)
+;;  (prime? x))
+  (fast-prime? x fermat-times))
+(define (advancemethod x)
+  (next x)) ; 1-23 and forward
+  ;(+ x 1)) ; prior to 1-23
+
 ;; Exercise 1.21: Use the smallest-divisor procedure to find the smallest
 ;; divisor of each of the following numbers: 199, 1999, 19999.
 (define (square x)
   (* x x))
-
-(define (smallest-divisor n)
-  ;(find-divisor n 2)) ; stock method
-  (find-divisor-integrated n 2)) ; hopefully faster
-
-#|
-(define (find-divisor n test-divisor)
-  (cond ((> (square test-divisor) n)
-         n)
-        ((divides? test-divisor n)
-         test-divisor)
-        (else (find-divisor
-               n
-               (+ test-divisor 1)))))
-|#
 
 (define (divides? a b)
   (= (remainder b a) 0))
 
 (define (prime? n)
   (= n (smallest-divisor n)))
+
+(define (find-divisor n test-divisor)
+  (cond ((> (square test-divisor) n)
+         n)
+        ((divides? test-divisor n)
+         test-divisor)
+        (#t (find-divisor
+               n
+               (advancemethod test-divisor)))))
 
 ;(list 199 (smallest-divisor 199) 1999 (smallest-divisor 1999) 19999 (smallest-divisor 19999))
 
@@ -61,8 +71,6 @@
             (search-for-primes-iter (+ n 2) lst goal)))))
 
 ;; Modified version that averages multiple runs!
-(define timestoavg 100000)
-
 (define (avg-timed-prime-test n)
   (newline)
   (display n)
@@ -127,18 +135,6 @@
       3
       (+ n 2)))
 
-(define (advancemethod x)
-  (next x)) ; 1-23 and forward
-  ;(+ x 1)) ; prior to 1-23
-
-(define (find-divisor n test-divisor)
-  (cond ((> (square test-divisor) n)
-         n)
-        ((divides? test-divisor n)
-         test-divisor)
-        (#t (find-divisor
-               n
-               (advancemethod test-divisor)))))
 
 ;; With timed-prime-test incorporating this modified version of
 ;; smallest-divisor, run the test for each of the 12 primes found in Exercise
@@ -180,7 +176,7 @@
            test-divisor)
           (#t (fdi-iter
                (+ test-divisor 2)))))
-(if (divides? test-divisor n) ;; Assuming test-divisor is 2
+  (if (divides? test-divisor n) ;; Assuming test-divisor is 2
       test-divisor
       (fdi-iter (+ test-divisor 1))))
 
@@ -221,9 +217,6 @@
 ;; test primes near 1000? Do your data bear this out? Can you explain any
 ;; discrepancy you find?
 
-(define (prime-method x)
-;;  (prime? x))
-  (fast-prime? x 5))
 (define (expmod base exp m)
   (cond ((= exp 0) 1)
         ((even? exp)
@@ -238,7 +231,6 @@
   (define (try-it a)
     (= (expmod a n n) a))
   (try-it (+ 1 (random (- n 1)))))
-
 (define (fast-prime? n times)
   (cond ((= times 0) #t)
         ((fermat-test n)
