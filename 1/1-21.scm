@@ -169,7 +169,7 @@
 ;; conditionals involved slow it down enough to be noticeable. Doesn't seem
 ;; likely. I'm going to look at what others say about this.
 ;;
-;; I was wrong, it *was* the conditonal. I'll try combining the code.
+;; I was wrong, it *was* the conditional. I'll try combining the code.
 
 (define (find-divisor-integrated n test-divisor)
   ; when first run, runs logic for test-divisor = 2, then proceeds to odd looping
@@ -262,7 +262,8 @@
 ;; 1000033 *** 26877.27847
 ;; 1000037 *** 27711.29949
 ;;
-;; Growth of time is certainly much slower here.
+;; Growth of time is certainly much slower here. I notice that increasing by
+;; 1000 takes about 1.3x-2.0x time.
 ;;
 ;; 1000000007 *** 42455.87824
 ;; 1000000009 *** 42236.69831
@@ -271,3 +272,10 @@
 ;; 1000000000039 *** 91734.66884
 ;; 1000000000061 *** 92712.81946
 ;; 1000000000063 *** 94876.69355
+;;
+;; Though this algorithm is slower at small numbers, it's obvious that its rate
+;; of growth means it's much faster with large numbers than prior algorithms.
+;;
+;; Looking online, apparently the algorithm should roughly double in time when
+;; doubling the number of digits involved, and increase by a constant with every
+;; single digit added.
