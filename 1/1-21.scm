@@ -306,3 +306,27 @@
 ;;
 ;; However, expmod repeatedly applies remainder to its iterations, which keeps
 ;; the value from growing too large.
+
+;; Exercise 1.26 (see source text)
+;;
+;; In the original code, expmod is evaluated and then given to square. But in
+;; Lewis' new code, it recurses twice, exponentially increasing with n. This
+;; turns the \Theta(log n) into \Theta(n).
+
+;; Exercise 1.27: Demonstrate that the Carmichael numbers listed in Footnote 47
+;; really do fool the Fermat test. That is, write a procedure that takes an
+;; integer n and tests whether a^n is congruent to a modulo n for every a<n, and
+;; try your procedure on the given Carmichael numbers.
+
+(define carmichael '(561 1105 1729 2465 2821 6601))
+
+(define (car-test n)
+  (define (checkit a)
+    (= (remainder (expt a n) n) (remainder (modulo a n) n)))
+  (and-map checkit
+           (filter (lambda (x)(< x n))
+                   (cdr (iota n)))))
+
+;; test with
+;(car-test 1009)
+;(car-test 1105)
