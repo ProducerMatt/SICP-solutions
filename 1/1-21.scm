@@ -289,4 +289,20 @@
 (define (expmod-hack base exp m)
   (remainder (fast-expt base exp) m))
 
-;; Is she correct? Would this procedure serve as well for our fast prime tester? Explain.
+;; Is she correct? Would this procedure serve as well for our fast prime tester?
+;; Explain.
+
+(define (fast-expt n b)
+  (expt-fast-iter n b 1))
+(define (expt-fast-iter b n a)
+  (cond ((= n 0) a)
+        ((even? n)
+         (expt-fast-iter (square b) (/ n 2) a))
+        (else
+         (expt-fast-iter b (- n 1) (* b a)))))
+
+;; For starters, I can see that fast-expt ends up making extremely large values
+;; of b while reducing n. So large that the debugger stops displaying them.
+;;
+;; However, expmod repeatedly applies remainder to its iterations, which keeps
+;; the value from growing too large.
