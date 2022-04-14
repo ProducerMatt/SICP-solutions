@@ -274,10 +274,19 @@
 ;; Looking online, apparently the algorithm should roughly double in time when
 ;; doubling the number of digits involved, and increase by a constant with every
 ;; single digit added.
-#|
 (define cool-numbers '(1009 1013 1019 10007 10009 10037 100003 100019
 100043 1000003 1000033 1000037 1000000007 1000000009 1000000021 10000000019
 10000000033 10000000061 100000000003 100000000019 100000000057 1000000000039
 1000000000061 1000000000063))
+#|
 (map avg-timed-prime-test cool-numbers)
 |#
+
+;; Exercise 1.25: Alyssa P. Hacker complains that we went to a lot of extra work
+;; in writing expmod. After all, she says, since we already know how to compute
+;; exponentials, we could have simply written
+
+(define (expmod-hack base exp m)
+  (remainder (fast-expt base exp) m))
+
+;; Is she correct? Would this procedure serve as well for our fast prime tester? Explain.
