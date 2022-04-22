@@ -330,3 +330,63 @@
 ;; test with
 ;(car-test 1009)
 ;(car-test 1105)
+
+;; Exercise 1.28 (also quite long)
+;;
+;; Basically, if (remainder (expt a (- n 1)) n) is 1 then we've got it.
+
+;; Attempt 1, just returns zero in all scenarios.
+#|
+(define (expmod-mr base exp m)
+  (cond ((= exp 0) 1)
+        ((even? exp)
+         (let ((mr
+                (remainder
+                 (square (expmod-mr base (/ exp 2) m))
+                 m)))
+           (if (= mr 1)
+               0
+               mr)))
+        (else
+         (remainder
+          (* base (expmod-mr base (- exp 1) m))
+          m))))
+|#
+
+;; Attempt 2. Stop guessing dude
+#|
+(define (expmod-mr base exp m)
+  (cond ((= exp 0) 1)
+        ((= (remainder (square base) m) 1) 0)
+        ((even? exp)
+         (remainder
+          (square (expmod base (/ exp 2) m))
+          m))
+        (else
+         (remainder
+          (* base (expmod base (- exp 1) m))
+          m))))
+|#
+(define (expmod-mr base exp m)
+  (cond ((= exp 0) 1)
+        ((and (> base 1) (< base (- exp 1))
+              (= (remainder (square base) m) 1) 0))
+        ((even? exp)
+         (remainder
+          (square (expmod base (/ exp 2) m))
+          m))
+        (else
+         (remainder
+          (* base (expmod base (- exp 1) m))
+          m))))
+;; TODO
+(define (mr-test n)
+  (define (try-it a)
+    (let ((result (expmod-mr a (- n 1) n)))
+      (or (= result a) (= result 0))))
+  (try-it (+ 1 (random (- n 1)))))
+(define (mr-prime? n times)
+  (cond ((= times 0) #t)
+        ((mr-test n)
+         (mr-prime? n (- times 1)))
+        (else #f)))
