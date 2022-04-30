@@ -367,10 +367,13 @@
           (* base (expmod base (- exp 1) m))
           m))))
 |#
+;; Attempt 3. I'm missing something here.
+#|
 (define (expmod-mr base exp m)
   (cond ((= exp 0) 1)
-        ((and (> base 1) (< base (- exp 1))
-              (= (remainder (square base) m) 1) 0))
+        ((and (> base 1) (< base m)
+         (= (remainder (square base) m) 1))
+         0)
         ((even? exp)
          (remainder
           (square (expmod base (/ exp 2) m))
@@ -379,11 +382,67 @@
          (remainder
           (* base (expmod base (- exp 1) m))
           m))))
+|#
+;; Attempt 4
+#|
+(define (expmod-mr base exp m)
+  (cond ((= exp 0) 1)
+        ((even? exp)
+         (let* ((rem-num (remainder (square
+                                     (expmod base (/ exp 2) m))
+                                    m)))
+           (if (= rem-num 1)
+               0
+               rem-num)))
+        (else
+         (remainder
+          (* base (expmod base (- exp 1) m))
+          m))))
+|#
+;; OH MY GOD I'M A MORON!!!
+;;
+;; I've been calling expmod instead of expmod-mr. What a basic mistake.
+;; Attempt #5:
+#|
+(define (expmod-mr base exp m)
+  (cond ((= exp 0) 1)
+        ((even? exp)
+         (let* ((result (expmod-mr base (/ exp 2) m))
+                (rem-num (remainder (square result)
+                                    m)))
+           (cond ((and (> result 1) (< result (- m 1)) (= rem-num 1)) 0)
+                 (else rem-num))))
+        (else
+         (remainder
+          (* base (expmod-mr base (- exp 1) m))
+          m))))
+;; NOTE: returning 1 on (expmod-mr 589 1008 1009)
+|#
+;; Attempt #6
+(define (expmod-mr base exp m)
+  (cond ((= exp 0) 1)
+        ((even? exp)
+         (let* ((result (expmod-mr base (/ exp 2) m))
+                (rem-num (remainder (square result)
+                                    m)))
+           (cond ((and (= rem-num 1)
+                       (not (equal? result 1))
+                       (not (equal? result (- m 1))))
+                  0)
+                 (else rem-num))))
+        (else
+         (remainder
+          (* base (expmod-mr base (- exp 1) m))
+          m))))
+;; I noticed the book says a != 1, a != n-1, instead
+;; of what I thought (1 < a < n-1). Still not getting
+;; the right return value though.
+
 ;; TODO
 (define (mr-test n)
   (define (try-it a)
     (let ((result (expmod-mr a (- n 1) n)))
-      (or (= result a) (= result 0))))
+      (= result 0)))
   (try-it (+ 1 (random (- n 1)))))
 (define (mr-prime? n times)
   (cond ((= times 0) #t)
