@@ -419,6 +419,7 @@
 ;; NOTE: returning 1 on (expmod-mr 589 1008 1009)
 |#
 ;; Attempt #6
+#|
 (define (expmod-mr base exp m)
   (cond ((= exp 0) 1)
         ((even? exp)
@@ -434,18 +435,64 @@
          (remainder
           (* base (expmod-mr base (- exp 1) m))
           m))))
+|#
 ;; I noticed the book says a != 1, a != n-1, instead
 ;; of what I thought (1 < a < n-1). Still not getting
 ;; the right return value though.
+
+;; Attempt 6
+(define (expmod-mr base exp m)
+  (define dbg #f)
+  (cond ((= exp 0) 1)
+        ((even? exp)
+         (let* ((result (expmod-mr base (/ exp 2) m))
+                (rem-num (remainder (square result)
+                                    m)))
+           (cond (dbg ;; Debugging
+                  (display "Exponent: ")(write (/ exp 2))
+                  (newline)
+                  (display "Result: ")(write result)
+                  (newline)
+                  (display "Square: ")(write (square result))
+                  (newline)
+                  (display "rem-num: ")(write rem-num)
+                  (newline)))
+           (if (and (= rem-num 1)
+                    (not (= result 1))
+                    (not (= result (- m 1))))
+               0
+               rem-num)))
+        (else
+         (let* ((result (expmod-mr base (- exp 1) m))
+                (mult (* base result))
+                (rem-num (remainder mult m)))
+           (cond (dbg
+                  (display "Exponent: ")(write (- exp 1))
+                  (newline)
+                  (display "Result: ")(write result)
+                  (newline)
+                  (display "Multiplied: ")(write mult)
+                  (newline)
+                  (display "rem-num: ")(write rem-num)
+                  (newline)))
+           rem-num))))
+
+;; MattsDiary: much debugging later and I think it's working correctly. Moreover
+;; I appear to have misunderstood the goal. Falling asleep as I type, I'll have
+;; to flesh this out more later.
 
 ;; TODO
 (define (mr-test n)
   (define (try-it a)
     (let ((result (expmod-mr a (- n 1) n)))
-      (= result 0)))
+      (= result 1)))
   (try-it (+ 1 (random (- n 1)))))
 (define (mr-prime? n times)
   (cond ((= times 0) #t)
         ((mr-test n)
          (mr-prime? n (- times 1)))
         (else #f)))
+(define (test rem-num result m)
+  (display "rem-num = 1: " (= rem-num 1))
+  (not (= result 1))
+  (not (= result (- m 1))))
