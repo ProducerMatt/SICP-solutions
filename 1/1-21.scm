@@ -496,3 +496,45 @@
   (display "rem-num = 1: " (= rem-num 1))
   (not (= result 1))
   (not (= result (- m 1))))
+
+;; Some tests from http://community.schemewiki.org/?sicp-ex-1.28
+
+(define (check-prime n expected)
+  (define (report-result n result expected)
+    (newline)
+    (display n)
+    (display ": ")
+    (display result)
+    (display ": ")
+    (display (if (eq? result expected) "OK" "FOOLED")))
+  (report-result n (mr-prime? n 500) expected))
+
+(check-prime 2 #t)
+(check-prime 7 #t)
+(check-prime 13 #t)
+(check-prime 15 #f)
+(check-prime 37 #t)
+(check-prime 39 #f)
+
+(check-prime 561 #f)  ; Carmichael number
+(check-prime 1105 #f) ; Carmichael number
+(check-prime 1729 #f) ; Carmichael number
+(check-prime 2465 #f) ; Carmichael number
+(check-prime 2821 #f) ; Carmichael number
+(check-prime 6601 #f) ; Carmichael number
+
+;; This all appears to be working right. I misunderstood when 0s and 1s were
+;; meant to show up. This is a problem since I needed that info to understand
+;; whether things were working or not. Let's sum up.
+;;
+;; When expmod-mr is called on a prime number, it will return 1s for all ints
+;; less than that number. If it's called on a non-prime, it'll sometimes return
+;; 0s or other numbers.
+;;
+;; Just another wakeup call to specify the problem better.
+;;
+;; Interestingly enough, someone on SO pointed out that SICP's definition of the
+;; Miller-Rabin test is slightly incorrect. Specifically the claim that at least
+;; half of a<n will be congruent modulo n. This can be disproven with n=9.
+;; However, for the purposes of this test it's not likely (mr-prime?) will hit
+;; this edge case. https://stackoverflow.com/a/59834347
