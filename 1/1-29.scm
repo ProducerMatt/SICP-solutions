@@ -51,10 +51,33 @@
           (else (series-y
                  (+ sum (* 4 (gety k)))
                  (+ 1 k)))))
-  (define sum-of-series (series-y (f a) 1)) ;; (f a) = y_0
+  (define sum-of-series (series-y (gety a) 1)) ;; (f a) = y_0
   (* (/ h 3) sum-of-series))
 
 ;; scheme@(guile-user) [4]> (int-simp cube 0.0 1.0 1000.0)
 ;; $24 = 0.25000000000000006
 
 ;; This appears to be working correctly on the first try. I am suspicious.
+
+;; Here's another version that integrates the (sum) procedure. I had to look
+;; online to figure out this was possible but it makes clear sense, things are
+;; the sum of their parts.
+
+(define (plustwo x) (+ 2 x))
+
+(define (int-simp-sum f a b n)
+  (define h
+    (/ (- b a)
+       n))
+  (define (gety k)
+    (f (+ a (* k h))))
+  (* (/ h 3) (+ (gety 0) (gety n)
+                (* 4 (sum gety 1 plustwo (- n 1)))
+                (* 2 (sum gety 2 plustwo (- n 1))))))
+
+;; scheme@(guile-user)> (int-simp-sum cube 0.0 1.0 1000)
+;; $10 = 0.2500000000000002
+;; scheme@(guile-user)> (int-simp cube 0.0 1.0 1000)
+;; $11 = 0.25000000000000006
+
+;; This one is one digit less accurate?
