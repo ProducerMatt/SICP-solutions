@@ -142,3 +142,10 @@
 ;scheme@(guile-user) [5]> (* 1.0 (pi-product 1000))
 ;$25 = 3.1400238186005973
 ;; It was pi in a trenchcoat! (aka 1/2 pi)
+
+;; Make a recursive version of product.
+(define (product-rec term a next b)
+  (if (> a b)
+      1
+      (* (term a)
+         (product-rec term (next a) next b))))
