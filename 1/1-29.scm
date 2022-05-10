@@ -113,14 +113,14 @@
   (product-iter identity 1 inc n))
 
 ;; Also use product to compute approximations to π using the Wallace formula
-
+#|
 (define (pi-product n)
   (define (div x)
     (let ((x1 (+ x 1))
           (x2 (+ x 2)))
       (* (/ x x1) (/ x2 x1))))
   (product-iter div 2 (lambda (z) (+ z 2)) n))
-
+|#
 ;scheme@(guile-user) [5]> (* 1.0 (pi-product 50))
 ;$13 = 0.7929860229356764
 ;; Well that's clearly wrong. What gives?
@@ -130,4 +130,15 @@
 ;; Someone online says the formula is slightly wrong. Starting with 2/1 instead:
 ;scheme@(guile-user) [5]> (* 1.0 (/ 2 1) (/ 2 3) (/ 4 3) (/ 4 5) (/ 6 5)(/ 6 7) (/ 8 7) (/ 8 9))
 ;$18 = 1.4860770975056687
-;; Better but not exactly Pi-worthy.
+;; Better but not exactly Pi-worthy. But wait...
+
+(define (pi-product n)
+  (define (div x)
+    (let ((x1 (- x 1))
+          (x2 (+ x 1)))
+      (* (/ x x1) (/ x x2))))
+  (* 2.0 (product-iter div 2 (lambda (z) (+ z 2)) n)))
+
+;scheme@(guile-user) [5]> (* 1.0 (pi-product 1000))
+;$25 = 3.1400238186005973
+;; It was pi in a trenchcoat! (aka 1/2 pi)
