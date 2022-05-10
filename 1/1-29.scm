@@ -80,4 +80,54 @@
 ;; scheme@(guile-user)> (int-simp cube 0.0 1.0 1000)
 ;; $11 = 0.25000000000000006
 
-;; This one is one digit less accurate?
+;; This one is one digit less accurate? Maybe this method is accumulating more
+;; rounding errors from h.
+
+;; Exercise 1.30: rewrite sum as an iterative process.
+(define (sum-iter term a next b)
+  (define (iter a result)
+    (if (> a b)
+        result
+        (iter (next a) (+ result (term a)))))
+  (iter a 0))
+
+;; I forgot to sum the result on each iteration at first.
+
+;; Exercise 1.31: write a procedure called (product) that is (sum) but with
+;; multiplication
+
+(define (product-iter term a next b)
+  (define (iter a result)
+    (if (> a b)
+        result
+        (iter (next a) (* result (term a)))))
+  (iter a 1)) ;; start at 1 so it's not always 0
+
+;; "Define factorial in terms of product."
+;;
+;; I was briefly stumped because product only counts upward. Then I realized
+;; that's just how it's presented and it can go either direction, since additon
+;; and multiplication are commutative. I look forward to building up a more
+;; intuitive sense of numbers.
+(define (factorial n)
+  (product-iter identity 1 inc n))
+
+;; Also use product to compute approximations to π using the Wallace formula
+
+(define (pi-product n)
+  (define (div x)
+    (let ((x1 (+ x 1))
+          (x2 (+ x 2)))
+      (* (/ x x1) (/ x2 x1))))
+  (product-iter div 2 (lambda (z) (+ z 2)) n))
+
+;scheme@(guile-user) [5]> (* 1.0 (pi-product 50))
+;$13 = 0.7929860229356764
+;; Well that's clearly wrong. What gives?
+;; Trying by hand:
+;scheme@(guile-user) [5]> (* 1.0 (/ 2 3) (/ 4 3) (/ 4 5) (/ 6 5))
+;$16 = 0.8533333333333334
+;; Someone online says the formula is slightly wrong. Starting with 2/1 instead:
+;scheme@(guile-user) [5]> (* 1.0 (/ 2 1) (/ 2 3) (/ 4 3) (/ 4 5) (/ 6 5)(/ 6 7) (/ 8 7) (/ 8 9))
+;$18 = 1.4860770975056687
+;; Better but not exactly Pi-worthy.
