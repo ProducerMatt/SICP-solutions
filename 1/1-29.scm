@@ -175,3 +175,34 @@
       (combiner (term a)
          (accumulate-rec combiner null-value
                          term (next a) next b))))
+
+;; Exercise 1.33: filtered accumulate
+(define (filtered-accumulate
+         combiner null-value
+         term a next b filter)
+  (define (iter a result)
+    (if (> a b)
+        result
+        (iter (next a)
+              (if (filter a)
+                  (combiner result (term a))
+                  result))))
+  (iter a null-value))
+
+(load "1/1-21.scm")
+(define (sumofprimes a b)
+  (filtered-accumulate + 0
+                       square a
+                       inc b
+                       prime?))
+;; Test
+#|
+(use-srfis '(1))
+(let* ((coollist (map (lambda (x) (+ x 100)) (iota 30)))
+       (filt (filter prime? coollist))
+       (squaredlist (map square filt))
+       (finalsum (apply + squaredlist)))
+  (display finalsum)
+  (newline)
+  (display (sumofprimes 100 129)))
+|#
