@@ -206,3 +206,23 @@
   (newline)
   (display (sumofprimes 100 129)))
 |#
+
+;; The product of all positive integers less than n that are relatively prime to n
+(load "1/defs.scm")
+(define (relativeprime x y)
+  (= (gcd x y) 1))
+(define (productofposint n)
+  (filtered-accumulate * 1
+                       identity 1
+                       inc n
+                       (lambda (z) (relativeprime z n))))
+
+;; Test
+(use-srfis '(1))
+(let* ((targetnum 30)
+       (coollist (cdr (iota targetnum)))
+       (filtered (filter (lambda (z) (relativeprime z targetnum)) coollist))
+       (theproduct (apply * filtered)))
+  (display theproduct)
+  (newline)
+  (display (productofposint targetnum)))
