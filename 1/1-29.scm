@@ -290,3 +290,7 @@
   (fixed-point
    (lambda (x) (+ 1 (/ 1 x)))
    1.6))
+
+;scheme@(guile-user) [5]> golden
+;$24 = 1.6180327868852458
+;; Good enough for government work.
