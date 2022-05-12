@@ -288,5 +288,5 @@
 
 (define golden
   (fixed-point
-   (lambda (x) (average 1.6 (+ 1 (/ 1 x))))
+   (lambda (x) (+ 1 (/ 1 x)))
    1.6))
