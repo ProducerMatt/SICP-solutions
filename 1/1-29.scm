@@ -229,4 +229,15 @@
 
 ;; MattsDiary: the issue with verifying my results is that it always involves
 ;; more advanced methods than the actual book. They probably expect me to do the
-;; math manually on paper and then verify my solution against that?
+;; math manually on paper and then verify my solution against that? That might
+;; have some advantages.
+
+;; Exercise 1.34: explain this:
+;(define (f g) (g 2))
+;(f f) => Wrong type to apply: 2
+;
+;; This evaluates like this:
+;;(f f)
+;;(f 2)
+;;(2 2)
+;; Which isn't a valid expression.
