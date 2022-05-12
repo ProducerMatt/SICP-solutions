@@ -226,3 +226,7 @@
   (display theproduct)
   (newline)
   (display (productofposint targetnum)))
+
+;; MattsDiary: the issue with verifying my results is that it always involves
+;; more advanced methods than the actual book. They probably expect me to do the
+;; math manually on paper and then verify my solution against that?
