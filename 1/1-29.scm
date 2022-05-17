@@ -311,7 +311,7 @@
 
 ;; Exercise 1.37.1: Define a function to solve k-term finite fractions. How high
 ;; must k be to get accuracy to 4 decimal places?
-(define (cont-frac n d k)
+(define (cont-frac-rec n d k)
   (define (rec i)
     (if (= i k)
         (/ (n i) (d i))
@@ -321,13 +321,27 @@
 ;(cont-frac (lambda (i) 1.0) (lambda (i) 1.0) 11)
 ;; k = 11 to get 0.6180555555555556
 ;;
-;; Actually I think I did this one backwards. k should start at 1 and add up.
+;; At first I did this one backwards. k should start at 1 and add up.
 ;; Iterative would go down.
 
 ;; Exercise 1.37.2: now do it iteratively.
-(define (cont-frac-iter n d k)
+(define (cont-frac n d k)
   (define (iter i x)
     (if (= i 0)
         x
-        (iter (- i 1) (/ (n i) (+ (d k) x)))))
+        (iter (- i 1) (/ (n i) (+ (d i) x)))))
   (iter (- k 1) (/ (n k) (d k))))
+
+;; Exercise 1.38: use cont-frac to approximate Euler's number
+(define (euler k)
+  (+ 2
+     (cont-frac
+      (lambda (i) 1.0)
+      (lambda (i)
+        (define j (+ i 1))
+        (if (not (= (remainder j 3) 0))
+            1.0
+            (/ j 1.5)))
+      k)))
+
+;; Discovered a bug in (cont-frac), the last call of (d i) was (d k) instead.
