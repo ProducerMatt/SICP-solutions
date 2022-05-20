@@ -345,3 +345,41 @@
       k)))
 
 ;; Discovered a bug in (cont-frac), the last call of (d i) was (d k) instead.
+
+;; Exercise 1.39: use cont-frac to perform a tangent
+;; Attempt 1
+#|
+(define (tan-cf x k)
+  (define (d i)
+     (- (* i 2.0) 1.0))
+  (define (iter i val)
+    (if (= i 0)
+        val
+        (iter (- i 1) (/ x (- (d i) val)))))
+  (iter (- k 1) (/ x (d k))))
+|#
+
+;; Why's it not working? ... Wait.
+
+(define (tan-cf x k)
+  (define (d i)
+     (- (* i 2.0) 1.0))
+  (define (n i)
+    (if (= i 1)
+        x
+        (* x x)))
+  (define (iter i val)
+    (if (= i 0)
+        val
+        (iter (- i 1) (/ (n i) (- (d i) val)))))
+  (iter (- k 1) (/ (n k) (d k))))
+
+;; Which could also be defined as:
+(define (tan-cf x k)
+  (cont-frac
+   (lambda (i)
+     (if (= i 1)
+         x
+         (* x x -1.0))) ;; note the negation!
+   (lambda (i) (- (* i 2.0) 1.0))
+   k))
