@@ -52,4 +52,16 @@
 ;(((double (double double)) inc) 5)
 ;
 ;; = 21. Double squares the number of function calls, and there are 3 doubles here. So two function calls
-;; become four, which become sixteen.
+;; become four, which become sixteen. Lambda calculus baby!
+
+;; Exercise 1-42: define a function (compose f g) which returns the function
+;; composition (f (g x))
+
+(define (compose f g)
+  (lambda (x)
+    (f (g x))))
+
+;; What is the result of
+;((compose square inc) 6)
+;
+;; = 49, or (square (+ 1 6))
