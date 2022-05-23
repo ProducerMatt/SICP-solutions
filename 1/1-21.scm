@@ -509,19 +509,19 @@
     (display (if (eq? result expected) "OK" "FOOLED")))
   (report-result n (mr-prime? n 500) expected))
 
-(check-prime 2 #t)
-(check-prime 7 #t)
-(check-prime 13 #t)
-(check-prime 15 #f)
-(check-prime 37 #t)
-(check-prime 39 #f)
-
-(check-prime 561 #f)  ; Carmichael number
-(check-prime 1105 #f) ; Carmichael number
-(check-prime 1729 #f) ; Carmichael number
-(check-prime 2465 #f) ; Carmichael number
-(check-prime 2821 #f) ; Carmichael number
-(check-prime 6601 #f) ; Carmichael number
+;(check-prime 2 #t)
+;(check-prime 7 #t)
+;(check-prime 13 #t)
+;(check-prime 15 #f)
+;(check-prime 37 #t)
+;(check-prime 39 #f)
+;
+;(check-prime 561 #f)  ; Carmichael number
+;(check-prime 1105 #f) ; Carmichael number
+;(check-prime 1729 #f) ; Carmichael number
+;(check-prime 2465 #f) ; Carmichael number
+;(check-prime 2821 #f) ; Carmichael number
+;(check-prime 6601 #f) ; Carmichael number
 
 ;; This all appears to be working right. I misunderstood when 0s and 1s were
 ;; meant to show up. This is a problem since I needed that info to understand
