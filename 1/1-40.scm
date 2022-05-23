@@ -1,4 +1,5 @@
 ;; Includes
+(define (inc x) (+ x 1))
 (define (square x) (* x x))
 (define (cube x) (* x x x))
 
@@ -29,7 +30,7 @@
           (try next))))
   (try first-guess))
 
-;; 1-40: Define a procedure cubic that can be used together with the
+;; Exercise 1-40: Define a procedure cubic that can be used together with the
 ;; newtons-method procedure to approximate zeroes of the cubic:
 ;;
 ;; x^3 + ax^2 + bx + c
@@ -39,3 +40,16 @@
     (+ (cube x)
        (* a (square x))
        (* b x) c)))
+
+;; Exercise 1-41: Define a prcedure double that takes a procedure f which takes
+;; one argument, and returns a procedure that applies f twice.
+
+(define (double f)
+  (lambda (x)
+    (f (f x))))
+
+;; What is the result of
+;(((double (double double)) inc) 5)
+;
+;; = 21. Double squares the number of function calls, and there are 3 doubles here. So two function calls
+;; become four, which become sixteen.
