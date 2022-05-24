@@ -65,3 +65,36 @@
 ;((compose square inc) 6)
 ;
 ;; = 49, or (square (+ 1 6))
+
+;; Exercise 1.43: make a function that returns a lambda that applies f to x n
+;; times.
+(define (repeated f n)
+  (lambda (x)
+    (define (iter i val)
+      (if (< i 1)
+          val
+          (iter (- i 1) (f val))))
+    (iter n x)))
+
+(define (repeated-rec f n)
+  (lambda (x)
+    (define (rec i)
+      (if (< i 1)
+          x
+          (f (rec (- i 1)))))
+    (rec n)))
+
+(define (repeated-comp f n)
+  (lambda (x)
+    (cond ((> n 1) ((compose f (repeated-comp f (- n 1))) x))
+          ((= n 1) (f x))
+          ((< n 1) x))))
+
+;; 3 variants and all felt a little off. Checking codology.net I found his was
+;; much more elegant, though repeated-iter might be more computationally
+;; efficient?
+
+(define (repeated f n)
+  (if (= n 1)
+      f
+      (compose f (repeated f (- n 1)))))
