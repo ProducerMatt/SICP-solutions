@@ -68,7 +68,7 @@
 
 ;; Exercise 1.43: make a function that returns a lambda that applies f to x n
 ;; times.
-(define (repeated-iter f n)
+(define (repeated f n)
   (lambda (x)
     (define (iter i val)
       (if (< i 1)
@@ -94,15 +94,15 @@
 ;; much more elegant, though repeated-iter might be more computationally
 ;; efficient?
 
-(define (repeated f n)
+(define (repeated-codo f n)
   (if (= n 1)
       f
       (compose f (repeated f (- n 1)))))
 
 ;; Some benchmarks:
-;(benchmark (lambda () ((repeated square 3) 5)) 10000000)
+;(benchmark (lambda () ((repeated-codo square 3) 5)) 10000000)
 ;$12 = 574.0746973
-;(benchmark (lambda () ((repeated-iter square 3) 5)) 10000000)
+;(benchmark (lambda () ((repeated square 3) 5)) 10000000)
 ;$15 = 380.045134
 ;(benchmark (lambda () ((repeated-comp square 3) 5)) 10000000)
 ;$17 = 868.9915327
@@ -110,3 +110,16 @@
 ;$18 = 468.1337157
 
 ;; So the iterative version is the fastest one after all.
+
+;; Exercise 1-44: make a function smooth that takes function f and returns
+;; a function that returns the average of (f (+ x dx)), (f x), (f (- x dx))
+(define (smooth f)
+  (lambda (x)
+    (/ (+ (f x)
+          (f (+ x dx))
+          (f (- x dx)))
+       3)))
+
+;; Show how to return an n-fold smoothed function.
+(define (smooth-n f n)
+  ((repeated smooth n) f))
