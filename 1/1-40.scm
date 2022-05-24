@@ -68,7 +68,7 @@
 
 ;; Exercise 1.43: make a function that returns a lambda that applies f to x n
 ;; times.
-(define (repeated f n)
+(define (repeated-iter f n)
   (lambda (x)
     (define (iter i val)
       (if (< i 1)
@@ -98,3 +98,15 @@
   (if (= n 1)
       f
       (compose f (repeated f (- n 1)))))
+
+;; Some benchmarks:
+;(benchmark (lambda () ((repeated square 3) 5)) 10000000)
+;$12 = 574.0746973
+;(benchmark (lambda () ((repeated-iter square 3) 5)) 10000000)
+;$15 = 380.045134
+;(benchmark (lambda () ((repeated-comp square 3) 5)) 10000000)
+;$17 = 868.9915327
+;(benchmark (lambda () ((repeated-rec square 3) 5)) 10000000)
+;$18 = 468.1337157
+
+;; So the iterative version is the fastest one after all.
