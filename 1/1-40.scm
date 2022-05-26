@@ -159,10 +159,18 @@
    (average-damp
     (average-damp
      (average-damp
-      (average-damp
        (lambda (y)
-         (/ x (expt y 7)))))))
+         (/ x (expt y 7))))))
      1.0))
 
-;; So the number of dampings needed for an n-root is likely n/2.
-;; TODO: test 3 dampings instead
+(define (sixteenth-root x)
+  (fixed-point
+   (average-damp
+    (average-damp
+     (average-damp
+      (average-damp
+       (lambda (y)
+         (/ x (expt y 15)))))))
+     1.0))
+
+;; So K'th root requires (sqrt K) dampings
