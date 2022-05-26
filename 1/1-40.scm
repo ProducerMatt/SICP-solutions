@@ -2,6 +2,8 @@
 (define (inc x) (+ x 1))
 (define (square x) (* x x))
 (define (cube x) (* x x x))
+(define (average x y)
+  (/ (+ x y) 2))
 
 (define dx 0.00001)
 (define (deriv g)
@@ -29,6 +31,23 @@
           next
           (try next))))
   (try first-guess))
+
+(define (average-damp f)
+  (lambda (x)
+    (average x (f x))))
+
+(define (sqrt x)
+  (fixed-point
+   (average-damp
+    (lambda (y) (/ x y)))
+   1.0))
+
+(define (cube-root x)
+  (fixed-point
+   (average-damp
+    (lambda (y)
+      (/ x (square y))))
+   1.0))
 
 ;; Exercise 1-40: Define a procedure cubic that can be used together with the
 ;; newtons-method procedure to approximate zeroes of the cubic:
@@ -123,3 +142,27 @@
 ;; Show how to return an n-fold smoothed function.
 (define (smooth-n f n)
   ((repeated smooth n) f))
+
+;; Exercise 1-45: experiment to determine how many average-damps are required to
+;; compute nth roots as a fixed-point approximation of y |-> x/y^(n-1).
+(define (fourth-root x)
+  (fixed-point
+   (average-damp
+    (average-damp
+     (lambda (y)
+       (/ x (cube y)))))
+     1.0))
+
+;; So fourth-root requires two dampings. What about more?
+(define (eighth-root x)
+  (fixed-point
+   (average-damp
+    (average-damp
+     (average-damp
+      (average-damp
+       (lambda (y)
+         (/ x (expt y 7)))))))
+     1.0))
+
+;; So the number of dampings needed for an n-root is likely n/2.
+;; TODO: test 3 dampings instead
