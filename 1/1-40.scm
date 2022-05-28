@@ -187,3 +187,44 @@
 ;; $7 = 1.0710680658969496
 ;; scheme@(guile-user) [2]> (sixteenth-root 3)
 ;; $8 = 1.0710754830729146
+
+;; Exercise 1.46: Write a procedure iterative-improve that takes two procedures
+;; as arguments: a method for telling whether a guess is good enough and a
+;; method for improving a guess. Iterative-improve should return as its value a
+;; procedure that takes a guess as argument and keeps improving the guess until
+;; it is good enough.
+(define (iterate-improve good-enough? improve-guess)
+  (lambda (guess)
+    (define (rec guess)
+    (if (good-enough? guess)
+        guess
+        (rec (improve-guess guess))))
+    (rec guess)))
+
+;; Rewrite the sqrt procedure of 1.1.7 and the fixed-point procedure of 1.3.3 in
+;; terms of iterative-improve.
+(define (sqrt-new x)
+  (define (average a b)
+    (/ (+ a b) 2))
+  (define (goodenough? guess)
+    (< (abs (- (square guess) x)) 0.001))
+  (define (improve guess)
+    (average guess (/ x guess)))
+  ((iterate-improve goodenough? improve) 1.0))
+;; MattsDiary: very cool how knowing x would be a constant allowed me to reduce
+;; the operation enough that iterate-improve could get these single-variable
+;; functions.
+(define (fixed-point-new f first-guess)
+  (define (close-enough? guess)
+    (< (abs (- guess (f guess)))
+       tolerance))
+  ((iterate-improve close-enough? f) first-guess))
+;; scheme@(guile-user) [3]> (fixed-point-new cos 1.0)
+;; $13 = 0.7390893414033927
+;; scheme@(guile-user) [3]> (fixed-point cos 1.0)
+;; $14 = 0.7390822985224024
+
+;; Again rounding differences. This time I know why better. It's going to do 1
+;; less iteration because of the (f guess) call being inside the close-enough
+;; check instead of outside it. See fixed-point's original defintion and notice
+;; the use of 'guess' and 'next'.
