@@ -173,4 +173,17 @@
          (/ x (expt y 15)))))))
      1.0))
 
-;; So K'th root requires (sqrt K) dampings
+;; So n'th root requires (sqrt n) dampings
+(define (nth-root x n)
+  (fixed-point
+   ((repeated average-damp (ceiling (sqrt n)))
+    (lambda (y)
+      (/ x (expt y (- n 1)))))
+   1.0))
+
+;; It works! Though there's some rounding errors going on somewhere.
+;;
+;; scheme@(guile-user) [2]> (nth-root 3 16)
+;; $7 = 1.0710680658969496
+;; scheme@(guile-user) [2]> (sixteenth-root 3)
+;; $8 = 1.0710754830729146
