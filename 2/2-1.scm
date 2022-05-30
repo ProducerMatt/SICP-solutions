@@ -34,7 +34,19 @@
   (display "/")
   (display (denom x)))
 
+(define one-half (make-rat 1 2))
 
+(define one-third (make-rat 1 3))
+
+;(print-rat one-half)
+;(print-rat
+; (add-rat one-half one-third))
+
+;(print-rat
+; (mul-rat one-half one-third))
+
+;(print-rat
+; (add-rat one-third one-third))
 
 ;; Exercise 2-1: Define a better version of make-rat that handles both positive
 ;; and negative arguments. Make-rat should normalize the sign so that if the
@@ -42,6 +54,10 @@
 ;; and if the rational number is negative, only the numerator is negative.
 
 (define (make-rat n d)
-  (let ((g (gcd n d)))
-    (cons (/ n g)
-          (/ d g))))
+  (if (< d 0)
+      (if (< n 0)
+          (make-rat (abs n)(abs d))
+          (make-rat (- n) (abs d)))
+      (let ((g (gcd n d)))
+        (cons (/ n g)
+              (/ d g)))))
