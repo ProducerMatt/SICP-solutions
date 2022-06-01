@@ -211,7 +211,7 @@
 
 (define (print-rectangle r)
   (display "Origin: ")
-  (display (print-point (origin-rectangle r)))
+  (print-point (origin-rectangle r))
   (newline)
   (display "Height: ")
   (display (height-rectangle r))
@@ -222,3 +222,5 @@
   (display "Angle: ")
   (display (angle-rectangle r))
   (newline))
+
+;; (testit (make-rectangle (make-point 1 2) 2 3 0))
