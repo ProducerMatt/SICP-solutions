@@ -128,7 +128,7 @@
 ;; defining a rectangle as two opposite points which can then be used to
 ;; reconstruct the full thing. A is top-left, B is top-right, C is bottom-left,
 ;; D is bottom-right. But now I realize that makes a "Z" from ABCD. Should have
-;; done it the normal math class way, see how perimieter-rectangle has to make
+;; done it the normal math class way, see how perimeter-rectangle has to make
 ;; lines from B to D and C to A.
 #|
 (define (make-rectangle A D)
@@ -170,7 +170,7 @@
 |#
 (define (testit r)
   (print-rectangle r)
-  (display "perimiter: ")
+  (display "perimeter: ")
   (display (perimeter-rectangle r))
   (newline)
   (display "area: ")
@@ -190,7 +190,7 @@
 
 ;; Ok, my implementation isn't very strong. for example a better one would be
 ;; noting the origin, height, width, and angle. Heavily inspired from codology's
-;; solution..
+;; solution.
 (define (make-rectangle origin height width angle)
   ;; 1 point and 3 floats
   (cons (cons height width) (cons origin angle)))
@@ -212,7 +212,6 @@
 (define (print-rectangle r)
   (display "Origin: ")
   (print-point (origin-rectangle r))
-  (newline)
   (display "Height: ")
   (display (height-rectangle r))
   (newline)
