@@ -111,3 +111,114 @@
             (x-point (end-segment line)))
    (average (y-point (start-segment line))
             (y-point (end-segment line)))))
+
+;; Exercise 2.3: Implement a representation for rectangles in a plane. (Hint:
+;; You may want to make use of Exercise 2.2.) In terms of your constructors and
+;; selectors, create procedures that compute the perimeter and the area of a
+;; given rectangle.
+
+;; I also want this:
+(define (length-segment line)
+  (let* ((pa (start-segment line))
+         (pb (end-segment line))
+         (x-distance (- (x-point pa) (x-point pb)))
+         (y-distance (- (y-point pa) (y-point pb))))
+    (+ (abs x-distance) (abs y-distance))))
+
+;; defining a rectangle as two opposite points which can then be used to
+;; reconstruct the full thing. A is top-left, B is top-right, C is bottom-left,
+;; D is bottom-right. But now I realize that makes a "Z" from ABCD. Should have
+;; done it the normal math class way, see how perimieter-rectangle has to make
+;; lines from B to D and C to A.
+#|
+(define (make-rectangle A D)
+  (cons A D))
+(define (A-rectangle r)
+  (car r))
+(define (D-rectangle r)
+  (cdr r))
+(define (B-rectangle r)
+  (make-point (x-point (D-rectangle r))
+              (y-point (A-rectangle r))))
+(define (C-rectangle r)
+  (make-point (x-point (A-rectangle r))
+              (y-point (D-rectangle r))))
+
+(define (perimeter-rectangle r)
+  (let ((line1 (make-segment (A-rectangle r) (B-rectangle r)))
+        (line2 (make-segment (B-rectangle r) (D-rectangle r)))
+        (line3 (make-segment (D-rectangle r) (C-rectangle r)))
+        (line4 (make-segment (C-rectangle r) (A-rectangle r))))
+    ;; Now I "C" the error of my ways.
+    (+ (length-segment line1) (length-segment line2)
+       (length-segment line3) (length-segment line4))))
+(define (area-rectangle r)
+  (let ((line1 (make-segment (A-rectangle r) (B-rectangle r)))
+        (line2 (make-segment (B-rectangle r) (D-rectangle r))))
+    (* (length-segment line1) (length-segment line2))))
+
+(define (print-rectangle r)
+    (display "point A: ")
+    (display (print-point (A-rectangle r)))
+    (display "point B: ")
+    (display (print-point (B-rectangle r)))
+    (display "point C: ")
+    (display (print-point (C-rectangle r)))
+    (display "point D: ")
+    (display (print-point (D-rectangle r)))
+    (newline))
+|#
+(define (testit r)
+  (print-rectangle r)
+  (display "perimiter: ")
+  (display (perimeter-rectangle r))
+  (newline)
+  (display "area: ")
+  (display (area-rectangle r))
+  (newline))
+#|
+(let ((r (make-rectangle (make-point 1 2) (make-point 3 4))))
+  (testit)
+|#
+;; Now implement a different representation for rectangles. Can you design your
+;; system with suitable abstraction barriers, so that the same perimeter and
+;; area procedures will work using either representation?
+
+;; MattsDiary: Hmm. I implemented them so focused on the points that were I to
+;; swap them out for lines, they wouldn't really make sense. Also the nesting of
+;; objects probably goes beyond what the author intended. Let me check online.
+
+;; Ok, my implementation isn't very strong. for example a better one would be
+;; noting the origin, height, width, and angle. Heavily inspired from codology's
+;; solution..
+(define (make-rectangle origin height width angle)
+  ;; 1 point and 3 floats
+  (cons (cons height width) (cons origin angle)))
+(define (origin-rectangle r)
+  (car (cdr r)))
+(define (angle-rectangle r)
+  (cdr (cdr r)))
+
+;; "Public" interface
+(define (height-rectangle r)
+  (car (car r)))
+(define (width-rectangle r)
+  (cdr (car r)))
+(define (area-rectangle r)
+  (* (height-rectangle r) (width-rectangle r)))
+(define (perimeter-rectangle r)
+  (+ (* 2 (height-rectangle r)) (* 2 (width-rectangle r))))
+
+(define (print-rectangle r)
+  (display "Origin: ")
+  (display (print-point (origin-rectangle r)))
+  (newline)
+  (display "Height: ")
+  (display (height-rectangle r))
+  (newline)
+  (display "Width: ")
+  (display (width-rectangle r))
+  (newline)
+  (display "Angle: ")
+  (display (angle-rectangle r))
+  (newline))
