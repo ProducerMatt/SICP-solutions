@@ -1,4 +1,5 @@
 ;; Definitions
+(define pi 3.1415926535897932384626433832795028)
 (define (average x y)
   (/ (+ x y) 2))
 (define (make-rat n d)
@@ -180,17 +181,15 @@
 (let ((r (make-rectangle (make-point 1 2) (make-point 3 4))))
   (testit)
 |#
-;; Now implement a different representation for rectangles. Can you design your
-;; system with suitable abstraction barriers, so that the same perimeter and
-;; area procedures will work using either representation?
 
 ;; MattsDiary: Hmm. I implemented them so focused on the points that were I to
-;; swap them out for lines, they wouldn't really make sense. Also the nesting of
-;; objects probably goes beyond what the author intended. Let me check online.
+;; swap them out for anything else, they wouldn't really make sense. Also the
+;; nesting of objects probably goes beyond what the author intended. Let me
+;; check online.
 
-;; Ok, my implementation isn't very strong. for example a better one would be
-;; noting the origin, height, width, and angle. Heavily inspired from codology's
-;; solution.
+;; Ok, my implementation isn't very strong. A better one would be noting the
+;; origin, height, width, and angle. Second pass heavily inspired from
+;; codology's solution.
 (define (make-rectangle origin height width angle)
   ;; 1 point and 3 floats
   (cons (cons height width) (cons origin angle)))
@@ -223,3 +222,39 @@
   (newline))
 
 ;; (testit (make-rectangle (make-point 1 2) 2 3 0))
+
+;; Now implement a different representation for rectangles. Can you design your
+;; system with suitable abstraction barriers, so that the same perimeter and
+;; area procedures will work using either representation?
+
+;; MattsDiary: guess I'll try the 3-point model now. Point B connects to point A
+;; and C.
+(define (make-rectangle a b c)
+  (cons a (cons b c)))
+(define (A-rectangle r)
+  (car r))
+(define (B-rectangle r)
+  (cadr r))
+(define (C-rectangle r)
+  (cddr r))
+(define (origin-rectangle r)
+  (A-rectangle r))
+(define (angle-rectangle r)
+  (let ((x1 (x-point (B-rectangle r)))
+        (x2 (x-point (A-rectangle r)))
+        (y1 (y-point (B-rectangle r)))
+        (y2 (y-point (A-rectangle r))))
+    (* (atan (- y2 y1) (- x2 x1)) (/ 180 pi))))
+;; outputs an angle in degrees. As to whether this is actually mathematically
+;; useful I couldn't say, I'm flying half-blind until I catch up in my remedial
+;; math. Also this would be better described as the "slope" of the line from B
+;; to A.
+
+(define (height-rectangle r)
+  (length-segment (make-segment (A-rectangle r)
+                                (B-rectangle r))))
+(define (width-rectangle r)
+  (length-segment (make-segment (B-rectangle r)
+                                (C-rectangle r))))
+
+;; (testit (make-rectangle (make-point 1 2) (make-point 3 2) (make-point 3 4)))
