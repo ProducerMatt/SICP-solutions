@@ -229,6 +229,7 @@
 
 ;; MattsDiary: guess I'll try the 3-point model now. Point B connects to point A
 ;; and C.
+#|
 (define (make-rectangle a b c)
   (cons a (cons b c)))
 (define (A-rectangle r)
@@ -256,5 +257,45 @@
 (define (width-rectangle r)
   (length-segment (make-segment (B-rectangle r)
                                 (C-rectangle r))))
+|#
 
 ;; (testit (make-rectangle (make-point 1 2) (make-point 3 2) (make-point 3 4)))
+
+;; Exercise 2.4: Here is an alternative procedural representation of pairs.......
+;;
+;; MattsDiary: it works by "storing" the numbers inside lambda objects handled
+;; by the interpreter.
+
+;; Exercise 2.5: Show that we can represent pairs of nonnegative integers using
+;; only numbers and arithmetic operations if we represent the pair a and b as
+;; the integer that is the product (2^a * 3^b). Give the corresponding
+;; definitions of the procedures cons, car, and cdr.
+
+(define (cons-nnint a b)
+  (* (expt 2 a) (expt 3 b)))
+(define (cons-nnint a b)
+  (let* ((aa (expt 2 a))
+         (bb (expt 3 b))
+         (ab (* aa bb)))
+    (display aa)
+    (newline)
+    (display bb)
+    (newline)
+    (display ab)
+    (newline)
+    ab))
+
+(let ((n (cons-nnint 5 7)))
+  (load "defs.scm")
+  (* (/ (log n) (log 3)) 1.0))
+
+(define (intlogb-rec b x)
+  (if (> x 1)
+      (+ 1 (mylogb-rec b (/ x b)))
+      0))
+(define (intlogb b x)
+  (define (iter i n)
+    (if (> n 1)
+        (iter (+ 1 i) (/ n b))
+        i))
+  (iter 0 x))
