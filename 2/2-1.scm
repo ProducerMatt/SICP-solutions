@@ -271,9 +271,11 @@
 ;; the integer that is the product (2^a * 3^b). Give the corresponding
 ;; definitions of the procedures cons, car, and cdr.
 
+;; Oh boy.
 (define (cons-nnint a b)
   (* (expt 2 a) (expt 3 b)))
-(define (cons-nnint a b)
+#|
+(define (cons-nnint a b) ;; DEBUG
   (let* ((aa (expt 2 a))
          (bb (expt 3 b))
          (ab (* aa bb)))
@@ -284,18 +286,26 @@
     (display ab)
     (newline)
     ab))
-
-(let ((n (cons-nnint 5 7)))
-  (load "defs.scm")
-  (* (/ (log n) (log 3)) 1.0))
-
-(define (intlogb-rec b x)
-  (if (> x 1)
-      (+ 1 (mylogb-rec b (/ x b)))
-      0))
+|#
+;; I have no idea what I'm doing. Here's a helper function to help me figure out
+;; what I'm doing
 (define (intlogb b x)
   (define (iter i n)
     (if (> n 1)
         (iter (+ 1 i) (/ n b))
         i))
   (iter 0 x))
+
+;; ok. it looks like, because 2 and 3 are coprime, I can divide the unwanted one
+;; until it's factored out and then do a log base the desired one to retrieve
+;; the value.
+(define (all-your-base ab unwanted wanted)
+  (if (equal? (modulo ab unwanted) 0)
+      (all-your-base (/ ab unwanted) unwanted wanted)
+      (if (equal? (modulo ab wanted) 0)
+          (intlogb wanted ab)
+          "This number isn't a factor!")))
+(define (car-nnint ab)
+  (all-your-base ab 3 2))
+(define (cdr-nnint ab)
+  (all-your-base ab 2 3))
