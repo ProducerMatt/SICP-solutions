@@ -57,7 +57,8 @@
 ;; up for a little bit because I assumed I had to recurse *in the even call*
 ;; which is leads to infinite loops.
 
-;; Overall I'd rather refactor this code so it doesn't repeat itself, and also doesn't waste an extra cycle computing a fib it'll throw away.
+;; Overall I'd rather refactor this code so it doesn't repeat itself, and also
+;; doesn't waste an extra cycle computing a fib it'll throw away.
 
 (define (fib-iter a b p q count)
   (define (calc-a a b)
@@ -104,6 +105,6 @@
                ;; like this more often.
 
 |#
-;; I found mine by applying the fibonacci functions to p & q, where he found his
+;; I found mine by applying the Fibonacci functions to p & q, where he found his
 ;; by reducing to an equation and solving it. I wonder if he could have missed
-;; the fibonacci aspect of p & q by doing this.
+;; the Fibonacci aspect of p & q by doing this.

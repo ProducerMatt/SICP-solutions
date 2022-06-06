@@ -40,7 +40,7 @@ ideas are incorporated in the following procedures: |#
 ;; I'm able to make a matching curve with this formula:
 ;; (3.1 + log3(x))
 ;;
-;; From this I think it's ressonable to say the time used is
+;; From this I think it's reasonable to say the time used is
 ;; Theta(log3(n))
 ;;
 ;; Wait, make that Theta(log(n)). A regular log can also be fit, it doesn't have

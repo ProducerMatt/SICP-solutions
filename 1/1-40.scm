@@ -70,8 +70,9 @@
 ;; What is the result of
 ;(((double (double double)) inc) 5)
 ;
-;; = 21. Double squares the number of function calls, and there are 3 doubles here. So two function calls
-;; become four, which become sixteen. Lambda calculus baby!
+;; = 21. Double squares the number of function calls, and there are 3 doubles
+;; here. So two function calls become four, which become sixteen. Lambda
+;; calculus baby!
 
 ;; Exercise 1-42: define a function (compose f g) which returns the function
 ;; composition (f (g x))

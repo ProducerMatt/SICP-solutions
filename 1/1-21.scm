@@ -311,7 +311,7 @@
 ;;
 ;; In the original code, expmod is evaluated and then given to square. But in
 ;; Lewis' new code, it recurses twice, exponentially increasing with n. This
-;; turns the \Theta(log n) into \Theta(n).
+;; turns the Theta(log n) into Theta(n).
 
 ;; Exercise 1.27: Demonstrate that the Carmichael numbers listed in Footnote 47
 ;; really do fool the Fermat test. That is, write a procedure that takes an
