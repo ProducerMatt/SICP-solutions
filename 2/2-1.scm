@@ -309,3 +309,29 @@
   (all-your-base ab 3 2))
 (define (cdr-nnint ab)
   (all-your-base ab 2 3))
+
+;; Exercise 2.6: lambda calculus? in MY lisp derivative? it's more likely than
+;; you think.
+(define zero (lambda (f) (lambda (y) y)))
+
+(define (add-1 n)
+  (lambda (f) (lambda (x) (f ((n f) x)))))
+
+;; evaluating (add-1 zero)
+(if #f '( ;; a silly trick for syntax highlighting
+    (lambda (f) (lambda (x) (f ((zero f) x))))
+    (lambda (f) (lambda (x) (f (((lambda (f) (lambda (y) y)) f) x))))
+    (lambda (f) (lambda (x) (f ((lambda (y) y) x))))
+    (lambda (f) (lambda (x) (f x)))
+))
+
+;; Thus:
+(define one (lambda (f) (lambda (x)
+                          (f x))))
+(define two (lambda (f) (lambda (x)
+                          (f (f x)))))
+(define (add-l a b)
+  (lambda (f) (lambda (x) ((b f) ((a f) x)))))
+
+;; MattsDiary: I got the definition right the first time but spent some time
+;; confused because I left in an extra pair of ()
