@@ -387,3 +387,19 @@
 ;; paranoid that this interval case meant there would be some nonobvious aspect
 ;; to it, like whether the output would be absolute. It wasn't very reasonable
 ;; considering the book hasn't pulled any stunts like that before.
+
+;; Exercise 2.9: width of intervals
+(define (width-interval x)
+  (/ (- (upper-bound x)
+        (lower-bound x))
+     2))
+;; if you add or subtract two intervals together, the result's width will be the added width of
+;; the two component intervals. This isn't true for multiplication or division:
+(define (matt-test-intervals)
+  (let ((i (make-interval 5.1 4.9))
+        (j (make-interval 3.2 2.8)))
+    (list
+     (width-interval (add-interval i j))
+     (width-interval (sub-interval i j))
+     (width-interval (mul-interval i j))
+     (width-interval (div-interval i j)))))
