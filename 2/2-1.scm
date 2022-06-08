@@ -395,7 +395,7 @@
      2))
 ;; if you add or subtract two intervals together, the result's width will be the added width of
 ;; the two component intervals. This isn't true for multiplication or division:
-(define (matt-test-intervals)
+(define (matt-test-width-intervals)
   (let ((i (make-interval 5.1 4.9))
         (j (make-interval 3.2 2.8)))
     (list
@@ -403,3 +403,18 @@
      (width-interval (sub-interval i j))
      (width-interval (mul-interval i j))
      (width-interval (div-interval i j)))))
+
+;; Exercise 2.10: modify div-interval to give an error when dividing by an
+;; interval that spans 0
+(define (div-interval x y)
+  (if (and (< 0 (upper-bound y))
+           (> 0 (lower-bound y)))
+      "div-interval error: division by interval that spans zero"
+      (mul-interval x
+                    (make-interval
+                     (/ 1.0 (upper-bound y))
+                     (/ 1.0 (lower-bound y))))))
+
+(define (matt-test-div-intervals)
+  (div-interval (make-interval 1 2)
+                (make-interval 3 -4)))
