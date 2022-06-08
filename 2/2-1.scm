@@ -335,3 +335,55 @@
 
 ;; MattsDiary: I got the definition right the first time but spent some time
 ;; confused because I left in an extra pair of ()
+
+;; Section 2.1.4 Definitions
+(define (add-interval x y)
+  (make-interval (+ (lower-bound x)
+                    (lower-bound y))
+                 (+ (upper-bound x)
+                    (upper-bound y))))
+(define (mul-interval x y)
+  (let ((p1 (* (lower-bound x)
+               (lower-bound y)))
+        (p2 (* (lower-bound x)
+               (upper-bound y)))
+        (p3 (* (upper-bound x)
+               (lower-bound y)))
+        (p4 (* (upper-bound x)
+               (upper-bound y))))
+    (make-interval (min p1 p2 p3 p4)
+                   (max p1 p2 p3 p4))))
+(define (div-interval x y)
+  (mul-interval x
+                (make-interval
+                 (/ 1.0 (upper-bound y))
+                 (/ 1.0 (lower-bound y)))))
+;;(define (make-interval a b) (cons a b))
+
+;; Exercise 2.7
+(define (make-interval a b) ;; first, I feel like this is appropriate.
+  (cons (max a b) (min a b)))
+(define (upper-bound interval)
+  (car interval))
+(define (lower-bound interval)
+  (cdr interval))
+
+;; Exercise 2.8: define sub-interval and explain
+;;
+;; When subtracting two intervals A & B, the largest possible difference is between
+;; upper bound A and lower bound B, and the smallest possible
+;; difference is between lower bound A and upper bound B.
+(define (sub-interval-explicit x y)
+  (make-interval (- (upper-bound x)
+                    (lower-bound y))
+                 (- (lower-bound x)
+                    (upper-bound y))))
+;; Can also be defined:
+(define (sub-interval x y)
+  (add-interval x
+                (make-interval (- (upper-bound y))
+                               (- (lower-bound y)))))
+;; I confess I had to check an online answer before composing my own, I was
+;; paranoid that this interval case meant there would be some nonobvious aspect
+;; to it, like whether the output would be absolute. It wasn't very reasonable
+;; considering the book hasn't pulled any stunts like that before.
