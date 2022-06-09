@@ -418,3 +418,81 @@
 (define (matt-test-div-intervals)
   (div-interval (make-interval 1 2)
                 (make-interval 3 -4)))
+
+;; Exercise 2.11: modify mul-interval so it only uses 2 multiplications for 8
+;; out of 9 possible cases.
+(define (matt-examine-mult)
+  (let ((pp (make-interval 3 2))
+        (pn (make-interval 2 -3))
+        (nn (make-interval -2 -3)))
+    (list (mul-interval pp pp)
+          (mul-interval pp pn)
+          (mul-interval pp nn)
+          (mul-interval pn pp)
+          (mul-interval pn pn)
+          (mul-interval pn nn)
+          (mul-interval nn pp)
+          (mul-interval nn pn)
+          (mul-interval nn nn))))
+;; ((9 . 4) (6 . -9) (-4 . -9) (6 . -9) (9 . -6) (9 . -6) (-4 . -9) (9 . -6) (9 . 4))
+;;    PPPP    PPPN      PPNN     PNPP     PNPN     PNNN      NNPP     NNPN     NNNN
+;;   UU LL   UU  UL   LU   UL   UU  LU   LL  UL   LL  UL   UL   UL   LL  LU   LL  UU
+;;   CASE A  CASE B   CASE C    CASE D   CASE E   CASE F   CASE G    CASE H   CASE A
+;; - Case A: PPPP/NNNN. UULL
+;; - Case B: PPPN UUUL
+(define (mul-interval x y) ;; reference
+  (let ((p1 (* (lower-bound x)
+               (lower-bound y)))
+        (p2 (* (lower-bound x)
+               (upper-bound y)))
+        (p3 (* (upper-bound x)
+               (lower-bound y)))
+        (p4 (* (upper-bound x)
+               (upper-bound y))))
+    (make-interval (min p1 p2 p3 p4)
+                   (max p1 p2 p3 p4))))
+
+;; Incomplete, realized some abstraction was needed but I had to start typing it
+;; out manually to see it
+(define (mul-interval-fragment x y)
+  (let ((xu (upper-bound x))
+        (xl (lower-bound x))
+        (yu (upper-bound y))
+        (yl (lower-bound y)))
+    (define (same-sign?)
+      (or (and (positive? xu)
+               (positive? xl)
+               (positive? yu)
+               (positive? yl))
+          (and (negative? xu)
+               (negative? xl)
+               (negative? yu)
+               (negative? yl))))
+    (define (pnpp)
+      (and (positive? xu)
+           (negative? xl)
+           (positive? yu)
+           (positive? yl)))
+    (define (pppn)
+      (and (positive? xu)
+           (positive? xl)
+           (positive? yu)
+           (negative? yl)))
+    (cond ((same-sign?)
+           (make-interval (* xu yu)
+                          (* xl yl)))
+          ((pnpp)
+           (make-interval (* xu yu)
+                          (* xl yu)))
+          ((pppn)
+           (make-interval (* xu yu)
+                          (* xu yl)))
+          (else "Fallout"))))
+;; Incomplete
+
+;; Attempt #2
+(define (mul-interval x y)
+  (let ((xu (upper-bound x))
+        (xl (lower-bound x))
+        (yu (upper-bound y))
+        (yl (lower-bound y)))
