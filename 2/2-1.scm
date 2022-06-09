@@ -604,3 +604,33 @@
                           (* xl yl))))))
 ;; Will I make a more optimal version? Find out in the next episode of
 ;; Dragonball SICP.
+
+;; MattsDiary: checked online and was surprised to discover that many solutions
+;; are just as complicated. While my solution may be ugly, at least it's ugly on
+;; par.
+(define (make-center-width c w)
+  (make-interval (- c w) (+ c w)))
+
+(define (center i)
+  (/ (+ (lower-bound i)
+        (upper-bound i))
+     2))
+
+(define (width i)
+  (/ (- (upper-bound i)
+        (lower-bound i))
+     2))
+
+;; Exercise 2.12: Define a constructor make-center-percent that takes a center
+;; and a percentage tolerance and produces the desired interval. You must also
+;; define a selector percent that produces the percentage tolerance for a given
+;; interval. The center selector is the same as the one shown above.
+(define (of-percent x p)
+  (* x (+ 1 (* p 0.01))))
+(define (make-center-percent c t)
+  (make-interval (of-percent c t)
+                 (of-percent c (- t))))
+(define (percent x)
+  (let* ((xu (upper-bound x))
+         (c (center x)))
+    (* 100 (- (/ xu c) 1))))
