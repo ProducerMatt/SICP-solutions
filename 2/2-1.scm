@@ -634,3 +634,24 @@
   (let* ((xu (upper-bound x))
          (c (center x)))
     (* 100 (- (/ xu c) 1))))
+
+;;text
+(define (par1 r1 r2)
+  (div-interval
+   (mul-interval r1 r2)
+   (add-interval r1 r2)))
+
+(define (par2 r1 r2)
+  (let ((one (make-interval 1 1)))
+    (div-interval
+     one
+     (add-interval
+      (div-interval one r1)
+      (div-interval one r2)))))
+
+;; Exercise 2.14: Demonstrate that Lem is right. Investigate the behavior of the
+;; system on a variety of arithmetic expressions. Make some intervals A and B,
+;; and use them in computing the expressions A/A and A/B. You will get the most
+;; insight by using intervals whose width is a small percentage of the center
+;; value. Examine the results of the computation in center-percent form (see
+;; Exercise 2.12).
