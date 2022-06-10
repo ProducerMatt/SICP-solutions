@@ -358,11 +358,15 @@
                 (make-interval
                  (/ 1.0 (upper-bound y))
                  (/ 1.0 (lower-bound y)))))
-;;(define (make-interval a b) (cons a b))
+
 
 ;; Exercise 2.7
-(define (make-interval a b) ;; first, I feel like this is appropriate.
-  (cons (max a b) (min a b)))
+
+;; I wrote most of my code with the following definition of make-interval. I had
+;; to disable it as it makes some operations not possible. See 2.16.
+;(define (make-interval a b)
+;  (cons (max a b) (min a b)))
+(define (make-interval a b) (cons a b))
 (define (upper-bound interval)
   (car interval))
 (define (lower-bound interval)
@@ -655,3 +659,59 @@
 ;; insight by using intervals whose width is a small percentage of the center
 ;; value. Examine the results of the computation in center-percent form (see
 ;; Exercise 2.12).
+
+;scheme@(guile-user)> (define A (make-center-percent 10 0.1))
+;scheme@(guile-user)> A
+;$3 = (10.009999999999998 . 9.99)
+;scheme@(guile-user)> (define B (make-center-percent 3 0.1))
+;scheme@(guile-user)> B
+;$18 = (3.0029999999999997 . 2.997)
+;
+;scheme@(guile-user)> (par1 A B)
+;$14 = (2.314624624624624 . 2.3007784523169144)
+;scheme@(guile-user)> (par2 A B)
+;$15 = (2.3099999999999996 . 2.3053846153846154)
+;
+;scheme@(guile-user)> (percent (par1 A B))
+;$16 = 0.29999920000236546
+;scheme@(guile-user)> (percent (par2 A B))
+;$17 = 0.09999999999998899
+
+;; Exercise 2.15: Eva Lu Ator, another user, has also noticed the different
+;; intervals computed by different but algebraically equivalent expressions. She
+;; says that a formula to compute with intervals using Alyssa’s system will
+;; produce tighter error bounds if it can be written in such a form that no
+;; variable that represents an uncertain number is repeated. Thus, she says,
+;; par2 is a “better” program for parallel resistances than par1. Is she right?
+;; Why?
+
+;; MattsDiary: well, I can observe from the (percent) calls that par2 produces a
+;; smaller variance that happens to be equal to the percent difference I defined
+;; A and B with. So it seems to be better, confirmed by online answers.
+
+;; Exercise 2.16: Explain, in general, why equivalent algebraic expressions may
+;; lead to different answers. Can you devise an interval-arithmetic package that
+;; does not have this shortcoming, or is this task impossible? (Warning: This
+;; problem is very difficult.)
+
+;; It does indeed seem very complicated. Using any interval twice appears to increase the range of error significantly. This is called the "dependency problem".
+;;
+;; Some good resources:
+;;
+;; http://community.schemewiki.org/?sicp-ex-2.14-2.15-2.16
+;; https://stackoverflow.com/a/14131196/1449443
+;;
+;; Someone suggested this:
+(define inverse-obj
+  (lambda (i) (cons (/ 1 (lower-bound i)) (/ 1 (upper-bound i)))))
+
+(define (div-interval x y)
+  (if (<= (* (upper-bound y) (lower-bound y)) 0)
+      (display "error")
+      (mul-interval
+       x
+       (inverse-obj y))))
+;; it actually does appear to work, though I had to disable my definition of
+;; make-interval that always put the positive above the negative, who knows what
+;; removing that might break. I should've kept track of where in the code I made
+;; the assumption that operation was being done. Hmm...
