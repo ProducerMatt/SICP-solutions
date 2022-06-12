@@ -54,3 +54,31 @@
 ;$46 = 17138.0581
 ;scheme@(guile-user) [15]> (benchmark (λ () (reverse (iota 100))) 10000)
 ;$45 = 7019.8518
+
+;; Exercise 2-19: the change counting strikes back!
+(define (cc amount coin-values)
+  (cond ((= amount 0)
+         1)
+        ((or (< amount 0)
+             (no-more? coin-values))
+         0)
+        (else
+         (+ (cc
+             amount
+             (except-first-denomination
+              coin-values))
+            (cc
+             (- amount
+                (first-denomination
+                 coin-values))
+             coin-values)))))
+
+(define (first-denomination lst)
+  (car lst))
+(define (except-first-denomination lst)
+  (cdr lst))
+(define (no-more? lst)
+  (null? lst))
+
+;; Changing the order of coin types doesn't change the results, as it still
+;; explores all possible combinations of its components.
