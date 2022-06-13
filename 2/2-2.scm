@@ -1,4 +1,4 @@
-(load "defs.scm")
+(load "../defs.scm")
 (use-srfis '(1))
 
 ;; Exercise 2.17: Define a procedure last-pair that returns the list that
@@ -72,7 +72,12 @@
                 (first-denomination
                  coin-values))
              coin-values)))))
+(define us-coins
+  (list 50 25 10 5 1))
+(define uk-coins
+  (list 100 50 20 10 5 2 1 0.5))
 
+;; my code
 (define (first-denomination lst)
   (car lst))
 (define (except-first-denomination lst)
@@ -82,3 +87,19 @@
 
 ;; Changing the order of coin types doesn't change the results, as it still
 ;; explores all possible combinations of its components.
+
+;; Exercise 2-20: write a procedure same-parity that takes one or more integers
+;; and returns a list of all the arguments that have the same even-odd parity as
+;; the first argument.
+(define (same-parity . lst)
+  (let ((parity (even? (car lst))))
+    (define (rec ll)
+      (if (null? ll)
+          '()
+          (let* ((lcar (car ll))
+                 (lcdr (cdr ll))
+                 (ifeq? (equal? (even? lcar) parity)))
+            (cond (ifeq? (cons lcar (rec lcdr)))
+                  ((not ifeq?)
+                   (rec lcdr))))))
+    (rec lst)))
