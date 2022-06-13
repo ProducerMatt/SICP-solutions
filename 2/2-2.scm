@@ -103,3 +103,39 @@
                   ((not ifeq?)
                    (rec lcdr))))))
     (rec lst)))
+
+;; Exercise 2.21:
+(define (square-list-cons items)
+  (if (null? items)
+      '()
+      (cons (square (car items)) (square-list-cons (cdr items)))))
+
+(define (square-list items)
+  (map square items))
+
+;; Exercise 2.22: why are these broken?
+(define (square-list-broken1 items)
+  (define (iter things answer)
+    (if (null? things)
+        answer
+        (iter (cdr things)
+              (cons (square (car things))
+                    answer))))
+  (iter items #nil))
+
+(define (square-list-broken2 items)
+  (define (iter things answer)
+    (if (null? things)
+        answer
+        (iter (cdr things)
+              (cons answer
+                    (square
+                     (car things))))))
+  (iter items #nil))
+
+;scheme@(guile-user) [17]> (square-list-broken1 (iota 9))
+;$20 = (64 49 36 25 16 9 4 1 0)
+;scheme@(guile-user) [17]> (square-list-broken2 (iota 9))
+;$21 = (((((((((#nil . 0) . 1) . 4) . 9) . 16) . 25) . 36) . 49) . 64)
+
+;; these are broken because they reverse the pairs themselves.
