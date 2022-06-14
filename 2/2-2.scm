@@ -139,3 +139,13 @@
 ;$21 = (((((((((#nil . 0) . 1) . 4) . 9) . 16) . 25) . 36) . 49) . 64)
 
 ;; these are broken because they reverse the pairs themselves.
+
+;; Exercise 2.23: give an implementation of for-each.
+(define (for-each-mine f lst)
+  (map f lst)
+  (values))
+
+(define (matt-test-foreach f)
+  (f
+   (lambda (x) (display x) (newline))
+   (list 57 321 88)))
