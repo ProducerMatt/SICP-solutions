@@ -149,3 +149,95 @@
   (f
    (lambda (x) (display x) (newline))
    (list 57 321 88)))
+
+;; text 2.2.2
+(define (count-leaves x)
+  (cond ((null? x) 0)
+        ((not (pair? x)) 1)
+        (else (+ (count-leaves (car x))
+                 (count-leaves (cdr x))))))
+
+;; Exercise 2.24: evaluate the expression (list 1 (list 2 (list 3 4))). Give the
+;; result printed by the interpreter, the corresponding box-and-pointer
+;; structure, and the interpretation of this as a tree.
+
+; the interpreter returns (1 (2 (3 4))).
+;; I'm going to skip drawing box and pointers because I've had to learn this
+;; through previous debuggings and also drawing in a text doc sounds like a bad
+;; time.
+
+;; Exercise 2.25: Give combinations of cars and cdrs that will pick 7 from each
+;; of the following lists:
+(define (2-25-test)
+  (let ((l1 '(1 3 (5 7) 9))
+        (l2 '((7)))
+        (l3 '(1 (2 (3 (4 (5 (6 7))))))))
+    (list
+     (car (cdaddr l1))
+     (car (car l2))
+     (cadadr (cadadr (cadadr l3))))))
+
+;; Exercise 2.26: Suppose we define x and y to be two lists:
+(define (2-26-test)
+  (let ((x (list 1 2 3))
+        (y (list 4 5 6)))
+    ;; What result is printed by the interpreter in response to evaluating each
+    ;; of the following expressions:
+    (list
+     (append x y)
+     (cons x y)
+     (list x y))))
+;((1 2 3 4 5 6) ;; list with 6 cells
+;((1 2 3) 4 5 6) ;; list with 4 cells with one 3-cell list
+;((1 2 3) (4 5 6))) ;; list with two 3-cell lists
+
+;; Exercise 2.27: Modify your reverse procedure of Exercise 2.18 to produce a
+;; deep-reverse procedure that takes a list as argument and returns as its value
+;; the list with its elements reversed and with all sublists deep-reversed as
+;; well.
+(define (deep-reverse-fail1 lst)
+  (define (rec ll)
+    (if (null? ll)
+        '()
+        (let ((la (car ll))
+              (ld (cdr ll)))
+          (cond ((and (null? la)
+                      (pair? ld)) (append (rec ld) '()))
+                ((and (null? ld)
+                      (not (pair? la))) ll)
+                ((and (not (null? ld))
+                      (not (pair? la))) (append (rec ld) (list la)))
+                ((and (pair? ld)
+                      (pair? la)) (append (rec ld) (rec la)))))))
+  (rec lst))
+
+(define (my-reverse lst)
+  (define (rec ll)
+      (let ((lcut (cdr ll)))
+        (if (null? lcut)
+          ll
+          (append (rec lcut) (list (car ll))))))
+  (if (null? lst)
+      '()
+      (rec lst)))
+
+(define (deep-reverse-fail2 lst)
+  (cond ((null? lst) '())
+        ((not (pair? lst)) (list lst))
+        (else (append (deep-reverse (cdr lst))
+                    (deep-reverse (car lst))))))
+
+(define (deep-reverse-fail3 lst)
+  (define (rec ll)
+     (if (not (pair? ll))
+         ll
+         (let ((la (car ll))
+               (ld (cdr ll)))
+           (cond ((null? ld) (rec la))
+                 ((and (null? la) (not (pair? ld))) (rec ld))
+                 (else (append (list (rec ld)) (list (rec la))))))))
+  (if (null? lst)
+      '()
+      (rec lst)))
+;; I'm fumbling around a lot here. I'm getting my pencil and paper and regoing
+;; through how cons cells work.
