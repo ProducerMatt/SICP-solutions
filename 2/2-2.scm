@@ -266,21 +266,52 @@
 ;; 2. knowing this book they probably want me to just modify the procedure I had
 ;;    already for (my-reverse)
 (define (deep-reverse lst)
+  (define (rec-if-pair l)
+    (if (pair? l)
+        (list (rec l))
+        (list l)))
   (define (rec ll)
-      (let ((ld (cdr ll))
-            (la (car ll)))
-        (define (rec-if-pair l)
-          (if (pair? l)
-              (list (rec l))
-              (list l)))
-        (if (null? ld)
-          (rec-if-pair ld)
+    (let ((ld (cdr ll))
+          (la (car ll)))
+      (if (null? ld)
+          (rec-if-pair la)
           (append (rec ld) (rec-if-pair la)))))
   (if (null? lst)
       '()
       (rec lst)))
-;; it works!
+;; it works! EDIT: actually, when committed it didn't, but now it does. Not sure
+;; how I had it working, broke it before committing it, discovered it was broken
+;; after committing, and couldn't figure out what was wrong.
 
 ;; Also on second thought, an irregularly formed list isn't really a list
 ;; anyway. If I wanted to reverse irregularly formed pairs I'd also need to not
 ;; move the nulls, so reversing a good list would become a bad one.
+
+;; Here's a different solution from the SICP wiki
+(define (wiki-deep-reverse l)
+  (define (rev l res)
+    (cond ((null? l) res)
+          ((not (pair? l)) l)
+          (else (rev (cdr l)
+                     (cons (rev (car l)
+                                '())
+                           res)))))
+  (rev l '()))
+(define (make-nightmare-list levels)
+  (define (iter i l)
+    (if (<= i 0)
+        l
+        (iter (- i 1) (map (λ (x) (iota levels)) l))))
+  (iter levels (iota levels)))
+
+(define (bench-deep-reverse f n levels)
+  (let ((ll (make-nightmare-list levels)))
+    (benchmark (λ () f ll) n)))
+
+;scheme@(guile-user) [6]> (bench-deep-reverse deep-reverse 10000000000 20)
+;$33 = 13.5013363326
+;scheme@(guile-user) [6]> (bench-deep-reverse wiki-deep-reverse 10000000000 20)
+;$34 = 13.4545667882
+;; Hmm. and changing the size of the list doesn't seem to make any difference
+;; until the list is really large. I wonder if the overhead on running the
+;; function is worse than the actual function itself.
