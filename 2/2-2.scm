@@ -241,3 +241,46 @@
       (rec lst)))
 ;; I'm fumbling around a lot here. I'm getting my pencil and paper and regoing
 ;; through how cons cells work.
+
+(define (deep-reverse-fail4 lst)
+  (define (rec ll)
+    (let ((la (car ll))
+          (ld (cdr ll)))
+      (cond ((and (null? ld) (pair? la))
+             (list (rec la)))
+            ((and (null? ld) (not (pair? la)))
+             ll
+            ((and (null? la) (not (null? ld)))
+             (rec ld))
+            ((and (not (pair? la)) (not (null? ld)))
+             (append (rec ld) (list la))))
+            ((and (pair? la) (not (null? ld)))
+             (append (rec ld) (list (rec la)))))))
+  (cond ((null? lst) '())
+        ((not (pair? lst)) lst)
+        (else (rec lst))))
+
+;; ok two issues with what I'm doing:
+;; 1. I'm trying to solve for irregularly formed (dotted) lists which is
+;;    probably not in the description
+;; 2. knowing this book they probably want me to just modify the procedure I had
+;;    already for (my-reverse)
+(define (deep-reverse lst)
+  (define (rec ll)
+      (let ((ld (cdr ll))
+            (la (car ll)))
+        (define (rec-if-pair l)
+          (if (pair? l)
+              (list (rec l))
+              (list l)))
+        (if (null? ld)
+          (rec-if-pair ld)
+          (append (rec ld) (rec-if-pair la)))))
+  (if (null? lst)
+      '()
+      (rec lst)))
+;; it works!
+
+;; Also on second thought, an irregularly formed list isn't really a list
+;; anyway. If I wanted to reverse irregularly formed pairs I'd also need to not
+;; move the nulls, so reversing a good list would become a bad one.
