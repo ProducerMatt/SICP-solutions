@@ -114,8 +114,8 @@
 
   ;; How you measure time is implementation dependent. For GNU Guile, you get
   ;; number of milliseconds at the start and the end and subtract the former
-  ;; from the latter.
-  (define (time-getter) (get-internal-real-time))
+  ;; from the latter. NOTE: changed to run-time from real-time
+  (define (time-getter) (get-internal-run-time))
   (define start-time (time-getter))
   (define (how-long) (- (time-getter) start-time))
 
