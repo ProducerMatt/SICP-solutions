@@ -452,3 +452,12 @@
 (define (square-tree tree)
   (square-tree-map tree))
 ;; Too easy. There's a twist coming, I just know it.
+
+;; Exercise 2.31: Abstract your answer to Exercise 2.30 to produce a procedure
+;; tree-map. (There's the twist)
+(define (tree-map f tree)
+  (map (lambda (sub-tree)
+         (if (pair? sub-tree)
+             (tree-map f sub-tree)
+             (f sub-tree)))
+       tree))
