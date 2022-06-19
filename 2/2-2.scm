@@ -308,10 +308,91 @@
   (let ((ll (make-nightmare-list levels)))
     (benchmark (λ () f ll) n)))
 
-;scheme@(guile-user) [6]> (bench-deep-reverse deep-reverse 10000000000 20)
-;$33 = 13.5013363326
-;scheme@(guile-user) [6]> (bench-deep-reverse wiki-deep-reverse 10000000000 20)
-;$34 = 13.4545667882
+;scheme@(guile-user) [5]> (bench-deep-reverse deep-reverse 1000000 1000)
+;$32 = 13.28837
+;scheme@(guile-user) [5]> (bench-deep-reverse wiki-deep-reverse 1000000 1000)
+;$33 = 13.283717
 ;; Hmm. and changing the size of the list doesn't seem to make any difference
 ;; until the list is really large. I wonder if the overhead on running the
 ;; function is worse than the actual function itself.
+
+;; Exercise 2.28: Write a procedure fringe that takes as argument a tree
+;; (represented as a list) and returns a list whose elements are all the leaves
+;; of the tree arranged in left-to-right order. For example,
+
+(define (2-28-test f)
+  (let ((l (list (list (list 1 2) (list 3 4))
+                 (list (list 1 2) (list 3 4)))))
+    (f l)))
+
+(define (fringe l)
+  (define (rec-if-pair l)
+    (if (pair? l)
+        (rec l)
+        (list l)))
+  (define (rec ll)
+    (let ((ld (cdr ll))
+          (la (car ll)))
+      (if (null? ld)
+          (rec-if-pair la)
+          (append (rec-if-pair la) (rec ld)))))
+  (if (null? l)
+      '()
+      (rec l)))
+
+;; Exercise 2.29: make representations of a binary mobile
+(define (make-mobile left right)
+  (list left right))
+(define (make-branch length structure)
+  (list length structure))
+
+(define (left-branch m)
+  (car m))
+(define (right-branch m)
+  (cadr m))
+(define (branch-length b)
+  (car b))
+(define (branch-structure b)
+  (cadr b))
+(define (has-no-mobile? m)
+  (and (equal? (length m) 1) (not (pair? (car m)))))
+(define (total-weight m)
+  (define (rec m)
+    (cond ((not (pair? m)) m)
+          ((has-no-mobile? m) (car m))
+          (else (+ (rec (branch-structure (left-branch m)))
+                   (rec (branch-structure (right-branch m)))))))
+  (rec m))
+;; returns total torque if balanced, and 0 if not balanced
+(define (is-balanced? m)
+  (define (rec b)
+    (cond ((or (not (pair? (branch-structure b)))
+               (has-no-mobile? (branch-structure b)))
+           (* (branch-length b) (branch-structure b)))
+          (else
+           (* (branch-length b) (is-balanced? (branch-structure b))))))
+  (let ((lb (rec (left-branch m)))
+        (rb (rec (right-branch m))))
+    (if (and (equal? lb rb)
+             (not (equal? lb 0))
+             (not (equal? rb 0)))
+        (+ lb rb) ;; all balanced!
+        0)))
+
+(define (2-29-test)
+  (let ((m-balanced
+         (make-mobile (make-branch 4 4)
+                      (make-branch 2
+                                   (make-mobile (make-branch 2 2)
+                                                (make-branch 2 2)))))
+        (m-unbal
+         (make-mobile (make-branch 4 4)
+                      (make-branch 1
+                                   (make-mobile (make-branch 2 2)
+                                                (make-branch 2 2))))))
+    (list (list (total-weight m-balanced)
+                (is-balanced? m-balanced))
+          (list (total-weight m-unbal)
+                (is-balanced? m-unbal)))))
+
+;; What changes if you change the constructor to use cons?
