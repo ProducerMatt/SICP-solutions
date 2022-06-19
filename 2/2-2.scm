@@ -354,8 +354,18 @@
   (car b))
 (define (branch-structure b)
   (cadr b))
+;; cons redefinition
+(define (make-mobile left right)
+  (cons left right))
+(define (make-branch length structure)
+  (cons length structure))
+(define (right-branch m)
+  (cdr m))
+(define (branch-structure b)
+  (cdr b))
+
 (define (has-no-mobile? m)
-  (and (equal? (length m) 1) (not (pair? (car m)))))
+  (and (pair? m) (not (pair? (car m)))))
 (define (total-weight m)
   (define (rec m)
     (cond ((not (pair? m)) m)
@@ -396,3 +406,6 @@
                 (is-balanced? m-unbal)))))
 
 ;; What changes if you change the constructor to use cons?
+
+;; All I had to change was replacing a call to "length" with "pair"! Not bad all
+;; things considered.
