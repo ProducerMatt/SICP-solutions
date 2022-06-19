@@ -409,3 +409,46 @@
 
 ;; All I had to change was replacing a call to "length" with "pair"! Not bad all
 ;; things considered.
+;;
+;; An observation: I implemented this as summing the torque for each side, where
+;; others online only implemented the torque in the context of that tree and
+;; then passed up the total-weight instead. It feels intuitively to me that
+;; passing the torque would hold true for an actual binary mobile.
+
+;; Text
+(define (scale-tree-cons tree factor)
+  (cond ((null? tree) #nil)
+        ((not (pair? tree))
+         (* tree factor))
+        (else
+         (cons (scale-tree-cons (car tree)
+                                factor)
+               (scale-tree-cons (cdr tree)
+                                factor)))))
+(define (scale-tree-map tree factor)
+  (map (lambda (sub-tree)
+         (if (pair? sub-tree)
+             (scale-tree-map sub-tree factor)
+             (* sub-tree factor)))
+       tree))
+(define (scale-tree tree factor)
+  (scale-tree-map tree factor))
+
+;; Exercise 2.30: Define a procedure square-tree analogous to the square-list
+;; procedure of Exercise 2.21, both by map and recursion.
+(define (square-tree-cons tree)
+  (cond ((null? tree) #nil)
+        ((not (pair? tree))
+         (square tree))
+        (else
+         (cons (square-tree-cons (car tree))
+               (square-tree-cons (cdr tree))))))
+(define (square-tree-map tree)
+  (map (lambda (sub-tree)
+         (if (pair? sub-tree)
+             (square-tree-map sub-tree)
+             (square sub-tree)))
+       tree))
+(define (square-tree tree)
+  (square-tree-map tree))
+;; Too easy. There's a twist coming, I just know it.
