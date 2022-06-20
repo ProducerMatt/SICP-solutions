@@ -461,3 +461,26 @@
              (tree-map f sub-tree)
              (f sub-tree)))
        tree))
+
+;; Exercise 2.32: We can represent a set as a list of distinct elements, and we
+;; can represent the set of all subsets of the set as a list of lists. For
+;; example, if the set is (1 2 3), then the set of all subsets is
+;; (() (3) (2) (2 3) (1) (1 3) (1 2) (1 2 3)). Complete the following definition
+;; of a procedure that generates the set of subsets of a set and give a clear
+;; explanation of why it works:
+(define (subsets s)
+  (if (null? s)
+      (list #nil)
+      (let ((rest (subsets (cdr s))))
+        (append rest (map
+                      (λ (x) (cons (car s) x))
+                      rest)))))
+;; I confess I had to look this one up. Trying to work through it. First of all
+;; a breakdown of the process when given (1 2 3)
+;; - First we recurse through cdrs until hitting null. Then s is null, so we
+;;   return null in a list (())
+;; - s is (3 null), rest is null. map iterates once to cons 3 with null
+;; - s is (2 3 null), rest is (3 null). map iterates to cons 2 with null,
+;;   then 2 with 3
+;; - s is (1 2 3 null), rest is (2 3 null). map iterates to cons 1 with null,
+;;   then 1 with 3, then 1 with 2, then 1 with (2 3).
