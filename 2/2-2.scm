@@ -484,3 +484,33 @@
 ;;   then 2 with 3
 ;; - s is (1 2 3 null), rest is (2 3 null). map iterates to cons 1 with null,
 ;;   then 1 with 3, then 1 with 2, then 1 with (2 3).
+
+;; Text 2.2.3
+(define (accumulate op initial sequence)
+  (if (null? sequence)
+      initial
+      (op (car sequence)
+          (accumulate op
+                      initial
+                      (cdr sequence)))))
+
+;; Exercise 2.33: Fill in the missing expressions to complete the following
+;; definitions of some basic list-manipulation operations as accumulations:
+
+(define (map-acc p sequence)
+  (accumulate (lambda (x y) (cons (p x) y))
+              #nil sequence))
+(define (append-acc seq1 seq2)
+  (accumulate cons seq2 seq1)) ;; this one feels like witchcraft.
+
+(define (length-acc sequence)
+  (accumulate (λ (x y) (+ y 1)) 0 sequence))
+
+;; Why does this always return false?
+;(equal? (map-acc square (iota 5)) (map square (iota 5))
+
+;(use-modules (srfi srfi-64))
+;(test-runner-current (test-runner-simple))
+;(test-begin "2-33")
+;(test-equal '(0 1 4 9 16) (map-acc square (iota 5)))
+;(test-end "2-33")
