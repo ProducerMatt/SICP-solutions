@@ -509,8 +509,22 @@
 ;; Why does this always return false?
 ;(equal? (map-acc square (iota 5)) (map square (iota 5))
 
-;(use-modules (srfi srfi-64))
+(use-modules (srfi srfi-64))
 ;(test-runner-current (test-runner-simple))
 ;(test-begin "2-33")
 ;(test-equal '(0 1 4 9 16) (map-acc square (iota 5)))
 ;(test-end "2-33")
+
+;; Exercise 2.34: Evaluating a polynomial in x at a given value of x
+(define (horner-eval x coefficient-sequence)
+  (accumulate
+   (lambda (this-coeff higher-terms)
+;    (+ higher-terms (* this-coeff x))) ;; incorrect, though many online
+                                        ;; solutions also got this wrong.
+     (+ this-coeff (* higher-terms x)))
+   0
+   coefficient-sequence))
+
+(test-begin "2-34")
+(test-equal 79 (horner-eval 2 (list 1 3 0 5 0 1)))
+(test-end "2-34")
