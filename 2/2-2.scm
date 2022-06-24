@@ -1,5 +1,7 @@
-(load "../defs.scm")
 (use-srfis '(1))
+;(load "../check.scm")
+(load "../defs.scm")
+(load "../mattcheck.scm")
 
 ;; Exercise 2.17: Define a procedure last-pair that returns the list that
 ;; contains only the last element of a given (nonempty) list.
@@ -507,13 +509,15 @@
   (accumulate (λ (x y) (+ y 1)) 0 sequence))
 
 ;; Why does this always return false?
-;(equal? (map-acc square (iota 5)) (map square (iota 5))
+(mattcheck "map-acc and map consistency"
+           (equal? (map-acc square (iota 5))
+                   (map square (iota 5))))
 
-(use-modules (srfi srfi-64))
+;; NOTE: decided not to use this for now but may come back to it later once the
+;; duct-tape-and-spit approach wears thin
+;(use-modules (srfi srfi-64))
 ;(test-runner-current (test-runner-simple))
-;(test-begin "2-33")
 ;(test-equal '(0 1 4 9 16) (map-acc square (iota 5)))
-;(test-end "2-33")
 
 ;; Exercise 2.34: Evaluating a polynomial in x at a given value of x
 (define (horner-eval x coefficient-sequence)
@@ -525,6 +529,34 @@
    0
    coefficient-sequence))
 
-(test-begin "2-34")
-(test-equal 79 (horner-eval 2 (list 1 3 0 5 0 1)))
-(test-end "2-34")
+(mattcheck "horner-eval" (equal? 79 (horner-eval 2 (list 1 3 0 5 0 1))))
+
+;; Exercise 2.35: Redefine count-leaves from 2.2.2 as an accumulation
+(define (count-leaves-acc t)
+  (accumulate + 0
+              (map (λ (x) (cond ((null? x) 0)
+        ((not (pair? x)) 1)
+        (else (count-leaves x)))) t)))
+
+(let ((l (make-nightmare-list 4)))
+  (mattcheck "count-leaves and count-leaves-acc equivalence" (equal? (count-leaves l) (count-leaves-acc l))))
+
+;; Exercise 2.36: The procedure accumulate-n is similar to accumulate except
+;; that it takes as its third argument a sequence of sequences, which are all
+;; assumed to have the same number of elements. It applies the designated
+;; accumulation procedure to combine all the first elements of the sequences,
+;; all the second elements of the sequences, and so on, and returns a sequence
+;; of the results. For instance, if s is a sequence containing four sequences,
+;; ((1 2 3) (4 5 6) (7 8 9) (10 11 12)), then the value of (accumulate-n + 0 s)
+;; should be the sequence (22 26 30). Fill in the missing expressions in the
+;; following definition of accumulate-n:
+(define (accumulate-n op init seqs)
+  (if (null? (car seqs))
+      #nil
+      (cons (accumulate op init (map car seqs))
+            (accumulate-n op init (map cdr seqs)))))
+;; Neat!
+(mattcheck "accumulate-n"
+           (equal? '(22 26 30)
+                   (accumulate-n + 0 '((1 2 3) (4 5 6) (7 8 9) (10 11 12)))))
+;; This is definitely correct but still fails.
