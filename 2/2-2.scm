@@ -123,7 +123,7 @@
         (iter (cdr things)
               (cons (square (car things))
                     answer))))
-  (iter items #nil))
+  (iter items '()))
 
 (define (square-list-broken2 items)
   (define (iter things answer)
@@ -133,7 +133,7 @@
               (cons answer
                     (square
                      (car things))))))
-  (iter items #nil))
+  (iter items '()))
 
 ;scheme@(guile-user) [17]> (square-list-broken1 (iota 9))
 ;$20 = (64 49 36 25 16 9 4 1 0)
@@ -419,7 +419,7 @@
 
 ;; Text
 (define (scale-tree-cons tree factor)
-  (cond ((null? tree) #nil)
+  (cond ((null? tree) '())
         ((not (pair? tree))
          (* tree factor))
         (else
@@ -439,7 +439,7 @@
 ;; Exercise 2.30: Define a procedure square-tree analogous to the square-list
 ;; procedure of Exercise 2.21, both by map and recursion.
 (define (square-tree-cons tree)
-  (cond ((null? tree) #nil)
+  (cond ((null? tree) '())
         ((not (pair? tree))
          (square tree))
         (else
@@ -472,7 +472,7 @@
 ;; explanation of why it works:
 (define (subsets s)
   (if (null? s)
-      (list #nil)
+      (list '())
       (let ((rest (subsets (cdr s))))
         (append rest (map
                       (λ (x) (cons (car s) x))
@@ -501,7 +501,7 @@
 
 (define (map-acc p sequence)
   (accumulate (lambda (x y) (cons (p x) y))
-              #nil sequence))
+              '() sequence))
 (define (append-acc seq1 seq2)
   (accumulate cons seq2 seq1)) ;; this one feels like witchcraft.
 
@@ -552,7 +552,7 @@
 ;; following definition of accumulate-n:
 (define (accumulate-n op init seqs)
   (if (null? (car seqs))
-      #nil
+      '()
       (cons (accumulate op init (map car seqs))
             (accumulate-n op init (map cdr seqs)))))
 ;; Neat!
