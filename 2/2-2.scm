@@ -1,5 +1,5 @@
 (use-srfis '(1))
-;(load "../check.scm")
+;(load "../check.scm") ;; "bad use of '=>' syntactic keyword"?
 (load "../defs.scm")
 (load "../mattcheck.scm")
 
