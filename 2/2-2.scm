@@ -583,3 +583,21 @@
   (mattcheck "matrix-*-vector"
              (equal? '(1 -3)
                      (matrix-*-vector m v))))
+
+(define (matrix-*-matrix m n)
+  (let ((cols (transpose n)))
+    (map (λ (r)
+           (map (λ (c)
+                  (dot-product r c))
+                cols))
+         m)))
+(let ((m      '((0 3 5)
+                (5 5 2)))
+      (n      '((3 4)
+                (3 -2)
+                (4 -2)))
+      (answer '((29 -16)
+                (38 6))))
+  (mattcheck "matrix-*-matrix"
+             (equal? answer
+                     (matrix-*-matrix m n))))
