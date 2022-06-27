@@ -508,7 +508,6 @@
 (define (length-acc sequence)
   (accumulate (λ (x y) (+ y 1)) 0 sequence))
 
-;; Why does this always return false?
 (mattcheck "map-acc and map consistency"
            (equal? (map-acc square (iota 5))
                    (map square (iota 5))))
@@ -559,4 +558,28 @@
 (mattcheck "accumulate-n"
            (equal? '(22 26 30)
                    (accumulate-n + 0 '((1 2 3) (4 5 6) (7 8 9) (10 11 12)))))
-;; This is definitely correct but still fails.
+
+;; MattsDiary: Hi, Matt from the future here. It turns out that #nil does not
+;; equal the empty list. All my checks are finally working.
+
+;; Exercise 2.37: programs for matrix operations. I'm gonna have to crack open a
+;; textbook for this one.
+(define (dot-product v w) ;; textbook defined
+  (accumulate + 0 (map * v w)))
+(define (transpose mat)
+  (accumulate-n cons '() mat))
+(mattcheck "transpose"
+           (equal? '((1 2 3)
+                     (4 5 6)
+                     (7 8 9))
+                   (transpose '((1 4 7)
+                                (2 5 8)
+                                (3 6 9)))))
+
+(define (matrix-*-vector m v)
+  (map (λ (x) (dot-product x v)) m))
+(let ((m '((1 -1 2) (0 -3 1)))
+      (v '(2 1 0)))
+  (mattcheck "matrix-*-vector"
+             (equal? '(1 -3)
+                     (matrix-*-vector m v))))
