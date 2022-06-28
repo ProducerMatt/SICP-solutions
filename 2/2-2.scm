@@ -608,7 +608,7 @@
 ;; fold-right, except that it combines elements working in the opposite
 ;; direction
 (define fold-left accumulate)
-(define (fold-left op initial sequence)
+(define (fold-right op initial sequence)
   (define (iter result rest)
     (if (null? rest)
         result
@@ -626,3 +626,29 @@
 ;; fold-left will produce the same values for any sequence.
 ; Op should be commutative. For example, addition (+) is the same in either
 ; direction.
+
+;; Exercise 2.39: Complete the following definitions of reverse (Exercise 2.18)
+;; in terms of fold-right and fold-left from Exercise 2.38:
+(define (reverse-fr sequence)
+  (fold-right
+   (lambda (x y) (cons y x)) '() sequence))
+
+;; used for debugging
+(define (print-two-points x y)
+  (display x)
+  (display ", ")
+  (display y)
+  (newline))
+
+(define (reverse-fl sequence)
+  (fold-left
+   (lambda (x y) (append y (list x))) '() sequence))
+
+(let* ((l (iota 9))
+      (correct (reverse l)))
+  (mattcheck "reverse-fr"
+             (equal? correct
+                     (reverse-fr l)))
+  (mattcheck "reverse-fl"
+             (equal? correct
+                     (reverse-fl l))))
