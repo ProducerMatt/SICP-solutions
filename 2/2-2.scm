@@ -652,3 +652,76 @@
   (mattcheck "reverse-fl"
              (equal? correct
                      (reverse-fl l))))
+
+;; "Nested mappings"
+(define (enumerate-interval low high)
+  (if (> low high)
+      '()
+      (cons low
+            (enumerate-interval
+             (+ low 1)
+             high))))
+(define (flatmap proc seq)
+  (accumulate append '() (map proc seq)))
+(define (prime-sum? pair)
+  (prime? (+ (car pair) (cadr pair))))
+(define (make-pair-sum pair)
+  (list (car pair)
+        (cadr pair)
+        (+ (car pair) (cadr pair))))
+(define (prime-sum-pairs n)
+  (map make-pair-sum
+       (filter
+        prime-sum?
+        (flatmap
+         (lambda (i)
+           (map (lambda (j)
+                  (list i j))
+                (enumerate-interval
+                 1
+                 (- i 1))))
+         (enumerate-interval 1 n)))))
+(define (remove item sequence)
+  (filter (lambda (x) (not (= x item)))
+          sequence))
+(define (permutations s)
+  (if (null? s)   ; empty set?
+      (list '())  ; sequence containing empty set
+      (flatmap (lambda (x)
+                 (map (lambda (p)
+                        (cons x p))
+                      (permutations
+                       (remove x s))))
+               s)))
+
+(let ((correct '((2 1 3) (3 2 5) (4 1 5) (4 3 7))))
+  (mattcheck "prime-sum-pairs"
+             (equal? correct
+                     (prime-sum-pairs 4))))
+;; Exercise 2.40: Define a procedure unique-pairs that, given an integer n,
+;; generates the sequence of pairs (i,j) with 1≤j<i≤n. Use unique-pairs to
+;; simplify the definition of prime-sum-pairs given above.
+(define (unique-pairs n)
+  (flatmap
+   (lambda (i)
+     (map (lambda (j)
+            (list i j))
+          (enumerate-interval
+           1
+           (- i 1))))
+   (enumerate-interval 1 n)))
+(let ((correct '((2 1) (3 1) (3 2) (4 1) (4 2) (4 3))))
+  (mattcheck "unique-pairs"
+             (equal? correct
+                     (unique-pairs 4))))
+
+(define (prime-sum-pairs n)
+  (map make-pair-sum
+       (filter
+        prime-sum?
+        (unique-pairs n))))
+
+(let ((correct '((2 1 3) (3 2 5) (4 1 5) (4 3 7))))
+  (mattcheck "prime-sum-pairs w/ unique-pairs"
+             (equal? correct
+                     (prime-sum-pairs 4))))

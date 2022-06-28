@@ -171,3 +171,25 @@
     (lambda (y)
       (/ x (expt y (- n 1)))))
    1.0))
+
+;; find prime numbers
+;; (define (next n)
+;;   (if (= n 2)
+;;       3
+;;       (+ n 2)))
+(define (divides? a b)
+  (= (remainder b a) 0))
+(define (prime? n)
+  (define (find-divisor-integrated n test-divisor)
+    ; when first run, runs logic for test-divisor = 2, then proceeds to odd looping
+    (define (fdi-iter test-divisor)
+      (cond ((> (square test-divisor) n)
+             n)
+            ((divides? test-divisor n)
+             test-divisor)
+            (#t (fdi-iter
+                 (+ test-divisor 2)))))
+    (if (divides? test-divisor n) ;; Assuming test-divisor is 2
+        test-divisor
+        (fdi-iter (+ test-divisor 1))))
+  (= n (find-divisor-integrated n 2)))
