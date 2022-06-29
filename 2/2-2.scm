@@ -721,7 +721,97 @@
         prime-sum?
         (unique-pairs n))))
 
-(let ((correct '((2 1 3) (3 2 5) (4 1 5) (4 3 7))))
-  (mattcheck "prime-sum-pairs w/ unique-pairs"
-             (equal? correct
-                     (prime-sum-pairs 4))))
+
+(mattcheck-equal "prime-sum-pairs w/ unique-pairs"
+                 (prime-sum-pairs 4)
+                 '((2 1 3) (3 2 5) (4 1 5) (4 3 7)))
+
+;; Exercise 2.41: Write a procedure to find all ordered triples of distinct
+;; positive integers i, j, and k less than or equal to a given integer n that
+;; sum to a given integer s.
+
+(define (unique-triplets n)
+  (flatmap
+   (lambda (i)
+     (flatmap
+      (lambda (k)
+        (map (lambda (j)
+               (list i k j))
+             (enumerate-interval
+              1
+              (- k 1))))
+      (enumerate-interval 1 (- i 1))))
+   (enumerate-interval 1 n)))
+(mattcheck-equal "unique-triplets"
+                 (unique-triplets 7)
+                 '((3 2 1) (4 2 1) (4 3 1) (4 3 2) (5 2 1) (5 3 1)
+                   (5 3 2) (5 4 1) (5 4 2) (5 4 3) (6 2 1) (6 3 1)
+                   (6 3 2) (6 4 1) (6 4 2) (6 4 3) (6 5 1) (6 5 2)
+                   (6 5 3) (6 5 4) (7 2 1) (7 3 1) (7 3 2) (7 4 1)
+                   (7 4 2) (7 4 3) (7 5 1) (7 5 2) (7 5 3) (7 5 4)
+                   (7 6 1) (7 6 2) (7 6 3) (7 6 4) (7 6 5)))
+
+(define (find-sum-triples n s)
+  (filter
+   (λ (t)
+     (equal? s (fold + 0 t)))
+   (unique-triplets n)))
+
+(mattcheck-equal "find-sum-triples"
+                 (find-sum-triples 12 9)
+                 '((4 3 2) (5 3 1) (6 2 1)))
+
+;; Exercise 2.42: The “eight-queens puzzle” asks how to place eight queens on a
+;; chessboard so that no queen is in check from any other (i.e., no two queens
+;; are in the same row, column, or diagonal).
+
+; textbook:
+(define (queens board-size)
+  (define (queen-cols k)
+    (if (= k 0)
+        (list empty-board)
+        (filter
+         (lambda (positions)
+           (safe? k positions))
+         (flatmap
+          (lambda (rest-of-queens)
+            (map (lambda (new-row)
+                   (adjoin-position
+                    new-row
+                    k
+                    rest-of-queens))
+                 (enumerate-interval
+                  1
+                  board-size)))
+          (queen-cols (- k 1))))))
+  (queen-cols board-size))
+
+; mine:
+(define empty-board '())
+;; positions will be a list of (row column) pairs. Pairs will be appended in
+;; reverse so (car) gets the most recent
+(define (adjoin-position new-row k rest-of-queens)
+  (append (list (list new-row k)) rest-of-queens))
+(mattcheck-equal "adjoin-position"
+                 (adjoin-position 3 4 '((1 3)(4 2)(2 1)))
+                 '((3 4)(1 3)(4 2)(2 1)))
+(define (safe? k positions)
+  (let ((myrow (caar positions))
+        (rest (cdr positions)))
+  ;; check row
+  (define (row-safe? b)
+    (let ((aa (caar b))
+          (d (cdr b)))
+      (cond ((= myrow aa) #f)
+            ((not (null? d))
+             (row-safe? d))
+            (else #t))))
+  ;; (column will only have one queen)
+  ;; check diagonal
+  (row-safe? (cdr positions))))
+(let ((safe4board '((3 4)(1 3)(4 2)(2 1)))
+      (badrow4board '((3 4)(3 3)(3 2)(3 1))))
+  (mattcheck "safe?"
+             (safe? 4 safe4board))
+  (mattcheck "safe? bad row"
+             (not (safe? 4 badrow4board))))
