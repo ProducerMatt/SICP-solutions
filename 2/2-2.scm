@@ -795,56 +795,89 @@
 (mattcheck-equal "adjoin-position"
                  (adjoin-position 3 4 '((1 3)(4 2)(2 1)))
                  '((3 4)(1 3)(4 2)(2 1)))
+(mattcheck-equal "adjoin-position new"
+                 (adjoin-position 2 1 '())
+                 '((2 1)))
+(mattcheck-equal "adjoin-position one"
+                 (adjoin-position 4 2 '((2 1)))
+                 '((4 2)(2 1)))
 
-(define (potential-diagonals k p)
-  ;; produces an unsorted list of pairs that are diagonal to the given pair
-  ;; while still being on the board
-  (define (rec-inc l)    ;; NOTE: these two could be refactored into 1 with
-    (let ((row (caar l)) ;; higher-order functions.
-          (col (cadar l)))
-      (if (or (= row k) (= col 1))
-          l
-          (rec-inc (adjoin-position
-                    (+ row 1)
-                    (- col 1)
-                    l)))))
-  (define (rec-dec l)
-    (let ((row (caar l))
-          (col (cadar l)))
-      (if (or (= row 1) (= col 1))
-          l
-          (rec-dec (adjoin-position
-                    (- row 1)
-                    (- col 1)
-                    l)))))
-  (append (rec-inc (list p)) (rec-dec (list p))))
-(let ((start '(3 7))
-      (sizeofboard 8)
-      (answer '((8 2) (7 3) (6 4) (5 5) (4 6)
-                (3 7) (1 5) (2 6) (3 7))))
-    (mattcheck-equal "potential-diagonals"
-                     (potential-diagonals sizeofboard
-                                          start)
-                     answer))
+;; ;; MattsDiary: I suspect this isn't how the book wants me to solve it?
+;; ;; edit: it turns out it wasn't.
+;; (define (potential-diagonals k p)
+;;   ;; produces an unsorted list of pairs that are diagonal to the given pair
+;;   ;; while still being on the board
+;;   (define (rec-inc l)    ;; NOTE: these two could be refactored into 1 with
+;;     (let ((row (caar l)) ;; higher-order functions.
+;;           (col (cadar l)))
+;;       (if (or (= row k) (= col 1))
+;;           l
+;;           (rec-inc (adjoin-position
+;;                     (+ row 1)
+;;                     (- col 1)
+;;                     l)))))
+;;   (define (rec-dec l)
+;;     (let ((row (caar l))
+;;           (col (cadar l)))
+;;       (if (or (= row 1) (= col 1))
+;;           l
+;;           (rec-dec (adjoin-position
+;;                     (- row 1)
+;;                     (- col 1)
+;;                     l)))))
+;;   (append (rec-inc (list p)) (rec-dec (list p))))
+;; (let ((start '(3 7))
+;;       (sizeofboard 8)
+;;       (answer '((8 2) (7 3) (6 4) (5 5) (4 6)
+;;                 (3 7) (1 5) (2 6) (3 7))))
+;;     (mattcheck-equal "potential-diagonals"
+;;                      (potential-diagonals sizeofboard
+;;                                           start)
+;;                      answer))
+;; the matching code extracted from (safe?)
+;  (define (diagonals-safe?)
+;    (if (find (λ (x)
+;            (member x rest))
+;          (potential-diagonals k newqueen))
+;        #f
+;        #t))
 
 (define (safe? k positions)
-  (let ((myrow (caar positions))
-        (rest (cdr positions)))
-  ;; check row
-  (define (row-safe? b)
-    (let ((aa (caar b))
-          (d (cdr b)))
-      (cond ((= myrow aa) #f)
-            ((not (null? d))
-             (row-safe? d))
-            (else #t))))
-  ;; (column will only have one queen)
-  ;; check diagonal
-  (row-safe? (cdr positions))))
+  (let* ((newqueen (car positions))
+         (myrow (car newqueen))
+         (mycol (cadr newqueen))
+         (rest (cdr positions)))
+    ;; check row
+    (define (row-safe? b)
+      (let ((aa (caar b))
+            (d (cdr b)))
+        (cond ((= myrow aa) #f)
+              ((not (null? d))
+               (row-safe? d))
+              (else #t))))
+    ;; check diagonal
+    (define (diagonals-safe? b)
+      (let ((a (car b))
+            (d (cdr b)))
+        (cond ((= (abs (- (car a) myrow))
+                  (abs (- (cadr a) mycol))) #f)
+              ((not (null? d))
+               (diagonals-safe? d))
+              (else #t))))
+    (and (row-safe? rest)
+         (diagonals-safe? rest))))
+
+;; not super proud of this but it works. Could be refactored in a number of ways.
 
 (let ((safe4board '((3 4)(1 3)(4 2)(2 1)))
-      (badrow4board '((3 4)(3 3)(3 2)(3 1))))
+      (badrow4board '((3 4)(3 3)(3 2)(3 1)))
+      (baddiagonal4 '((3 4)(2 3)(4 2)(1 1))))
   (mattcheck "safe?"
              (safe? 4 safe4board))
   (mattcheck "safe? bad row"
-             (not (safe? 4 badrow4board))))
+             (not (safe? 4 badrow4board)))
+  (mattcheck "safe? bad diagonals"
+             (not (safe? 4 baddiagonal4))))
+
+;; But now I have a new problem, the (queens) procedure is double-nesting the
+;; list somehow. What should be ((4 1) (5 1)) is (((4 1)) ((5 1)))
