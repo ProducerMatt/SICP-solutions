@@ -791,13 +791,16 @@
 ;; positions will be a list of (row column) pairs. Pairs will be appended in
 ;; reverse so (car) gets the most recent
 (define (adjoin-position new-row k rest-of-queens)
-  (append (list (list new-row k)) rest-of-queens))
+  (if (nil? rest-of-queens)
+      (list new-row k)
+      (cons (list new-row k) rest-of-queens)))
+;;  (append (list (list new-row k)) rest-of-queens))
 (mattcheck-equal "adjoin-position"
                  (adjoin-position 3 4 '((1 3)(4 2)(2 1)))
                  '((3 4)(1 3)(4 2)(2 1)))
 (mattcheck-equal "adjoin-position new"
                  (adjoin-position 2 1 '())
-                 '((2 1)))
+                 '(2 1))
 (mattcheck-equal "adjoin-position one"
                  (adjoin-position 4 2 '((2 1)))
                  '((4 2)(2 1)))
