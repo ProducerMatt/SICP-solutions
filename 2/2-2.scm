@@ -791,16 +791,14 @@
 ;; positions will be a list of (row column) pairs. Pairs will be appended in
 ;; reverse so (car) gets the most recent
 (define (adjoin-position new-row k rest-of-queens)
-  (if (nil? rest-of-queens)
-      (list new-row k)
-      (cons (list new-row k) rest-of-queens)))
+  (cons (list new-row k) rest-of-queens))
 ;;  (append (list (list new-row k)) rest-of-queens))
 (mattcheck-equal "adjoin-position"
                  (adjoin-position 3 4 '((1 3)(4 2)(2 1)))
                  '((3 4)(1 3)(4 2)(2 1)))
 (mattcheck-equal "adjoin-position new"
                  (adjoin-position 2 1 '())
-                 '(2 1))
+                 '((2 1)))
 (mattcheck-equal "adjoin-position one"
                  (adjoin-position 4 2 '((2 1)))
                  '((4 2)(2 1)))
@@ -867,20 +865,33 @@
               ((not (null? d))
                (diagonals-safe? d))
               (else #t))))
-    (and (row-safe? rest)
-         (diagonals-safe? rest))))
+    (if (nil? rest)
+        #t
+        (and (row-safe? rest)
+             (diagonals-safe? rest)))))
 
 ;; not super proud of this but it works. Could be refactored in a number of ways.
 
 (let ((safe4board '((3 4)(1 3)(4 2)(2 1)))
       (badrow4board '((3 4)(3 3)(3 2)(3 1)))
-      (baddiagonal4 '((3 4)(2 3)(4 2)(1 1))))
+      (baddiagonal4 '((3 4)(2 3)(4 2)(1 1)))
+      (q4 '(((3 4) (1 3) (4 2) (2 1))
+            ((2 4) (4 3) (1 2) (3 1))))
+      (q11l 2680))
   (mattcheck "safe?"
              (safe? 4 safe4board))
   (mattcheck "safe? bad row"
              (not (safe? 4 badrow4board)))
   (mattcheck "safe? bad diagonals"
-             (not (safe? 4 baddiagonal4))))
+             (not (safe? 4 baddiagonal4)))
+  (mattcheck-equal "queens"
+             (list (queens 4)
+                   (length (queens 11)))
+             (list q4 q11l)))
 
 ;; But now I have a new problem, the (queens) procedure is double-nesting the
 ;; list somehow. What should be ((4 1) (5 1)) is (((4 1)) ((5 1)))
+
+;; Later: Turns out the double-wrapping was fine. They represent different
+;; sequences that are only one position long. The issue was I didn't give safe?
+;; a case for when there was only one item.
