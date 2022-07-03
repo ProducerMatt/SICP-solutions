@@ -843,7 +843,7 @@
 ;        #f
 ;        #t))
 
-(define (safe? k positions)
+(define (safe1? k positions)
   (let* ((newqueen (car positions))
          (myrow (car newqueen))
          (mycol (cadr newqueen))
@@ -869,8 +869,9 @@
         #t
         (and (row-safe? rest)
              (diagonals-safe? rest)))))
-
 ;; not super proud of this but it works. Could be refactored in a number of ways.
+
+(define safe? safe1?) ;; choose implementation
 
 (let ((safe4board '((3 4)(1 3)(4 2)(2 1)))
       (badrow4board '((3 4)(3 3)(3 2)(3 1)))
@@ -895,3 +896,56 @@
 ;; Later: Turns out the double-wrapping was fine. They represent different
 ;; sequences that are only one position long. The issue was I didn't give safe?
 ;; a case for when there was only one item.
+
+;; Now I want to tentatively attempt some refactoring. First let me benchmark
+;; what I have so far.
+;scheme@(guile-user) [1]> (benchmark (λ () (length (queens 11))) 10)
+;$6 = 1313655987.3
+;scheme@(guile-user) [1]> (benchmark (λ () (length (queens 11))) 20)
+;$7 = 1264162735.8
+
+;; Ok, this one is mostly inspired by x3v's solution at
+;; http://community.schemewiki.org/?sicp-ex-2.42
+
+(define (check newqueen p)
+  (let ((ar (car newqueen))
+        (ac (cadr newqueen))
+        (br (car p))
+        (bc (cadr p)))
+    (and (not (= ar br))
+         (not (= (abs (- ar br))
+                 (abs (- ac bc)))))))
+(define (safe2? k positions)
+  (let* ((newqueen (car positions))
+         (rest (cdr positions)))
+    (if (nil? rest)
+        #t
+        (= 0
+           (fold + 0 (map (λ (p) (if (check newqueen p)
+                                     0
+                                     1))
+                          rest))))))
+
+(define safe? safe2?)
+(let ((safe4board '((3 4)(1 3)(4 2)(2 1)))
+      (badrow4board '((3 4)(3 3)(3 2)(3 1)))
+      (baddiagonal4 '((3 4)(2 3)(4 2)(1 1)))
+      (q4 '(((3 4) (1 3) (4 2) (2 1))
+            ((2 4) (4 3) (1 2) (3 1))))
+      (q11l 2680))
+  (mattcheck "safe2?"
+             (safe2? 4 safe4board))
+  (mattcheck "safe2? bad row"
+             (not (safe2? 4 badrow4board)))
+  (mattcheck "safe2? bad diagonals"
+             (not (safe2? 4 baddiagonal4)))
+  (mattcheck-equal "queens with safe2?"
+             (list (queens 4)
+                   (length (queens 11)))
+             (list q4 q11l)))
+
+;scheme@(guile-user) [5]> (benchmark (λ () (length (queens 11))) 20)
+;$11 = 5185596245.75
+;scheme@(guile-user) [5]> (benchmark (λ () (length (queens 11))) 20)
+;$12 = 5179305935.45
+;; Wow, way less efficient. 5.182 G vs 1.288 G.
