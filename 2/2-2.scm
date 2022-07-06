@@ -948,4 +948,92 @@
 ;$11 = 5185596245.75
 ;scheme@(guile-user) [5]> (benchmark (λ () (length (queens 11))) 20)
 ;$12 = 5179305935.45
-;; Wow, way less efficient. 5.182 G vs 1.288 G.
+;; Wow, way less efficient. 5.182 Meg vs 1.288 Meg.
+
+;; Ok, extra credit: so how could I make this better? Doing it all iteratively
+;; would make more sense I guess. Also if we're always going in one direction
+;; with the columns then they don't need to be recorded at all. So it will just
+;; be a list of row numbers, in descending column order, and those lists will be
+;; listed together to make the set of solutions.
+;(define (myqueens board-size)
+;  (define newset (map (λ(x)(list x))
+;                      (enumerate-interval 1 board-size)))
+;  (define (iter column result)
+;    (if (= column board-size)
+;        result
+;        (let ((nextset
+;               (flatmap (λ(s)
+;                          (map (λ(t) (append t s))
+;                               result))
+;                        newset)))
+;          (iter (+ 1 column)
+;                (filter-incorrect nextset board-size)))))
+;
+;  (if (< board-size 4)
+;      '()
+;      (iter 1 newset)))
+;
+;;; assumes it is being passed a list of board configurations, at least two
+;;; positions per config. Assumes car is the latest config and the previous
+;;; configs have been checked.
+;(define (listcrawler s board-size)
+;  (let ((newest (car s)))
+;    (define (iter is updiag downdiag)
+;      (if (nil? is)
+;          #t ;; no issues found
+;          (let ((checking (car is)))
+;            (newline)
+;            (display checking)
+;            (if (or (= newest checking)
+;                    (and (<= updiag board-size)
+;                         (= updiag checking))
+;                    (and (>= downdiag 1)
+;                         (= downdiag checking)))
+;                #f
+;                (iter (cdr is) (+ 1 updiag) (- 1 downdiag))))))
+;    (iter (cdr s) (+ 1 newest) (- 1 newest))))
+;(define (filter-incorrect set board-size)
+;  (filter
+;   (λ(x) (listcrawler x board-size))
+;   set))
+
+;; Actually I'd rather make progress for now. Though I already think this
+;; version has problems as well. I don't have as clear of an idea of what I'm
+;; doing as I ought to have.
+
+;; Exercise 2.43: explain why Louis' program runs more slowly than the
+;; textbook's Queen procedure, and how much more slowly.
+;;
+;; In Louis' version, the recursive procedure call is nested inside the map
+;; procedure. This has the result of recursing to the power of the board-size in
+;; comparison to the original. So if the original runs in T time, Louis' runs in
+;; T^board-size.
+(define (louis-queens board-size)
+  (define (queen-cols k)
+    (if (= k 0)
+        (list empty-board)
+        (filter
+         (lambda (positions)
+           (safe? k positions))
+         (flatmap
+          (lambda (new-row)
+            (map (lambda (rest-of-queens)
+                   (adjoin-position
+                    new-row k rest-of-queens))
+                 (queen-cols (- k 1))))
+          (enumerate-interval 1 board-size)))))
+  (queen-cols board-size))
+
+;scheme@(guile-user) [1]> (benchmark (λ () (length (queens 7))) 1000)
+;$11 = 3705119.435
+;scheme@(guile-user) [1]> (benchmark (λ () (length (louis-queens 7))) 10)
+;$6 = 1768678658.1
+;
+;; 1.76G vs 3.70M. So 475 times slower in this case.
+;;
+;; MattsDiary: after checking online with posts like the following:
+;; https://wernerdegroot.wordpress.com/2015/08/01/sicp-exercise-2-43/ It looks
+;; like the big O notation could be considered O((N^N)*T) at its simplest. I
+;; don't have a good grasp on how to reason out the time complexity of a
+;; non-trivial algorithm. I aim to eventually do "How to Solve It" and "How to
+;; Prove It" and possibly that will fill in the missing gaps.
