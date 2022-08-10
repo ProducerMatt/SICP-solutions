@@ -1,6 +1,8 @@
-#+title: SICP testing
-#+AUTHOR: ProducerMatt
 #+PANDOC_OPTIONS: standalone:t
+# this doesn't appear to do anything. Be sure to run pandoc with -s
+
+#+title: SICP Chapter 1
+#+AUTHOR: ProducerMatt
 
 * Testing
 
