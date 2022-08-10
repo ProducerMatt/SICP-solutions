@@ -54,10 +54,10 @@
 * Exercise 1.2
 ** Q
 Translate the following expression into prefix form:
-\(
+\begin{equation}
   \frac{5 + 2 + (2 - 3 - (6 + \frac{4}{5})))}
             {3(6 - 2)(2 - 7)}
-  \)
+\end{equation}
 ** A
 #+BEGIN: EX1-2
 #+BEGIN_SRC scheme :results value :tangle no :exports both
