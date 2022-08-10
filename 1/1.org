@@ -50,3 +50,20 @@
          (else -1))
    (+ a 1)) ;; 16
 #+END_SRC
+
+* Exercise 1.2
+** Q
+Translate the following expression into prefix form:
+\(
+  \frac{5 + 2 + (2 - 3 - (6 + \frac{4}{5})))}
+            {3(6 - 2)(2 - 7)}
+  \)
+** A
+#+BEGIN: EX1-2
+#+BEGIN_SRC scheme :results value :tangle no :exports both
+(/ (+ 5 2 (- 2 3 (+ 6 (/ 4 5))))
+   (* 3 (- 6 2) (- 2 7)))
+#+END_SRC
+
+#+RESULTS:
+: 1/75
