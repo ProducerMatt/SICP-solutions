@@ -1,0 +1,47 @@
+#+title: SICP testing
+#+AUTHOR: ProducerMatt
+
+* Testing
+
+#+BEGIN_SRC scheme :results value :tangle no :exports both
+(define (foo a b)
+  (+ a (* 2 b)))
+
+(foo 5 3)
+#+END_SRC
+
+#+RESULTS:
+: 11
+
+^ Dynamically evaluated when you press "enter" on the BEGIN_SRC block!
+
+** Also consider:
+- ":results output" for what the code prints
+- ":exports code" or "results" to just get one or the other
+
+\(a + (2 \times b)\) <~ inline Latex btw :)
+
+* Exercise 1.1
+
+#+BEGIN_SRC scheme :results value :tangle no :exports both
+10 ;; 10
+(+ 5 3 4) ;; 12
+(- 9 1) ;; 8
+(/ 6 2) ;; 3
+(+ (* 2 4) (- 4 6)) ;; 6
+(define a 3) ;; a=3
+(define b (+ a 1)) ;; b=4
+(+ a b (* a b)) ;; 19
+(= a b) ;; false
+(if (and (> b a) (< b (* a b)))
+    b
+    a) ;; 4
+(cond ((= a 4) 6)
+      ((= b 4) (+ 6 7 a))
+      (else 25)) ;; 16
+(+ 2 (if (> b a) b a)) ;; 6
+(* (cond ((> a b) a)
+         ((< a b) b)
+         (else -1))
+   (+ a 1)) ;; 16
+#+END_SRC
