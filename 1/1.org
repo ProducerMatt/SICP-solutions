@@ -19,8 +19,8 @@
 ^ Dynamically evaluated when you press "enter" on the BEGIN_SRC block!
 
 ** Also consider:
-- ":results output" for what the code prints
-- ":exports code" or "results" to just get one or the other
+- ~:results output~ for what the code prints
+- ~:exports code~ or ~results~ to just get one or the other
 
 \(a + (2 \times b)\) <~ inline Latex btw :)
 
