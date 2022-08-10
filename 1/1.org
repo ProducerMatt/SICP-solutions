@@ -25,7 +25,9 @@
 \(a + (2 \times b)\) <~ inline Latex btw :)
 
 * Exercise 1.1
-
+** Q
+=Below is a sequence of expressions. What is the result printed by the interpreter in response to each expression? Assume that the sequence is to be evaluated in the order in which it is presented.=
+** A
 #+BEGIN_SRC scheme :results value :tangle no :exports both
 10 ;; 10
 (+ 5 3 4) ;; 12
