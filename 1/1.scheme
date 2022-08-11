@@ -1,0 +1,41 @@
+;; [[file:1.org::square][square]]
+(define (square x)
+  (* x x))
+;; square ends here
+
+;; [[file:1.org::EX1-3][EX1-3]]
+;; [[[[file:~/SICP-group/1/1.org::square][square]]][square]]
+(define (square x)
+  (* x x))
+;; square ends here
+(define (sum-square x y)
+  (+ (square x) (square y)))
+(define (square-2of3 a b c)
+  (cond ((and (>= a b) (>= b c)) (sum-square a b))
+        ((and (>= a b) (> c b)) (sum-square a c))
+        ((and (> b a) (>= c a)) (sum-square b c))
+        (else "This shouldn't happen")))
+
+(list (square-2of3 7 5 3)
+      (square-2of3 7 3 5)
+      (square-2of3 3 5 7))
+;; EX1-3 ends here
+
+;; [[file:1.org::txt-sqrt][txt-sqrt]]
+(define (average x y)
+  (/ (+ x y) 2))
+
+(define (improve guess x)
+  (average guess (/ x guess)))
+
+(define (good-enough? guess x)
+  (< (abs (- (square guess) x)) 0.001))
+
+(define (sqrt-iter guess x)
+  (if (good-enough? guess x)
+      guess
+      (sqrt-iter (improve guess x) x)))
+
+(define (sqrt x)
+  (sqrt-iter 1.0 x))
+;; txt-sqrt ends here
