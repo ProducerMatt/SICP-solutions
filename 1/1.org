@@ -1,6 +1,10 @@
 # ORG-BABEL DEFAULTS
-# cache results. Use Guile's verbatim value output. Tangle. Export code and result to docs. Evaluate noweb references (<<these>>) but don't include in export or tangle. Comments added to the tangled file.
-#+PROPERTY: header-args :cache yes :results value verbatim :tangle yes :exports both :noweb no-export :comments noweb
+#+PROPERTY: header-args :tangle no :noeval :exports both :cache yes :results value verbatim :noweb no-export :comments noweb
+#
+# For the actual answers their dependencies use a header like this:
+# #+BEGIN_SRC scheme -n :eval no-export :tangle yes :exports both
+# For their dependencies:
+# #+BEGIN_SRC scheme :eval no-export :tangle yes
 
 #+PANDOC_OPTIONS: standalone:t
 # FIXME: this doesn't appear to do anything. Be sure to run pandoc with -s
@@ -11,7 +15,7 @@
 * Testing
 
 #+NAME: testing
-#+BEGIN_SRC scheme +n :tangle no :exports both
+#+BEGIN_SRC scheme -n :exports both :eval no-export
 (define (foo a b)
   (+ a (* 2 b)))
 
@@ -33,7 +37,7 @@
 ** Q
 Below is a sequence of expressions. What is the result printed by the interpreter in response to each expression? Assume that the sequence is to be evaluated in the order in which it is presented.
 ** A
-#+BEGIN_SRC scheme +n :results none :eval never :tangle no :exports code
+#+BEGIN_SRC scheme -n :results none
 10 ;; 10
 (+ 5 3 4) ;; 12
 (- 9 1) ;; 8
@@ -65,7 +69,7 @@ Translate the following expression into prefix form:
 \end{equation}
 ** A
 #+NAME: EX1-2
-#+BEGIN_SRC scheme :tangle no
+#+BEGIN_SRC scheme :eval no-export :exports both
 (/ (+ 5 2 (- 2 3 (+ 6 (/ 4 5))))
    (* 3 (- 6 2) (- 2 7)))
 #+END_SRC
@@ -77,13 +81,13 @@ Translate the following expression into prefix form:
 ** Q
 Define a procedure that takes three numbers as arguments and returns the sum of the squares of the two larger numbers.
 #+NAME: square
-#+BEGIN_SRC scheme +n :results silent
+#+BEGIN_SRC scheme :results silent :tangle yes
 (define (square x)
   (* x x))
 #+END_SRC
 ** A
 #+NAME: EX1-3
-#+BEGIN_SRC scheme +n
+#+BEGIN_SRC scheme -n :eval no-export :tangle yes :exports both
 <<square>>
 (define (sum-square x y)
   (+ (square x) (square y)))
@@ -107,7 +111,7 @@ Define a procedure that takes three numbers as arguments and returns the sum of 
 Observe that our model of evaluation allows for combinations whose operators are compound expressions. Use this observation to describe the behavior of the following procedure:
 
 #+NAME: a-plus-abs-b
-#+BEGIN_SRC scheme +n :results silent
+#+BEGIN_SRC scheme
 (define (a-plus-abs-b a b)
   ((if (> b 0) + -) a b))
 #+END_SRC
