@@ -4,7 +4,7 @@
 # For the actual answers their dependencies use a header like this:
 # #+BEGIN_SRC scheme -n :eval no-export :tangle yes :exports both
 # For their dependencies:
-# #+BEGIN_SRC scheme :eval no-export :tangle yes
+# #+BEGIN_SRC scheme :eval no-export :tangle yes :results silent
 
 #+PANDOC_OPTIONS: standalone:t
 # FIXME: this doesn't appear to do anything. Be sure to run pandoc with -s
@@ -35,7 +35,9 @@
 
 * Exercise 1.1
 ** Q
-Below is a sequence of expressions. What is the result printed by the interpreter in response to each expression? Assume that the sequence is to be evaluated in the order in which it is presented.
+Below is a sequence of expressions. What is the result printed by the
+interpreter in response to each expression? Assume that the sequence is to be
+evaluated in the order in which it is presented.
 ** A
 #+BEGIN_SRC scheme -n :results none
 10 ;; 10
@@ -80,12 +82,13 @@ Translate the following expression into prefix form:
 * Exercise 1.3
 ** Text
 #+NAME: square
-#+BEGIN_SRC scheme :eval no-export :results none :tangle yes
+#+BEGIN_SRC scheme :eval no-export :results silent :tangle yes
 (define (square x)
   (* x x))
 #+END_SRC
 ** Q
-Define a procedure that takes three numbers as arguments and returns the sum of the squares of the two larger numbers.
+Define a procedure that takes three numbers as arguments and returns the sum of
+the squares of the two larger numbers.
 ** A
 #+NAME: EX1-3
 #+BEGIN_SRC scheme -n :eval no-export :tangle yes :exports both
@@ -109,7 +112,9 @@ Define a procedure that takes three numbers as arguments and returns the sum of 
 
 * Exercise 1.4
 ** Q
-Observe that our model of evaluation allows for combinations whose operators are compound expressions. Use this observation to describe the behavior of the following procedure:
+Observe that our model of evaluation allows for combinations whose operators are
+compound expressions. Use this observation to describe the behavior of the
+following procedure:
 
 #+NAME: a-plus-abs-b
 #+BEGIN_SRC scheme
@@ -118,7 +123,11 @@ Observe that our model of evaluation allows for combinations whose operators are
 #+END_SRC
 
 ** A
-This code accepts the variables ~a~ and ~b~, and if ~b~ is positive, it adds ~a~ and ~b~. However, if ~b~ is zero or negative, it subtracts them. This decision is made by using the ~+~ and ~-~ procedures as the results of an if expression, and then evaluating according to the results of that expression. This is in contrast to a language like Python, which would do something like this:
+This code accepts the variables ~a~ and ~b~, and if ~b~ is positive, it adds ~a~
+and ~b~. However, if ~b~ is zero or negative, it subtracts them. This decision
+is made by using the ~+~ and ~-~ procedures as the results of an if expression,
+and then evaluating according to the results of that expression. This is in
+contrast to a language like Python, which would do something like this:
 
 #+BEGIN_SRC python :noeval :tangle no
 if b > 0: a + b
@@ -127,7 +136,9 @@ else: a - b
 
 * Exercise 1.5
 ** Q
-Ben Bitdiddle has invented a test to determine whether the interpreter he is faced with is using applicative-order evaluation or normal-order evaluation. He defines the following two procedures:
+Ben Bitdiddle has invented a test to determine whether the interpreter he is
+faced with is using applicative-order evaluation or normal-order evaluation. He
+defines the following two procedures:
 
 #+BEGIN_SRC scheme :noeval :tangle no
 (define (p) (p))
@@ -143,10 +154,19 @@ Then he evaluates the expression
 (test 0 (p))
 #+END_SRC
 
-What behavior will Ben observe with an interpreter that uses applicative-order evaluation? What behavior will he observe with an interpreter that uses normal-order evaluation? Explain your answer. (Assume that the evaluation rule for the special form if is the same whether the interpreter is using normal or applicative order: The predicate expression is evaluated first, and the result determines whether to evaluate the consequent or the alternative expression.)
+What behavior will Ben observe with an interpreter that uses applicative-order
+evaluation? What behavior will he observe with an interpreter that uses
+normal-order evaluation? Explain your answer. (Assume that the evaluation rule
+for the special form if is the same whether the interpreter is using normal or
+applicative order: The predicate expression is evaluated first, and the result
+determines whether to evaluate the consequent or the alternative expression.)
 
 ** A
-In either type of language, src_scheme[:noeval]{(define (p) (p))} is an infinite loop. However, a normal-order language will encounter the special form, return ~0~, and never evaluate ~(p)~. An applicative-order language evaluates the arguments to src_scheme[:noeval]{(test 0 (p))}, thus triggering the infinite loop.
+In either type of language, src_scheme[:noeval]{(define (p) (p))} is an infinite
+loop. However, a normal-order language will encounter the special form, return
+~0~, and never evaluate ~(p)~. An applicative-order language evaluates the
+arguments to src_scheme[:noeval]{(test 0 (p))}, thus triggering the infinite
+loop.
 
 * Exercise 1.6
 ** Text code
@@ -171,7 +191,10 @@ In either type of language, src_scheme[:noeval]{(define (p) (p))} is an infinite
 #+END_SRC
 
 ** Q
-Exercise 1.6: Alyssa P. Hacker doesn’t see why if needs to be provided as a special form. “Why can’t I just define it as an ordinary procedure in terms of cond?” she asks. Alyssa’s friend Eva Lu Ator claims this can indeed be done, and she defines a new version of if:
+Exercise 1.6: Alyssa P. Hacker doesn’t see why if needs to be provided as a
+special form. “Why can’t I just define it as an ordinary procedure in terms of
+cond?” she asks. Alyssa’s friend Eva Lu Ator claims this can indeed be done, and
+she defines a new version of if:
 
 #+BEGIN_SRC scheme :noeval :tangle no
 (define (new-if predicate
@@ -202,4 +225,7 @@ Delighted, Alyssa uses new-if to rewrite the square-root program:
 What happens when Alyssa attempts to use this to compute square roots? Explain.
 
 ** A
-Using Alyssa's ~new-if~ leads to an infinite loop because the recursive call to ~sqrt-iter~ is evaluated before the actual call to ~new-if~. This is because ~if~ and ~cond~ are special forms that change the way evaluation is handled; whichever branch is chosen leaves the other branches unevaluated.
+Using Alyssa's ~new-if~ leads to an infinite loop because the recursive call to
+~sqrt-iter~ is evaluated before the actual call to ~new-if~. This is because
+~if~ and ~cond~ are special forms that change the way evaluation is handled;
+whichever branch is chosen leaves the other branches unevaluated.
