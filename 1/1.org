@@ -78,13 +78,14 @@ Translate the following expression into prefix form:
 : 1/75
 
 * Exercise 1.3
-** Q
-Define a procedure that takes three numbers as arguments and returns the sum of the squares of the two larger numbers.
+** Text
 #+NAME: square
-#+BEGIN_SRC scheme :results silent :tangle yes
+#+BEGIN_SRC scheme :eval no-export :results none :tangle yes
 (define (square x)
   (* x x))
 #+END_SRC
+** Q
+Define a procedure that takes three numbers as arguments and returns the sum of the squares of the two larger numbers.
 ** A
 #+NAME: EX1-3
 #+BEGIN_SRC scheme -n :eval no-export :tangle yes :exports both
