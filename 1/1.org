@@ -147,3 +147,59 @@ What behavior will Ben observe with an interpreter that uses applicative-order e
 
 ** A
 In either type of language, src_scheme[:noeval]{(define (p) (p))} is an infinite loop. However, a normal-order language will encounter the special form, return ~0~, and never evaluate ~(p)~. An applicative-order language evaluates the arguments to src_scheme[:noeval]{(test 0 (p))}, thus triggering the infinite loop.
+
+* Exercise 1.6
+** Text code
+#+NAME: txt-sqrt
+#+BEGIN_SRC scheme :eval no-export :tangle yes :results silent
+(define (average x y)
+  (/ (+ x y) 2))
+
+(define (improve guess x)
+  (average guess (/ x guess)))
+
+(define (good-enough? guess x)
+  (< (abs (- (square guess) x)) 0.001))
+
+(define (sqrt-iter guess x)
+  (if (good-enough? guess x)
+      guess
+      (sqrt-iter (improve guess x) x)))
+
+(define (sqrt x)
+  (sqrt-iter 1.0 x))
+#+END_SRC
+
+** Q
+Exercise 1.6: Alyssa P. Hacker doesn’t see why if needs to be provided as a special form. “Why can’t I just define it as an ordinary procedure in terms of cond?” she asks. Alyssa’s friend Eva Lu Ator claims this can indeed be done, and she defines a new version of if:
+
+#+BEGIN_SRC scheme :noeval :tangle no
+(define (new-if predicate
+                then-clause
+                else-clause)
+  (cond (predicate then-clause)
+        (else else-clause)))
+#+END_SRC
+Eva demonstrates the program for Alyssa:
+
+#+BEGIN_SRC scheme :noeval :tangle no
+(new-if (= 2 3) 0 5)
+;; => 5
+
+(new-if (= 1 1) 0 5)
+;; => 0
+#+END_SRC
+
+Delighted, Alyssa uses new-if to rewrite the square-root program:
+
+#+BEGIN_SRC scheme :noeval :tangle no
+(define (sqrt-iter guess x)
+  (new-if (good-enough? guess x)
+          guess
+          (sqrt-iter (improve guess x) x)))
+#+END_SRC
+
+What happens when Alyssa attempts to use this to compute square roots? Explain.
+
+** A
+Using Alyssa's ~new-if~ leads to an infinite loop because the recursive call to ~sqrt-iter~ is evaluated before the actual call to ~new-if~. This is because ~if~ and ~cond~ are special forms that change the way evaluation is handled; whichever branch is chosen leaves the other branches unevaluated.
