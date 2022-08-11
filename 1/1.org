@@ -101,3 +101,44 @@ Define a procedure that takes three numbers as arguments and returns the sum of 
 
 #+RESULTS[989792998089e3810b3719c9871dae790c5e6cab]: EX1-3
 : (74 74 74)
+
+* Exercise 1.4
+** Q
+Observe that our model of evaluation allows for combinations whose operators are compound expressions. Use this observation to describe the behavior of the following procedure:
+
+#+NAME: a-plus-abs-b
+#+BEGIN_SRC scheme +n :results silent
+(define (a-plus-abs-b a b)
+  ((if (> b 0) + -) a b))
+#+END_SRC
+
+** A
+This code accepts the variables ~a~ and ~b~, and if ~b~ is positive, it adds ~a~ and ~b~. However, if ~b~ is zero or negative, it subtracts them. This decision is made by using the ~+~ and ~-~ procedures as the results of an if expression, and then evaluating according to the results of that expression. This is in contrast to a language like Python, which would do something like this:
+
+#+BEGIN_SRC python :noeval :tangle no
+if b > 0: a + b
+else: a - b
+#+END_SRC
+
+* Exercise 1.5
+** Q
+Ben Bitdiddle has invented a test to determine whether the interpreter he is faced with is using applicative-order evaluation or normal-order evaluation. He defines the following two procedures:
+
+#+BEGIN_SRC scheme :noeval :tangle no
+(define (p) (p))
+
+(define (test x y)
+  (if (= x 0)
+      0
+      y))
+#+END_SRC
+Then he evaluates the expression
+
+#+BEGIN_SRC scheme :noeval :tangle no
+(test 0 (p))
+#+END_SRC
+
+What behavior will Ben observe with an interpreter that uses applicative-order evaluation? What behavior will he observe with an interpreter that uses normal-order evaluation? Explain your answer. (Assume that the evaluation rule for the special form if is the same whether the interpreter is using normal or applicative order: The predicate expression is evaluated first, and the result determines whether to evaluate the consequent or the alternative expression.)
+
+** A
+In either type of language, src_scheme[:noeval]{(define (p) (p))} is an infinite loop. However, a normal-order language will encounter the special form, return ~0~, and never evaluate ~(p)~. An applicative-order language evaluates the arguments to src_scheme[:noeval]{(test 0 (p))}, thus triggering the infinite loop.
