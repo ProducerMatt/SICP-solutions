@@ -1,5 +1,5 @@
 # ORG-BABEL DEFAULTS
-#+PROPERTY: header-args :tangle no :noeval :exports both :cache yes :results output code :noweb no-export :comments noweb :session default
+#+PROPERTY: header-args :tangle no :noeval :exports both :cache yes :results output :noweb no-export :comments noweb :session default
 #
 # For the actual answers their dependencies use a header like this:
 # #+BEGIN_SRC scheme -n :eval no-export :tangle yes :exports both
@@ -305,7 +305,7 @@ steady divergence from correct answers here (should alternate between values sta
 (display (map sqrt '(0.1 0.01 0.001 0.0001 0.00001)))
 #+END_SRC
 
-#+RESULTS[3b7cf2ced0fd8c37248fb994645c5aeabedfa4ea]:
+#+RESULTS[0b0feea3e230d85f836bbc51d9ef5e6e629c244d]:
 | 0.316245562280389 | 0.10032578510960605 | 0.04124542607499115 | 0.03230844833048122 | 0.03135649010771716 |
 
 And for larger numbers, an infinite loop will eventually be reached. \(10^{12}\)
