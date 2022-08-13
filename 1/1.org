@@ -1,5 +1,5 @@
 # ORG-BABEL DEFAULTS
-#+PROPERTY: header-args :tangle no :noeval :exports both :cache yes :results value verbatim :noweb no-export :comments noweb
+#+PROPERTY: header-args :tangle no :noeval :exports both :cache yes :results output code :noweb no-export :comments noweb :session default
 #
 # For the actual answers their dependencies use a header like this:
 # #+BEGIN_SRC scheme -n :eval no-export :tangle yes :exports both
@@ -12,24 +12,27 @@
 #+title: SICP Chapter 1
 #+AUTHOR: ProducerMatt
 
-* Testing
-
+* HOW THIS DOCUMENT IS MADE
+**TODO**
 #+NAME: testing
 #+BEGIN_SRC scheme -n :exports both :eval no-export
 (define (foo a b)
   (+ a (* 2 b)))
 
-(foo 5 3)
+(display
+ (foo 5 3))
 #+END_SRC
 
-#+RESULTS[baf15ad8f013c07cb81668410f60ed7c8313bed9]: testing
-: 11
+#+RESULTS[af4eb2b81215feafc1414f1abe72e795d511b891]: testing
+#+begin_src scheme
+11
+#+end_src
 
 ^ Dynamically evaluated when you press "enter" on the ~BEGIN_SRC~ block!
 
 ** Also consider:
 - ~:results output~ for what the code prints
-- ~:exports code~ or ~results~ to just get one or the other
+- ~:exports code~ or ~:exports results~ to just get one or the other
 
 \(a + (\pi \times b)\) <~ inline Latex btw :)
 
@@ -72,12 +75,16 @@ Translate the following expression into prefix form:
 ** A
 #+NAME: EX1-2
 #+BEGIN_SRC scheme :eval no-export :exports both
-(/ (+ 5 2 (- 2 3 (+ 6 (/ 4 5))))
-   (* 3 (- 6 2) (- 2 7)))
+(display
+ (/ (+ 5 2 (- 2 3 (+ 6 (/ 4 5))))
+   (* 3 (- 6 2) (- 2 7))))
 #+END_SRC
 
-#+RESULTS[b18b746f9085701888916b8a4d03739daa68e253]: EX1-2
-: 1/75
+#+RESULTS[edf4cb2e672db8175aa184726708f08f710c5371]: EX1-2
+#+begin_src scheme
+1/75
+#+end_src
+
 
 * Exercise 1.3
 ** Text
@@ -91,7 +98,7 @@ Define a procedure that takes three numbers as arguments and returns the sum of
 the squares of the two larger numbers.
 ** A
 #+NAME: EX1-3
-#+BEGIN_SRC scheme -n :eval no-export :tangle yes :exports both
+#+BEGIN_SRC scheme -n :eval no-export :tangle yes :exports both :results output table
 <<square>>
 (define (sum-square x y)
   (+ (square x) (square y)))
@@ -101,14 +108,15 @@ the squares of the two larger numbers.
         ((and (> b a) (>= c a)) (sum-square b c))
         (else "This shouldn't happen")))
 
-(list (square-2of3 7 5 3)
-      (square-2of3 7 3 5)
-      (square-2of3 3 5 7))
+(display
+ (list (square-2of3 7 5 3)
+       (square-2of3 7 3 5)
+       (square-2of3 3 5 7)))
 
 #+END_SRC
 
-#+RESULTS[989792998089e3810b3719c9871dae790c5e6cab]: EX1-3
-: (74 74 74)
+#+RESULTS[48c9e4b98ac647fd7215bbe2d273efc7963ef63b]: EX1-3
+| 74 | 74 | 74 |
 
 * Exercise 1.4
 ** Q
@@ -162,22 +170,34 @@ applicative order: The predicate expression is evaluated first, and the result
 determines whether to evaluate the consequent or the alternative expression.)
 
 ** A
-In either type of language, src_scheme[:noeval]{(define (p) (p))} is an infinite
+In either type of language, src_scheme{(define (p) (p))} is an infinite
 loop. However, a normal-order language will encounter the special form, return
 ~0~, and never evaluate ~(p)~. An applicative-order language evaluates the
-arguments to src_scheme[:noeval]{(test 0 (p))}, thus triggering the infinite
+arguments to src_scheme{(test 0 (p))}, thus triggering the infinite
 loop.
 
 * Exercise 1.6
 ** Text code
-#+NAME: txt-sqrt
+#+NAME: abs
+#+BEGIN_SRC scheme :eval no-export :tangle yes :results silent
+(define (abs x)
+  (if (< x 0)
+	  (- x)
+	  x))
+#+END_SRC
+#+NAME: average
 #+BEGIN_SRC scheme :eval no-export :tangle yes :results silent
 (define (average x y)
   (/ (+ x y) 2))
-
+#+END_SRC
+#+NAME: txt-sqrt
+#+BEGIN_SRC scheme :eval no-export :tangle yes :results silent
+<<average>>
 (define (improve guess x)
   (average guess (/ x guess)))
 
+<<square>>
+<<abs>>
 (define (good-enough? guess x)
   (< (abs (- (square guess) x)) 0.001))
 
@@ -229,3 +249,94 @@ Using Alyssa's ~new-if~ leads to an infinite loop because the recursive call to
 ~sqrt-iter~ is evaluated before the actual call to ~new-if~. This is because
 ~if~ and ~cond~ are special forms that change the way evaluation is handled;
 whichever branch is chosen leaves the other branches unevaluated.
+
+* Exercise 1.7
+** Text
+#+NAME: mean-square
+#+BEGIN_SRC scheme :eval no-export :tangle yes :results silent
+(define (mean-square x y)
+  (average (square x) (square y)))
+#+END_SRC
+** Q
+The good-enough? test used in computing square roots will not be very effective
+for finding the square roots of very small numbers. Also, in real computers,
+arithmetic operations are almost always performed with limited precision. This
+makes our test inadequate for very large numbers. Explain these statements, with
+examples showing how the test fails for small and large numbers. An alternative
+strategy for implementing good-enough? is to watch how guess changes from one
+iteration to the next and to stop when the change is a very small fraction of
+the guess. Design a square-root procedure that uses this kind of end test. Does
+this work better for small and large numbers?
+** A
+The current method has decreasing accuracy with smaller numbers. Notice the steady divergence from the correct answers here:
+#+BEGIN_SRC scheme :eval no-export :exports both :results output table
+<<txt-sqrt>>
+(display (map sqrt '(0.1 0.01 0.001 0.0001 0.00001)))
+#+END_SRC
+
+#+RESULTS[3b7cf2ced0fd8c37248fb994645c5aeabedfa4ea]:
+| 0.316245562280389 | 0.10032578510960605 | 0.04124542607499115 | 0.03230844833048122 | 0.03135649010771716 |
+
+And for larger numbers, an infinite loop will eventually be reached. \(10^{12}\)
+can resolve, but \(10^{13}\) cannot.
+
+#+BEGIN_SRC scheme :eval no-export :tangle no :exports both :results value code
+<<txt-sqrt>>
+(sqrt 1000000000000)
+#+END_SRC
+
+#+RESULTS[330f2d6d4a86426a9997b90d2e7a37664ca0d2bd]:
+#+begin_src scheme
+1000000.0
+#+end_src
+
+My original answer was this, which compares the previous iteration until the new
+and old are within an arbitrary \(dx\).
+
+#+NAME: inferior-good-enough
+#+BEGIN_SRC scheme :tangle yes
+<<txt-sqrt>>
+(define (inferior-good-enough? guess lastguess)
+  (<=
+   (abs (-
+         (/ lastguess guess)
+         1))
+   0.0000000000001)) ; dx
+(define (new-sqrt-iter guess x lastguess) ;; Memory of previous value
+  (if (inferior-good-enough? guess lastguess)
+      guess
+      (new-sqrt-iter (improve guess x) x guess)))
+(define (new-sqrt x)
+  (new-sqrt-iter 1.0 x 0))
+#+end_src
+
+This solution can correctly find small and large numbers:
+#+BEGIN_SRC scheme :eval no-export :tangle no :exports both :results output code
+<<inferior-good-enough>>
+(display (new-sqrt 10000000000000))
+#+END_SRC
+
+#+RESULTS[9731fe27cd8347b34afd31413e6fd60c667171b0]:
+#+begin_src scheme
+3162277.6601683795
+#+end_src
+
+#+NAME: EX1-7-t2
+#+BEGIN_SRC scheme :noeval :tangle no :exports both :results output table
+<<inferior-good-enough>>
+(map (lambda (x) (display x) (display " "))
+     (map new-sqrt '(0.1 0.01 0.001 0.0001 0.00001)))
+#+end_src
+# HAD TO FUDGE THIS ONE, the "table" function wasn't working
+#+RESULTS[6f83225b5e874893c0c1803ba52498049d0ceada]: EX1-7-t2
+| 0.31622776601683794 | 0.1 | 0.03162277660168379 | 0.01 | 0.0031622776601683794 |
+
+However, I found this solution online that isn't just simpler but automatically
+reaches the precision limit of the system:
+
+#+NAME: new-good-enough
+#+BEGIN_SRC scheme :eval no-export :results silent
+<<txt-sqrt>>
+(define (good-enough? guess x)
+   (= (improve guess x) guess))
+#+END_SRC

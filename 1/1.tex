@@ -79,6 +79,16 @@
 \newcommand{\VariableTok}[1]{\textcolor[rgb]{0.10,0.09,0.49}{#1}}
 \newcommand{\VerbatimStringTok}[1]{\textcolor[rgb]{0.25,0.44,0.63}{#1}}
 \newcommand{\WarningTok}[1]{\textcolor[rgb]{0.38,0.63,0.69}{\textbf{\textit{#1}}}}
+\usepackage{longtable,booktabs,array}
+\usepackage{calc} % for calculating minipage widths
+% Correct order of tables after \paragraph or \subparagraph
+\usepackage{etoolbox}
+\makeatletter
+\patchcmd\longtable{\par}{\if@noskipsec\mbox{}\fi\par}{}{}
+\makeatother
+% Allow footnotes in longtable head/foot
+\IfFileExists{footnotehyper.sty}{\usepackage{footnotehyper}}{\usepackage{footnote}}
+\makesavenoteenv{longtable}
 \setlength{\emergencystretch}{3em} % prevent overfull lines
 \providecommand{\tightlist}{%
   \setlength{\itemsep}{0pt}\setlength{\parskip}{0pt}}
@@ -94,8 +104,10 @@
 \begin{document}
 \maketitle
 
-\hypertarget{testing}{%
-\section{Testing}\label{testing}}
+\hypertarget{how-this-document-is-made}{%
+\section{HOW THIS DOCUMENT IS MADE}\label{how-this-document-is-made}}
+
+\textbf{\textbf{TODO}}
 
 \hypertarget{testing}{%
 \label{testing}}%
@@ -104,13 +116,14 @@
 \NormalTok{(}\ExtensionTok{define}\FunctionTok{ }\NormalTok{(foo a b)}
 \NormalTok{  (}\OperatorTok{+}\NormalTok{ a (}\OperatorTok{*} \DecValTok{2}\NormalTok{ b)))}
 
-\NormalTok{(foo }\DecValTok{5} \DecValTok{3}\NormalTok{)}
+\NormalTok{(}\KeywordTok{display}
+\NormalTok{ (foo }\DecValTok{5} \DecValTok{3}\NormalTok{))}
 \end{Highlighting}
 \end{Shaded}
 
 \begin{Shaded}
 \begin{Highlighting}[]
-\NormalTok{11}
+\DecValTok{11}
 \end{Highlighting}
 \end{Shaded}
 
@@ -125,8 +138,8 @@
 \item
   \texttt{:results\ output} for what the code prints
 \item
-  \texttt{:exports\ code} or \texttt{results} to just get one or the
-  other
+  \texttt{:exports\ code} or \texttt{:exports\ results} to just get one
+  or the other
 \end{itemize}
 
 \(a + (\pi \times b)\) \textless\textasciitilde{} inline Latex btw :)
@@ -189,14 +202,15 @@ Translate the following expression into prefix form:
 \label{EX1-2}}%
 \begin{Shaded}
 \begin{Highlighting}[]
-\NormalTok{(}\OperatorTok{/}\NormalTok{ (}\OperatorTok{+} \DecValTok{5} \DecValTok{2}\NormalTok{ (}\OperatorTok{{-}} \DecValTok{2} \DecValTok{3}\NormalTok{ (}\OperatorTok{+} \DecValTok{6}\NormalTok{ (}\OperatorTok{/} \DecValTok{4} \DecValTok{5}\NormalTok{))))}
-\NormalTok{   (}\OperatorTok{*} \DecValTok{3}\NormalTok{ (}\OperatorTok{{-}} \DecValTok{6} \DecValTok{2}\NormalTok{) (}\OperatorTok{{-}} \DecValTok{2} \DecValTok{7}\NormalTok{)))}
+\NormalTok{(}\KeywordTok{display}
+\NormalTok{ (}\OperatorTok{/}\NormalTok{ (}\OperatorTok{+} \DecValTok{5} \DecValTok{2}\NormalTok{ (}\OperatorTok{{-}} \DecValTok{2} \DecValTok{3}\NormalTok{ (}\OperatorTok{+} \DecValTok{6}\NormalTok{ (}\OperatorTok{/} \DecValTok{4} \DecValTok{5}\NormalTok{))))}
+\NormalTok{   (}\OperatorTok{*} \DecValTok{3}\NormalTok{ (}\OperatorTok{{-}} \DecValTok{6} \DecValTok{2}\NormalTok{) (}\OperatorTok{{-}} \DecValTok{2} \DecValTok{7}\NormalTok{))))}
 \end{Highlighting}
 \end{Shaded}
 
 \begin{Shaded}
 \begin{Highlighting}[]
-\NormalTok{1/75}
+\DecValTok{1}\NormalTok{/75}
 \end{Highlighting}
 \end{Shaded}
 
@@ -237,18 +251,20 @@ sum of the squares of the two larger numbers.
 \NormalTok{        ((}\KeywordTok{and}\NormalTok{ (}\OperatorTok{\textgreater{}}\NormalTok{ b a) (}\OperatorTok{\textgreater{}=}\NormalTok{ c a)) (sum{-}square b c))}
 \NormalTok{        (}\KeywordTok{else} \StringTok{"This shouldn\textquotesingle{}t happen"}\NormalTok{)))}
 
-\NormalTok{(}\KeywordTok{list}\NormalTok{ (square{-}2of3 }\DecValTok{7} \DecValTok{5} \DecValTok{3}\NormalTok{)}
-\NormalTok{      (square{-}2of3 }\DecValTok{7} \DecValTok{3} \DecValTok{5}\NormalTok{)}
-\NormalTok{      (square{-}2of3 }\DecValTok{3} \DecValTok{5} \DecValTok{7}\NormalTok{))}
+\NormalTok{(}\KeywordTok{display}
+\NormalTok{ (}\KeywordTok{list}\NormalTok{ (square{-}2of3 }\DecValTok{7} \DecValTok{5} \DecValTok{3}\NormalTok{)}
+\NormalTok{       (square{-}2of3 }\DecValTok{7} \DecValTok{3} \DecValTok{5}\NormalTok{)}
+\NormalTok{       (square{-}2of3 }\DecValTok{3} \DecValTok{5} \DecValTok{7}\NormalTok{)))}
 
 \end{Highlighting}
 \end{Shaded}
 
-\begin{Shaded}
-\begin{Highlighting}[]
-\NormalTok{(74 74 74)}
-\end{Highlighting}
-\end{Shaded}
+\begin{longtable}[]{@{}lll@{}}
+\toprule
+\endhead
+74 & 74 & 74 \\
+\bottomrule
+\end{longtable}
 
 \hypertarget{exercise-1.4}{%
 \section{Exercise 1.4}\label{exercise-1.4}}
@@ -341,16 +357,36 @@ the infinite loop.
 \hypertarget{text-code}{%
 \subsection{Text code}\label{text-code}}
 
-\hypertarget{txt-sqrt}{%
-\label{txt-sqrt}}%
+\hypertarget{abs}{%
+\label{abs}}%
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{(}\ExtensionTok{define}\FunctionTok{ }\NormalTok{(}\KeywordTok{abs}\NormalTok{ x)}
+\NormalTok{  (}\KeywordTok{if}\NormalTok{ (}\OperatorTok{\textless{}}\NormalTok{ x }\DecValTok{0}\NormalTok{)}
+\NormalTok{      (}\OperatorTok{{-}}\NormalTok{ x)}
+\NormalTok{      x))}
+\end{Highlighting}
+\end{Shaded}
+
+\hypertarget{average}{%
+\label{average}}%
 \begin{Shaded}
 \begin{Highlighting}[]
 \NormalTok{(}\ExtensionTok{define}\FunctionTok{ }\NormalTok{(average x y)}
 \NormalTok{  (}\OperatorTok{/}\NormalTok{ (}\OperatorTok{+}\NormalTok{ x y) }\DecValTok{2}\NormalTok{))}
+\end{Highlighting}
+\end{Shaded}
 
+\hypertarget{txt-sqrt}{%
+\label{txt-sqrt}}%
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{\textless{}\textless{}average\textgreater{}\textgreater{}}
 \NormalTok{(}\ExtensionTok{define}\FunctionTok{ }\NormalTok{(improve guess x)}
 \NormalTok{  (average guess (}\OperatorTok{/}\NormalTok{ x guess)))}
 
+\NormalTok{\textless{}\textless{}square\textgreater{}\textgreater{}}
+\NormalTok{\textless{}\textless{}abs\textgreater{}\textgreater{}}
 \NormalTok{(}\ExtensionTok{define}\FunctionTok{ }\NormalTok{(good{-}enough? guess x)}
 \NormalTok{  (}\OperatorTok{\textless{}}\NormalTok{ (}\KeywordTok{abs}\NormalTok{ (}\OperatorTok{{-}}\NormalTok{ (square guess) x)) }\FloatTok{0.001}\NormalTok{))}
 
@@ -416,5 +452,141 @@ recursive call to \texttt{sqrt-iter} is evaluated before the actual call
 to \texttt{new-if}. This is because \texttt{if} and \texttt{cond} are
 special forms that change the way evaluation is handled; whichever
 branch is chosen leaves the other branches unevaluated.
+
+\hypertarget{exercise-1.7}{%
+\section{Exercise 1.7}\label{exercise-1.7}}
+
+\hypertarget{text-1}{%
+\subsection{Text}\label{text-1}}
+
+\hypertarget{mean-square}{%
+\label{mean-square}}%
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{(}\ExtensionTok{define}\FunctionTok{ }\NormalTok{(mean{-}square x y)}
+\NormalTok{  (average (square x) (square y)))}
+\end{Highlighting}
+\end{Shaded}
+
+\hypertarget{q-6}{%
+\subsection{Q}\label{q-6}}
+
+The good-enough? test used in computing square roots will not be very
+effective for finding the square roots of very small numbers. Also, in
+real computers, arithmetic operations are almost always performed with
+limited precision. This makes our test inadequate for very large
+numbers. Explain these statements, with examples showing how the test
+fails for small and large numbers. An alternative strategy for
+implementing good-enough? is to watch how guess changes from one
+iteration to the next and to stop when the change is a very small
+fraction of the guess. Design a square-root procedure that uses this
+kind of end test. Does this work better for small and large numbers?
+
+\hypertarget{a-6}{%
+\subsection{A}\label{a-6}}
+
+The current method has decreasing accuracy with smaller numbers. Notice
+the steady divergence from the correct answers here:
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{\textless{}\textless{}txt{-}sqrt\textgreater{}\textgreater{}}
+\NormalTok{(}\KeywordTok{display}\NormalTok{ (map }\KeywordTok{sqrt}\NormalTok{ \textquotesingle{}(}\FloatTok{0.1} \FloatTok{0.01} \FloatTok{0.001} \FloatTok{0.0001} \FloatTok{0.00001}\NormalTok{)))}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{longtable}[]{@{}lllll@{}}
+\toprule
+\endhead
+0.316245562280389 & 0.10032578510960605 & 0.04124542607499115 &
+0.03230844833048122 & 0.03135649010771716 \\
+\bottomrule
+\end{longtable}
+
+And for larger numbers, an infinite loop will eventually be reached.
+\(10^{12}\) can resolve, but \(10^{13}\) cannot.
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{\textless{}\textless{}txt{-}sqrt\textgreater{}\textgreater{}}
+\NormalTok{(}\KeywordTok{sqrt} \DecValTok{1000000000000}\NormalTok{)}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\FloatTok{1000000.0}
+\end{Highlighting}
+\end{Shaded}
+
+My original answer was this, which compares the previous iteration until
+the new and old are within an arbitrary \(dx\).
+
+\hypertarget{inferior-good-enough}{%
+\label{inferior-good-enough}}%
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{\textless{}\textless{}txt{-}sqrt\textgreater{}\textgreater{}}
+\NormalTok{(}\ExtensionTok{define}\FunctionTok{ }\NormalTok{(inferior{-}good{-}enough? guess lastguess)}
+\NormalTok{  (}\OperatorTok{\textless{}=}
+\NormalTok{   (}\KeywordTok{abs}\NormalTok{ (}\OperatorTok{{-}}
+\NormalTok{         (}\OperatorTok{/}\NormalTok{ lastguess guess)}
+         \DecValTok{1}\NormalTok{))}
+   \FloatTok{0.0000000000001}\NormalTok{)) }\CommentTok{; dx}
+\NormalTok{(}\ExtensionTok{define}\FunctionTok{ }\NormalTok{(new{-}sqrt{-}iter guess x lastguess) }\CommentTok{;; Memory of previous value}
+\NormalTok{  (}\KeywordTok{if}\NormalTok{ (inferior{-}good{-}enough? guess lastguess)}
+\NormalTok{      guess}
+\NormalTok{      (new{-}sqrt{-}iter (improve guess x) x guess)))}
+\NormalTok{(}\ExtensionTok{define}\FunctionTok{ }\NormalTok{(new{-}sqrt x)}
+\NormalTok{  (new{-}sqrt{-}iter }\FloatTok{1.0}\NormalTok{ x }\DecValTok{0}\NormalTok{))}
+\end{Highlighting}
+\end{Shaded}
+
+This solution can correctly find small and large numbers:
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{\textless{}\textless{}inferior{-}good{-}enough\textgreater{}\textgreater{}}
+\NormalTok{(}\KeywordTok{display}\NormalTok{ (new{-}sqrt }\DecValTok{10000000000000}\NormalTok{))}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\FloatTok{3162277.6601683795}
+\end{Highlighting}
+\end{Shaded}
+
+\hypertarget{EX1-7-t2}{%
+\label{EX1-7-t2}}%
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{\textless{}\textless{}inferior{-}good{-}enough\textgreater{}\textgreater{}}
+\NormalTok{(map (}\KeywordTok{lambda}\NormalTok{ (x) (}\KeywordTok{display}\NormalTok{ x) (}\KeywordTok{display} \StringTok{" "}\NormalTok{))}
+\NormalTok{     (map new{-}sqrt \textquotesingle{}(}\FloatTok{0.1} \FloatTok{0.01} \FloatTok{0.001} \FloatTok{0.0001} \FloatTok{0.00001}\NormalTok{)))}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{longtable}[]{@{}lllll@{}}
+\toprule
+\endhead
+0.31622776601683794 & 0.1 & 0.03162277660168379 & 0.01 &
+0.0031622776601683794 \\
+\bottomrule
+\end{longtable}
+
+However, I found this solution online that isn't just simpler but
+automatically reaches the precision limit of the system:
+
+\hypertarget{new-good-enough}{%
+\label{new-good-enough}}%
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{\textless{}\textless{}txt{-}sqrt\textgreater{}\textgreater{}}
+\NormalTok{(}\ExtensionTok{define}\FunctionTok{ }\NormalTok{(good{-}enough? guess x)}
+\NormalTok{   (}\OperatorTok{=}\NormalTok{ (improve guess x) guess))}
+\end{Highlighting}
+\end{Shaded}
+
 
 \end{document}

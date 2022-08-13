@@ -16,18 +16,42 @@
         ((and (> b a) (>= c a)) (sum-square b c))
         (else "This shouldn't happen")))
 
-(list (square-2of3 7 5 3)
-      (square-2of3 7 3 5)
-      (square-2of3 3 5 7))
+(display
+ (list (square-2of3 7 5 3)
+       (square-2of3 7 3 5)
+       (square-2of3 3 5 7)))
 ;; EX1-3 ends here
 
-;; [[file:1.org::txt-sqrt][txt-sqrt]]
+;; [[file:1.org::abs][abs]]
+(define (abs x)
+  (if (< x 0)
+	  (- x)
+	  x))
+;; abs ends here
+
+;; [[file:1.org::average][average]]
 (define (average x y)
   (/ (+ x y) 2))
+;; average ends here
 
+;; [[file:1.org::txt-sqrt][txt-sqrt]]
+;; [[[[file:~/SICP-group/1/1.org::average][average]]][average]]
+(define (average x y)
+  (/ (+ x y) 2))
+;; average ends here
 (define (improve guess x)
   (average guess (/ x guess)))
 
+;; [[[[file:~/SICP-group/1/1.org::txt-sqrt][txt-sqrt]]][square]]
+(define (square x)
+  (* x x))
+;; square ends here
+;; [[[[file:~/SICP-group/1/1.org::abs][abs]]][abs]]
+(define (abs x)
+  (if (< x 0)
+	  (- x)
+	  x))
+;; abs ends here
 (define (good-enough? guess x)
   (< (abs (- (square guess) x)) 0.001))
 
@@ -39,3 +63,52 @@
 (define (sqrt x)
   (sqrt-iter 1.0 x))
 ;; txt-sqrt ends here
+
+;; [[file:1.org::mean-square][mean-square]]
+(define (mean-square x y)
+  (average (square x) (square y)))
+;; mean-square ends here
+
+;; [[file:1.org::inferior-good-enough][inferior-good-enough]]
+;; [[[[file:~/SICP-group/1/1.org::txt-sqrt][txt-sqrt]]][txt-sqrt]]
+;; [[[[file:~/SICP-group/1/1.org::txt-sqrt][txt-sqrt]]][average]]
+(define (average x y)
+  (/ (+ x y) 2))
+;; average ends here
+(define (improve guess x)
+  (average guess (/ x guess)))
+
+;; [[[[file:~/SICP-group/1/1.org::txt-sqrt][txt-sqrt]]][square]]
+(define (square x)
+  (* x x))
+;; square ends here
+;; [[[[file:~/SICP-group/1/1.org::txt-sqrt][txt-sqrt]]][abs]]
+(define (abs x)
+  (if (< x 0)
+	  (- x)
+	  x))
+;; abs ends here
+(define (good-enough? guess x)
+  (< (abs (- (square guess) x)) 0.001))
+
+(define (sqrt-iter guess x)
+  (if (good-enough? guess x)
+      guess
+      (sqrt-iter (improve guess x) x)))
+
+(define (sqrt x)
+  (sqrt-iter 1.0 x))
+;; txt-sqrt ends here
+(define (inferior-good-enough? guess lastguess)
+  (<=
+   (abs (-
+         (/ lastguess guess)
+         1))
+   0.0000000000001)) ; dx
+(define (new-sqrt-iter guess x lastguess) ;; Memory of previous value
+  (if (inferior-good-enough? guess lastguess)
+      guess
+      (new-sqrt-iter (improve guess x) x guess)))
+(define (new-sqrt x)
+  (new-sqrt-iter 1.0 x 0))
+;; inferior-good-enough ends here
