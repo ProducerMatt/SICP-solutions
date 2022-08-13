@@ -36,6 +36,32 @@
 
 \(a + (\pi \times b)\) <~ inline Latex btw :)
 
+** Helper for org-mode tables
+#+NAME: print-as-rows
+#+BEGIN_SRC scheme :eval no-export :tangle yes :results silent
+(define (p-nl a)
+  (display a)
+  (newline))
+(define (print-spaced args)
+  (let ((a (car args))
+        (d (cdr args)))
+    (if (null? d)
+        (p-nl a)
+        (begin (display a)
+               (display " ")
+               (print-spaced d)))))
+(define (print-as-rows . args)
+  (let ((a (car args))
+        (d (cdr args)))
+    (if (list? a)
+        (if (= 1 (length args))
+            (apply print-as-rows a)
+            (print-spaced a))
+        (p-nl a))
+    (if (null? d)
+        '()
+        (apply print-as-rows d))))
+#+end_src
 * Exercise 1.1
 ** Q
 Below is a sequence of expressions. What is the result printed by the
