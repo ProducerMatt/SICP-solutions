@@ -294,7 +294,8 @@ iteration to the next and to stop when the change is a very small fraction of
 the guess. Design a square-root procedure that uses this kind of end test. Does
 this work better for small and large numbers?
 ** A
-The current method has decreasing accuracy with smaller numbers. Notice the steady divergence from the correct answers here:
+The current method has decreasing accuracy with smaller numbers. Notice the
+steady divergence from correct answers here (should alternate between values starting with "316" and "100"):
 #+BEGIN_SRC scheme :eval no-export :exports both :results output table
 <<txt-sqrt>>
 (display (map sqrt '(0.1 0.01 0.001 0.0001 0.00001)))
