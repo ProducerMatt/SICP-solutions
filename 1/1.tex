@@ -93,6 +93,8 @@
 \providecommand{\tightlist}{%
   \setlength{\itemsep}{0pt}\setlength{\parskip}{0pt}}
 \setcounter{secnumdepth}{-\maxdimen} % remove section numbering
+\setmonofont[Mapping=tex-text,Scale=MatchLowercase]{FiraMono-Regular}
+\listfiles
 \ifLuaTeX
   \usepackage{selnolig}  % disable illegal ligatures
 \fi
@@ -143,6 +145,39 @@
 \end{itemize}
 
 \(a + (\pi \times b)\) \textless\textasciitilde{} inline Latex btw :)
+
+\hypertarget{helper-for-org-mode-tables}{%
+\subsection{Helper for org-mode
+tables}\label{helper-for-org-mode-tables}}
+
+\hypertarget{print-as-rows}{%
+\label{print-as-rows}}%
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{(}\ExtensionTok{define}\FunctionTok{ }\NormalTok{(p{-}nl a)}
+\NormalTok{  (}\KeywordTok{display}\NormalTok{ a)}
+\NormalTok{  (}\KeywordTok{newline}\NormalTok{))}
+\NormalTok{(}\ExtensionTok{define}\FunctionTok{ }\NormalTok{(print{-}spaced args)}
+\NormalTok{  (}\KeywordTok{let}\NormalTok{ ((a (}\KeywordTok{car}\NormalTok{ args))}
+\NormalTok{        (d (}\KeywordTok{cdr}\NormalTok{ args)))}
+\NormalTok{    (}\KeywordTok{if}\NormalTok{ (}\KeywordTok{null?}\NormalTok{ d)}
+\NormalTok{        (p{-}nl a)}
+\NormalTok{        (}\KeywordTok{begin}\NormalTok{ (}\KeywordTok{display}\NormalTok{ a)}
+\NormalTok{               (}\KeywordTok{display} \StringTok{" "}\NormalTok{)}
+\NormalTok{               (print{-}spaced d)))))}
+\NormalTok{(}\ExtensionTok{define}\FunctionTok{ }\NormalTok{(print{-}as{-}rows }\OperatorTok{.}\NormalTok{ args)}
+\NormalTok{  (}\KeywordTok{let}\NormalTok{ ((a (}\KeywordTok{car}\NormalTok{ args))}
+\NormalTok{        (d (}\KeywordTok{cdr}\NormalTok{ args)))}
+\NormalTok{    (}\KeywordTok{if}\NormalTok{ (}\KeywordTok{list?}\NormalTok{ a)}
+\NormalTok{        (}\KeywordTok{if}\NormalTok{ (}\OperatorTok{=} \DecValTok{1}\NormalTok{ (}\KeywordTok{length}\NormalTok{ args))}
+\NormalTok{            (apply print{-}as{-}rows a)}
+\NormalTok{            (print{-}spaced a))}
+\NormalTok{        (p{-}nl a))}
+\NormalTok{    (}\KeywordTok{if}\NormalTok{ (}\KeywordTok{null?}\NormalTok{ d)}
+\NormalTok{        \textquotesingle{}()}
+\NormalTok{        (apply print{-}as{-}rows d))))}
+\end{Highlighting}
+\end{Shaded}
 
 \hypertarget{exercise-1.1}{%
 \section{Exercise 1.1}\label{exercise-1.1}}
@@ -486,7 +521,8 @@ kind of end test. Does this work better for small and large numbers?
 \subsection{A}\label{a-6}}
 
 The current method has decreasing accuracy with smaller numbers. Notice
-the steady divergence from the correct answers here:
+the steady divergence from correct answers here (should alternate
+between values starting with "316" and "100"):
 
 \begin{Shaded}
 \begin{Highlighting}[]
@@ -561,19 +597,21 @@ This solution can correctly find small and large numbers:
 \label{EX1-7-t2}}%
 \begin{Shaded}
 \begin{Highlighting}[]
+\NormalTok{\textless{}\textless{}print{-}as{-}rows\textgreater{}\textgreater{}}
 \NormalTok{\textless{}\textless{}inferior{-}good{-}enough\textgreater{}\textgreater{}}
-\NormalTok{(map (}\KeywordTok{lambda}\NormalTok{ (x) (}\KeywordTok{display}\NormalTok{ x) (}\KeywordTok{display} \StringTok{" "}\NormalTok{))}
-\NormalTok{     (map new{-}sqrt \textquotesingle{}(}\FloatTok{0.1} \FloatTok{0.01} \FloatTok{0.001} \FloatTok{0.0001} \FloatTok{0.00001}\NormalTok{)))}
+\NormalTok{(print{-}as{-}rows (map new{-}sqrt \textquotesingle{}(}\FloatTok{0.1} \FloatTok{0.01} \FloatTok{0.001} \FloatTok{0.0001} \FloatTok{0.00001}\NormalTok{)))}
 \end{Highlighting}
 \end{Shaded}
 
-\begin{longtable}[]{@{}lllll@{}}
-\toprule
-\endhead
-0.31622776601683794 & 0.1 & 0.03162277660168379 & 0.01 &
-0.0031622776601683794 \\
-\bottomrule
-\end{longtable}
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{0.31622776601683794}
+\NormalTok{0.1}
+\NormalTok{0.03162277660168379}
+\NormalTok{0.01}
+\NormalTok{0.0031622776601683794}
+\end{Highlighting}
+\end{Shaded}
 
 However, I found this solution online that isn't just simpler but
 automatically reaches the precision limit of the system:

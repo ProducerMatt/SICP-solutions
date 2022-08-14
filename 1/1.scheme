@@ -1,3 +1,33 @@
+;; [[file:1.org::transpose-list][transpose-list]]
+(define (transpose-list l)
+  (map (λ (i) (list i)) l))
+;; transpose-list ends here
+
+;; [[file:1.org::print-as-rows][print-as-rows]]
+(define (p-nl a)
+  (display a)
+  (newline))
+(define (print-spaced args)
+  (let ((a (car args))
+        (d (cdr args)))
+    (if (null? d)
+        (p-nl a)
+        (begin (display a)
+               (display " ")
+               (print-spaced d)))))
+(define (print-as-rows . args)
+  (let ((a (car args))
+        (d (cdr args)))
+    (if (list? a)
+        (if (= 1 (length args))
+            (apply print-as-rows a)
+            (print-spaced a))
+        (p-nl a))
+    (if (null? d)
+        '()
+        (apply print-as-rows d))))
+;; print-as-rows ends here
+
 ;; [[file:1.org::square][square]]
 (define (square x)
   (* x x))
