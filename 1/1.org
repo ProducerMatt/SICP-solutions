@@ -306,21 +306,21 @@ the guess. Design a square-root procedure that uses this kind of end test. Does
 this work better for small and large numbers?
 ** A
 The current method has decreasing accuracy with smaller numbers. Notice the
-steady divergence from correct answers here (should alternate between values starting with "316" and "100"):
+steady divergence from correct answers here (should be 0.1s getting smaller and smaller):
 #+NAME: EX1-7-t1
 #+BEGIN_SRC scheme :eval no-export :tangle no :exports both :results value table drawer
 <<transpose-list>>
 <<txt-sqrt>>
-(transpose-list (map sqrt '(0.1 0.01 0.001 0.0001 0.00001)))
+(transpose-list (map sqrt '(0.01 0.0001 0.000001 0.00000001 0.0000000001)))
 #+END_SRC
 
-#+RESULTS[b10f931ec3cc52ad5fbf1c99c1c4ac3b023c300e]:
+#+RESULTS[57d147a092109f331824bacee7632f948edac4d5]: EX1-7-t1
 :results:
-|   0.316245562280389 |
-| 0.10032578510960605 |
-| 0.04124542607499115 |
-| 0.03230844833048122 |
-| 0.03135649010771716 |
+|  0.10032578510960605 |
+|  0.03230844833048122 |
+| 0.031260655525445276 |
+|  0.03125010656242753 |
+|  0.03125000106562499 |
 :end:
 
 And for larger numbers, an infinite loop will eventually be reached. \(10^{12}\)
@@ -371,16 +371,16 @@ This solution can correctly find small and large numbers:
 #+BEGIN_SRC scheme :eval no-export :tangle no :exports both :results value table drawer
 <<transpose-list>>
 <<inferior-good-enough>>
-(transpose-list (map new-sqrt '(0.1 0.01 0.001 0.0001 0.00001)))
+(transpose-list (map new-sqrt '(0.01 0.0001 0.000001 0.00000001 0.0000000001)))
 #+end_src
 
-#+RESULTS[da3ca196124c45bb3bb2dc83c0b035c24f7bbf10]: EX1-7-t2
+#+RESULTS[e7b1a787e50f3cca05cce883961f20552fb63151]: EX1-7-t2
 :results:
-|   0.31622776601683794 |
 |                   0.1 |
-|   0.03162277660168379 |
 |                  0.01 |
-| 0.0031622776601683794 |
+|                 0.001 |
+| 9.999999999999999e-05 |
+| 9.999999999999999e-06 |
 :end:
 
 
@@ -405,14 +405,14 @@ reaches the precision limit of the system:
 
 (define (best-sqrt x)
   (best-sqrt-iter 1.0 x))
-(transpose-list (map best-sqrt '(0.1 0.01 0.001 0.0001 0.00001)))
+(transpose-list (map best-sqrt '(0.01 0.0001 0.000001 0.00000001 0.0000000001)))
 #+end_src
 
-#+RESULTS[7966eae23b1a86d36c3f92af0a867e1087931f1a]: EX1-7-t3
+#+RESULTS[815b533a404dbe62c2e92029a6b69103f411372e]: EX1-7-t3
 :results:
-|   0.31622776601683794 |
 |                   0.1 |
-|   0.03162277660168379 |
 |                  0.01 |
-| 0.0031622776601683794 |
+|                 0.001 |
+| 9.999999999999999e-05 |
+| 9.999999999999999e-06 |
 :end:
