@@ -41,6 +41,12 @@
 \(a + (\pi \times b)\) <~ inline Latex btw :)
 
 ** Helper for org-mode tables
+
+#+NAME: transpose-list
+#+BEGIN_SRC scheme :eval no-export :tangle yes :results silent
+(define (transpose-list l)
+  (map (λ (i) (list i)) l))
+#+end_src
 #+NAME: print-as-rows
 #+BEGIN_SRC scheme :eval no-export :tangle yes :results silent
 (define (p-nl a)
@@ -300,13 +306,21 @@ this work better for small and large numbers?
 ** A
 The current method has decreasing accuracy with smaller numbers. Notice the
 steady divergence from correct answers here (should alternate between values starting with "316" and "100"):
-#+BEGIN_SRC scheme :eval no-export :exports both :results output table
+#+NAME: EX1-7-t1
+#+BEGIN_SRC scheme :eval no-export :tangle no :exports both :results value table drawer
+<<transpose-list>>
 <<txt-sqrt>>
-(display (map sqrt '(0.1 0.01 0.001 0.0001 0.00001)))
+(transpose-list (map sqrt '(0.1 0.01 0.001 0.0001 0.00001)))
 #+END_SRC
 
-#+RESULTS[0b0feea3e230d85f836bbc51d9ef5e6e629c244d]:
-| 0.316245562280389 | 0.10032578510960605 | 0.04124542607499115 | 0.03230844833048122 | 0.03135649010771716 |
+#+RESULTS[b10f931ec3cc52ad5fbf1c99c1c4ac3b023c300e]:
+:results:
+|   0.316245562280389 |
+| 0.10032578510960605 |
+| 0.04124542607499115 |
+| 0.03230844833048122 |
+| 0.03135649010771716 |
+:end:
 
 And for larger numbers, an infinite loop will eventually be reached. \(10^{12}\)
 can resolve, but \(10^{13}\) cannot.
@@ -353,14 +367,21 @@ This solution can correctly find small and large numbers:
 #+end_src
 
 #+NAME: EX1-7-t2
-#+BEGIN_SRC scheme :noeval :tangle no :exports both :results output table
+#+BEGIN_SRC scheme :eval no-export :tangle no :exports both :results value table drawer
+<<transpose-list>>
 <<inferior-good-enough>>
-(map (lambda (x) (display x) (display " "))
-     (map new-sqrt '(0.1 0.01 0.001 0.0001 0.00001)))
+(transpose-list (map new-sqrt '(0.1 0.01 0.001 0.0001 0.00001)))
 #+end_src
-# HAD TO FUDGE THIS ONE, the "table" function wasn't working
-#+RESULTS[6f83225b5e874893c0c1803ba52498049d0ceada]: EX1-7-t2
-| 0.31622776601683794 | 0.1 | 0.03162277660168379 | 0.01 | 0.0031622776601683794 |
+
+#+RESULTS[da3ca196124c45bb3bb2dc83c0b035c24f7bbf10]: EX1-7-t2
+:results:
+|   0.31622776601683794 |
+|                   0.1 |
+|   0.03162277660168379 |
+|                  0.01 |
+| 0.0031622776601683794 |
+:end:
+
 
 However, I found this solution online that isn't just simpler but automatically
 reaches the precision limit of the system:
