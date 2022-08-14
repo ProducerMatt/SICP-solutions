@@ -1,5 +1,5 @@
 # ORG-BABEL DEFAULTS
-#+PROPERTY: header-args :tangle no :noeval :exports both :cache yes :results output :noweb no-export :comments noweb :session default
+#+PROPERTY: header-args :tangle no :noeval :exports both :cache yes :results output wrap :noweb no-export :comments noweb :session default
 #
 # For the actual answers their dependencies use a header like this:
 # #+BEGIN_SRC scheme -n :eval no-export :tangle yes :exports both
@@ -20,26 +20,30 @@
 * HOW THIS DOCUMENT IS MADE
 **TODO**
 #+NAME: testing
-#+BEGIN_SRC scheme -n :exports both :eval no-export
+#+BEGIN_SRC scheme -n :exports both :eval no-export :results value
 (define (foo a b)
   (+ a (* 2 b)))
 
-(display
- (foo 5 3))
+(foo 5 3)
 #+END_SRC
 
-#+RESULTS[af4eb2b81215feafc1414f1abe72e795d511b891]: testing
-#+begin_src scheme
+#+RESULTS[57407d275aacd484646294a75251646c910ae5fc]: testing
+:results:
 11
-#+end_src
+:end:
 
 ^ Dynamically evaluated when you press "enter" on the ~BEGIN_SRC~ block!
 
-** Also consider:
+*** Also consider:
 - ~:results output~ for what the code prints
 - ~:exports code~ or ~:exports results~ to just get one or the other
 
 \(a + (\pi \times b)\) <~ inline Latex btw :)
+
+*** Current command for conversion
+#+BEGIN_SRC sh :noeval
+pandoc --from org --to latex 1.org -o 1.tex -s; xelatex 1.tex
+#+END_SRC
 
 ** Helper for org-mode tables
 
@@ -111,16 +115,15 @@ Translate the following expression into prefix form:
 \end{equation}
 ** A
 #+NAME: EX1-2
-#+BEGIN_SRC scheme :eval no-export :exports both
-(display
- (/ (+ 5 2 (- 2 3 (+ 6 (/ 4 5))))
-   (* 3 (- 6 2) (- 2 7))))
+#+BEGIN_SRC scheme :eval no-export :exports both :results value
+(/ (+ 5 2 (- 2 3 (+ 6 (/ 4 5))))
+   (* 3 (- 6 2) (- 2 7)))
 #+END_SRC
 
-#+RESULTS[edf4cb2e672db8175aa184726708f08f710c5371]: EX1-2
-#+begin_src scheme
+#+RESULTS[7039c32447725d91001cae297dc9040b72a855ce]: EX1-2
+:results:
 1/75
-#+end_src
+:end:
 
 
 * Exercise 1.3
@@ -135,7 +138,7 @@ Define a procedure that takes three numbers as arguments and returns the sum of
 the squares of the two larger numbers.
 ** A
 #+NAME: EX1-3
-#+BEGIN_SRC scheme -n :eval no-export :tangle yes :exports both :results output table
+#+BEGIN_SRC scheme -n :eval no-export :tangle yes :exports both :results value table
 <<square>>
 (define (sum-square x y)
   (+ (square x) (square y)))
@@ -145,15 +148,16 @@ the squares of the two larger numbers.
         ((and (> b a) (>= c a)) (sum-square b c))
         (else "This shouldn't happen")))
 
-(display
  (list (square-2of3 7 5 3)
        (square-2of3 7 3 5)
-       (square-2of3 3 5 7)))
+       (square-2of3 3 5 7))
 
 #+END_SRC
 
-#+RESULTS[48c9e4b98ac647fd7215bbe2d273efc7963ef63b]: EX1-3
+#+RESULTS[581e1faead1b527d69adae4c0b78d6faee8b4e70]: EX1-3
+:results:
 | 74 | 74 | 74 |
+:end:
 
 * Exercise 1.4
 ** Q
@@ -308,7 +312,7 @@ this work better for small and large numbers?
 The current method has decreasing accuracy with smaller numbers. Notice the
 steady divergence from correct answers here (should be 0.1s getting smaller and smaller):
 #+NAME: EX1-7-t1
-#+BEGIN_SRC scheme :eval no-export :tangle no :exports both :results value table drawer
+#+BEGIN_SRC scheme :eval no-export :tangle no :exports both :results value table
 <<transpose-list>>
 <<txt-sqrt>>
 (transpose-list (map sqrt '(0.01 0.0001 0.000001 0.00000001 0.0000000001)))
@@ -326,15 +330,15 @@ steady divergence from correct answers here (should be 0.1s getting smaller and 
 And for larger numbers, an infinite loop will eventually be reached. \(10^{12}\)
 can resolve, but \(10^{13}\) cannot.
 
-#+BEGIN_SRC scheme :eval no-export :tangle no :exports both :results value code
+#+BEGIN_SRC scheme :eval no-export :tangle no :exports both :results value
 <<txt-sqrt>>
 (sqrt 1000000000000)
 #+END_SRC
 
-#+RESULTS[330f2d6d4a86426a9997b90d2e7a37664ca0d2bd]:
-#+begin_src scheme
+#+RESULTS[452bf3da7286d9fc1e3d621aeb715eafef650536]:
+:results:
 1000000.0
-#+end_src
+:end:
 
 My original answer was this, which compares the previous iteration until the new
 and old are within an arbitrary \(dx\).
@@ -357,15 +361,15 @@ and old are within an arbitrary \(dx\).
 #+end_src
 
 This solution can correctly find small and large numbers:
-#+BEGIN_SRC scheme :eval no-export :tangle no :exports both :results output code
+#+BEGIN_SRC scheme :eval no-export :tangle no :exports both :results value
 <<inferior-good-enough>>
-(display (new-sqrt 10000000000000))
+(new-sqrt 10000000000000)
 #+END_SRC
 
-#+RESULTS[9731fe27cd8347b34afd31413e6fd60c667171b0]:
-#+begin_src scheme
+#+RESULTS[68a129e63924b52600a4964626d31b776d79fed2]:
+:results:
 3162277.6601683795
-#+end_src
+:end:
 
 #+NAME: EX1-7-t2
 #+BEGIN_SRC scheme :eval no-export :tangle no :exports both :results value table drawer
@@ -405,6 +409,7 @@ reaches the precision limit of the system:
 
 (define (best-sqrt x)
   (best-sqrt-iter 1.0 x))
+
 (transpose-list (map best-sqrt '(0.01 0.0001 0.000001 0.00000001 0.0000000001)))
 #+end_src
 

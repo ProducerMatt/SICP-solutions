@@ -118,22 +118,17 @@
 \NormalTok{(}\ExtensionTok{define}\FunctionTok{ }\NormalTok{(foo a b)}
 \NormalTok{  (}\OperatorTok{+}\NormalTok{ a (}\OperatorTok{*} \DecValTok{2}\NormalTok{ b)))}
 
-\NormalTok{(}\KeywordTok{display}
-\NormalTok{ (foo }\DecValTok{5} \DecValTok{3}\NormalTok{))}
+\NormalTok{(foo }\DecValTok{5} \DecValTok{3}\NormalTok{)}
 \end{Highlighting}
 \end{Shaded}
 
-\begin{Shaded}
-\begin{Highlighting}[]
-\DecValTok{11}
-\end{Highlighting}
-\end{Shaded}
+11
 
 \^{} Dynamically evaluated when you press "enter" on the
 \texttt{BEGIN\_SRC} block!
 
 \hypertarget{also-consider}{%
-\subsection{Also consider:}\label{also-consider}}
+\subsubsection{Also consider:}\label{also-consider}}
 
 \begin{itemize}
 \tightlist
@@ -145,6 +140,16 @@
 \end{itemize}
 
 \(a + (\pi \times b)\) \textless\textasciitilde{} inline Latex btw :)
+
+\hypertarget{current-command-for-conversion}{%
+\subsubsection{Current command for
+conversion}\label{current-command-for-conversion}}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\ExtensionTok{pandoc} \AttributeTok{{-}{-}from}\NormalTok{ org }\AttributeTok{{-}{-}to}\NormalTok{ latex 1.org }\AttributeTok{{-}o}\NormalTok{ 1.tex }\AttributeTok{{-}s}\KeywordTok{;} \ExtensionTok{xelatex}\NormalTok{ 1.tex}
+\end{Highlighting}
+\end{Shaded}
 
 \hypertarget{helper-for-org-mode-tables}{%
 \subsection{Helper for org-mode
@@ -246,17 +251,12 @@ Translate the following expression into prefix form:
 \label{EX1-2}}%
 \begin{Shaded}
 \begin{Highlighting}[]
-\NormalTok{(}\KeywordTok{display}
-\NormalTok{ (}\OperatorTok{/}\NormalTok{ (}\OperatorTok{+} \DecValTok{5} \DecValTok{2}\NormalTok{ (}\OperatorTok{{-}} \DecValTok{2} \DecValTok{3}\NormalTok{ (}\OperatorTok{+} \DecValTok{6}\NormalTok{ (}\OperatorTok{/} \DecValTok{4} \DecValTok{5}\NormalTok{))))}
-\NormalTok{   (}\OperatorTok{*} \DecValTok{3}\NormalTok{ (}\OperatorTok{{-}} \DecValTok{6} \DecValTok{2}\NormalTok{) (}\OperatorTok{{-}} \DecValTok{2} \DecValTok{7}\NormalTok{))))}
+\NormalTok{(}\OperatorTok{/}\NormalTok{ (}\OperatorTok{+} \DecValTok{5} \DecValTok{2}\NormalTok{ (}\OperatorTok{{-}} \DecValTok{2} \DecValTok{3}\NormalTok{ (}\OperatorTok{+} \DecValTok{6}\NormalTok{ (}\OperatorTok{/} \DecValTok{4} \DecValTok{5}\NormalTok{))))}
+\NormalTok{   (}\OperatorTok{*} \DecValTok{3}\NormalTok{ (}\OperatorTok{{-}} \DecValTok{6} \DecValTok{2}\NormalTok{) (}\OperatorTok{{-}} \DecValTok{2} \DecValTok{7}\NormalTok{)))}
 \end{Highlighting}
 \end{Shaded}
 
-\begin{Shaded}
-\begin{Highlighting}[]
-\DecValTok{1}\NormalTok{/75}
-\end{Highlighting}
-\end{Shaded}
+1/75
 
 \hypertarget{exercise-1.3}{%
 \section{Exercise 1.3}\label{exercise-1.3}}
@@ -295,10 +295,9 @@ sum of the squares of the two larger numbers.
 \NormalTok{        ((}\KeywordTok{and}\NormalTok{ (}\OperatorTok{\textgreater{}}\NormalTok{ b a) (}\OperatorTok{\textgreater{}=}\NormalTok{ c a)) (sum{-}square b c))}
 \NormalTok{        (}\KeywordTok{else} \StringTok{"This shouldn\textquotesingle{}t happen"}\NormalTok{)))}
 
-\NormalTok{(}\KeywordTok{display}
 \NormalTok{ (}\KeywordTok{list}\NormalTok{ (square{-}2of3 }\DecValTok{7} \DecValTok{5} \DecValTok{3}\NormalTok{)}
 \NormalTok{       (square{-}2of3 }\DecValTok{7} \DecValTok{3} \DecValTok{5}\NormalTok{)}
-\NormalTok{       (square{-}2of3 }\DecValTok{3} \DecValTok{5} \DecValTok{7}\NormalTok{)))}
+\NormalTok{       (square{-}2of3 }\DecValTok{3} \DecValTok{5} \DecValTok{7}\NormalTok{))}
 
 \end{Highlighting}
 \end{Shaded}
@@ -564,11 +563,7 @@ And for larger numbers, an infinite loop will eventually be reached.
 \end{Highlighting}
 \end{Shaded}
 
-\begin{Shaded}
-\begin{Highlighting}[]
-\FloatTok{1000000.0}
-\end{Highlighting}
-\end{Shaded}
+1000000.0
 
 My original answer was this, which compares the previous iteration until
 the new and old are within an arbitrary \(dx\).
@@ -598,15 +593,11 @@ This solution can correctly find small and large numbers:
 \begin{Shaded}
 \begin{Highlighting}[]
 \NormalTok{\textless{}\textless{}inferior{-}good{-}enough\textgreater{}\textgreater{}}
-\NormalTok{(}\KeywordTok{display}\NormalTok{ (new{-}sqrt }\DecValTok{10000000000000}\NormalTok{))}
+\NormalTok{(new{-}sqrt }\DecValTok{10000000000000}\NormalTok{)}
 \end{Highlighting}
 \end{Shaded}
 
-\begin{Shaded}
-\begin{Highlighting}[]
-\FloatTok{3162277.6601683795}
-\end{Highlighting}
-\end{Shaded}
+3162277.6601683795
 
 \hypertarget{EX1-7-t2}{%
 \label{EX1-7-t2}}%
@@ -655,6 +646,7 @@ automatically reaches the precision limit of the system:
 
 \NormalTok{(}\ExtensionTok{define}\FunctionTok{ }\NormalTok{(best{-}sqrt x)}
 \NormalTok{  (best{-}sqrt{-}iter }\FloatTok{1.0}\NormalTok{ x))}
+
 \NormalTok{(transpose{-}list (map best{-}sqrt \textquotesingle{}(}\FloatTok{0.01} \FloatTok{0.0001} \FloatTok{0.000001} \FloatTok{0.00000001} \FloatTok{0.0000000001}\NormalTok{)))}
 \end{Highlighting}
 \end{Shaded}
