@@ -724,11 +724,11 @@ loops:
 \end{longtable}
 
 However, this will hang on an infinite loop when trying to run
-src\textsubscript{scheme}\{(cbrt 100)\}. I speculate it's a floating
-point precision issue with the "improve" algorithm. So to avoid it I'll
-just keep track of the last guess and stop improving when there's no
-more change occurring. Also while researching I discovered that (again
-due to floating point)
+\VERB|\NormalTok{(cbrt }\DecValTok{100}\NormalTok{)}|. I speculate it's
+a floating point precision issue with the "improve" algorithm. So to
+avoid it I'll just keep track of the last guess and stop improving when
+there's no more change occurring. Also while researching I discovered
+that (again due to floating point)
 \VERB|\NormalTok{(cbrt {-}}\DecValTok{2}\NormalTok{)}| loops forever
 unless you initialize your guess with a slightly different value, so
 let's do 1.1 instead.
@@ -736,10 +736,11 @@ let's do 1.1 instead.
 \hypertarget{a2}{%
 \subsection{A2}\label{a2}}
 
-\hypertarget{EX1-8-A2}{%
-\label{EX1-8-A2}}%
+\hypertarget{cbrt}{%
+\label{cbrt}}%
 \begin{Shaded}
 \begin{Highlighting}[]
+\NormalTok{\textless{}\textless{}square\textgreater{}\textgreater{}}
 \NormalTok{(}\ExtensionTok{define}\FunctionTok{ }\NormalTok{(cb{-}good{-}enough? nextguess guess lastguess x)}
 \NormalTok{  (}\KeywordTok{or}\NormalTok{ (}\OperatorTok{=}\NormalTok{ nextguess guess)}
 \NormalTok{      (}\OperatorTok{=}\NormalTok{ nextguess lastguess)))}
@@ -756,9 +757,14 @@ let's do 1.1 instead.
 \NormalTok{      (cbrt{-}iter nextguess guess x)))}
 \NormalTok{(}\ExtensionTok{define}\FunctionTok{ }\NormalTok{(cbrt x)}
 \NormalTok{  (cbrt{-}iter }\FloatTok{1.1} \DecValTok{9999}\NormalTok{ x))}
+\end{Highlighting}
+\end{Shaded}
 
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{\textless{}\textless{}cbrt\textgreater{}\textgreater{}}
 \NormalTok{(}\KeywordTok{let}\NormalTok{ ((testvals (}\KeywordTok{list} \DecValTok{7} \DecValTok{32} \DecValTok{56} \DecValTok{100}\NormalTok{ {-}}\DecValTok{2}\NormalTok{)))}
-\NormalTok{      (map (λ (i) (}\KeywordTok{cons}\NormalTok{ i (}\KeywordTok{cons}\NormalTok{ (cbrt i) \#nil))) testvals))}
+\NormalTok{  (map (λ (i) (}\KeywordTok{cons}\NormalTok{ i (}\KeywordTok{cons}\NormalTok{ (cbrt i) \#nil))) testvals))}
 \end{Highlighting}
 \end{Shaded}
 

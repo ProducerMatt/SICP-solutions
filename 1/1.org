@@ -466,16 +466,17 @@ My first attempt works, but needs an arbitrary limit to stop infinite loops:
 | 100 | 4.641588833612779 |
 :end:
 
-However, this will hang on an infinite loop when trying to run src_scheme{(cbrt
-100)}. I speculate it's a floating point precision issue with the "improve"
+However, this will hang on an infinite loop when trying to run src_scheme{(cbrt 100)}.
+I speculate it's a floating point precision issue with the "improve"
 algorithm. So to avoid it I'll just keep track of the last guess and stop
 improving when there's no more change occurring. Also while researching I
 discovered that (again due to floating point) src_scheme{(cbrt -2)} loops
 forever unless you initialize your guess with a slightly different value, so
 let's do 1.1 instead.
 ** A2
-#+NAME: EX1-8-A2
-#+BEGIN_SRC scheme :eval no-export :tangle no :exports both :results value table
+#+NAME: cbrt
+#+BEGIN_SRC scheme :eval no-export :tangle yes :exports code :results silent
+<<square>>
 (define (cb-good-enough? nextguess guess lastguess x)
   (or (= nextguess guess)
       (= nextguess lastguess)))
@@ -492,16 +493,18 @@ let's do 1.1 instead.
       (cbrt-iter nextguess guess x)))
 (define (cbrt x)
   (cbrt-iter 1.1 9999 x))
-
+#+END_SRC
+#+BEGIN_SRC scheme :eval no-export :tangle no :exports both :results value table
+<<cbrt>>
 (let ((testvals (list 7 32 56 100 -2)))
-      (map (λ (i) (cons i (cons (cbrt i) #nil))) testvals))
-  #+END_SRC
+  (map (λ (i) (cons i (cons (cbrt i) #nil))) testvals))
+#+END_SRC
 
-  #+RESULTS[e34519baea5f1ca4956cae2350b49d81d39f7aab]: EX1-8-A2
-  :results:
-  |   7 |   1.912931182772389 |
-  |  32 |   3.174802103936399 |
-  |  56 |   3.825862365544778 |
-  | 100 |   4.641588833612779 |
-  |  -2 | -1.2599210498948732 |
-  :end:
+#+RESULTS[7450ce5b782e8e88f422b003dc76ad2dbc06d2af]:
+:results:
+|   7 |   1.912931182772389 |
+|  32 |   3.174802103936399 |
+|  56 |   3.825862365544778 |
+| 100 |   4.641588833612779 |
+|  -2 | -1.2599210498948732 |
+:end:

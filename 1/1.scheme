@@ -46,10 +46,9 @@
         ((and (> b a) (>= c a)) (sum-square b c))
         (else "This shouldn't happen")))
 
-(display
  (list (square-2of3 7 5 3)
        (square-2of3 7 3 5)
-       (square-2of3 3 5 7)))
+       (square-2of3 3 5 7))
 ;; EX1-3 ends here
 
 ;; [[file:1.org::abs][abs]]
@@ -142,3 +141,26 @@
 (define (new-sqrt x)
   (new-sqrt-iter 1.0 x 0))
 ;; inferior-good-enough ends here
+
+;; [[file:1.org::cbrt][cbrt]]
+;; [[[[file:~/SICP-group/1/1.org::cbrt][cbrt]]][square]]
+(define (square x)
+  (* x x))
+;; square ends here
+(define (cb-good-enough? nextguess guess lastguess x)
+  (or (= nextguess guess)
+      (= nextguess lastguess)))
+(define (cb-improve guess x)
+  (/
+   (+
+    (/ x (square guess))
+    (* guess 2))
+   3))
+(define (cbrt-iter guess lastguess x)
+  (define nextguess (cb-improve guess x))
+  (if (cb-good-enough? nextguess guess lastguess x)
+      nextguess
+      (cbrt-iter nextguess guess x)))
+(define (cbrt x)
+  (cbrt-iter 1.1 9999 x))
+;; cbrt ends here
