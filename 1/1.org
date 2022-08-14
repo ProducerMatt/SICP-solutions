@@ -9,6 +9,7 @@
 #+PANDOC_OPTIONS: standalone:t
 # FIXME: this doesn't appear to do anything. Be sure to run pandoc with -s
 
+#+LATEX_CMD: xelatex
 #+LATEX_HEADER: \setmonofont[Mapping=tex-text,Scale=MatchLowercase]{FiraMono-Regular}
 #+LATEX_HEADER: \listfiles
 # listfiles causes latex to make a list of all files used during processing
