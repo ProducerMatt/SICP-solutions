@@ -399,7 +399,7 @@ reaches the precision limit of the system:
 #+END_SRC
 
 #+NAME: EX1-7-t3
-#+BEGIN_SRC scheme :eval no-export :tangle no :exports both :results value table drawer
+#+BEGIN_SRC scheme :eval no-export :tangle no :exports both :results value table
 <<transpose-list>>
 <<new-good-enough>>
 (define (best-sqrt-iter guess x)
@@ -421,3 +421,87 @@ reaches the precision limit of the system:
 | 9.999999999999999e-05 |
 | 9.999999999999999e-06 |
 :end:
+
+* Exercise 1.8
+** Q
+Newton’s method for cube roots is based on the fact that if y is an
+approximation to the cube root of x, then a better approximation is given by the
+value:
+\begin{equation}
+\frac{\frac{x}{y^2} + 2y}{3}
+\end{equation}
+Use this formula to implement a cube-root procedure analogous to the square-root
+procedure. (In 1.3.4 we will see how to implement Newton’s method in general as
+an abstraction of these square-root and cube-root procedures.)
+** A1
+My first attempt works, but needs an arbitrary limit to stop infinite loops:
+#+NAME: EX1-8-A1
+#+BEGIN_SRC scheme :eval no-export :tangle no :exports both :results value table
+<<square>>
+(define (cb-good-enough? guess x)
+  (= (cb-improve guess x) guess))
+(define (cb-improve guess x)
+  (/
+   (+
+    (/ x (square guess))
+    (* guess 2))
+   3))
+(define (cbrt-iter guess x counter)
+  (if (or (cb-good-enough? guess x) (> counter 100))
+      guess
+      (begin
+        (cbrt-iter (cb-improve guess x) x (+ 1 counter)))))
+(define (cbrt x)
+  (cbrt-iter 1.0 x 0))
+
+(let ((testvals (list 7 32 56 100)))
+      (map (λ (i) (cons i (cons (cbrt i) #nil))) testvals))
+#+end_src
+
+#+RESULTS[b2bd4cffe876e922265b4894e27a1970312fea5e]: EX1-8-A1
+:results:
+|   7 | 1.912931182772389 |
+|  32 | 3.174802103936399 |
+|  56 | 3.825862365544778 |
+| 100 | 4.641588833612779 |
+:end:
+
+However, this will hang on an infinite loop when trying to run src_scheme{(cbrt
+100)}. I speculate it's a floating point precision issue with the "improve"
+algorithm. So to avoid it I'll just keep track of the last guess and stop
+improving when there's no more change occurring. Also while researching I
+discovered that (again due to floating point) src_scheme{(cbrt -2)} loops
+forever unless you initialize your guess with a slightly different value, so
+let's do 1.1 instead.
+** A2
+#+NAME: EX1-8-A2
+#+BEGIN_SRC scheme :eval no-export :tangle no :exports both :results value table
+(define (cb-good-enough? nextguess guess lastguess x)
+  (or (= nextguess guess)
+      (= nextguess lastguess)))
+(define (cb-improve guess x)
+  (/
+   (+
+    (/ x (square guess))
+    (* guess 2))
+   3))
+(define (cbrt-iter guess lastguess x)
+  (define nextguess (cb-improve guess x))
+  (if (cb-good-enough? nextguess guess lastguess x)
+      nextguess
+      (cbrt-iter nextguess guess x)))
+(define (cbrt x)
+  (cbrt-iter 1.1 9999 x))
+
+(let ((testvals (list 7 32 56 100 -2)))
+      (map (λ (i) (cons i (cons (cbrt i) #nil))) testvals))
+  #+END_SRC
+
+  #+RESULTS[e34519baea5f1ca4956cae2350b49d81d39f7aab]: EX1-8-A2
+  :results:
+  |   7 |   1.912931182772389 |
+  |  32 |   3.174802103936399 |
+  |  56 |   3.825862365544778 |
+  | 100 |   4.641588833612779 |
+  |  -2 | -1.2599210498948732 |
+  :end:

@@ -662,4 +662,115 @@ automatically reaches the precision limit of the system:
 \bottomrule
 \end{longtable}
 
+\hypertarget{exercise-1.8}{%
+\section{Exercise 1.8}\label{exercise-1.8}}
+
+\hypertarget{q-7}{%
+\subsection{Q}\label{q-7}}
+
+Newton's method for cube roots is based on the fact that if y is an
+approximation to the cube root of x, then a better approximation is
+given by the value:
+
+\begin{equation}
+\frac{\frac{x}{y^2} + 2y}{3}
+\end{equation}
+
+Use this formula to implement a cube-root procedure analogous to the
+square-root procedure. (In 1.3.4 we will see how to implement Newton's
+method in general as an abstraction of these square-root and cube-root
+procedures.)
+
+\hypertarget{a1}{%
+\subsection{A1}\label{a1}}
+
+My first attempt works, but needs an arbitrary limit to stop infinite
+loops:
+
+\hypertarget{EX1-8-A1}{%
+\label{EX1-8-A1}}%
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{\textless{}\textless{}square\textgreater{}\textgreater{}}
+\NormalTok{(}\ExtensionTok{define}\FunctionTok{ }\NormalTok{(cb{-}good{-}enough? guess x)}
+\NormalTok{  (}\OperatorTok{=}\NormalTok{ (cb{-}improve guess x) guess))}
+\NormalTok{(}\ExtensionTok{define}\FunctionTok{ }\NormalTok{(cb{-}improve guess x)}
+\NormalTok{  (}\OperatorTok{/}
+\NormalTok{   (}\OperatorTok{+}
+\NormalTok{    (}\OperatorTok{/}\NormalTok{ x (square guess))}
+\NormalTok{    (}\OperatorTok{*}\NormalTok{ guess }\DecValTok{2}\NormalTok{))}
+   \DecValTok{3}\NormalTok{))}
+\NormalTok{(}\ExtensionTok{define}\FunctionTok{ }\NormalTok{(cbrt{-}iter guess x counter)}
+\NormalTok{  (}\KeywordTok{if}\NormalTok{ (}\KeywordTok{or}\NormalTok{ (cb{-}good{-}enough? guess x) (}\OperatorTok{\textgreater{}}\NormalTok{ counter }\DecValTok{100}\NormalTok{))}
+\NormalTok{      guess}
+\NormalTok{      (}\KeywordTok{begin}
+\NormalTok{        (cbrt{-}iter (cb{-}improve guess x) x (}\OperatorTok{+} \DecValTok{1}\NormalTok{ counter)))))}
+\NormalTok{(}\ExtensionTok{define}\FunctionTok{ }\NormalTok{(cbrt x)}
+\NormalTok{  (cbrt{-}iter }\FloatTok{1.0}\NormalTok{ x }\DecValTok{0}\NormalTok{))}
+
+\NormalTok{(}\KeywordTok{let}\NormalTok{ ((testvals (}\KeywordTok{list} \DecValTok{7} \DecValTok{32} \DecValTok{56} \DecValTok{100}\NormalTok{)))}
+\NormalTok{      (map (λ (i) (}\KeywordTok{cons}\NormalTok{ i (}\KeywordTok{cons}\NormalTok{ (cbrt i) \#nil))) testvals))}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{longtable}[]{@{}ll@{}}
+\toprule
+\endhead
+7 & 1.912931182772389 \\
+32 & 3.174802103936399 \\
+56 & 3.825862365544778 \\
+100 & 4.641588833612779 \\
+\bottomrule
+\end{longtable}
+
+However, this will hang on an infinite loop when trying to run
+src\textsubscript{scheme}\{(cbrt 100)\}. I speculate it's a floating
+point precision issue with the "improve" algorithm. So to avoid it I'll
+just keep track of the last guess and stop improving when there's no
+more change occurring. Also while researching I discovered that (again
+due to floating point)
+\VERB|\NormalTok{(cbrt {-}}\DecValTok{2}\NormalTok{)}| loops forever
+unless you initialize your guess with a slightly different value, so
+let's do 1.1 instead.
+
+\hypertarget{a2}{%
+\subsection{A2}\label{a2}}
+
+\hypertarget{EX1-8-A2}{%
+\label{EX1-8-A2}}%
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{(}\ExtensionTok{define}\FunctionTok{ }\NormalTok{(cb{-}good{-}enough? nextguess guess lastguess x)}
+\NormalTok{  (}\KeywordTok{or}\NormalTok{ (}\OperatorTok{=}\NormalTok{ nextguess guess)}
+\NormalTok{      (}\OperatorTok{=}\NormalTok{ nextguess lastguess)))}
+\NormalTok{(}\ExtensionTok{define}\FunctionTok{ }\NormalTok{(cb{-}improve guess x)}
+\NormalTok{  (}\OperatorTok{/}
+\NormalTok{   (}\OperatorTok{+}
+\NormalTok{    (}\OperatorTok{/}\NormalTok{ x (square guess))}
+\NormalTok{    (}\OperatorTok{*}\NormalTok{ guess }\DecValTok{2}\NormalTok{))}
+   \DecValTok{3}\NormalTok{))}
+\NormalTok{(}\ExtensionTok{define}\FunctionTok{ }\NormalTok{(cbrt{-}iter guess lastguess x)}
+\NormalTok{  (}\ExtensionTok{define}\FunctionTok{ nextguess }\NormalTok{(cb{-}improve guess x))}
+\NormalTok{  (}\KeywordTok{if}\NormalTok{ (cb{-}good{-}enough? nextguess guess lastguess x)}
+\NormalTok{      nextguess}
+\NormalTok{      (cbrt{-}iter nextguess guess x)))}
+\NormalTok{(}\ExtensionTok{define}\FunctionTok{ }\NormalTok{(cbrt x)}
+\NormalTok{  (cbrt{-}iter }\FloatTok{1.1} \DecValTok{9999}\NormalTok{ x))}
+
+\NormalTok{(}\KeywordTok{let}\NormalTok{ ((testvals (}\KeywordTok{list} \DecValTok{7} \DecValTok{32} \DecValTok{56} \DecValTok{100}\NormalTok{ {-}}\DecValTok{2}\NormalTok{)))}
+\NormalTok{      (map (λ (i) (}\KeywordTok{cons}\NormalTok{ i (}\KeywordTok{cons}\NormalTok{ (cbrt i) \#nil))) testvals))}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{longtable}[]{@{}ll@{}}
+\toprule
+\endhead
+7 & 1.912931182772389 \\
+32 & 3.174802103936399 \\
+56 & 3.825862365544778 \\
+100 & 4.641588833612779 \\
+-2 & -1.2599210498948732 \\
+\bottomrule
+\end{longtable}
+
 \end{document}
