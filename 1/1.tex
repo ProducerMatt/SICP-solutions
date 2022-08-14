@@ -150,6 +150,15 @@
 \subsection{Helper for org-mode
 tables}\label{helper-for-org-mode-tables}}
 
+\hypertarget{transpose-list}{%
+\label{transpose-list}}%
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{(}\ExtensionTok{define}\FunctionTok{ }\NormalTok{(transpose{-}list l)}
+\NormalTok{  (map (λ (i) (}\KeywordTok{list}\NormalTok{ i)) l))}
+\end{Highlighting}
+\end{Shaded}
+
 \hypertarget{print-as-rows}{%
 \label{print-as-rows}}%
 \begin{Shaded}
@@ -524,18 +533,24 @@ The current method has decreasing accuracy with smaller numbers. Notice
 the steady divergence from correct answers here (should alternate
 between values starting with "316" and "100"):
 
+\hypertarget{EX1-7-t1}{%
+\label{EX1-7-t1}}%
 \begin{Shaded}
 \begin{Highlighting}[]
+\NormalTok{\textless{}\textless{}transpose{-}list\textgreater{}\textgreater{}}
 \NormalTok{\textless{}\textless{}txt{-}sqrt\textgreater{}\textgreater{}}
-\NormalTok{(}\KeywordTok{display}\NormalTok{ (map }\KeywordTok{sqrt}\NormalTok{ \textquotesingle{}(}\FloatTok{0.1} \FloatTok{0.01} \FloatTok{0.001} \FloatTok{0.0001} \FloatTok{0.00001}\NormalTok{)))}
+\NormalTok{(transpose{-}list (map }\KeywordTok{sqrt}\NormalTok{ \textquotesingle{}(}\FloatTok{0.1} \FloatTok{0.01} \FloatTok{0.001} \FloatTok{0.0001} \FloatTok{0.00001}\NormalTok{)))}
 \end{Highlighting}
 \end{Shaded}
 
-\begin{longtable}[]{@{}lllll@{}}
+\begin{longtable}[]{@{}l@{}}
 \toprule
 \endhead
-0.316245562280389 & 0.10032578510960605 & 0.04124542607499115 &
-0.03230844833048122 & 0.03135649010771716 \\
+0.316245562280389 \\
+0.10032578510960605 \\
+0.04124542607499115 \\
+0.03230844833048122 \\
+0.03135649010771716 \\
 \bottomrule
 \end{longtable}
 
@@ -597,21 +612,22 @@ This solution can correctly find small and large numbers:
 \label{EX1-7-t2}}%
 \begin{Shaded}
 \begin{Highlighting}[]
-\NormalTok{\textless{}\textless{}print{-}as{-}rows\textgreater{}\textgreater{}}
+\NormalTok{\textless{}\textless{}transpose{-}list\textgreater{}\textgreater{}}
 \NormalTok{\textless{}\textless{}inferior{-}good{-}enough\textgreater{}\textgreater{}}
-\NormalTok{(print{-}as{-}rows (map new{-}sqrt \textquotesingle{}(}\FloatTok{0.1} \FloatTok{0.01} \FloatTok{0.001} \FloatTok{0.0001} \FloatTok{0.00001}\NormalTok{)))}
+\NormalTok{(transpose{-}list (map new{-}sqrt \textquotesingle{}(}\FloatTok{0.1} \FloatTok{0.01} \FloatTok{0.001} \FloatTok{0.0001} \FloatTok{0.00001}\NormalTok{)))}
 \end{Highlighting}
 \end{Shaded}
 
-\begin{Shaded}
-\begin{Highlighting}[]
-\NormalTok{0.31622776601683794}
-\NormalTok{0.1}
-\NormalTok{0.03162277660168379}
-\NormalTok{0.01}
-\NormalTok{0.0031622776601683794}
-\end{Highlighting}
-\end{Shaded}
+\begin{longtable}[]{@{}l@{}}
+\toprule
+\endhead
+0.31622776601683794 \\
+0.1 \\
+0.03162277660168379 \\
+0.01 \\
+0.0031622776601683794 \\
+\bottomrule
+\end{longtable}
 
 However, I found this solution online that isn't just simpler but
 automatically reaches the precision limit of the system:
@@ -626,5 +642,32 @@ automatically reaches the precision limit of the system:
 \end{Highlighting}
 \end{Shaded}
 
+\hypertarget{EX1-7-t3}{%
+\label{EX1-7-t3}}%
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{\textless{}\textless{}transpose{-}list\textgreater{}\textgreater{}}
+\NormalTok{\textless{}\textless{}new{-}good{-}enough\textgreater{}\textgreater{}}
+\NormalTok{(}\ExtensionTok{define}\FunctionTok{ }\NormalTok{(sqrt{-}iter guess x)}
+\NormalTok{  (}\KeywordTok{if}\NormalTok{ (good{-}enough? guess x)}
+\NormalTok{      guess}
+\NormalTok{      (sqrt{-}iter (improve guess x) x)))}
+
+\NormalTok{(}\ExtensionTok{define}\FunctionTok{ }\NormalTok{(}\KeywordTok{sqrt}\NormalTok{ x)}
+\NormalTok{  (sqrt{-}iter }\FloatTok{1.0}\NormalTok{ x))}
+\NormalTok{(transpose{-}list (map }\KeywordTok{sqrt}\NormalTok{ \textquotesingle{}(}\FloatTok{0.1} \FloatTok{0.01} \FloatTok{0.001} \FloatTok{0.0001} \FloatTok{0.00001}\NormalTok{)))}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{longtable}[]{@{}l@{}}
+\toprule
+\endhead
+0.31622776601683794 \\
+0.1 \\
+0.03162277660168379 \\
+0.01 \\
+0.0031622776601683794 \\
+\bottomrule
+\end{longtable}
 
 \end{document}
