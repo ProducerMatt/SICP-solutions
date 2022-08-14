@@ -392,3 +392,26 @@ reaches the precision limit of the system:
 (define (good-enough? guess x)
    (= (improve guess x) guess))
 #+END_SRC
+
+#+NAME: EX1-7-t3
+#+BEGIN_SRC scheme :eval no-export :tangle no :exports both :results value table drawer
+<<transpose-list>>
+<<new-good-enough>>
+(define (sqrt-iter guess x)
+  (if (good-enough? guess x)
+      guess
+      (sqrt-iter (improve guess x) x)))
+
+(define (sqrt x)
+  (sqrt-iter 1.0 x))
+(transpose-list (map sqrt '(0.1 0.01 0.001 0.0001 0.00001)))
+#+end_src
+
+#+RESULTS[973f70cb8d7bff8c7d1040fd19d445e6a2254a0b]: EX1-7-t3
+:results:
+|   0.31622776601683794 |
+|                   0.1 |
+|   0.03162277660168379 |
+|                  0.01 |
+| 0.0031622776601683794 |
+:end:
