@@ -6,6 +6,8 @@
 # For their dependencies:
 # #+BEGIN_SRC scheme :eval no-export :tangle yes :results silent
 
+#+auto_tangle: t
+
 #+PANDOC_OPTIONS: standalone:t
 # FIXME: this doesn't appear to do anything. Be sure to run pandoc with -s
 
