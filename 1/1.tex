@@ -892,5 +892,62 @@ tail-recursion.
 \end{Highlighting}
 \end{Shaded}
 
+\hypertarget{exercise-1.10}{%
+\section{Exercise 1.10}\label{exercise-1.10}}
+
+\hypertarget{q-9}{%
+\subsection{Q}\label{q-9}}
+
+The following procedure computes a mathematical function called
+Ackermann's function.
+
+\hypertarget{ackermann}{%
+\label{ackermann}}%
+\begin{Shaded}
+\begin{Highlighting}[numbers=left,,]
+\NormalTok{(}\ExtensionTok{define}\FunctionTok{ }\NormalTok{(A x y)}
+\NormalTok{  (}\KeywordTok{cond}\NormalTok{ ((}\OperatorTok{=}\NormalTok{ y }\DecValTok{0}\NormalTok{) }\DecValTok{0}\NormalTok{)}
+\NormalTok{        ((}\OperatorTok{=}\NormalTok{ x }\DecValTok{0}\NormalTok{) (}\OperatorTok{*} \DecValTok{2}\NormalTok{ y))}
+\NormalTok{        ((}\OperatorTok{=}\NormalTok{ y }\DecValTok{1}\NormalTok{) }\DecValTok{2}\NormalTok{)}
+\NormalTok{        (}\KeywordTok{else}\NormalTok{ (A (}\OperatorTok{{-}}\NormalTok{ x }\DecValTok{1}\NormalTok{)}
+\NormalTok{                 (A x (}\OperatorTok{{-}}\NormalTok{ y }\DecValTok{1}\NormalTok{))))))}
+\end{Highlighting}
+\end{Shaded}
+
+What are the values of the following expressions?
+
+\begin{Shaded}
+\begin{Highlighting}[numbers=left,,]
+\NormalTok{(A }\DecValTok{1} \DecValTok{10}\NormalTok{)}
+\NormalTok{(A }\DecValTok{2} \DecValTok{4}\NormalTok{)}
+\NormalTok{(A }\DecValTok{3} \DecValTok{3}\NormalTok{)}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{longtable}[]{@{}ll@{}}
+\toprule
+\endhead
+(1 10) & 1024 \\
+(2 4) & 65536 \\
+(3 3) & 65536 \\
+\bottomrule
+\end{longtable}
+
+\hypertarget{EX1-10_defs}{%
+\label{EX1-10_defs}}%
+\begin{Shaded}
+\begin{Highlighting}[numbers=left,,]
+\NormalTok{\textless{}\textless{}ackermann\textgreater{}\textgreater{}}
+\NormalTok{(}\ExtensionTok{define}\FunctionTok{ }\NormalTok{(f n) (A }\DecValTok{0}\NormalTok{ n))}
+\NormalTok{(}\ExtensionTok{define}\FunctionTok{ }\NormalTok{(g n) (A }\DecValTok{1}\NormalTok{ n))}
+\NormalTok{(}\ExtensionTok{define}\FunctionTok{ }\NormalTok{(h n) (A }\DecValTok{2}\NormalTok{ n))}
+\NormalTok{(}\ExtensionTok{define}\FunctionTok{ }\NormalTok{(k n) (}\OperatorTok{*} \DecValTok{5}\NormalTok{ n n))}
+\end{Highlighting}
+\end{Shaded}
+
+Give concise mathematical definitions for the functions computed by the
+procedures \texttt{f}, \texttt{g}, and \texttt{h} for positive integer
+values of \(n\). For example, \VERB|\NormalTok{(k n)}| computes
+\(5n^2\).
 
 \end{document}
