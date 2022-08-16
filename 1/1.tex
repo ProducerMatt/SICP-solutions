@@ -650,20 +650,20 @@ This solution can correctly find small and large numbers:
 \label{EX1-7-t2}}%
 \begin{Shaded}
 \begin{Highlighting}[]
-\NormalTok{\textless{}\textless{}transpose{-}list\textgreater{}\textgreater{}}
+\NormalTok{\textless{}\textless{}try{-}these\textgreater{}\textgreater{}}
 \NormalTok{\textless{}\textless{}inferior{-}good{-}enough\textgreater{}\textgreater{}}
-\NormalTok{(transpose{-}list (map new{-}sqrt \textquotesingle{}(}\FloatTok{0.01} \FloatTok{0.0001} \FloatTok{0.000001} \FloatTok{0.00000001} \FloatTok{0.0000000001}\NormalTok{)))}
+\NormalTok{(try{-}these new{-}sqrt \textquotesingle{}(}\FloatTok{0.01} \FloatTok{0.0001} \FloatTok{0.000001} \FloatTok{0.00000001} \FloatTok{0.0000000001}\NormalTok{))}
 \end{Highlighting}
 \end{Shaded}
 
-\begin{longtable}[]{@{}l@{}}
+\begin{longtable}[]{@{}ll@{}}
 \toprule
 \endhead
-0.1 \\
-0.01 \\
-0.001 \\
-9.999999999999999e-05 \\
-9.999999999999999e-06 \\
+0.01 & 0.1 \\
+0.0001 & 0.01 \\
+1e-06 & 0.001 \\
+1e-08 & 9.999999999999999e-05 \\
+1e-10 & 9.999999999999999e-06 \\
 \bottomrule
 \end{longtable}
 
@@ -684,7 +684,7 @@ automatically reaches the precision limit of the system:
 \label{EX1-7-t3}}%
 \begin{Shaded}
 \begin{Highlighting}[]
-\NormalTok{\textless{}\textless{}transpose{-}list\textgreater{}\textgreater{}}
+\NormalTok{\textless{}\textless{}try{-}these\textgreater{}\textgreater{}}
 \NormalTok{\textless{}\textless{}new{-}good{-}enough\textgreater{}\textgreater{}}
 \NormalTok{(}\ExtensionTok{define}\FunctionTok{ }\NormalTok{(best{-}sqrt{-}iter guess x)}
 \NormalTok{  (}\KeywordTok{if}\NormalTok{ (best{-}good{-}enough? guess x)}
@@ -694,18 +694,18 @@ automatically reaches the precision limit of the system:
 \NormalTok{(}\ExtensionTok{define}\FunctionTok{ }\NormalTok{(best{-}sqrt x)}
 \NormalTok{  (best{-}sqrt{-}iter }\FloatTok{1.0}\NormalTok{ x))}
 
-\NormalTok{(transpose{-}list (map best{-}sqrt \textquotesingle{}(}\FloatTok{0.01} \FloatTok{0.0001} \FloatTok{0.000001} \FloatTok{0.00000001} \FloatTok{0.0000000001}\NormalTok{)))}
+\NormalTok{(try{-}these best{-}sqrt \textquotesingle{}(}\FloatTok{0.01} \FloatTok{0.0001} \FloatTok{0.000001} \FloatTok{0.00000001} \FloatTok{0.0000000001}\NormalTok{))}
 \end{Highlighting}
 \end{Shaded}
 
-\begin{longtable}[]{@{}l@{}}
+\begin{longtable}[]{@{}ll@{}}
 \toprule
 \endhead
-0.1 \\
-0.01 \\
-0.001 \\
-9.999999999999999e-05 \\
-9.999999999999999e-06 \\
+0.01 & 0.1 \\
+0.0001 & 0.01 \\
+1e-06 & 0.001 \\
+1e-08 & 9.999999999999999e-05 \\
+1e-10 & 9.999999999999999e-06 \\
 \bottomrule
 \end{longtable}
 
@@ -755,8 +755,7 @@ loops:
 \NormalTok{(}\ExtensionTok{define}\FunctionTok{ }\NormalTok{(cbrt x)}
 \NormalTok{  (cbrt{-}iter }\FloatTok{1.0}\NormalTok{ x }\DecValTok{0}\NormalTok{))}
 
-\NormalTok{(}\KeywordTok{let}\NormalTok{ ((testvals (}\KeywordTok{list} \DecValTok{7} \DecValTok{32} \DecValTok{56} \DecValTok{100}\NormalTok{)))}
-\NormalTok{      (map (λ (i) (}\KeywordTok{cons}\NormalTok{ i (}\KeywordTok{cons}\NormalTok{ (cbrt i) \#nil))) testvals))}
+\NormalTok{(try{-}these cbrt }\DecValTok{7} \DecValTok{32} \DecValTok{56} \DecValTok{100}\NormalTok{)}
 \end{Highlighting}
 \end{Shaded}
 
@@ -810,8 +809,8 @@ let's do 1.1 instead.
 \begin{Shaded}
 \begin{Highlighting}[]
 \NormalTok{\textless{}\textless{}cbrt\textgreater{}\textgreater{}}
-\NormalTok{(}\KeywordTok{let}\NormalTok{ ((testvals (}\KeywordTok{list} \DecValTok{7} \DecValTok{32} \DecValTok{56} \DecValTok{100}\NormalTok{ {-}}\DecValTok{2}\NormalTok{)))}
-\NormalTok{  (map (λ (i) (}\KeywordTok{cons}\NormalTok{ i (}\KeywordTok{cons}\NormalTok{ (cbrt i) \#nil))) testvals))}
+\NormalTok{\textless{}\textless{}try{-}these\textgreater{}\textgreater{}}
+\NormalTok{(try{-}these cbrt }\DecValTok{7} \DecValTok{32} \DecValTok{56} \DecValTok{100}\NormalTok{ {-}}\DecValTok{2}\NormalTok{)}
 \end{Highlighting}
 \end{Shaded}
 

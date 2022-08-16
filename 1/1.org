@@ -181,7 +181,7 @@ the squares of the two larger numbers.
                         '(3 5 7))
 #+END_SRC
 
-#+RESULTS[1892a96d51fb103222badea13a0335870c39871f]:
+#+RESULTS[0f816cfe3925898754ab7943a28f676135795e6c]:
 :results:
 | (7 5 3) | 74 |
 | (7 3 5) | 74 |
@@ -403,18 +403,18 @@ This solution can correctly find small and large numbers:
 
 #+NAME: EX1-7-t2
 #+BEGIN_SRC scheme :eval no-export :tangle no :exports both :results value table drawer
-<<transpose-list>>
+<<try-these>>
 <<inferior-good-enough>>
-(transpose-list (map new-sqrt '(0.01 0.0001 0.000001 0.00000001 0.0000000001)))
+(try-these new-sqrt '(0.01 0.0001 0.000001 0.00000001 0.0000000001))
 #+end_src
 
-#+RESULTS[e7b1a787e50f3cca05cce883961f20552fb63151]: EX1-7-t2
+#+RESULTS[c27aa8604cebcef53580dbfc41f8585b748aacda]: EX1-7-t2
 :results:
-|                   0.1 |
-|                  0.01 |
-|                 0.001 |
-| 9.999999999999999e-05 |
-| 9.999999999999999e-06 |
+|   0.01 |                   0.1 |
+| 0.0001 |                  0.01 |
+|  1e-06 |                 0.001 |
+|  1e-08 | 9.999999999999999e-05 |
+|  1e-10 | 9.999999999999999e-06 |
 :end:
 
 
@@ -430,7 +430,7 @@ reaches the precision limit of the system:
 
 #+NAME: EX1-7-t3
 #+BEGIN_SRC scheme :eval no-export :tangle no :exports both :results value table
-<<transpose-list>>
+<<try-these>>
 <<new-good-enough>>
 (define (best-sqrt-iter guess x)
   (if (best-good-enough? guess x)
@@ -440,16 +440,16 @@ reaches the precision limit of the system:
 (define (best-sqrt x)
   (best-sqrt-iter 1.0 x))
 
-(transpose-list (map best-sqrt '(0.01 0.0001 0.000001 0.00000001 0.0000000001)))
+(try-these best-sqrt '(0.01 0.0001 0.000001 0.00000001 0.0000000001))
 #+end_src
 
-#+RESULTS[815b533a404dbe62c2e92029a6b69103f411372e]: EX1-7-t3
+#+RESULTS[e76eef1cdddb1b40eb987330f13c0babf05110db]: EX1-7-t3
 :results:
-|                   0.1 |
-|                  0.01 |
-|                 0.001 |
-| 9.999999999999999e-05 |
-| 9.999999999999999e-06 |
+|   0.01 |                   0.1 |
+| 0.0001 |                  0.01 |
+|  1e-06 |                 0.001 |
+|  1e-08 | 9.999999999999999e-05 |
+|  1e-10 | 9.999999999999999e-06 |
 :end:
 
 * Exercise 1.8
@@ -484,11 +484,10 @@ My first attempt works, but needs an arbitrary limit to stop infinite loops:
 (define (cbrt x)
   (cbrt-iter 1.0 x 0))
 
-(let ((testvals (list 7 32 56 100)))
-      (map (λ (i) (cons i (cons (cbrt i) #nil))) testvals))
+(try-these cbrt 7 32 56 100)
 #+end_src
 
-#+RESULTS[b2bd4cffe876e922265b4894e27a1970312fea5e]: EX1-8-A1
+#+RESULTS[1eb5546cd3e124a63b0cd988f571097371a60813]: EX1-8-A1
 :results:
 |   7 | 1.912931182772389 |
 |  32 | 3.174802103936399 |
@@ -526,11 +525,11 @@ let's do 1.1 instead.
 #+END_SRC
 #+BEGIN_SRC scheme :eval no-export :tangle no :exports both :results value table
 <<cbrt>>
-(let ((testvals (list 7 32 56 100 -2)))
-  (map (λ (i) (cons i (cons (cbrt i) #nil))) testvals))
+<<try-these>>
+(try-these cbrt 7 32 56 100 -2)
 #+END_SRC
 
-#+RESULTS[7450ce5b782e8e88f422b003dc76ad2dbc06d2af]:
+#+RESULTS[965031d6fc942ec767b94f18bc03219f3a3f93d6]:
 :results:
 |   7 |   1.912931182772389 |
 |  32 |   3.174802103936399 |
