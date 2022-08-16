@@ -619,7 +619,7 @@ What are the values of the following expressions?
 | (3 3)  | 65536 |
 :end:
 
-#+NAME: EX1-10_defs
+#+NAME: EX1-10-defs
 #+BEGIN_SRC scheme -n :eval no-export :tangle yes :exports code :results silent
 <<ackermann>>
 (define (f n) (A 0 n))
@@ -631,3 +631,26 @@ What are the values of the following expressions?
 Give concise mathematical definitions for the functions computed by the
 procedures ~f~, ~g~, and ~h~ for positive integer values of \(n\). For example,
 src_scheme{(k n)} computes \(5n^2\).
+
+** A
+Let's start with ~f~.
+
+#+BEGIN_SRC scheme -n :eval no-export :tangle no :exports both :results value table
+<<try-these>>
+<<EX1-10-defs>>
+(try-these f 1 2 3 10 15 20)
+#+END_SRC
+
+#+RESULTS[d24f130b3c260d786e4cb6a89fa32c320b8c9216]:
+:results:
+|  1 |  2 |
+|  2 |  4 |
+|  3 |  6 |
+| 10 | 20 |
+| 15 | 30 |
+| 20 | 40 |
+:end:
+
+\[
+f(n)=2n
+\]

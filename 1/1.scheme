@@ -185,7 +185,7 @@
                  (A x (- y 1))))))
 ;; ackermann ends here
 
-;; [[file:1.org::EX1-10_defs][EX1-10_defs]]
+;; [[file:1.org::EX1-10-defs][EX1-10-defs]]
 ;; [[[[file:~/SICP-group/1/1.org::ackermann][ackermann]]][ackermann]]
 (define (A x y)
   (cond ((= y 0) 0)
@@ -198,4 +198,4 @@
 (define (g n) (A 1 n))
 (define (h n) (A 2 n))
 (define (k n) (* 5 n n))
-;; EX1-10_defs ends here
+;; EX1-10-defs ends here

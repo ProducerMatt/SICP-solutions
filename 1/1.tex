@@ -933,8 +933,8 @@ What are the values of the following expressions?
 \bottomrule
 \end{longtable}
 
-\hypertarget{EX1-10_defs}{%
-\label{EX1-10_defs}}%
+\hypertarget{EX1-10-defs}{%
+\label{EX1-10-defs}}%
 \begin{Shaded}
 \begin{Highlighting}[numbers=left,,]
 \NormalTok{\textless{}\textless{}ackermann\textgreater{}\textgreater{}}
@@ -949,5 +949,34 @@ Give concise mathematical definitions for the functions computed by the
 procedures \texttt{f}, \texttt{g}, and \texttt{h} for positive integer
 values of \(n\). For example, \VERB|\NormalTok{(k n)}| computes
 \(5n^2\).
+
+\hypertarget{a-8}{%
+\subsection{A}\label{a-8}}
+
+Let's start with \texttt{f}.
+
+\begin{Shaded}
+\begin{Highlighting}[numbers=left,,]
+\NormalTok{\textless{}\textless{}try{-}these\textgreater{}\textgreater{}}
+\NormalTok{\textless{}\textless{}EX1{-}10{-}defs\textgreater{}\textgreater{}}
+\NormalTok{(try{-}these f }\DecValTok{1} \DecValTok{2} \DecValTok{3} \DecValTok{10} \DecValTok{15} \DecValTok{20}\NormalTok{)}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{longtable}[]{@{}ll@{}}
+\toprule
+\endhead
+1 & 2 \\
+2 & 4 \\
+3 & 6 \\
+10 & 20 \\
+15 & 30 \\
+20 & 40 \\
+\bottomrule
+\end{longtable}
+
+\[
+f(n)=2n
+\]
 
 \end{document}
