@@ -53,7 +53,7 @@ Takes function ~f~ and list ~testvals~ and applies ~f~ to each item ~i~. For
 each ~i~ returns a list with ~i~ and the result. Useful dor making tables with a
 column for input and a column for output.
 #+NAME: try-these
-#+BEGIN_SRC scheme :eval no-export :tangle yes :results silent
+#+BEGIN_SRC scheme -n :eval no-export :tangle yes :results silent
 ;; Surely this could be less nightmarish
 (define (try-these f . testvals)
   (let ((l (if (and (= 1 (length testvals))
@@ -71,14 +71,14 @@ column for input and a column for output.
 "Rotate" a list, for example from src_scheme{'(1 2 3)} to
 src_scheme{'('(1) '(2) '(3))}
 #+NAME: transpose-list
-#+BEGIN_SRC scheme :eval no-export :tangle yes :results silent
+#+BEGIN_SRC scheme -n :eval no-export :tangle yes :results silent
 (define (transpose-list l)
   (map (λ (i) (list i)) l))
 #+end_src
 *** ~print-as-rows~
 For manually printing items in rows to stdout. Not currently used.
 #+NAME: print-as-rows
-#+BEGIN_SRC scheme :eval no-export :tangle yes :results silent
+#+BEGIN_SRC scheme -n :eval no-export :tangle yes :results silent
 (define (p-nl a)
   (display a)
   (newline))
@@ -140,7 +140,7 @@ Translate the following expression into prefix form:
 \end{equation}
 ** A
 #+NAME: EX1-2
-#+BEGIN_SRC scheme :eval no-export :exports both :results value
+#+BEGIN_SRC scheme -n :eval no-export :exports both :results value
 (/ (+ 5 2 (- 2 3 (+ 6 (/ 4 5))))
    (* 3 (- 6 2) (- 2 7)))
 #+END_SRC
@@ -154,7 +154,7 @@ Translate the following expression into prefix form:
 * Exercise 1.3
 ** Text
 #+NAME: square
-#+BEGIN_SRC scheme :eval no-export :results silent :tangle yes
+#+BEGIN_SRC scheme -n :eval no-export :results silent :tangle yes
 (define (square x)
   (* x x))
 #+END_SRC
@@ -195,7 +195,7 @@ compound expressions. Use this observation to describe the behavior of the
 following procedure:
 
 #+NAME: a-plus-abs-b
-#+BEGIN_SRC scheme
+#+BEGIN_SRC scheme -n
 (define (a-plus-abs-b a b)
   ((if (> b 0) + -) a b))
 #+END_SRC
@@ -218,7 +218,7 @@ Ben Bitdiddle has invented a test to determine whether the interpreter he is
 faced with is using applicative-order evaluation or normal-order evaluation. He
 defines the following two procedures:
 
-#+BEGIN_SRC scheme :noeval :tangle no
+#+BEGIN_SRC scheme -n :noeval :tangle no
 (define (p) (p))
 
 (define (test x y)
@@ -228,7 +228,7 @@ defines the following two procedures:
 #+END_SRC
 Then he evaluates the expression
 
-#+BEGIN_SRC scheme :noeval :tangle no
+#+BEGIN_SRC scheme -n :noeval :tangle no
 (test 0 (p))
 #+END_SRC
 
@@ -249,19 +249,19 @@ loop.
 * Exercise 1.6
 ** Text code
 #+NAME: abs
-#+BEGIN_SRC scheme :eval no-export :tangle yes :results silent
+#+BEGIN_SRC scheme -n :eval no-export :tangle yes :results silent
 (define (abs x)
   (if (< x 0)
 	  (- x)
 	  x))
 #+END_SRC
 #+NAME: average
-#+BEGIN_SRC scheme :eval no-export :tangle yes :results silent
+#+BEGIN_SRC scheme -n :eval no-export :tangle yes :results silent
 (define (average x y)
   (/ (+ x y) 2))
 #+END_SRC
 #+NAME: txt-sqrt
-#+BEGIN_SRC scheme :eval no-export :tangle yes :results silent
+#+BEGIN_SRC scheme -n :eval no-export :tangle yes :results silent
 <<average>>
 (define (improve guess x)
   (average guess (/ x guess)))
@@ -286,7 +286,7 @@ special form. “Why can’t I just define it as an ordinary procedure in terms 
 cond?” she asks. Alyssa’s friend Eva Lu Ator claims this can indeed be done, and
 she defines a new version of if:
 
-#+BEGIN_SRC scheme :noeval :tangle no
+#+BEGIN_SRC scheme -n :noeval :tangle no
 (define (new-if predicate
                 then-clause
                 else-clause)
@@ -295,7 +295,7 @@ she defines a new version of if:
 #+END_SRC
 Eva demonstrates the program for Alyssa:
 
-#+BEGIN_SRC scheme :noeval :tangle no
+#+BEGIN_SRC scheme -n :noeval :tangle no
 (new-if (= 2 3) 0 5)
 ;; => 5
 
@@ -305,7 +305,7 @@ Eva demonstrates the program for Alyssa:
 
 Delighted, Alyssa uses new-if to rewrite the square-root program:
 
-#+BEGIN_SRC scheme :noeval :tangle no
+#+BEGIN_SRC scheme -n :noeval :tangle no
 (define (sqrt-iter guess x)
   (new-if (good-enough? guess x)
           guess
@@ -323,7 +323,7 @@ whichever branch is chosen leaves the other branches unevaluated.
 * Exercise 1.7
 ** Text
 #+NAME: mean-square
-#+BEGIN_SRC scheme :eval no-export :tangle yes :results silent
+#+BEGIN_SRC scheme -n :eval no-export :tangle yes :results silent
 (define (mean-square x y)
   (average (square x) (square y)))
 #+END_SRC
@@ -342,7 +342,7 @@ The current method has decreasing accuracy with smaller numbers. Notice the
 steady divergence from correct answers here (should be decreasing powers of
 0.1):
 #+NAME: EX1-7-t1
-#+BEGIN_SRC scheme :eval no-export :tangle no :exports both :results value table
+#+BEGIN_SRC scheme -n :eval no-export :tangle no :exports both :results value table
 <<txt-sqrt>>
 <<try-these>>
 (try-these sqrt 0.01 0.0001 0.000001 0.00000001 0.0000000001)
@@ -360,7 +360,7 @@ steady divergence from correct answers here (should be decreasing powers of
 And for larger numbers, an infinite loop will eventually be reached. \(10^{12}\)
 can resolve, but \(10^{13}\) cannot.
 
-#+BEGIN_SRC scheme :eval no-export :tangle no :exports both :results value
+#+BEGIN_SRC scheme -n :eval no-export :tangle no :exports both :results value
 <<txt-sqrt>>
 (sqrt 1000000000000)
 #+END_SRC
@@ -374,7 +374,7 @@ My original answer was this, which compares the previous iteration until the new
 and old are within an arbitrary \(dx\).
 
 #+NAME: inferior-good-enough
-#+BEGIN_SRC scheme :tangle yes
+#+BEGIN_SRC scheme -n :tangle yes
 <<txt-sqrt>>
 (define (inferior-good-enough? guess lastguess)
   (<=
@@ -391,7 +391,7 @@ and old are within an arbitrary \(dx\).
 #+end_src
 
 This solution can correctly find small and large numbers:
-#+BEGIN_SRC scheme :eval no-export :tangle no :exports both :results value
+#+BEGIN_SRC scheme -n :eval no-export :tangle no :exports both :results value
 <<inferior-good-enough>>
 (new-sqrt 10000000000000)
 #+END_SRC
@@ -402,7 +402,7 @@ This solution can correctly find small and large numbers:
 :end:
 
 #+NAME: EX1-7-t2
-#+BEGIN_SRC scheme :eval no-export :tangle no :exports both :results value table drawer
+#+BEGIN_SRC scheme -n :eval no-export :tangle no :exports both :results value table drawer
 <<try-these>>
 <<inferior-good-enough>>
 (try-these new-sqrt '(0.01 0.0001 0.000001 0.00000001 0.0000000001))
@@ -422,14 +422,14 @@ However, I found this solution online that isn't just simpler but automatically
 reaches the precision limit of the system:
 
 #+NAME: new-good-enough
-#+BEGIN_SRC scheme :eval no-export :results silent
+#+BEGIN_SRC scheme -n :eval no-export :results silent
 <<txt-sqrt>>
 (define (best-good-enough? guess x)
    (= (improve guess x) guess))
 #+END_SRC
 
 #+NAME: EX1-7-t3
-#+BEGIN_SRC scheme :eval no-export :tangle no :exports both :results value table
+#+BEGIN_SRC scheme -n :eval no-export :tangle no :exports both :results value table
 <<try-these>>
 <<new-good-enough>>
 (define (best-sqrt-iter guess x)
@@ -466,7 +466,7 @@ an abstraction of these square-root and cube-root procedures.)
 ** A1
 My first attempt works, but needs an arbitrary limit to stop infinite loops:
 #+NAME: EX1-8-A1
-#+BEGIN_SRC scheme :eval no-export :tangle no :exports both :results value table
+#+BEGIN_SRC scheme -n :eval no-export :tangle no :exports both :results value table
 <<square>>
 (define (cb-good-enough? guess x)
   (= (cb-improve guess x) guess))
@@ -504,7 +504,7 @@ forever unless you initialize your guess with a slightly different value, so
 let's do 1.1 instead.
 ** A2
 #+NAME: cbrt
-#+BEGIN_SRC scheme :eval no-export :tangle yes :exports code :results silent
+#+BEGIN_SRC scheme -n :eval no-export :tangle yes :exports code :results silent
 <<square>>
 (define (cb-good-enough? nextguess guess lastguess x)
   (or (= nextguess guess)
@@ -523,7 +523,7 @@ let's do 1.1 instead.
 (define (cbrt x)
   (cbrt-iter 1.1 9999 x))
 #+END_SRC
-#+BEGIN_SRC scheme :eval no-export :tangle no :exports both :results value table
+#+BEGIN_SRC scheme -n :eval no-export :tangle no :exports both :results value table
 <<cbrt>>
 <<try-these>>
 (try-these cbrt 7 32 56 100 -2)
@@ -544,7 +544,7 @@ Each of the following two procedures defines a method for adding two positive
 integers in terms of the procedures inc, which increments its argument by 1, and
 dec, which decrements its argument by 1.
 
-#+BEGIN_SRC scheme :noeval :tangle no
+#+BEGIN_SRC scheme -n :noeval :tangle no
 (define (+ a b)
   (if (= a 0)
       b
@@ -562,7 +562,7 @@ in evaluating src_scheme{(+ 4 5)}. Are these processes iterative or recursive?
 The first procedure is recursive, while the second is iterative though
 tail-recursion.
 *** recursive procedure
-#+BEGIN_SRC scheme :noeval :tangle no
+#+BEGIN_SRC scheme -n :noeval :tangle no
 (+ 4 5)
 (inc (+ 3 5))
 (inc (inc (+ 2 5)))
@@ -576,7 +576,7 @@ tail-recursion.
 #+END_SRC
 
 *** iterative procedure
-#+BEGIN_SRC scheme :noeval :tangle no
+#+BEGIN_SRC scheme -n :noeval :tangle no
 (+ 4 5)
 (+ 3 6)
 (+ 2 7)

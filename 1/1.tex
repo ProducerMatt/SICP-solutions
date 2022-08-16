@@ -166,7 +166,7 @@ for input and a column for output.
 \hypertarget{try-these}{%
 \label{try-these}}%
 \begin{Shaded}
-\begin{Highlighting}[]
+\begin{Highlighting}[numbers=left,,]
 \CommentTok{;; Surely this could be less nightmarish}
 \NormalTok{(}\ExtensionTok{define}\FunctionTok{ }\NormalTok{(try{-}these f }\OperatorTok{.}\NormalTok{ testvals)}
 \NormalTok{  (}\KeywordTok{let}\NormalTok{ ((l (}\KeywordTok{if}\NormalTok{ (}\KeywordTok{and}\NormalTok{ (}\OperatorTok{=} \DecValTok{1}\NormalTok{ (}\KeywordTok{length}\NormalTok{ testvals))}
@@ -193,7 +193,7 @@ to
 \hypertarget{transpose-list}{%
 \label{transpose-list}}%
 \begin{Shaded}
-\begin{Highlighting}[]
+\begin{Highlighting}[numbers=left,,]
 \NormalTok{(}\ExtensionTok{define}\FunctionTok{ }\NormalTok{(transpose{-}list l)}
 \NormalTok{  (map (λ (i) (}\KeywordTok{list}\NormalTok{ i)) l))}
 \end{Highlighting}
@@ -207,7 +207,7 @@ For manually printing items in rows to stdout. Not currently used.
 \hypertarget{print-as-rows}{%
 \label{print-as-rows}}%
 \begin{Shaded}
-\begin{Highlighting}[]
+\begin{Highlighting}[numbers=left,,]
 \NormalTok{(}\ExtensionTok{define}\FunctionTok{ }\NormalTok{(p{-}nl a)}
 \NormalTok{  (}\KeywordTok{display}\NormalTok{ a)}
 \NormalTok{  (}\KeywordTok{newline}\NormalTok{))}
@@ -290,7 +290,7 @@ Translate the following expression into prefix form:
 \hypertarget{EX1-2}{%
 \label{EX1-2}}%
 \begin{Shaded}
-\begin{Highlighting}[]
+\begin{Highlighting}[numbers=left,,]
 \NormalTok{(}\OperatorTok{/}\NormalTok{ (}\OperatorTok{+} \DecValTok{5} \DecValTok{2}\NormalTok{ (}\OperatorTok{{-}} \DecValTok{2} \DecValTok{3}\NormalTok{ (}\OperatorTok{+} \DecValTok{6}\NormalTok{ (}\OperatorTok{/} \DecValTok{4} \DecValTok{5}\NormalTok{))))}
 \NormalTok{   (}\OperatorTok{*} \DecValTok{3}\NormalTok{ (}\OperatorTok{{-}} \DecValTok{6} \DecValTok{2}\NormalTok{) (}\OperatorTok{{-}} \DecValTok{2} \DecValTok{7}\NormalTok{)))}
 \end{Highlighting}
@@ -307,7 +307,7 @@ Translate the following expression into prefix form:
 \hypertarget{square}{%
 \label{square}}%
 \begin{Shaded}
-\begin{Highlighting}[]
+\begin{Highlighting}[numbers=left,,]
 \NormalTok{(}\ExtensionTok{define}\FunctionTok{ }\NormalTok{(square x)}
 \NormalTok{  (}\OperatorTok{*}\NormalTok{ x x))}
 \end{Highlighting}
@@ -369,7 +369,7 @@ behavior of the following procedure:
 \hypertarget{a-plus-abs-b}{%
 \label{a-plus-abs-b}}%
 \begin{Shaded}
-\begin{Highlighting}[]
+\begin{Highlighting}[numbers=left,,]
 \NormalTok{(}\ExtensionTok{define}\FunctionTok{ }\NormalTok{(a{-}plus{-}abs{-}b a b)}
 \NormalTok{  ((}\KeywordTok{if}\NormalTok{ (}\OperatorTok{\textgreater{}}\NormalTok{ b }\DecValTok{0}\NormalTok{) }\OperatorTok{+} \OperatorTok{{-}}\NormalTok{) a b))}
 \end{Highlighting}
@@ -404,7 +404,7 @@ he is faced with is using applicative-order evaluation or normal-order
 evaluation. He defines the following two procedures:
 
 \begin{Shaded}
-\begin{Highlighting}[]
+\begin{Highlighting}[numbers=left,,]
 \NormalTok{(}\ExtensionTok{define}\FunctionTok{ }\NormalTok{(p) (p))}
 
 \NormalTok{(}\ExtensionTok{define}\FunctionTok{ }\NormalTok{(test x y)}
@@ -417,7 +417,7 @@ evaluation. He defines the following two procedures:
 Then he evaluates the expression
 
 \begin{Shaded}
-\begin{Highlighting}[]
+\begin{Highlighting}[numbers=left,,]
 \NormalTok{(test }\DecValTok{0}\NormalTok{ (p))}
 \end{Highlighting}
 \end{Shaded}
@@ -450,7 +450,7 @@ the infinite loop.
 \hypertarget{abs}{%
 \label{abs}}%
 \begin{Shaded}
-\begin{Highlighting}[]
+\begin{Highlighting}[numbers=left,,]
 \NormalTok{(}\ExtensionTok{define}\FunctionTok{ }\NormalTok{(}\KeywordTok{abs}\NormalTok{ x)}
 \NormalTok{  (}\KeywordTok{if}\NormalTok{ (}\OperatorTok{\textless{}}\NormalTok{ x }\DecValTok{0}\NormalTok{)}
 \NormalTok{      (}\OperatorTok{{-}}\NormalTok{ x)}
@@ -461,7 +461,7 @@ the infinite loop.
 \hypertarget{average}{%
 \label{average}}%
 \begin{Shaded}
-\begin{Highlighting}[]
+\begin{Highlighting}[numbers=left,,]
 \NormalTok{(}\ExtensionTok{define}\FunctionTok{ }\NormalTok{(average x y)}
 \NormalTok{  (}\OperatorTok{/}\NormalTok{ (}\OperatorTok{+}\NormalTok{ x y) }\DecValTok{2}\NormalTok{))}
 \end{Highlighting}
@@ -470,7 +470,7 @@ the infinite loop.
 \hypertarget{txt-sqrt}{%
 \label{txt-sqrt}}%
 \begin{Shaded}
-\begin{Highlighting}[]
+\begin{Highlighting}[numbers=left,,]
 \NormalTok{\textless{}\textless{}average\textgreater{}\textgreater{}}
 \NormalTok{(}\ExtensionTok{define}\FunctionTok{ }\NormalTok{(improve guess x)}
 \NormalTok{  (average guess (}\OperatorTok{/}\NormalTok{ x guess)))}
@@ -499,7 +499,7 @@ in terms of cond?'' she asks. Alyssa's friend Eva Lu Ator claims this
 can indeed be done, and she defines a new version of if:
 
 \begin{Shaded}
-\begin{Highlighting}[]
+\begin{Highlighting}[numbers=left,,]
 \NormalTok{(}\ExtensionTok{define}\FunctionTok{ }\NormalTok{(new{-}if predicate}
 \NormalTok{                then{-}clause}
 \NormalTok{                else{-}clause)}
@@ -511,7 +511,7 @@ can indeed be done, and she defines a new version of if:
 Eva demonstrates the program for Alyssa:
 
 \begin{Shaded}
-\begin{Highlighting}[]
+\begin{Highlighting}[numbers=left,,]
 \NormalTok{(new{-}if (}\OperatorTok{=} \DecValTok{2} \DecValTok{3}\NormalTok{) }\DecValTok{0} \DecValTok{5}\NormalTok{)}
 \CommentTok{;; =\textgreater{} 5}
 
@@ -523,7 +523,7 @@ Eva demonstrates the program for Alyssa:
 Delighted, Alyssa uses new-if to rewrite the square-root program:
 
 \begin{Shaded}
-\begin{Highlighting}[]
+\begin{Highlighting}[numbers=left,,]
 \NormalTok{(}\ExtensionTok{define}\FunctionTok{ }\NormalTok{(sqrt{-}iter guess x)}
 \NormalTok{  (new{-}if (good{-}enough? guess x)}
 \NormalTok{          guess}
@@ -552,7 +552,7 @@ branch is chosen leaves the other branches unevaluated.
 \hypertarget{mean-square}{%
 \label{mean-square}}%
 \begin{Shaded}
-\begin{Highlighting}[]
+\begin{Highlighting}[numbers=left,,]
 \NormalTok{(}\ExtensionTok{define}\FunctionTok{ }\NormalTok{(mean{-}square x y)}
 \NormalTok{  (average (square x) (square y)))}
 \end{Highlighting}
@@ -582,7 +582,7 @@ powers of 0.1):
 \hypertarget{EX1-7-t1}{%
 \label{EX1-7-t1}}%
 \begin{Shaded}
-\begin{Highlighting}[]
+\begin{Highlighting}[numbers=left,,]
 \NormalTok{\textless{}\textless{}txt{-}sqrt\textgreater{}\textgreater{}}
 \NormalTok{\textless{}\textless{}try{-}these\textgreater{}\textgreater{}}
 \NormalTok{(try{-}these }\KeywordTok{sqrt} \FloatTok{0.01} \FloatTok{0.0001} \FloatTok{0.000001} \FloatTok{0.00000001} \FloatTok{0.0000000001}\NormalTok{)}
@@ -604,7 +604,7 @@ And for larger numbers, an infinite loop will eventually be reached.
 \(10^{12}\) can resolve, but \(10^{13}\) cannot.
 
 \begin{Shaded}
-\begin{Highlighting}[]
+\begin{Highlighting}[numbers=left,,]
 \NormalTok{\textless{}\textless{}txt{-}sqrt\textgreater{}\textgreater{}}
 \NormalTok{(}\KeywordTok{sqrt} \DecValTok{1000000000000}\NormalTok{)}
 \end{Highlighting}
@@ -618,7 +618,7 @@ the new and old are within an arbitrary \(dx\).
 \hypertarget{inferior-good-enough}{%
 \label{inferior-good-enough}}%
 \begin{Shaded}
-\begin{Highlighting}[]
+\begin{Highlighting}[numbers=left,,]
 \NormalTok{\textless{}\textless{}txt{-}sqrt\textgreater{}\textgreater{}}
 \NormalTok{(}\ExtensionTok{define}\FunctionTok{ }\NormalTok{(inferior{-}good{-}enough? guess lastguess)}
 \NormalTok{  (}\OperatorTok{\textless{}=}
@@ -638,7 +638,7 @@ the new and old are within an arbitrary \(dx\).
 This solution can correctly find small and large numbers:
 
 \begin{Shaded}
-\begin{Highlighting}[]
+\begin{Highlighting}[numbers=left,,]
 \NormalTok{\textless{}\textless{}inferior{-}good{-}enough\textgreater{}\textgreater{}}
 \NormalTok{(new{-}sqrt }\DecValTok{10000000000000}\NormalTok{)}
 \end{Highlighting}
@@ -649,7 +649,7 @@ This solution can correctly find small and large numbers:
 \hypertarget{EX1-7-t2}{%
 \label{EX1-7-t2}}%
 \begin{Shaded}
-\begin{Highlighting}[]
+\begin{Highlighting}[numbers=left,,]
 \NormalTok{\textless{}\textless{}try{-}these\textgreater{}\textgreater{}}
 \NormalTok{\textless{}\textless{}inferior{-}good{-}enough\textgreater{}\textgreater{}}
 \NormalTok{(try{-}these new{-}sqrt \textquotesingle{}(}\FloatTok{0.01} \FloatTok{0.0001} \FloatTok{0.000001} \FloatTok{0.00000001} \FloatTok{0.0000000001}\NormalTok{))}
@@ -673,7 +673,7 @@ automatically reaches the precision limit of the system:
 \hypertarget{new-good-enough}{%
 \label{new-good-enough}}%
 \begin{Shaded}
-\begin{Highlighting}[]
+\begin{Highlighting}[numbers=left,,]
 \NormalTok{\textless{}\textless{}txt{-}sqrt\textgreater{}\textgreater{}}
 \NormalTok{(}\ExtensionTok{define}\FunctionTok{ }\NormalTok{(best{-}good{-}enough? guess x)}
 \NormalTok{   (}\OperatorTok{=}\NormalTok{ (improve guess x) guess))}
@@ -683,7 +683,7 @@ automatically reaches the precision limit of the system:
 \hypertarget{EX1-7-t3}{%
 \label{EX1-7-t3}}%
 \begin{Shaded}
-\begin{Highlighting}[]
+\begin{Highlighting}[numbers=left,,]
 \NormalTok{\textless{}\textless{}try{-}these\textgreater{}\textgreater{}}
 \NormalTok{\textless{}\textless{}new{-}good{-}enough\textgreater{}\textgreater{}}
 \NormalTok{(}\ExtensionTok{define}\FunctionTok{ }\NormalTok{(best{-}sqrt{-}iter guess x)}
@@ -737,7 +737,7 @@ loops:
 \hypertarget{EX1-8-A1}{%
 \label{EX1-8-A1}}%
 \begin{Shaded}
-\begin{Highlighting}[]
+\begin{Highlighting}[numbers=left,,]
 \NormalTok{\textless{}\textless{}square\textgreater{}\textgreater{}}
 \NormalTok{(}\ExtensionTok{define}\FunctionTok{ }\NormalTok{(cb{-}good{-}enough? guess x)}
 \NormalTok{  (}\OperatorTok{=}\NormalTok{ (cb{-}improve guess x) guess))}
@@ -785,7 +785,7 @@ let's do 1.1 instead.
 \hypertarget{cbrt}{%
 \label{cbrt}}%
 \begin{Shaded}
-\begin{Highlighting}[]
+\begin{Highlighting}[numbers=left,,]
 \NormalTok{\textless{}\textless{}square\textgreater{}\textgreater{}}
 \NormalTok{(}\ExtensionTok{define}\FunctionTok{ }\NormalTok{(cb{-}good{-}enough? nextguess guess lastguess x)}
 \NormalTok{  (}\KeywordTok{or}\NormalTok{ (}\OperatorTok{=}\NormalTok{ nextguess guess)}
@@ -807,7 +807,7 @@ let's do 1.1 instead.
 \end{Shaded}
 
 \begin{Shaded}
-\begin{Highlighting}[]
+\begin{Highlighting}[numbers=left,,]
 \NormalTok{\textless{}\textless{}cbrt\textgreater{}\textgreater{}}
 \NormalTok{\textless{}\textless{}try{-}these\textgreater{}\textgreater{}}
 \NormalTok{(try{-}these cbrt }\DecValTok{7} \DecValTok{32} \DecValTok{56} \DecValTok{100}\NormalTok{ {-}}\DecValTok{2}\NormalTok{)}
@@ -836,7 +836,7 @@ positive integers in terms of the procedures inc, which increments its
 argument by 1, and dec, which decrements its argument by 1.
 
 \begin{Shaded}
-\begin{Highlighting}[]
+\begin{Highlighting}[numbers=left,,]
 \NormalTok{(}\ExtensionTok{define}\FunctionTok{ }\NormalTok{(}\OperatorTok{+}\NormalTok{ a b)}
 \NormalTok{  (}\KeywordTok{if}\NormalTok{ (}\OperatorTok{=}\NormalTok{ a }\DecValTok{0}\NormalTok{)}
 \NormalTok{      b}
@@ -864,7 +864,7 @@ tail-recursion.
 \subsubsection{recursive procedure}\label{recursive-procedure}}
 
 \begin{Shaded}
-\begin{Highlighting}[]
+\begin{Highlighting}[numbers=left,,]
 \NormalTok{(}\OperatorTok{+} \DecValTok{4} \DecValTok{5}\NormalTok{)}
 \NormalTok{(inc (}\OperatorTok{+} \DecValTok{3} \DecValTok{5}\NormalTok{))}
 \NormalTok{(inc (inc (}\OperatorTok{+} \DecValTok{2} \DecValTok{5}\NormalTok{)))}
@@ -882,7 +882,7 @@ tail-recursion.
 \subsubsection{iterative procedure}\label{iterative-procedure}}
 
 \begin{Shaded}
-\begin{Highlighting}[]
+\begin{Highlighting}[numbers=left,,]
 \NormalTok{(}\OperatorTok{+} \DecValTok{4} \DecValTok{5}\NormalTok{)}
 \NormalTok{(}\OperatorTok{+} \DecValTok{3} \DecValTok{6}\NormalTok{)}
 \NormalTok{(}\OperatorTok{+} \DecValTok{2} \DecValTok{7}\NormalTok{)}
