@@ -151,9 +151,44 @@ conversion}\label{current-command-for-conversion}}
 \end{Highlighting}
 \end{Shaded}
 
-\hypertarget{helper-for-org-mode-tables}{%
-\subsection{Helper for org-mode
-tables}\label{helper-for-org-mode-tables}}
+\hypertarget{helpers-for-org-mode-tables}{%
+\subsection{Helpers for org-mode
+tables}\label{helpers-for-org-mode-tables}}
+
+\hypertarget{try-these}{%
+\subsubsection{\texorpdfstring{\texttt{try-these}}{try-these}}\label{try-these}}
+
+Takes function \texttt{f} and list \texttt{testvals} and applies
+\texttt{f} to each item \texttt{i}. For each \texttt{i} returns a list
+with \texttt{i} and the result. Useful dor making tables with a column
+for input and a column for output.
+
+\hypertarget{try-these}{%
+\label{try-these}}%
+\begin{Shaded}
+\begin{Highlighting}[]
+\CommentTok{;; Surely this could be less nightmarish}
+\NormalTok{(}\ExtensionTok{define}\FunctionTok{ }\NormalTok{(try{-}these f }\OperatorTok{.}\NormalTok{ testvals)}
+\NormalTok{  (}\KeywordTok{let}\NormalTok{ ((l (}\KeywordTok{if}\NormalTok{ (}\KeywordTok{and}\NormalTok{ (}\OperatorTok{=} \DecValTok{1}\NormalTok{ (}\KeywordTok{length}\NormalTok{ testvals))}
+\NormalTok{                    (}\KeywordTok{list?}\NormalTok{ (}\KeywordTok{car}\NormalTok{ testvals)))}
+\NormalTok{               (}\KeywordTok{car}\NormalTok{ testvals)}
+\NormalTok{               testvals)))}
+\NormalTok{    (map (λ (i) (}\KeywordTok{cons}\NormalTok{ i}
+\NormalTok{                      (}\KeywordTok{cons}\NormalTok{ (}\KeywordTok{if}\NormalTok{ (}\KeywordTok{list?}\NormalTok{ i)}
+\NormalTok{                                (apply f i)}
+\NormalTok{                                (f i))}
+\NormalTok{                            \#nil)))}
+\NormalTok{         l)))}
+\end{Highlighting}
+\end{Shaded}
+
+\hypertarget{transpose-list}{%
+\subsubsection{\texorpdfstring{\texttt{transpose-list}}{transpose-list}}\label{transpose-list}}
+
+"Rotate" a list, for example from
+\VERB|\NormalTok{\textquotesingle{}(}\DecValTok{1} \DecValTok{2} \DecValTok{3}\NormalTok{)}|
+to
+\VERB|\NormalTok{\textquotesingle{}(\textquotesingle{}(}\DecValTok{1}\NormalTok{) \textquotesingle{}(}\DecValTok{2}\NormalTok{) \textquotesingle{}(}\DecValTok{3}\NormalTok{))}|
 
 \hypertarget{transpose-list}{%
 \label{transpose-list}}%
@@ -163,6 +198,11 @@ tables}\label{helper-for-org-mode-tables}}
 \NormalTok{  (map (λ (i) (}\KeywordTok{list}\NormalTok{ i)) l))}
 \end{Highlighting}
 \end{Shaded}
+
+\hypertarget{print-as-rows}{%
+\subsubsection{\texorpdfstring{\texttt{print-as-rows}}{print-as-rows}}\label{print-as-rows}}
+
+For manually printing items in rows to stdout. Not currently used.
 
 \hypertarget{print-as-rows}{%
 \label{print-as-rows}}%
@@ -294,18 +334,25 @@ sum of the squares of the two larger numbers.
 \NormalTok{        ((}\KeywordTok{and}\NormalTok{ (}\OperatorTok{\textgreater{}=}\NormalTok{ a b) (}\OperatorTok{\textgreater{}}\NormalTok{ c b)) (sum{-}square a c))}
 \NormalTok{        ((}\KeywordTok{and}\NormalTok{ (}\OperatorTok{\textgreater{}}\NormalTok{ b a) (}\OperatorTok{\textgreater{}=}\NormalTok{ c a)) (sum{-}square b c))}
 \NormalTok{        (}\KeywordTok{else} \StringTok{"This shouldn\textquotesingle{}t happen"}\NormalTok{)))}
-
-\NormalTok{ (}\KeywordTok{list}\NormalTok{ (square{-}2of3 }\DecValTok{7} \DecValTok{5} \DecValTok{3}\NormalTok{)}
-\NormalTok{       (square{-}2of3 }\DecValTok{7} \DecValTok{3} \DecValTok{5}\NormalTok{)}
-\NormalTok{       (square{-}2of3 }\DecValTok{3} \DecValTok{5} \DecValTok{7}\NormalTok{))}
-
 \end{Highlighting}
 \end{Shaded}
 
-\begin{longtable}[]{@{}lll@{}}
+\begin{Shaded}
+\begin{Highlighting}[numbers=left,,]
+\NormalTok{\textless{}\textless{}EX1{-}3\textgreater{}\textgreater{}}
+\NormalTok{\textless{}\textless{}try{-}these\textgreater{}\textgreater{}}
+\NormalTok{ (try{-}these square{-}2of3 \textquotesingle{}(}\DecValTok{7} \DecValTok{5} \DecValTok{3}\NormalTok{)}
+\NormalTok{                        \textquotesingle{}(}\DecValTok{7} \DecValTok{3} \DecValTok{5}\NormalTok{)}
+\NormalTok{                        \textquotesingle{}(}\DecValTok{3} \DecValTok{5} \DecValTok{7}\NormalTok{))}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{longtable}[]{@{}ll@{}}
 \toprule
 \endhead
-74 & 74 & 74 \\
+(7 5 3) & 74 \\
+(7 3 5) & 74 \\
+(3 5 7) & 74 \\
 \bottomrule
 \end{longtable}
 
@@ -529,27 +576,27 @@ kind of end test. Does this work better for small and large numbers?
 \subsection{A}\label{a-6}}
 
 The current method has decreasing accuracy with smaller numbers. Notice
-the steady divergence from correct answers here (should be 0.1s getting
-smaller and smaller):
+the steady divergence from correct answers here (should be decreasing
+powers of 0.1):
 
 \hypertarget{EX1-7-t1}{%
 \label{EX1-7-t1}}%
 \begin{Shaded}
 \begin{Highlighting}[]
-\NormalTok{\textless{}\textless{}transpose{-}list\textgreater{}\textgreater{}}
 \NormalTok{\textless{}\textless{}txt{-}sqrt\textgreater{}\textgreater{}}
-\NormalTok{(transpose{-}list (map }\KeywordTok{sqrt}\NormalTok{ \textquotesingle{}(}\FloatTok{0.01} \FloatTok{0.0001} \FloatTok{0.000001} \FloatTok{0.00000001} \FloatTok{0.0000000001}\NormalTok{)))}
+\NormalTok{\textless{}\textless{}try{-}these\textgreater{}\textgreater{}}
+\NormalTok{(try{-}these }\KeywordTok{sqrt} \FloatTok{0.01} \FloatTok{0.0001} \FloatTok{0.000001} \FloatTok{0.00000001} \FloatTok{0.0000000001}\NormalTok{)}
 \end{Highlighting}
 \end{Shaded}
 
-\begin{longtable}[]{@{}l@{}}
+\begin{longtable}[]{@{}ll@{}}
 \toprule
 \endhead
-0.10032578510960605 \\
-0.03230844833048122 \\
-0.031260655525445276 \\
-0.03125010656242753 \\
-0.03125000106562499 \\
+0.01 & 0.10032578510960605 \\
+0.0001 & 0.03230844833048122 \\
+1e-06 & 0.031260655525445276 \\
+1e-08 & 0.03125010656242753 \\
+1e-10 & 0.03125000106562499 \\
 \bottomrule
 \end{longtable}
 

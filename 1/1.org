@@ -47,13 +47,36 @@
 pandoc --from org --to latex 1.org -o 1.tex -s; xelatex 1.tex
 #+END_SRC
 
-** Helper for org-mode tables
-
+** Helpers for org-mode tables
+*** ~try-these~
+Takes function ~f~ and list ~testvals~ and applies ~f~ to each item ~i~. For
+each ~i~ returns a list with ~i~ and the result. Useful dor making tables with a
+column for input and a column for output.
+#+NAME: try-these
+#+BEGIN_SRC scheme :eval no-export :tangle yes :results silent
+;; Surely this could be less nightmarish
+(define (try-these f . testvals)
+  (let ((l (if (and (= 1 (length testvals))
+                    (list? (car testvals)))
+               (car testvals)
+               testvals)))
+    (map (λ (i) (cons i
+                      (cons (if (list? i)
+                                (apply f i)
+                                (f i))
+                            #nil)))
+         l)))
+#+end_src
+*** ~transpose-list~
+"Rotate" a list, for example from src_scheme{'(1 2 3)} to
+src_scheme{'('(1) '(2) '(3))}
 #+NAME: transpose-list
 #+BEGIN_SRC scheme :eval no-export :tangle yes :results silent
 (define (transpose-list l)
   (map (λ (i) (list i)) l))
 #+end_src
+*** ~print-as-rows~
+For manually printing items in rows to stdout. Not currently used.
 #+NAME: print-as-rows
 #+BEGIN_SRC scheme :eval no-export :tangle yes :results silent
 (define (p-nl a)
@@ -149,16 +172,20 @@ the squares of the two larger numbers.
         ((and (>= a b) (> c b)) (sum-square a c))
         ((and (> b a) (>= c a)) (sum-square b c))
         (else "This shouldn't happen")))
-
- (list (square-2of3 7 5 3)
-       (square-2of3 7 3 5)
-       (square-2of3 3 5 7))
-
+#+END_SRC
+#+BEGIN_SRC scheme -n :eval no-export :tangle no :exports both :results value table
+<<EX1-3>>
+<<try-these>>
+ (try-these square-2of3 '(7 5 3)
+                        '(7 3 5)
+                        '(3 5 7))
 #+END_SRC
 
-#+RESULTS[581e1faead1b527d69adae4c0b78d6faee8b4e70]: EX1-3
+#+RESULTS[1892a96d51fb103222badea13a0335870c39871f]:
 :results:
-| 74 | 74 | 74 |
+| (7 5 3) | 74 |
+| (7 3 5) | 74 |
+| (3 5 7) | 74 |
 :end:
 
 * Exercise 1.4
@@ -312,21 +339,22 @@ the guess. Design a square-root procedure that uses this kind of end test. Does
 this work better for small and large numbers?
 ** A
 The current method has decreasing accuracy with smaller numbers. Notice the
-steady divergence from correct answers here (should be 0.1s getting smaller and smaller):
+steady divergence from correct answers here (should be decreasing powers of
+0.1):
 #+NAME: EX1-7-t1
 #+BEGIN_SRC scheme :eval no-export :tangle no :exports both :results value table
-<<transpose-list>>
 <<txt-sqrt>>
-(transpose-list (map sqrt '(0.01 0.0001 0.000001 0.00000001 0.0000000001)))
+<<try-these>>
+(try-these sqrt 0.01 0.0001 0.000001 0.00000001 0.0000000001)
 #+END_SRC
 
-#+RESULTS[57d147a092109f331824bacee7632f948edac4d5]: EX1-7-t1
+#+RESULTS[b2aaaf48d742a7df9331cff3b730a799ad550cfe]: EX1-7-t1
 :results:
-|  0.10032578510960605 |
-|  0.03230844833048122 |
-| 0.031260655525445276 |
-|  0.03125010656242753 |
-|  0.03125000106562499 |
+|   0.01 |  0.10032578510960605 |
+| 0.0001 |  0.03230844833048122 |
+|  1e-06 | 0.031260655525445276 |
+|  1e-08 |  0.03125010656242753 |
+|  1e-10 |  0.03125000106562499 |
 :end:
 
 And for larger numbers, an infinite loop will eventually be reached. \(10^{12}\)

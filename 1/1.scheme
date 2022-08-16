@@ -1,3 +1,18 @@
+;; [[file:1.org::try-these][try-these]]
+;; Surely this could be less nightmarish
+(define (try-these f . testvals)
+  (let ((l (if (and (= 1 (length testvals))
+                    (list? (car testvals)))
+               (car testvals)
+               testvals)))
+    (map (λ (i) (cons i
+                      (cons (if (list? i)
+                                (apply f i)
+                                (f i))
+                            #nil)))
+         l)))
+;; try-these ends here
+
 ;; [[file:1.org::transpose-list][transpose-list]]
 (define (transpose-list l)
   (map (λ (i) (list i)) l))
@@ -45,10 +60,6 @@
         ((and (>= a b) (> c b)) (sum-square a c))
         ((and (> b a) (>= c a)) (sum-square b c))
         (else "This shouldn't happen")))
-
- (list (square-2of3 7 5 3)
-       (square-2of3 7 3 5)
-       (square-2of3 3 5 7))
 ;; EX1-3 ends here
 
 ;; [[file:1.org::abs][abs]]
@@ -71,7 +82,7 @@
 (define (improve guess x)
   (average guess (/ x guess)))
 
-;; [[[[file:~/SICP-group/1/1.org::txt-sqrt][txt-sqrt]]][square]]
+;; [[[[file:~/SICP-group/1/1.org::square][square]]][square]]
 (define (square x)
   (* x x))
 ;; square ends here
@@ -100,18 +111,18 @@
 
 ;; [[file:1.org::inferior-good-enough][inferior-good-enough]]
 ;; [[[[file:~/SICP-group/1/1.org::txt-sqrt][txt-sqrt]]][txt-sqrt]]
-;; [[[[file:~/SICP-group/1/1.org::txt-sqrt][txt-sqrt]]][average]]
+;; [[[[file:~/SICP-group/1/1.org::average][average]]][average]]
 (define (average x y)
   (/ (+ x y) 2))
 ;; average ends here
 (define (improve guess x)
   (average guess (/ x guess)))
 
-;; [[[[file:~/SICP-group/1/1.org::txt-sqrt][txt-sqrt]]][square]]
+;; [[[[file:~/SICP-group/1/1.org::square][square]]][square]]
 (define (square x)
   (* x x))
 ;; square ends here
-;; [[[[file:~/SICP-group/1/1.org::txt-sqrt][txt-sqrt]]][abs]]
+;; [[[[file:~/SICP-group/1/1.org::abs][abs]]][abs]]
 (define (abs x)
   (if (< x 0)
 	  (- x)
@@ -143,7 +154,7 @@
 ;; inferior-good-enough ends here
 
 ;; [[file:1.org::cbrt][cbrt]]
-;; [[[[file:~/SICP-group/1/1.org::cbrt][cbrt]]][square]]
+;; [[[[file:~/SICP-group/1/1.org::square][square]]][square]]
 (define (square x)
   (* x x))
 ;; square ends here
