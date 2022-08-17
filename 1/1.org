@@ -134,10 +134,10 @@ evaluated in the order in which it is presented.
 * Exercise 1.2
 ** Q
 Translate the following expression into prefix form:
-\begin{equation}
+\[
   \frac{5 + 2 + (2 - 3 - (6 + \frac{4}{5})))}
             {3(6 - 2)(2 - 7)}
-\end{equation}
+\]
 ** A
 #+NAME: EX1-2
 #+BEGIN_SRC scheme -n :eval no-export :exports both :results value
@@ -705,3 +705,119 @@ h(n)=2 \uparrow\uparrow n
 \[
 h(n)={}^{n}2
 \]
+
+* Exercise 1.11
+** Q
+A function \(f\) is defined by the rule that:
+\[
+f(n)=n \text{ if } n<3
+\]
+\[
+\text{ and }
+\]
+\[
+f(n)=f(n-1)+2f(n-2)+3f(n-3) \text{ if } n \geq 3
+\]
+
+Write a procedure that computes \(f\) by means of a recursive process. Write a
+procedure that computes \(f\) by means of an iterative process.
+** A
+*** Recursive
+#+NAME: EX1-11-fr
+#+BEGIN_SRC scheme -n :eval no-export :tangle yes :exports code :results silent
+(define (fr n)
+  (if (< n 3)
+      n
+      (+      (fr (- n 1))
+         (* 2 (fr (- n 2)))
+         (* 3 (fr (- n 3))))))
+#+END_SRC
+
+#+BEGIN_SRC scheme -n :eval no-export :tangle no :exports both :results value table
+<<try-these>>
+<<EX1-11-fr>>
+(try-these fr 1 3 5 10)
+#+END_SRC
+
+#+RESULTS[d54b80d2fe7a526473762819190f33a520a19fe4]:
+:results:
+|  1 |    1 |
+|  3 |    4 |
+|  5 |   25 |
+| 10 | 1892 |
+:end:
+
+*** Iterative
+**** Attempt 1
+#+NAME: EX1-11-fi
+#+BEGIN_SRC scheme -n :eval no-export :tangle yes :exports code :results silent
+;; This seems like it could be better
+(define (fi n)
+  (define (formula l)
+    (let ((a (car l))
+           (b (cadr l))
+           (c (caddr l)))
+      (+ a
+         (* 2 b)
+         (* 3 c))))
+  (define (iter l i)
+    (if (= i n)
+        (car l)
+        (iter (cons (formula l) l)
+              (+ 1 i))))
+  (if (< n 3)
+      n
+      (iter '(2 1 0) 2)))
+#+END_SRC
+
+#+BEGIN_SRC scheme -n :eval no-export :tangle no :exports both :results value table
+<<try-these>>
+<<EX1-11-fi>>
+(try-these fi 1 3 5 10)
+#+END_SRC
+
+#+RESULTS[77f33e30f912c03277beeb8092d92c55abfcc936]:
+:results:
+|  1 |    1 |
+|  3 |    4 |
+|  5 |   25 |
+| 10 | 1892 |
+:end:
+
+It works but it seems wasteful.
+
+**** Attempt 2
+#+NAME: EX1-11-fi2
+#+BEGIN_SRC scheme -n :eval no-export :tangle yes :exports code :results silent
+(define (fi2 n)
+  (define (formula a b c)
+      (+ a
+         (* 2 b)
+         (* 3 c)))
+  (define (iter a b c i)
+    (if (= i n)
+        a
+        (iter (formula a b c)
+              a
+              b
+              (+ 1 i))))
+  (if (< n 3)
+      n
+      (iter 2 1 0 2)))
+#+END_SRC
+
+#+BEGIN_SRC scheme -n :eval no-export :tangle no :exports both :results value table
+<<try-these>>
+<<EX1-11-fi2>>
+(try-these fi2 1 3 5 10)
+#+END_SRC
+
+#+RESULTS[baa8cd23dfff7b5fa47ae133b0a8b58ef2cb9a61]:
+:results:
+|  1 |    1 |
+|  3 |    4 |
+|  5 |   25 |
+| 10 | 1892 |
+:end:
+
+I like that better.
