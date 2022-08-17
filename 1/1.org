@@ -633,7 +633,7 @@ procedures ~f~, ~g~, and ~h~ for positive integer values of \(n\). For example,
 src_scheme{(k n)} computes \(5n^2\).
 
 ** A
-Let's start with ~f~.
+*** ~f~
 
 #+BEGIN_SRC scheme -n :eval no-export :tangle no :exports both :results value table
 <<try-these>>
@@ -653,4 +653,55 @@ Let's start with ~f~.
 
 \[
 f(n)=2n
+\]
+*** ~g~
+
+#+BEGIN_SRC scheme -n :eval no-export :tangle no :exports both :results value table
+<<try-these>>
+<<EX1-10-defs>>
+(try-these g 1 2 3 4 5 6 7 8)
+#+END_SRC
+
+#+RESULTS[2de64054dc56968afee805dc8757b991e4f74d88]:
+:results:
+| 1 |   2 |
+| 2 |   4 |
+| 3 |   8 |
+| 4 |  16 |
+| 5 |  32 |
+| 6 |  64 |
+| 7 | 128 |
+| 8 | 256 |
+:end:
+
+\[
+g(n)=2^n
+\]
+
+*** ~h~
+
+#+BEGIN_SRC scheme -n :eval no-export :tangle no :exports both :results value table
+<<try-these>>
+<<EX1-10-defs>>
+(try-these h 1 2 3 4)
+#+END_SRC
+
+#+RESULTS[b80263a28bd5076f3bfa3f4bae09ec511773e7af]:
+:results:
+| 1 |     2 |
+| 2 |     4 |
+| 3 |    16 |
+| 4 | 65536 |
+:end:
+
+It took a while to figure this one out, just because I didn't know the term.
+This is repeated exponentiation. This operation is to exponentiation, what
+exponentiation is to multiplication. It's called either /tetration/ or /hyper-4/
+and has no formal notation, but two common ways would be these:
+
+\[
+h(n)=2 \uparrow\uparrow n
+\]
+\[
+h(n)={}^{n}2
 \]

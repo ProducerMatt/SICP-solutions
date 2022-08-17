@@ -953,7 +953,8 @@ values of \(n\). For example, \VERB|\NormalTok{(k n)}| computes
 \hypertarget{a-8}{%
 \subsection{A}\label{a-8}}
 
-Let's start with \texttt{f}.
+\hypertarget{f}{%
+\subsubsection{\texorpdfstring{\texttt{f}}{f}}\label{f}}
 
 \begin{Shaded}
 \begin{Highlighting}[numbers=left,,]
@@ -977,6 +978,68 @@ Let's start with \texttt{f}.
 
 \[
 f(n)=2n
+\]
+
+\hypertarget{g}{%
+\subsubsection{\texorpdfstring{\texttt{g}}{g}}\label{g}}
+
+\begin{Shaded}
+\begin{Highlighting}[numbers=left,,]
+\NormalTok{\textless{}\textless{}try{-}these\textgreater{}\textgreater{}}
+\NormalTok{\textless{}\textless{}EX1{-}10{-}defs\textgreater{}\textgreater{}}
+\NormalTok{(try{-}these g }\DecValTok{1} \DecValTok{2} \DecValTok{3} \DecValTok{4} \DecValTok{5} \DecValTok{6} \DecValTok{7} \DecValTok{8}\NormalTok{)}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{longtable}[]{@{}ll@{}}
+\toprule
+\endhead
+1 & 2 \\
+2 & 4 \\
+3 & 8 \\
+4 & 16 \\
+5 & 32 \\
+6 & 64 \\
+7 & 128 \\
+8 & 256 \\
+\bottomrule
+\end{longtable}
+
+\[
+g(n)=2^n
+\]
+
+\hypertarget{h}{%
+\subsubsection{\texorpdfstring{\texttt{h}}{h}}\label{h}}
+
+\begin{Shaded}
+\begin{Highlighting}[numbers=left,,]
+\NormalTok{\textless{}\textless{}try{-}these\textgreater{}\textgreater{}}
+\NormalTok{\textless{}\textless{}EX1{-}10{-}defs\textgreater{}\textgreater{}}
+\NormalTok{(try{-}these h }\DecValTok{1} \DecValTok{2} \DecValTok{3} \DecValTok{4}\NormalTok{)}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{longtable}[]{@{}ll@{}}
+\toprule
+\endhead
+1 & 2 \\
+2 & 4 \\
+3 & 16 \\
+4 & 65536 \\
+\bottomrule
+\end{longtable}
+
+It took a while to figure this one out, just because I didn't know the
+term. This is repeated exponentiation. This operation is to
+exponentiation, what exponentiation is to multiplication. It's called
+either \emph{tetration} or \emph{hyper-4} and has no formal notation,
+but two common ways would be these:
+
+\[
+h(n)=2 \uparrow\uparrow n
+\] \[
+h(n)={}^{n}2
 \]
 
 \end{document}
