@@ -332,3 +332,31 @@
         ((= kinds-of-coins 4) 25)
         ((= kinds-of-coins 5) 50)))
 ;; count-change-graphviz ends here
+
+;; [[file:1.org::cc-calls][cc-calls]]
+(define (count-calls amount)
+  (cc-calls amount 5))
+
+(define (cc-calls amount kinds-of-coins)
+  (cond ((= amount 0) '(1 . 1))
+        ((or (< amount 0)
+             (= kinds-of-coins 0))
+         '(0 . 1))
+        (else
+         (let ((a (cc-calls amount (- kinds-of-coins 1)))
+               (b (cc-calls (- amount (first-denomination
+                                 kinds-of-coins))
+                      kinds-of-coins)))
+           (cons (+ (car a)
+                    (car b))
+                 (+ 1
+                    (cdr a)
+                    (cdr b)))))))
+
+(define (first-denomination kinds-of-coins)
+  (cond ((= kinds-of-coins 1) 1)
+        ((= kinds-of-coins 2) 5)
+        ((= kinds-of-coins 3) 10)
+        ((= kinds-of-coins 4) 25)
+        ((= kinds-of-coins 5) 50)))
+;; cc-calls ends here
