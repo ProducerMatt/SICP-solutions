@@ -1,0 +1,292 @@
+;; [[file:1.org::try-these][try-these]]
+;; Surely this could be less nightmarish
+(define (try-these f . testvals)
+  (let ((l (if (and (= 1 (length testvals))
+                    (list? (car testvals)))
+               (car testvals)
+               testvals)))
+    (map (λ (i) (cons i
+                      (cons (if (list? i)
+                                (apply f i)
+                                (f i))
+                            #nil)))
+         l)))
+;; try-these ends here
+
+;; [[file:1.org::transpose-list][transpose-list]]
+(define (transpose-list l)
+  (map (λ (i) (list i)) l))
+;; transpose-list ends here
+
+;; [[file:1.org::print-as-rows][print-as-rows]]
+(define (p-nl a)
+  (display a)
+  (newline))
+(define (print-spaced args)
+  (let ((a (car args))
+        (d (cdr args)))
+    (if (null? d)
+        (p-nl a)
+        (begin (display a)
+               (display " ")
+               (print-spaced d)))))
+(define (print-as-rows . args)
+  (let ((a (car args))
+        (d (cdr args)))
+    (if (list? a)
+        (if (= 1 (length args))
+            (apply print-as-rows a)
+            (print-spaced a))
+        (p-nl a))
+    (if (null? d)
+        '()
+        (apply print-as-rows d))))
+;; print-as-rows ends here
+
+;; [[file:1.org::square][square]]
+(define (square x)
+  (* x x))
+;; square ends here
+
+;; [[file:1.org::EX1-3][EX1-3]]
+;; [[[[file:~/SICP-group/1/1.org::square][square]]][square]]
+(define (square x)
+  (* x x))
+;; square ends here
+(define (sum-square x y)
+  (+ (square x) (square y)))
+(define (square-2of3 a b c)
+  (cond ((and (>= a b) (>= b c)) (sum-square a b))
+        ((and (>= a b) (> c b)) (sum-square a c))
+        ((and (> b a) (>= c a)) (sum-square b c))
+        (else "This shouldn't happen")))
+;; EX1-3 ends here
+
+;; [[file:1.org::abs][abs]]
+(define (abs x)
+  (if (< x 0)
+	  (- x)
+	  x))
+;; abs ends here
+
+;; [[file:1.org::average][average]]
+(define (average x y)
+  (/ (+ x y) 2))
+;; average ends here
+
+;; [[file:1.org::txt-sqrt][txt-sqrt]]
+;; [[[[file:~/SICP-group/1/1.org::average][average]]][average]]
+(define (average x y)
+  (/ (+ x y) 2))
+;; average ends here
+(define (improve guess x)
+  (average guess (/ x guess)))
+
+;; [[[[file:~/SICP-group/1/1.org::square][square]]][square]]
+(define (square x)
+  (* x x))
+;; square ends here
+;; [[[[file:~/SICP-group/1/1.org::abs][abs]]][abs]]
+(define (abs x)
+  (if (< x 0)
+	  (- x)
+	  x))
+;; abs ends here
+(define (good-enough? guess x)
+  (< (abs (- (square guess) x)) 0.001))
+
+(define (sqrt-iter guess x)
+  (if (good-enough? guess x)
+      guess
+      (sqrt-iter (improve guess x) x)))
+
+(define (sqrt x)
+  (sqrt-iter 1.0 x))
+;; txt-sqrt ends here
+
+;; [[file:1.org::mean-square][mean-square]]
+(define (mean-square x y)
+  (average (square x) (square y)))
+;; mean-square ends here
+
+;; [[file:1.org::inferior-good-enough][inferior-good-enough]]
+;; [[[[file:~/SICP-group/1/1.org::txt-sqrt][txt-sqrt]]][txt-sqrt]]
+;; [[[[file:~/SICP-group/1/1.org::average][average]]][average]]
+(define (average x y)
+  (/ (+ x y) 2))
+;; average ends here
+(define (improve guess x)
+  (average guess (/ x guess)))
+
+;; [[[[file:~/SICP-group/1/1.org::square][square]]][square]]
+(define (square x)
+  (* x x))
+;; square ends here
+;; [[[[file:~/SICP-group/1/1.org::abs][abs]]][abs]]
+(define (abs x)
+  (if (< x 0)
+	  (- x)
+	  x))
+;; abs ends here
+(define (good-enough? guess x)
+  (< (abs (- (square guess) x)) 0.001))
+
+(define (sqrt-iter guess x)
+  (if (good-enough? guess x)
+      guess
+      (sqrt-iter (improve guess x) x)))
+
+(define (sqrt x)
+  (sqrt-iter 1.0 x))
+;; txt-sqrt ends here
+(define (inferior-good-enough? guess lastguess)
+  (<=
+   (abs (-
+         (/ lastguess guess)
+         1))
+   0.0000000000001)) ; dx
+(define (new-sqrt-iter guess x lastguess) ;; Memory of previous value
+  (if (inferior-good-enough? guess lastguess)
+      guess
+      (new-sqrt-iter (improve guess x) x guess)))
+(define (new-sqrt x)
+  (new-sqrt-iter 1.0 x 0))
+;; inferior-good-enough ends here
+
+;; [[file:1.org::sqrt][sqrt]]
+;; [[[[file:~/SICP-group/1/1.org::average][average]]][average]]
+(define (average x y)
+  (/ (+ x y) 2))
+;; average ends here
+(define (improve guess x)
+  (average guess (/ x guess)))
+(define (good-enough? guess x)
+   (= (improve guess x) guess))
+(define (sqrt-iter guess x)
+  (if (good-enough? guess x)
+      guess
+      (sqrt-iter (improve guess x) x)))
+(define (sqrt x)
+  (sqrt-iter 1.0 x))
+;; sqrt ends here
+
+;; [[file:1.org::cbrt][cbrt]]
+;; [[[[file:~/SICP-group/1/1.org::square][square]]][square]]
+(define (square x)
+  (* x x))
+;; square ends here
+(define (cb-good-enough? nextguess guess lastguess x)
+  (or (= nextguess guess)
+      (= nextguess lastguess)))
+(define (cb-improve guess x)
+  (/
+   (+
+    (/ x (square guess))
+    (* guess 2))
+   3))
+(define (cbrt-iter guess lastguess x)
+  (define nextguess (cb-improve guess x))
+  (if (cb-good-enough? nextguess guess lastguess x)
+      nextguess
+      (cbrt-iter nextguess guess x)))
+(define (cbrt x)
+  (cbrt-iter 1.1 9999 x))
+;; cbrt ends here
+
+;; [[file:1.org::ackermann][ackermann]]
+(define (A x y)
+  (cond ((= y 0) 0)
+        ((= x 0) (* 2 y))
+        ((= y 1) 2)
+        (else (A (- x 1)
+                 (A x (- y 1))))))
+;; ackermann ends here
+
+;; [[file:1.org::EX1-10-defs][EX1-10-defs]]
+;; [[[[file:~/SICP-group/1/1.org::ackermann][ackermann]]][ackermann]]
+(define (A x y)
+  (cond ((= y 0) 0)
+        ((= x 0) (* 2 y))
+        ((= y 1) 2)
+        (else (A (- x 1)
+                 (A x (- y 1))))))
+;; ackermann ends here
+(define (f n) (A 0 n))
+(define (g n) (A 1 n))
+(define (h n) (A 2 n))
+(define (k n) (* 5 n n))
+;; EX1-10-defs ends here
+
+;; [[file:1.org::pascal-rec][pascal-rec]]
+(define (pascal x y)
+  (if (or (= x 0)
+          (= y 0))
+      1
+      (+ (pascal (- x 1) y)
+         (pascal x (- y 1)))))
+;; pascal-rec ends here
+
+;; [[file:1.org::fib-iter][fib-iter]]
+(define (fib-iter n)
+  (define (iter i a b)
+    (if (= i n)
+        b
+    (iter (+ i 1)
+          b
+          (+ a b))))
+  (if (<= n 2)
+      1
+      (iter 2 1 1)))
+;; fib-iter ends here
+
+;; [[file:1.org::fib-phi][fib-phi]]
+;; [[[[file:~/SICP-group/1/1.org::sqrt][sqrt]]][sqrt]]
+;; [[[[file:~/SICP-group/1/1.org::average][average]]][average]]
+(define (average x y)
+  (/ (+ x y) 2))
+;; average ends here
+(define (improve guess x)
+  (average guess (/ x guess)))
+(define (good-enough? guess x)
+   (= (improve guess x) guess))
+(define (sqrt-iter guess x)
+  (if (good-enough? guess x)
+      guess
+      (sqrt-iter (improve guess x) x)))
+(define (sqrt x)
+  (sqrt-iter 1.0 x))
+;; sqrt ends here
+(define sqrt5
+  (sqrt 5))
+(define phi
+  (/ (+ 1 sqrt5) 2))
+(define upsilon
+  (/ (- 1 sqrt5) 2))
+(define (fib-phi n)
+  (/ (- (expt phi n)
+        (expt upsilon n))
+     sqrt5))
+;; fib-phi ends here
+
+;; [[file:1.org::count-change][count-change]]
+(define (count-change amount)
+  (cc amount 5))
+
+(define (cc amount kinds-of-coins)
+  (cond ((= amount 0) 1)
+        ((or (< amount 0)
+             (= kinds-of-coins 0))
+         0)
+        (else
+         (+ (cc amount (- kinds-of-coins 1))
+            (cc (- amount (first-denomination
+                           kinds-of-coins))
+                kinds-of-coins)))))
+
+(define (first-denomination kinds-of-coins)
+  (cond ((= kinds-of-coins 1) 1)
+        ((= kinds-of-coins 2) 5)
+        ((= kinds-of-coins 3) 10)
+        ((= kinds-of-coins 4) 25)
+        ((= kinds-of-coins 5) 50)))
+;; count-change ends here
