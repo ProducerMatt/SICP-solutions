@@ -1,0 +1,48 @@
+\contentsline {section}{HOW THIS DOCUMENT IS MADE}{2}{section*.2}%
+\contentsline {subsubsection}{Also consider:}{2}{section*.3}%
+\contentsline {subsubsection}{Current command for conversion}{3}{section*.4}%
+\contentsline {subsection}{Helpers for org-mode tables}{3}{section*.5}%
+\contentsline {subsubsection}{\texttt {try-these}}{3}{section*.6}%
+\contentsline {subsubsection}{\texttt {transpose-list}}{3}{section*.7}%
+\contentsline {subsubsection}{\texttt {print-as-rows}}{3}{section*.8}%
+\contentsline {section}{Exercise 1.1}{4}{section*.9}%
+\contentsline {subsection}{Q}{4}{section*.10}%
+\contentsline {subsection}{A}{4}{section*.11}%
+\contentsline {section}{Exercise 1.2}{5}{section*.12}%
+\contentsline {subsection}{Q}{5}{section*.13}%
+\contentsline {subsection}{A}{5}{section*.14}%
+\contentsline {section}{Exercise 1.3}{5}{section*.15}%
+\contentsline {subsection}{Text}{5}{section*.16}%
+\contentsline {subsection}{Q}{5}{section*.17}%
+\contentsline {subsection}{A}{5}{section*.18}%
+\contentsline {section}{Exercise 1.4}{6}{section*.19}%
+\contentsline {subsection}{Q}{6}{section*.20}%
+\contentsline {subsection}{A}{6}{section*.21}%
+\contentsline {section}{Exercise 1.5}{6}{section*.22}%
+\contentsline {subsection}{Q}{6}{section*.23}%
+\contentsline {subsection}{A}{7}{section*.24}%
+\contentsline {section}{Exercise 1.6}{7}{section*.25}%
+\contentsline {subsection}{Text code}{7}{section*.26}%
+\contentsline {subsection}{Q}{7}{section*.27}%
+\contentsline {subsection}{A}{8}{section*.28}%
+\contentsline {section}{Exercise 1.7}{8}{section*.29}%
+\contentsline {subsection}{Text}{8}{section*.30}%
+\contentsline {subsection}{Q}{8}{section*.31}%
+\contentsline {subsection}{A}{9}{section*.32}%
+\contentsline {section}{Exercise 1.8}{10}{section*.33}%
+\contentsline {subsection}{Q}{10}{section*.34}%
+\contentsline {subsection}{A1}{11}{section*.35}%
+\contentsline {subsection}{A2}{11}{section*.36}%
+\contentsline {section}{Exercise 1.9}{12}{section*.37}%
+\contentsline {subsection}{Q}{12}{section*.38}%
+\contentsline {subsection}{A}{13}{section*.39}%
+\contentsline {subsubsection}{recursive procedure}{13}{section*.40}%
+\contentsline {subsubsection}{iterative procedure}{13}{section*.41}%
+\contentsline {section}{Exercise 1.10}{13}{section*.42}%
+\contentsline {subsection}{Q}{13}{section*.43}%
+\contentsline {subsection}{A}{14}{section*.44}%
+\contentsline {subsubsection}{\texttt {f}}{14}{section*.45}%
+\contentsline {subsubsection}{\texttt {g}}{14}{section*.46}%
+\contentsline {subsubsection}{\texttt {h}}{15}{section*.47}%
+\contentsline {section}{Exercise 1.11}{15}{section*.48}%
+\contentsline {subsection}{Q}{15}{section*.49}%
