@@ -678,21 +678,33 @@ automatically reaches the precision limit of the system:
 \end{Highlighting}
 \end{Shaded}
 
+So, my final definition of \texttt{sqrt}:
+
+\hypertarget{sqrt}{%
+\label{sqrt}}%
+\begin{Shaded}
+\begin{Highlighting}[numbers=left,,]
+\NormalTok{\textless{}\textless{}average\textgreater{}\textgreater{}}
+\NormalTok{(}\ExtensionTok{define}\FunctionTok{ }\NormalTok{(improve guess x)}
+\NormalTok{  (average guess (}\OperatorTok{/}\NormalTok{ x guess)))}
+\NormalTok{(}\ExtensionTok{define}\FunctionTok{ }\NormalTok{(good{-}enough? guess x)}
+\NormalTok{   (}\OperatorTok{=}\NormalTok{ (improve guess x) guess))}
+\NormalTok{(}\ExtensionTok{define}\FunctionTok{ }\NormalTok{(sqrt{-}iter guess x)}
+\NormalTok{  (}\KeywordTok{if}\NormalTok{ (good{-}enough? guess x)}
+\NormalTok{      guess}
+\NormalTok{      (sqrt{-}iter (improve guess x) x)))}
+\NormalTok{(}\ExtensionTok{define}\FunctionTok{ }\NormalTok{(}\KeywordTok{sqrt}\NormalTok{ x)}
+\NormalTok{  (sqrt{-}iter }\FloatTok{1.0}\NormalTok{ x))}
+\end{Highlighting}
+\end{Shaded}
+
 \hypertarget{EX1-7-t3}{%
 \label{EX1-7-t3}}%
 \begin{Shaded}
 \begin{Highlighting}[numbers=left,,]
 \NormalTok{\textless{}\textless{}try{-}these\textgreater{}\textgreater{}}
-\NormalTok{\textless{}\textless{}new{-}good{-}enough\textgreater{}\textgreater{}}
-\NormalTok{(}\ExtensionTok{define}\FunctionTok{ }\NormalTok{(best{-}sqrt{-}iter guess x)}
-\NormalTok{  (}\KeywordTok{if}\NormalTok{ (best{-}good{-}enough? guess x)}
-\NormalTok{      guess}
-\NormalTok{      (best{-}sqrt{-}iter (improve guess x) x)))}
-
-\NormalTok{(}\ExtensionTok{define}\FunctionTok{ }\NormalTok{(best{-}sqrt x)}
-\NormalTok{  (best{-}sqrt{-}iter }\FloatTok{1.0}\NormalTok{ x))}
-
-\NormalTok{(try{-}these best{-}sqrt \textquotesingle{}(}\FloatTok{0.01} \FloatTok{0.0001} \FloatTok{0.000001} \FloatTok{0.00000001} \FloatTok{0.0000000001}\NormalTok{))}
+\NormalTok{\textless{}\textless{}sqrt\textgreater{}\textgreater{}}
+\NormalTok{(try{-}these }\KeywordTok{sqrt}\NormalTok{ \textquotesingle{}(}\FloatTok{0.01} \FloatTok{0.0001} \FloatTok{0.000001} \FloatTok{0.00000001} \FloatTok{0.0000000001}\NormalTok{))}
 \end{Highlighting}
 \end{Shaded}
 
@@ -1256,5 +1268,109 @@ corner of an infinite spreadsheet.
 \end{longtable}
 
 The test code was much harder to write than the actual solution.
+
+\hypertarget{exercise-1.13}{%
+\section{Exercise 1.13}\label{exercise-1.13}}
+
+\hypertarget{q-12}{%
+\subsection{Q}\label{q-12}}
+
+Prove that \(\text{Fib}(n)\) is the closest integer to
+\(\frac{ϕ^n}{\sqrt{5}}\) where Phi is \(\frac{1 + \sqrt{5}}{2}\). Hint:
+let \(Υ = \frac{1 - \sqrt{5}}{2}\). Use induction and the definition of
+the Fibonacci numbers to prove that
+
+\[
+ \text{Fib}(n) = \frac{ϕ^n - Υ^n}{\sqrt{5}}
+\]
+
+\hypertarget{a-11}{%
+\subsection{A}\label{a-11}}
+
+I don't know how to write a proof yet, but I can make functions to
+demonstrate it.
+
+\hypertarget{fibonacci-number-generator}{%
+\subsubsection{Fibonacci number
+generator}\label{fibonacci-number-generator}}
+
+\hypertarget{fib-iter}{%
+\label{fib-iter}}%
+\begin{Shaded}
+\begin{Highlighting}[numbers=left,,]
+\NormalTok{(}\ExtensionTok{define}\FunctionTok{ }\NormalTok{(fib{-}iter n)}
+\NormalTok{  (}\ExtensionTok{define}\FunctionTok{ }\NormalTok{(iter i a b)}
+\NormalTok{    (}\KeywordTok{if}\NormalTok{ (}\OperatorTok{=}\NormalTok{ i n)}
+\NormalTok{        b}
+\NormalTok{    (iter (}\OperatorTok{+}\NormalTok{ i }\DecValTok{1}\NormalTok{)}
+\NormalTok{          b}
+\NormalTok{          (}\OperatorTok{+}\NormalTok{ a b))))}
+\NormalTok{  (}\KeywordTok{if}\NormalTok{ (}\OperatorTok{\textless{}=}\NormalTok{ n }\DecValTok{2}\NormalTok{)}
+      \DecValTok{1}
+\NormalTok{      (iter }\DecValTok{2} \DecValTok{1} \DecValTok{1}\NormalTok{)))}
+\end{Highlighting}
+\end{Shaded}
+
+\hypertarget{various-algorithms-relating-to-the-question}{%
+\subsubsection{Various algorithms relating to the
+question}\label{various-algorithms-relating-to-the-question}}
+
+\hypertarget{fib-phi}{%
+\label{fib-phi}}%
+\begin{Shaded}
+\begin{Highlighting}[numbers=left,,]
+\NormalTok{\textless{}\textless{}sqrt\textgreater{}\textgreater{}}
+\NormalTok{(}\ExtensionTok{define}\FunctionTok{ sqrt5}
+\NormalTok{  (}\KeywordTok{sqrt} \DecValTok{5}\NormalTok{))}
+\NormalTok{(}\ExtensionTok{define}\FunctionTok{ phi}
+\NormalTok{  (}\OperatorTok{/}\NormalTok{ (}\OperatorTok{+} \DecValTok{1}\NormalTok{ sqrt5) }\DecValTok{2}\NormalTok{))}
+\NormalTok{(}\ExtensionTok{define}\FunctionTok{ upsilon}
+\NormalTok{  (}\OperatorTok{/}\NormalTok{ (}\OperatorTok{{-}} \DecValTok{1}\NormalTok{ sqrt5) }\DecValTok{2}\NormalTok{))}
+\NormalTok{(}\ExtensionTok{define}\FunctionTok{ }\NormalTok{(fib{-}phi n)}
+\NormalTok{  (}\OperatorTok{/}\NormalTok{ (}\OperatorTok{{-}}\NormalTok{ (}\KeywordTok{expt}\NormalTok{ phi n)}
+\NormalTok{        (}\KeywordTok{expt}\NormalTok{ upsilon n))}
+\NormalTok{     sqrt5))}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{Shaded}
+\begin{Highlighting}[numbers=left,,]
+\NormalTok{(use{-}srfis \textquotesingle{}(}\DecValTok{1}\NormalTok{))}
+\NormalTok{\textless{}\textless{}fib{-}iter\textgreater{}\textgreater{}}
+\NormalTok{\textless{}\textless{}fib{-}phi\textgreater{}\textgreater{}}
+\NormalTok{\textless{}\textless{}try{-}these\textgreater{}\textgreater{}}
+
+\NormalTok{(}\KeywordTok{let*}\NormalTok{ ((vals (}\KeywordTok{cdr}\NormalTok{ (iota }\DecValTok{21}\NormalTok{)))}
+\NormalTok{       (fibs (map fib{-}iter vals))}
+\NormalTok{       (approx (map fib{-}phi vals)))}
+\NormalTok{  (zip vals fibs approx))}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{longtable}[]{@{}lll@{}}
+\toprule
+\endhead
+1 & 1 & 1.0 \\
+2 & 1 & 1.0 \\
+3 & 2 & 2.0 \\
+4 & 3 & 3.0 \\
+5 & 5 & 5.0 \\
+6 & 8 & 8.0 \\
+7 & 13 & 13.0 \\
+8 & 21 & 21.0 \\
+9 & 34 & 34.0 \\
+10 & 55 & 54.99999999999999 \\
+11 & 89 & 89.0 \\
+12 & 144 & 143.99999999999997 \\
+13 & 233 & 232.99999999999994 \\
+14 & 377 & 377.00000000000006 \\
+15 & 610 & 610.0 \\
+16 & 987 & 986.9999999999998 \\
+17 & 1597 & 1596.9999999999998 \\
+18 & 2584 & 2584.0 \\
+19 & 4181 & 4181.0 \\
+20 & 6765 & 6764.999999999999 \\
+\bottomrule
+\end{longtable}
 
 \end{document}

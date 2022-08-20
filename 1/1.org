@@ -428,22 +428,29 @@ reaches the precision limit of the system:
    (= (improve guess x) guess))
 #+END_SRC
 
+So, my final definition of ~sqrt~:
+#+NAME: sqrt
+#+BEGIN_SRC scheme -n :eval no-export :tangle yes :exports both :results value table
+<<average>>
+(define (improve guess x)
+  (average guess (/ x guess)))
+(define (good-enough? guess x)
+   (= (improve guess x) guess))
+(define (sqrt-iter guess x)
+  (if (good-enough? guess x)
+      guess
+      (sqrt-iter (improve guess x) x)))
+(define (sqrt x)
+  (sqrt-iter 1.0 x))
+#+end_src
 #+NAME: EX1-7-t3
 #+BEGIN_SRC scheme -n :eval no-export :tangle no :exports both :results value table
 <<try-these>>
-<<new-good-enough>>
-(define (best-sqrt-iter guess x)
-  (if (best-good-enough? guess x)
-      guess
-      (best-sqrt-iter (improve guess x) x)))
-
-(define (best-sqrt x)
-  (best-sqrt-iter 1.0 x))
-
-(try-these best-sqrt '(0.01 0.0001 0.000001 0.00000001 0.0000000001))
+<<sqrt>>
+(try-these sqrt '(0.01 0.0001 0.000001 0.00000001 0.0000000001))
 #+end_src
 
-#+RESULTS[e76eef1cdddb1b40eb987330f13c0babf05110db]: EX1-7-t3
+#+RESULTS[7cb8301b492f578ac407eef3e3378a8d1552a5a3]: EX1-7-t3
 :results:
 |   0.01 |                   0.1 |
 | 0.0001 |                  0.01 |
@@ -873,3 +880,83 @@ infinite spreadsheet.
 :end:
 
 The test code was much harder to write than the actual solution.
+
+* Exercise 1.13
+** Q
+Prove that \(\text{Fib}(n)\) is the closest integer to
+\(\frac{ϕ^n}{\sqrt{5}}\) where Phi is \(\frac{1 + \sqrt{5}}{2}\). Hint: let
+\(Υ = \frac{1 - \sqrt{5}}{2}\). Use induction and the definition of the
+Fibonacci numbers to prove that
+
+\[
+ \text{Fib}(n) = \frac{ϕ^n - Υ^n}{\sqrt{5}}
+\]
+
+** A
+I don't know how to write a proof yet, but I can make functions to
+demonstrate it.
+
+*** Fibonacci number generator
+#+NAME: fib-iter
+#+BEGIN_SRC scheme -n :eval no-export :tangle yes :exports code :results silent
+(define (fib-iter n)
+  (define (iter i a b)
+    (if (= i n)
+        b
+    (iter (+ i 1)
+          b
+          (+ a b))))
+  (if (<= n 2)
+      1
+      (iter 2 1 1)))
+#+END_SRC
+*** Various algorithms relating to the question
+#+NAME: fib-phi
+#+BEGIN_SRC scheme -n :eval no-export :tangle yes :exports code :results silent
+<<sqrt>>
+(define sqrt5
+  (sqrt 5))
+(define phi
+  (/ (+ 1 sqrt5) 2))
+(define upsilon
+  (/ (- 1 sqrt5) 2))
+(define (fib-phi n)
+  (/ (- (expt phi n)
+        (expt upsilon n))
+     sqrt5))
+#+END_SRC
+#+BEGIN_SRC scheme -n :eval no-export :tangle no :exports both :results value table
+(use-srfis '(1))
+<<fib-iter>>
+<<fib-phi>>
+<<try-these>>
+
+(let* ((vals (cdr (iota 21)))
+       (fibs (map fib-iter vals))
+       (approx (map fib-phi vals)))
+  (zip vals fibs approx))
+#+END_SRC
+
+#+RESULTS[cf6fa040a9238cee24d2ba63089c5911f655d9b4]:
+:results:
+|  1 |    1 |                1.0 |
+|  2 |    1 |                1.0 |
+|  3 |    2 |                2.0 |
+|  4 |    3 |                3.0 |
+|  5 |    5 |                5.0 |
+|  6 |    8 |                8.0 |
+|  7 |   13 |               13.0 |
+|  8 |   21 |               21.0 |
+|  9 |   34 |               34.0 |
+| 10 |   55 |  54.99999999999999 |
+| 11 |   89 |               89.0 |
+| 12 |  144 | 143.99999999999997 |
+| 13 |  233 | 232.99999999999994 |
+| 14 |  377 | 377.00000000000006 |
+| 15 |  610 |              610.0 |
+| 16 |  987 |  986.9999999999998 |
+| 17 | 1597 | 1596.9999999999998 |
+| 18 | 2584 |             2584.0 |
+| 19 | 4181 |             4181.0 |
+| 20 | 6765 |  6764.999999999999 |
+:end:

@@ -153,6 +153,23 @@
   (new-sqrt-iter 1.0 x 0))
 ;; inferior-good-enough ends here
 
+;; [[file:1.org::sqrt][sqrt]]
+;; [[[[file:~/SICP-group/1/1.org::average][average]]][average]]
+(define (average x y)
+  (/ (+ x y) 2))
+;; average ends here
+(define (improve guess x)
+  (average guess (/ x guess)))
+(define (good-enough? guess x)
+   (= (improve guess x) guess))
+(define (sqrt-iter guess x)
+  (if (good-enough? guess x)
+      guess
+      (sqrt-iter (improve guess x) x)))
+(define (sqrt x)
+  (sqrt-iter 1.0 x))
+;; sqrt ends here
+
 ;; [[file:1.org::cbrt][cbrt]]
 ;; [[[[file:~/SICP-group/1/1.org::square][square]]][square]]
 (define (square x)
@@ -208,3 +225,45 @@
       (+ (pascal (- x 1) y)
          (pascal x (- y 1)))))
 ;; pascal-rec ends here
+
+;; [[file:1.org::fib-iter][fib-iter]]
+(define (fib-iter n)
+  (define (iter i a b)
+    (if (= i n)
+        b
+    (iter (+ i 1)
+          b
+          (+ a b))))
+  (if (<= n 2)
+      1
+      (iter 2 1 1)))
+;; fib-iter ends here
+
+;; [[file:1.org::fib-phi][fib-phi]]
+;; [[[[file:~/SICP-group/1/1.org::sqrt][sqrt]]][sqrt]]
+;; [[[[file:~/SICP-group/1/1.org::average][average]]][average]]
+(define (average x y)
+  (/ (+ x y) 2))
+;; average ends here
+(define (improve guess x)
+  (average guess (/ x guess)))
+(define (good-enough? guess x)
+   (= (improve guess x) guess))
+(define (sqrt-iter guess x)
+  (if (good-enough? guess x)
+      guess
+      (sqrt-iter (improve guess x) x)))
+(define (sqrt x)
+  (sqrt-iter 1.0 x))
+;; sqrt ends here
+(define sqrt5
+  (sqrt 5))
+(define phi
+  (/ (+ 1 sqrt5) 2))
+(define upsilon
+  (/ (- 1 sqrt5) 2))
+(define (fib-phi n)
+  (/ (- (expt phi n)
+        (expt upsilon n))
+     sqrt5))
+;; fib-phi ends here
