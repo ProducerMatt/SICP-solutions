@@ -925,29 +925,21 @@ demonstrate it.
         (expt upsilon n))
      sqrt5))
 #+END_SRC
+#+NAME: 1-13-tab
 #+BEGIN_SRC scheme -n :eval no-export :tangle no :exports both :results value table
 (use-srfis '(1))
 <<fib-iter>>
 <<fib-phi>>
 <<try-these>>
 
-(let* ((vals (cdr (iota 21)))
+(let* ((vals (drop (iota 21) 10))
        (fibs (map fib-iter vals))
        (approx (map fib-phi vals)))
   (zip vals fibs approx))
 #+END_SRC
 
-#+RESULTS[cf6fa040a9238cee24d2ba63089c5911f655d9b4]:
+#+RESULTS[732483d41040c13f1e9a125ebe5a0ecdca1f5d18]: 1-13-tab
 :results:
-|  1 |    1 |                1.0 |
-|  2 |    1 |                1.0 |
-|  3 |    2 |                2.0 |
-|  4 |    3 |                3.0 |
-|  5 |    5 |                5.0 |
-|  6 |    8 |                8.0 |
-|  7 |   13 |               13.0 |
-|  8 |   21 |               21.0 |
-|  9 |   34 |               34.0 |
 | 10 |   55 |  54.99999999999999 |
 | 11 |   89 |               89.0 |
 | 12 |  144 | 143.99999999999997 |
@@ -959,4 +951,34 @@ demonstrate it.
 | 18 | 2584 |             2584.0 |
 | 19 | 4181 |             4181.0 |
 | 20 | 6765 |  6764.999999999999 |
+:end:
+
+You can see they follow extremely closely. Graphing the differences:
+#+NAME: 1-13-tab2
+#+BEGIN_SRC scheme -n :eval no-export :tangle no :exports none :results value silent
+(use-srfis '(1))
+<<fib-iter>>
+<<fib-phi>>
+<<try-these>>
+
+(let* ((vals (drop (iota 500) 2))
+       (diffs (map (λ (i)
+                     (- (fib-iter i) (fib-phi i)))
+                   vals)))
+  (zip vals diffs))
+#+END_SRC
+
+
+
+#+begin_src gnuplot :var data=1-13-tab2 :file 1-13.png :exports results :eval no-export
+reset # helps with various issues in execution
+set xlabel 'values of n'
+set logscale y
+
+plot data using 1:2 with lines title 'Fib(n) minus Fib-phi(n)'
+#+end_src
+
+#+RESULTS[8c0a67c9f76a9da9c115187192a6c35899c939cb]:
+:results:
+[[file:1-13.png]]
 :end:
