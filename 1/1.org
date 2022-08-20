@@ -1196,3 +1196,61 @@ plot data using 1:2 with lp title 'Ways to make change for n', \
 :results:
 [[file:fig/cc-100.png]]
 :end:
+
+I believe the space to be \(\Theta(n+d)\) as the function calls count down the
+denominations before counting down the change. However I notice most answers
+describe \(\Theta(n)\) instead, maybe I'm being overly pedantic and getting the
+wrong answer.
+
+My issues came finding the time. The book describes the meaning and properties
+of \(\Theta\) notation in [[http://sarabander.github.io/sicp/html/1_002e2.xhtml#g_t1_002e2_002e3][Section 1.2.3]]. However, my lack of formal math
+education made realizing the significance of this passage difficult. For one, I
+didn't understand that \(k_{1}f(n) \leq R(n) \leq k_{2}f(n)\) means "you can
+find the \(\Theta\) by proving that a graph of the algorithm's resource usage is
+bounded by two identical functions multiplied by constants." So, the graph of
+resource usage for an algorithm with \(\Theta(n^{2})\) will by bounded by lines
+of \(n^{2} \times some constant\), the top boundary's constant being larger than
+the small boundary. These are arbitrarily chosen constants, you're just proving
+that the function behaves the way you think it does.
+
+Overall, finding the \(\Theta\) and \(\Omega\) and \(O\) notations (they are all
+different btw!) is about aggressively simplifying to make a very general
+statement about the behavior of the algorithm.
+
+I could tell that a "correct" way to find the \(\Theta\) would be to make a
+formula which describes the algorithm's function calls for given input and
+denominations. This is one of the biggest time sinks, although I had a lot of
+fun and learned a lot. In the end, with some help from Jach in a Lisp Discord, I
+had the following formula:
+
+\[
+\sum_{i=1}^{ceil(n / val(d))} T(n - val(d)*i, d)
+\]
+
+But I wasn't sure where to go from here. I took the opportunity to make [[/1/cc/Ways%20to%20Make%20Changes%20Analyzed.ipynb][some
+graphs of the function in Jupyter]] and saw some interesting trends, though I
+didn't get any closer to an answer in the process.
+
+By reading on other websites, I knew that you could find \(\Theta\) by obtaining
+a formula for \(R(n)\) and removing constants to end up with a term of interest.
+For example, if your algorithm's resource usage is \(\frac{n^{2} + 7n}{5}\),
+this demonstrates \(\Theta(n^{2})\). So I know a formula *without* a \(\sum\)
+would give me the answer I wanted. It didn't occur to me that it might be
+possible to use calculus to remove the \(\sum\) from the equation. At this point
+I knew I was stuck and decided to look up a guide.
+
+After seeing a few solutions that I found somewhat confusing, I landed on [[https://codology.net/post/sicp-solution-exercise-1-14/][this
+awesome article from Codology.net]]. They show how you can remove the summation,
+and proposed this equation for count-change with 5 denominations:
+
+\[
+T(n,5)=\frac n{50}+1+\sum_{i=0}^{n/50}T(n-50i,1)
+\]
+
+Which, when expanded and simplified, demonstrates \(\Theta(n^{5})\) for 5
+denominations.
+
+Overall I'm relieved that I wasn't entirely off, given I haven't done math work
+like this since college. It's inspired me to restart my remedial math courses, I
+don't think I really grasped the nature of math as a tool of empowerment until
+now.
