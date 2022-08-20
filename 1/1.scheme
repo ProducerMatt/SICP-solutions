@@ -360,3 +360,25 @@
         ((= kinds-of-coins 4) 25)
         ((= kinds-of-coins 5) 50)))
 ;; cc-calls ends here
+
+;; [[file:1.org::1-15-deps][1-15-deps]]
+(define (cube x) (* x x x))
+(define (p x) (- (* 3 x) (* 4 (cube x))))
+(define (sine angle)
+  (if (not (> (abs angle) 0.1))
+      angle
+      (p (sine (/ angle 3.0)))))
+;; 1-15-deps ends here
+
+;; [[file:1.org::1-15-deps][1-15-deps]]
+(define (cube x) (* x x x))
+(define (p x) (- (* 3 x) (* 4 (cube x))))
+(define (sine angle)
+  (if (not (> (abs angle) 0.1))
+      (cons angle 0)
+      (let ((x (sine (/ angle 3.0))))
+        (cons (p (car x)) (+ 1 (cdr x))))))
+
+(let ((xy (sine 12.15)))
+  (list (car xy) (cdr xy)))
+;; 1-15-deps ends here
