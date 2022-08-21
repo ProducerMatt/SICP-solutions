@@ -297,9 +297,9 @@
 ;; Returns # of ways change can be made
 ;; "Helper" for (cc)
 (define (count-change amount)
-  (display "digraph {\n")
+  (display "digraph {\n") ;; start graph
   (cc amount 5 0)
-  (display "}\n")
+  (display "}\n") ;; end graph
   (set! bubblecounter 0))
 
 ;; GraphViz output
@@ -307,11 +307,11 @@
 (define (cc amount kinds-of-coins oldbubble)
   (let ((recur (lambda (new-amount new-kinds)
                  (begin
-                   (display "\"")
+                   (display "\"") ;; Source bubble
                    (display `(,oldbubble ,amount ,kinds-of-coins))
                    (display "\"")
-                   (display " -> ")
-                   (display "\"")
+                   (display " -> ") ;; arrow pointing from parent to child
+                   (display "\"") ;; child bubble
                    (display `(,bubblecounter ,new-amount ,new-kinds))
                    (display "\"")
                    (display "\n")
@@ -370,7 +370,7 @@
       (p (sine (/ angle 3.0)))))
 ;; 1-15-deps ends here
 
-;; [[file:1.org::1-15-deps][1-15-deps]]
+;; [[file:1.org::1-15-p-measure][1-15-p-measure]]
 (define (cube x) (* x x x))
 (define (p x) (- (* 3 x) (* 4 (cube x))))
 (define (sine angle)
@@ -378,7 +378,4 @@
       (cons angle 0)
       (let ((x (sine (/ angle 3.0))))
         (cons (p (car x)) (+ 1 (cdr x))))))
-
-(let ((xy (sine 12.15)))
-  (list (car xy) (cdr xy)))
-;; 1-15-deps ends here
+;; 1-15-p-measure ends here
