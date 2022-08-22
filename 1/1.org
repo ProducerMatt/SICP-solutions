@@ -1,11 +1,12 @@
 # ORG-BABEL DEFAULTS
 #+PROPERTY: header-args :tangle no :noeval :exports both :cache yes :results output wrap :noweb no-export :comments noweb :session default
-#
+#+PROPERTY: header-args:gnuplot :prelude "reset"
 # For the actual answers their dependencies use a header like this:
 # #+BEGIN_SRC scheme -n :eval no-export :tangle yes :exports both
 # For their dependencies:
 # #+BEGIN_SRC scheme :eval no-export :tangle yes :results silent
 
+#+STARTUP: overview
 #+auto_tangle: t
 
 #+PANDOC_OPTIONS: standalone:t
@@ -149,7 +150,6 @@ Translate the following expression into prefix form:
 :results:
 1/75
 :end:
-
 
 * Exercise 1.3
 ** Text
@@ -1290,7 +1290,7 @@ Let's find out!
 #+end_src
 
 #+NAME: 1-15-sine1215
-#+BEGIN_SRC scheme -n :eval no-export :tangle no` :exports both :results value
+#+BEGIN_SRC scheme -n :eval no-export :tangle no :exports both :results value
 <<1-15-p-measure>>
 (let ((xy (sine 12.15)))
   (list (car xy) (cdr xy)))
@@ -1395,4 +1395,60 @@ This graph shows that the number of times ~sine~ will be called is logarithmic.
 - 2.7 to 8 are divided four times
 - 8.5 to 23.8 are divided five times
 
-So I argue the time is \(\Theta(\log(n))\)
+Given that the calls to ~p~ get stacked recursively, like this:
+#+BEGIN_SRC scheme :noeval :exports code
+(sine 12.15)
+(p (sine 4.05))
+(p (p (sine 1.35)))
+(p (p (p (sine 0.45))))
+(p (p (p (p (sine 0.15)))))
+(p (p (p (p (p (sine 0.05))))))
+(p (p (p (p (p 0.05)))))
+(p (p (p (p 0.14950000000000002))))
+(p (p (p 0.43513455050000005)))
+(p (p 0.9758465331678772))
+(p -0.7895631144708228)
+-0.39980345741334
+#+END_SRC
+
+So I argue the space and time is \(\Theta(\log(n))\)
+
+
+We can also prove this for the time by benchmarking the function:
+
+#+NAME: 1-15-sine-bench
+#+BEGIN_SRC scheme -n :noeval :tangle "Ex15/sine-bench.scheme" :exports code :results none
+;; This execution takes too long for org-mode, so I'm doing it externally and importing the results
+(use-srfis '(1))
+(use-modules (ice-9 format))
+(load "../../mattbench.scm")
+<<1-15-deps>>
+(let* ((vals (iota 300 0.1 0.1))
+       (times (map (λ (i)
+                     (mattbench (λ () (sine i)) 1000000))
+                   vals)))
+  (with-output-to-file "sine-bench.dat" (λ ()
+     (map (λ (x y)
+           (format #t "~s~/~s~%" x y))
+         vals times))))
+#+END_SRC
+
+#+begin_src gnuplot :file fig/1-15-bench.png :exports both :eval no-export
+reset # helps with various issues in execution
+set xlabel 'values of x'
+set logscale x
+set key top left
+set style fill solid 1.00 border
+#set style function fillsteps below
+
+f(x) = (log(x) * a) + b
+fit f(x) 'Ex15/sine-bench.dat' using 1:2 via a,b
+
+plot 'Ex15/sine-bench.dat' using 1:2 with fillsteps title 'time to execute', \
+     'Ex15/sine-bench.dat' using 1:(f($1)) with lines title sprintf('(log(x) * %.2f) + %.2f', a, b)
+#+end_src
+
+#+RESULTS[6de2ecfc7850150d0cc39422e126f714590f6fb4]:
+:results:
+[[file:fig/1-15-bench.png]]
+:end:

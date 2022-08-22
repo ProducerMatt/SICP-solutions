@@ -1,0 +1,22 @@
+;; [[file:../1.org::1-15-sine-bench][1-15-sine-bench]]
+;; This execution takes too long for org-mode, so I'm doing it externally and importing the results
+(use-srfis '(1))
+(use-modules (ice-9 format))
+(load "../../mattbench.scm")
+;; [[[[file:~/SICP-group/1/1.org::1-15-deps][1-15-deps]]][1-15-deps]]
+(define (cube x) (* x x x))
+(define (p x) (- (* 3 x) (* 4 (cube x))))
+(define (sine angle)
+  (if (not (> (abs angle) 0.1))
+      angle
+      (p (sine (/ angle 3.0)))))
+;; 1-15-deps ends here
+(let* ((vals (iota 300 0.1 0.1))
+       (times (map (λ (i)
+                     (mattbench (λ () (sine i)) 1000000))
+                   vals)))
+  (with-output-to-file "sine-bench.dat" (λ ()
+     (map (λ (x y)
+           (format #t "~s~/~s~%" x y))
+         vals times))))
+;; 1-15-sine-bench ends here

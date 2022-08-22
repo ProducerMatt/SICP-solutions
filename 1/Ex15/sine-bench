@@ -1,0 +1,19 @@
+;; [[file:../1.org::1-15-sine-bench][1-15-sine-bench]]
+(use-srfis '(1))
+(load "mattbench.scm")
+;; [[[[file:~/SICP-group/1/1.org::1-15-deps][1-15-deps]]][1-15-deps]]
+(define (cube x) (* x x x))
+(define (p x) (- (* 3 x) (* 4 (cube x))))
+(define (sine angle)
+  (if (not (> (abs angle) 0.1))
+      angle
+      (p (sine (/ angle 3.0)))))
+;; 1-15-deps ends here
+(define (1-15-sine-bench)
+(let* ((vals (iota 300 0.1 0.1))
+       (times (map (λ (i)
+                     (mattbench (λ () (sine i)) 100000))
+                   vals)))
+  (zip vals times))
+)
+;; 1-15-sine-bench ends here
