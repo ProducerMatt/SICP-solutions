@@ -1,5 +1,6 @@
 ;; [[file:../1.org::1-15-sine-bench][1-15-sine-bench]]
-;; This execution takes too long for org-mode, so I'm doing it externally and importing the results
+;; This execution takes too long for org-mode, so I'm doing it
+;; externally and importing the results
 (use-srfis '(1))
 (use-modules (ice-9 format))
 (load "../../mattbench.scm")

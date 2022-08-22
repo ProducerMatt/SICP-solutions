@@ -1797,6 +1797,68 @@ is logarithmic.
   8.5 to 23.8 are divided five times
 \end{itemize}
 
-So I argue the time is \(\Theta(\log(n))\)
+Given that the calls to \texttt{p} get stacked recursively, like this:
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{(sine }\FloatTok{12.15}\NormalTok{)}
+\NormalTok{(p (sine }\FloatTok{4.05}\NormalTok{))}
+\NormalTok{(p (p (sine }\FloatTok{1.35}\NormalTok{)))}
+\NormalTok{(p (p (p (sine }\FloatTok{0.45}\NormalTok{))))}
+\NormalTok{(p (p (p (p (sine }\FloatTok{0.15}\NormalTok{)))))}
+\NormalTok{(p (p (p (p (p (sine }\FloatTok{0.05}\NormalTok{))))))}
+\NormalTok{(p (p (p (p (p }\FloatTok{0.05}\NormalTok{)))))}
+\NormalTok{(p (p (p (p }\FloatTok{0.14950000000000002}\NormalTok{))))}
+\NormalTok{(p (p (p }\FloatTok{0.43513455050000005}\NormalTok{)))}
+\NormalTok{(p (p }\FloatTok{0.9758465331678772}\NormalTok{))}
+\NormalTok{(p {-}}\FloatTok{0.7895631144708228}\NormalTok{)}
+\NormalTok{{-}}\FloatTok{0.39980345741334}
+\end{Highlighting}
+\end{Shaded}
+
+So I argue the space and time is \(\Theta(\log(n))\)
+
+We can also prove this for the time by benchmarking the function:
+
+\hypertarget{1-15-sine-bench}{%
+\label{1-15-sine-bench}}%
+\begin{Shaded}
+\begin{Highlighting}[numbers=left,,]
+\CommentTok{;; This execution takes too long for org{-}mode, so I\textquotesingle{}m doing it}
+\CommentTok{;; externally and importing the results}
+\NormalTok{(use{-}srfis \textquotesingle{}(}\DecValTok{1}\NormalTok{))}
+\NormalTok{(use{-}modules (ice{-}9 format))}
+\NormalTok{(}\KeywordTok{load} \StringTok{"../../mattbench.scm"}\NormalTok{)}
+\NormalTok{\textless{}\textless{}1{-}15{-}deps\textgreater{}\textgreater{}}
+\NormalTok{(}\KeywordTok{let*}\NormalTok{ ((vals (iota }\DecValTok{300} \FloatTok{0.1} \FloatTok{0.1}\NormalTok{))}
+\NormalTok{       (times (map (λ (i)}
+\NormalTok{                     (mattbench (λ () (sine i)) }\DecValTok{1000000}\NormalTok{))}
+\NormalTok{                   vals)))}
+\NormalTok{  (}\KeywordTok{with{-}output{-}to{-}file} \StringTok{"sine{-}bench.dat"}\NormalTok{ (λ ()}
+\NormalTok{     (map (λ (x y)}
+\NormalTok{           (format }\DecValTok{\#t} \StringTok{"\textasciitilde{}s\textasciitilde{}/\textasciitilde{}s\textasciitilde{}\%"}\NormalTok{ x y))}
+\NormalTok{         vals times))))}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{reset \# helps with various issues in execution}
+\NormalTok{set xtics 0.5}
+\NormalTok{set xlabel \textquotesingle{}values of x\textquotesingle{}}
+\NormalTok{set logscale x}
+\NormalTok{set key top left}
+\NormalTok{set style fill solid 1.00 border}
+\NormalTok{\#set style function fillsteps below}
+
+\NormalTok{f(x) = (log(x) * a) + b}
+\NormalTok{fit f(x) \textquotesingle{}Ex15/sine{-}bench.dat\textquotesingle{} using 1:2 via a,b}
+
+\NormalTok{plot \textquotesingle{}Ex15/sine{-}bench.dat\textquotesingle{} using 1:2 with fillsteps title \textquotesingle{}time to execute\textquotesingle{}, \textbackslash{}}
+\NormalTok{     \textquotesingle{}Ex15/sine{-}bench.dat\textquotesingle{} using 1:(f($1)) with lines title sprintf(\textquotesingle{}(log(x) * \%.2f) + \%.2f\textquotesingle{}, a, b)}
+\end{Highlighting}
+\end{Shaded}
+
+\includegraphics{fig/1-15-bench.png}
 
 \end{document}

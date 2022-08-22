@@ -1418,7 +1418,8 @@ We can also prove this for the time by benchmarking the function:
 
 #+NAME: 1-15-sine-bench
 #+BEGIN_SRC scheme -n :noeval :tangle "Ex15/sine-bench.scheme" :exports code :results none
-;; This execution takes too long for org-mode, so I'm doing it externally and importing the results
+;; This execution takes too long for org-mode, so I'm doing it
+;; externally and importing the results
 (use-srfis '(1))
 (use-modules (ice-9 format))
 (load "../../mattbench.scm")
@@ -1435,6 +1436,7 @@ We can also prove this for the time by benchmarking the function:
 
 #+begin_src gnuplot :file fig/1-15-bench.png :exports both :eval no-export
 reset # helps with various issues in execution
+set xtics 0.5
 set xlabel 'values of x'
 set logscale x
 set key top left
@@ -1448,7 +1450,7 @@ plot 'Ex15/sine-bench.dat' using 1:2 with fillsteps title 'time to execute', \
      'Ex15/sine-bench.dat' using 1:(f($1)) with lines title sprintf('(log(x) * %.2f) + %.2f', a, b)
 #+end_src
 
-#+RESULTS[6de2ecfc7850150d0cc39422e126f714590f6fb4]:
+#+RESULTS[fb7f0aefd66103c1d2a3d67706e4323de589c4f9]:
 :results:
 [[file:fig/1-15-bench.png]]
 :end:
