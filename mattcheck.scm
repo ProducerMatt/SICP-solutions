@@ -1,3 +1,10 @@
+;; /*─────────────────────────────────────────────────────────────────╗
+;; │ To the extent possible under law, Matthew Pherigo has waived     │
+;; │ all copyright and related or neighboring rights to this file,    │
+;; │ as it is written in the following disclaimers:                   │
+;; │   • http://unlicense.org/                                        │
+;; ╚─────────────────────────────────────────────────────────────────*/
+
 ;; Made this to dodge weird compiler/emacs behavior that breaks SRFI-78
 ;; (see check.scm) and friends.
 
