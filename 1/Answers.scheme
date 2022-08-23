@@ -1,4 +1,4 @@
-;; [[file:1.org::try-these][try-these]]
+;; [[file:Answers.org::try-these][try-these]]
 ;; Surely this could be less nightmarish
 (define (try-these f . testvals)
   (let ((l (if (and (= 1 (length testvals))
@@ -13,12 +13,12 @@
          l)))
 ;; try-these ends here
 
-;; [[file:1.org::transpose-list][transpose-list]]
+;; [[file:Answers.org::transpose-list][transpose-list]]
 (define (transpose-list l)
-  (map (λ (i) (list i)) l))
+  (map list l))
 ;; transpose-list ends here
 
-;; [[file:1.org::print-as-rows][print-as-rows]]
+;; [[file:Answers.org::print-as-rows][print-as-rows]]
 (define (p-nl a)
   (display a)
   (newline))
@@ -43,13 +43,13 @@
         (apply print-as-rows d))))
 ;; print-as-rows ends here
 
-;; [[file:1.org::square][square]]
+;; [[file:Answers.org::square][square]]
 (define (square x)
   (* x x))
 ;; square ends here
 
-;; [[file:1.org::EX1-3][EX1-3]]
-;; [[[[file:~/SICP-group/1/1.org::square][square]]][square]]
+;; [[file:Answers.org::EX1-3][EX1-3]]
+;; [[[[file:~/SICP-group/1/Answers.org::square][square]]][square]]
 (define (square x)
   (* x x))
 ;; square ends here
@@ -58,35 +58,34 @@
 (define (square-2of3 a b c)
   (cond ((and (>= a b) (>= b c)) (sum-square a b))
         ((and (>= a b) (> c b)) (sum-square a c))
-        ((and (> b a) (>= c a)) (sum-square b c))
-        (else "This shouldn't happen")))
+        (else (sum-square b c))
 ;; EX1-3 ends here
 
-;; [[file:1.org::abs][abs]]
+;; [[file:Answers.org::abs][abs]]
 (define (abs x)
   (if (< x 0)
 	  (- x)
 	  x))
 ;; abs ends here
 
-;; [[file:1.org::average][average]]
+;; [[file:Answers.org::average][average]]
 (define (average x y)
   (/ (+ x y) 2))
 ;; average ends here
 
-;; [[file:1.org::txt-sqrt][txt-sqrt]]
-;; [[[[file:~/SICP-group/1/1.org::average][average]]][average]]
+;; [[file:Answers.org::txt-sqrt][txt-sqrt]]
+;; [[[[file:~/SICP-group/1/Answers.org::average][average]]][average]]
 (define (average x y)
   (/ (+ x y) 2))
 ;; average ends here
 (define (improve guess x)
   (average guess (/ x guess)))
 
-;; [[[[file:~/SICP-group/1/1.org::square][square]]][square]]
+;; [[[[file:~/SICP-group/1/Answers.org::square][square]]][square]]
 (define (square x)
   (* x x))
 ;; square ends here
-;; [[[[file:~/SICP-group/1/1.org::abs][abs]]][abs]]
+;; [[[[file:~/SICP-group/1/Answers.org::abs][abs]]][abs]]
 (define (abs x)
   (if (< x 0)
 	  (- x)
@@ -104,57 +103,13 @@
   (sqrt-iter 1.0 x))
 ;; txt-sqrt ends here
 
-;; [[file:1.org::mean-square][mean-square]]
+;; [[file:Answers.org::mean-square][mean-square]]
 (define (mean-square x y)
   (average (square x) (square y)))
 ;; mean-square ends here
 
-;; [[file:1.org::inferior-good-enough][inferior-good-enough]]
-;; [[[[file:~/SICP-group/1/1.org::txt-sqrt][txt-sqrt]]][txt-sqrt]]
-;; [[[[file:~/SICP-group/1/1.org::average][average]]][average]]
-(define (average x y)
-  (/ (+ x y) 2))
-;; average ends here
-(define (improve guess x)
-  (average guess (/ x guess)))
-
-;; [[[[file:~/SICP-group/1/1.org::square][square]]][square]]
-(define (square x)
-  (* x x))
-;; square ends here
-;; [[[[file:~/SICP-group/1/1.org::abs][abs]]][abs]]
-(define (abs x)
-  (if (< x 0)
-	  (- x)
-	  x))
-;; abs ends here
-(define (good-enough? guess x)
-  (< (abs (- (square guess) x)) 0.001))
-
-(define (sqrt-iter guess x)
-  (if (good-enough? guess x)
-      guess
-      (sqrt-iter (improve guess x) x)))
-
-(define (sqrt x)
-  (sqrt-iter 1.0 x))
-;; txt-sqrt ends here
-(define (inferior-good-enough? guess lastguess)
-  (<=
-   (abs (-
-         (/ lastguess guess)
-         1))
-   0.0000000000001)) ; dx
-(define (new-sqrt-iter guess x lastguess) ;; Memory of previous value
-  (if (inferior-good-enough? guess lastguess)
-      guess
-      (new-sqrt-iter (improve guess x) x guess)))
-(define (new-sqrt x)
-  (new-sqrt-iter 1.0 x 0))
-;; inferior-good-enough ends here
-
-;; [[file:1.org::sqrt][sqrt]]
-;; [[[[file:~/SICP-group/1/1.org::average][average]]][average]]
+;; [[file:Answers.org::sqrt][sqrt]]
+;; [[[[file:~/SICP-group/1/Answers.org::average][average]]][average]]
 (define (average x y)
   (/ (+ x y) 2))
 ;; average ends here
@@ -170,8 +125,8 @@
   (sqrt-iter 1.0 x))
 ;; sqrt ends here
 
-;; [[file:1.org::cbrt][cbrt]]
-;; [[[[file:~/SICP-group/1/1.org::square][square]]][square]]
+;; [[file:Answers.org::cbrt][cbrt]]
+;; [[[[file:~/SICP-group/1/Answers.org::square][square]]][square]]
 (define (square x)
   (* x x))
 ;; square ends here
@@ -193,7 +148,7 @@
   (cbrt-iter 1.1 9999 x))
 ;; cbrt ends here
 
-;; [[file:1.org::ackermann][ackermann]]
+;; [[file:Answers.org::ackermann][ackermann]]
 (define (A x y)
   (cond ((= y 0) 0)
         ((= x 0) (* 2 y))
@@ -202,8 +157,8 @@
                  (A x (- y 1))))))
 ;; ackermann ends here
 
-;; [[file:1.org::EX1-10-defs][EX1-10-defs]]
-;; [[[[file:~/SICP-group/1/1.org::ackermann][ackermann]]][ackermann]]
+;; [[file:Answers.org::EX1-10-defs][EX1-10-defs]]
+;; [[[[file:~/SICP-group/1/Answers.org::ackermann][ackermann]]][ackermann]]
 (define (A x y)
   (cond ((= y 0) 0)
         ((= x 0) (* 2 y))
@@ -217,7 +172,7 @@
 (define (k n) (* 5 n n))
 ;; EX1-10-defs ends here
 
-;; [[file:1.org::pascal-rec][pascal-rec]]
+;; [[file:Answers.org::pascal-rec][pascal-rec]]
 (define (pascal x y)
   (if (or (= x 0)
           (= y 0))
@@ -226,7 +181,7 @@
          (pascal x (- y 1)))))
 ;; pascal-rec ends here
 
-;; [[file:1.org::fib-iter][fib-iter]]
+;; [[file:Answers.org::fib-iter][fib-iter]]
 (define (fib-iter n)
   (define (iter i a b)
     (if (= i n)
@@ -239,9 +194,9 @@
       (iter 2 1 1)))
 ;; fib-iter ends here
 
-;; [[file:1.org::fib-phi][fib-phi]]
-;; [[[[file:~/SICP-group/1/1.org::sqrt][sqrt]]][sqrt]]
-;; [[[[file:~/SICP-group/1/1.org::average][average]]][average]]
+;; [[file:Answers.org::fib-phi][fib-phi]]
+;; [[[[file:~/SICP-group/1/Answers.org::sqrt][sqrt]]][sqrt]]
+;; [[[[file:~/SICP-group/1/Answers.org::average][average]]][average]]
 (define (average x y)
   (/ (+ x y) 2))
 ;; average ends here
@@ -268,7 +223,7 @@
      sqrt5))
 ;; fib-phi ends here
 
-;; [[file:1.org::count-change][count-change]]
+;; [[file:Answers.org::count-change][count-change]]
 (define (count-change amount)
   (cc amount 5))
 
@@ -291,7 +246,7 @@
         ((= kinds-of-coins 5) 50)))
 ;; count-change ends here
 
-;; [[file:1.org::count-change-graphviz][count-change-graphviz]]
+;; [[file:Answers.org::count-change-graphviz][count-change-graphviz]]
 ;; cursed global
 (define bubblecounter 0)
 ;; Returns # of ways change can be made
@@ -333,7 +288,7 @@
         ((= kinds-of-coins 5) 50)))
 ;; count-change-graphviz ends here
 
-;; [[file:1.org::cc-calls][cc-calls]]
+;; [[file:Answers.org::cc-calls][cc-calls]]
 (define (count-calls amount)
   (cc-calls amount 5))
 
@@ -361,7 +316,7 @@
         ((= kinds-of-coins 5) 50)))
 ;; cc-calls ends here
 
-;; [[file:1.org::1-15-deps][1-15-deps]]
+;; [[file:Answers.org::1-15-deps][1-15-deps]]
 (define (cube x) (* x x x))
 (define (p x) (- (* 3 x) (* 4 (cube x))))
 (define (sine angle)
@@ -370,7 +325,7 @@
       (p (sine (/ angle 3.0)))))
 ;; 1-15-deps ends here
 
-;; [[file:1.org::1-15-p-measure][1-15-p-measure]]
+;; [[file:Answers.org::1-15-p-measure][1-15-p-measure]]
 (define (cube x) (* x x x))
 (define (p x) (- (* 3 x) (* 4 (cube x))))
 (define (sine angle)

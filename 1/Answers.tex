@@ -36,7 +36,7 @@
 \IfFileExists{xurl.sty}{\usepackage{xurl}}{} % add URL line breaks if available
 \IfFileExists{bookmark.sty}{\usepackage{bookmark}}{\usepackage{hyperref}}
 \hypersetup{
-  pdftitle={SICP Chapter 1},
+  pdftitle={SICP Chapter 1 Answers},
   pdfauthor={ProducerMatt},
   hidelinks,
   pdfcreator={LaTeX via pandoc}}
@@ -112,7 +112,7 @@
   \usepackage{selnolig}  % disable illegal ligatures
 \fi
 
-\title{SICP Chapter 1}
+\title{SICP Chapter 1 Answers}
 \author{ProducerMatt}
 \date{}
 
@@ -208,7 +208,7 @@ to
 \begin{Shaded}
 \begin{Highlighting}[numbers=left,,]
 \NormalTok{(}\ExtensionTok{define}\FunctionTok{ }\NormalTok{(transpose{-}list l)}
-\NormalTok{  (map (λ (i) (}\KeywordTok{list}\NormalTok{ i)) l))}
+\NormalTok{  (map }\KeywordTok{list}\NormalTok{ l))}
 \end{Highlighting}
 \end{Shaded}
 
@@ -249,15 +249,15 @@ For manually printing items in rows to stdout. Not currently used.
 \hypertarget{exercise-1.1}{%
 \section{Exercise 1.1}\label{exercise-1.1}}
 
-\hypertarget{q}{%
-\subsection{Q}\label{q}}
+\hypertarget{question}{%
+\subsection{Question}\label{question}}
 
 Below is a sequence of expressions. What is the result printed by the
 interpreter in response to each expression? Assume that the sequence is
 to be evaluated in the order in which it is presented.
 
-\hypertarget{a}{%
-\subsection{A}\label{a}}
+\hypertarget{answer}{%
+\subsection{Answer}\label{answer}}
 
 \begin{Shaded}
 \begin{Highlighting}[numbers=left,,]
@@ -287,16 +287,16 @@ to be evaluated in the order in which it is presented.
 \hypertarget{exercise-1.2}{%
 \section{Exercise 1.2}\label{exercise-1.2}}
 
-\hypertarget{q-1}{%
-\subsection{Q}\label{q-1}}
+\hypertarget{question-1}{%
+\subsection{Question}\label{question-1}}
 
 Translate the following expression into prefix form: \[
   \frac{5 + 2 + (2 - 3 - (6 + \frac{4}{5})))}
             {3(6 - 2)(2 - 7)}
 \]
 
-\hypertarget{a-1}{%
-\subsection{A}\label{a-1}}
+\hypertarget{answer-1}{%
+\subsection{Answer}\label{answer-1}}
 
 \hypertarget{EX1-2}{%
 \label{EX1-2}}%
@@ -324,14 +324,14 @@ Translate the following expression into prefix form: \[
 \end{Highlighting}
 \end{Shaded}
 
-\hypertarget{q-2}{%
-\subsection{Q}\label{q-2}}
+\hypertarget{question-2}{%
+\subsection{Question}\label{question-2}}
 
 Define a procedure that takes three numbers as arguments and returns the
 sum of the squares of the two larger numbers.
 
-\hypertarget{a-2}{%
-\subsection{A}\label{a-2}}
+\hypertarget{answer-2}{%
+\subsection{Answer}\label{answer-2}}
 
 \hypertarget{EX1-3}{%
 \label{EX1-3}}%
@@ -343,8 +343,7 @@ sum of the squares of the two larger numbers.
 \NormalTok{(}\ExtensionTok{define}\FunctionTok{ }\NormalTok{(square{-}2of3 a b c)}
 \NormalTok{  (}\KeywordTok{cond}\NormalTok{ ((}\KeywordTok{and}\NormalTok{ (}\OperatorTok{\textgreater{}=}\NormalTok{ a b) (}\OperatorTok{\textgreater{}=}\NormalTok{ b c)) (sum{-}square a b))}
 \NormalTok{        ((}\KeywordTok{and}\NormalTok{ (}\OperatorTok{\textgreater{}=}\NormalTok{ a b) (}\OperatorTok{\textgreater{}}\NormalTok{ c b)) (sum{-}square a c))}
-\NormalTok{        ((}\KeywordTok{and}\NormalTok{ (}\OperatorTok{\textgreater{}}\NormalTok{ b a) (}\OperatorTok{\textgreater{}=}\NormalTok{ c a)) (sum{-}square b c))}
-\NormalTok{        (}\KeywordTok{else} \StringTok{"This shouldn\textquotesingle{}t happen"}\NormalTok{)))}
+\NormalTok{        (}\KeywordTok{else}\NormalTok{ (sum{-}square b c))}
 \end{Highlighting}
 \end{Shaded}
 
@@ -370,8 +369,8 @@ sum of the squares of the two larger numbers.
 \hypertarget{exercise-1.4}{%
 \section{Exercise 1.4}\label{exercise-1.4}}
 
-\hypertarget{q-3}{%
-\subsection{Q}\label{q-3}}
+\hypertarget{question-3}{%
+\subsection{Question}\label{question-3}}
 
 Observe that our model of evaluation allows for combinations whose
 operators are compound expressions. Use this observation to describe the
@@ -386,8 +385,8 @@ behavior of the following procedure:
 \end{Highlighting}
 \end{Shaded}
 
-\hypertarget{a-3}{%
-\subsection{A}\label{a-3}}
+\hypertarget{answer-3}{%
+\subsection{Answer}\label{answer-3}}
 
 This code accepts the variables \texttt{a} and \texttt{b}, and if
 \texttt{b} is positive, it adds \texttt{a} and \texttt{b}. However, if
@@ -407,8 +406,8 @@ do something like this:
 \hypertarget{exercise-1.5}{%
 \section{Exercise 1.5}\label{exercise-1.5}}
 
-\hypertarget{q-4}{%
-\subsection{Q}\label{q-4}}
+\hypertarget{question-4}{%
+\subsection{Question}\label{question-4}}
 
 Ben Bitdiddle has invented a test to determine whether the interpreter
 he is faced with is using applicative-order evaluation or normal-order
@@ -441,8 +440,8 @@ whether the interpreter is using normal or applicative order: The
 predicate expression is evaluated first, and the result determines
 whether to evaluate the consequent or the alternative expression.)
 
-\hypertarget{a-4}{%
-\subsection{A}\label{a-4}}
+\hypertarget{answer-4}{%
+\subsection{Answer}\label{answer-4}}
 
 In either type of language,
 \VERB|\NormalTok{(}\ExtensionTok{define}\FunctionTok{ }\NormalTok{(p) (p))}|
@@ -501,8 +500,8 @@ the infinite loop.
 \end{Highlighting}
 \end{Shaded}
 
-\hypertarget{q-5}{%
-\subsection{Q}\label{q-5}}
+\hypertarget{question-5}{%
+\subsection{Question}\label{question-5}}
 
 Exercise 1.6: Alyssa P. Hacker doesn't see why if needs to be provided
 as a special form. ``Why can't I just define it as an ordinary procedure
@@ -545,8 +544,8 @@ Delighted, Alyssa uses new-if to rewrite the square-root program:
 What happens when Alyssa attempts to use this to compute square roots?
 Explain.
 
-\hypertarget{a-5}{%
-\subsection{A}\label{a-5}}
+\hypertarget{answer-5}{%
+\subsection{Answer}\label{answer-5}}
 
 Using Alyssa's \texttt{new-if} leads to an infinite loop because the
 recursive call to \texttt{sqrt-iter} is evaluated before the actual call
@@ -569,8 +568,8 @@ branch is chosen leaves the other branches unevaluated.
 \end{Highlighting}
 \end{Shaded}
 
-\hypertarget{q-6}{%
-\subsection{Q}\label{q-6}}
+\hypertarget{question-6}{%
+\subsection{Question}\label{question-6}}
 
 The good-enough? test used in computing square roots will not be very
 effective for finding the square roots of very small numbers. Also, in
@@ -583,45 +582,11 @@ iteration to the next and to stop when the change is a very small
 fraction of the guess. Design a square-root procedure that uses this
 kind of end test. Does this work better for small and large numbers?
 
-\hypertarget{a-6}{%
-\subsection{A}\label{a-6}}
+\hypertarget{diary}{%
+\subsection{Diary}\label{diary}}
 
-The current method has decreasing accuracy with smaller numbers. Notice
-the steady divergence from correct answers here (should be decreasing
-powers of 0.1):
-
-\hypertarget{EX1-7-t1}{%
-\label{EX1-7-t1}}%
-\begin{Shaded}
-\begin{Highlighting}[numbers=left,,]
-\NormalTok{\textless{}\textless{}txt{-}sqrt\textgreater{}\textgreater{}}
-\NormalTok{\textless{}\textless{}try{-}these\textgreater{}\textgreater{}}
-\NormalTok{(try{-}these }\KeywordTok{sqrt} \FloatTok{0.01} \FloatTok{0.0001} \FloatTok{0.000001} \FloatTok{0.00000001} \FloatTok{0.0000000001}\NormalTok{)}
-\end{Highlighting}
-\end{Shaded}
-
-\begin{longtable}[]{@{}ll@{}}
-\toprule
-\endhead
-0.01 & 0.10032578510960605 \\
-0.0001 & 0.03230844833048122 \\
-1e-06 & 0.031260655525445276 \\
-1e-08 & 0.03125010656242753 \\
-1e-10 & 0.03125000106562499 \\
-\bottomrule
-\end{longtable}
-
-And for larger numbers, an infinite loop will eventually be reached.
-\(10^{12}\) can resolve, but \(10^{13}\) cannot.
-
-\begin{Shaded}
-\begin{Highlighting}[numbers=left,,]
-\NormalTok{\textless{}\textless{}txt{-}sqrt\textgreater{}\textgreater{}}
-\NormalTok{(}\KeywordTok{sqrt} \DecValTok{1000000000000}\NormalTok{)}
-\end{Highlighting}
-\end{Shaded}
-
-1000000.0
+\hypertarget{solving}{%
+\subsubsection{Solving}\label{solving}}
 
 My original answer was this, which compares the previous iteration until
 the new and old are within an arbitrary \(dx\).
@@ -691,7 +656,114 @@ automatically reaches the precision limit of the system:
 \end{Highlighting}
 \end{Shaded}
 
-So, my final definition of \texttt{sqrt}:
+\hypertarget{imroving-sqrt-by-avoiding-extra-improve-call}{%
+\subsubsection{Imroving (sqrt) by avoiding extra (improve)
+call}\label{imroving-sqrt-by-avoiding-extra-improve-call}}
+
+\begin{enumerate}
+\item
+  Non-optimized
+
+\begin{Shaded}
+\begin{Highlighting}[numbers=left,,]
+\NormalTok{(use{-}modules (ice{-}9 format))}
+\NormalTok{(}\KeywordTok{load} \StringTok{"../mattbench.scm"}\NormalTok{)}
+\NormalTok{(}\ExtensionTok{define}\FunctionTok{ }\NormalTok{(average x y)}
+\NormalTok{  (}\OperatorTok{/}\NormalTok{ (}\OperatorTok{+}\NormalTok{ x y) }\DecValTok{2}\NormalTok{))}
+\NormalTok{(}\ExtensionTok{define}\FunctionTok{ }\NormalTok{(improve guess x)}
+\NormalTok{  (average guess (}\OperatorTok{/}\NormalTok{ x guess)))}
+\NormalTok{(}\ExtensionTok{define}\FunctionTok{ }\NormalTok{(good{-}enough? guess x)}
+\NormalTok{   (}\OperatorTok{=}\NormalTok{ (improve guess x) guess)) }\CommentTok{;; improve call 1}
+\NormalTok{(}\ExtensionTok{define}\FunctionTok{ }\NormalTok{(sqrt{-}iter guess x)}
+\NormalTok{  (}\KeywordTok{if}\NormalTok{ (good{-}enough? guess x)}
+\NormalTok{      guess}
+\NormalTok{      (sqrt{-}iter (improve guess x) x))) }\CommentTok{;; call 2}
+\NormalTok{(}\ExtensionTok{define}\FunctionTok{ }\NormalTok{(}\KeywordTok{sqrt}\NormalTok{ x)}
+\NormalTok{  (sqrt{-}iter }\FloatTok{1.0}\NormalTok{ x))}
+\NormalTok{(}\KeywordTok{newline}\NormalTok{)}
+\NormalTok{(}\KeywordTok{display}\NormalTok{ (mattbench (λ() (}\KeywordTok{sqrt} \DecValTok{69420}\NormalTok{)) }\DecValTok{400000000}\NormalTok{))}
+\NormalTok{(}\KeywordTok{newline}\NormalTok{)}
+\CommentTok{;; 4731.30 \textless{}{-} Benchmark results}
+\end{Highlighting}
+\end{Shaded}
+\item
+  Optimized
+
+\begin{Shaded}
+\begin{Highlighting}[numbers=left,,]
+\NormalTok{(use{-}modules (ice{-}9 format))}
+\NormalTok{(}\KeywordTok{load} \StringTok{"../mattbench.scm"}\NormalTok{)}
+\NormalTok{(}\ExtensionTok{define}\FunctionTok{ }\NormalTok{(average x y)}
+\NormalTok{  (}\OperatorTok{/}\NormalTok{ (}\OperatorTok{+}\NormalTok{ x y) }\DecValTok{2}\NormalTok{))}
+\NormalTok{(}\ExtensionTok{define}\FunctionTok{ }\NormalTok{(improve guess x)}
+\NormalTok{  (average guess (}\OperatorTok{/}\NormalTok{ x guess)))}
+\NormalTok{(}\ExtensionTok{define}\FunctionTok{ }\NormalTok{(good{-}enough? guess nextguess x)}
+\NormalTok{  (}\OperatorTok{=}\NormalTok{ nextguess guess))}
+\NormalTok{(}\ExtensionTok{define}\FunctionTok{ }\NormalTok{(sqrt{-}iter guess x)}
+\NormalTok{  (}\KeywordTok{let}\NormalTok{ ((nextguess (improve guess x)))}
+\NormalTok{    (}\KeywordTok{if}\NormalTok{ (good{-}enough? guess nextguess x)}
+\NormalTok{        guess}
+\NormalTok{        (sqrt{-}iter nextguess x))))}
+\NormalTok{(}\ExtensionTok{define}\FunctionTok{ }\NormalTok{(}\KeywordTok{sqrt}\NormalTok{ x)}
+\NormalTok{  (sqrt{-}iter }\FloatTok{1.0}\NormalTok{ x))}
+\NormalTok{(}\KeywordTok{newline}\NormalTok{)}
+\NormalTok{(}\KeywordTok{display}\NormalTok{ (mattbench (λ() (}\KeywordTok{sqrt} \DecValTok{69420}\NormalTok{)) }\DecValTok{400000000}\NormalTok{))}
+\NormalTok{(}\KeywordTok{newline}\NormalTok{)}
+\end{Highlighting}
+\end{Shaded}
+\item
+  Benchmark results
+
+  \begin{longtable}[]{@{}ll@{}}
+  \toprule
+  \endhead
+  Unoptimized & 4731.30 \\
+  Optimized & 2518.44 \\
+  \bottomrule
+  \end{longtable}
+\end{enumerate}
+
+\hypertarget{answer-6}{%
+\subsection{Answer}\label{answer-6}}
+
+The current method has decreasing accuracy with smaller numbers. Notice
+the steady divergence from correct answers here (should be decreasing
+powers of 0.1):
+
+\hypertarget{EX1-7-t1}{%
+\label{EX1-7-t1}}%
+\begin{Shaded}
+\begin{Highlighting}[numbers=left,,]
+\NormalTok{\textless{}\textless{}txt{-}sqrt\textgreater{}\textgreater{}}
+\NormalTok{\textless{}\textless{}try{-}these\textgreater{}\textgreater{}}
+\NormalTok{(try{-}these }\KeywordTok{sqrt} \FloatTok{0.01} \FloatTok{0.0001} \FloatTok{0.000001} \FloatTok{0.00000001} \FloatTok{0.0000000001}\NormalTok{)}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{longtable}[]{@{}ll@{}}
+\toprule
+\endhead
+0.01 & 0.10032578510960605 \\
+0.0001 & 0.03230844833048122 \\
+1e-06 & 0.031260655525445276 \\
+1e-08 & 0.03125010656242753 \\
+1e-10 & 0.03125000106562499 \\
+\bottomrule
+\end{longtable}
+
+And for larger numbers, an infinite loop will eventually be reached.
+\(10^{12}\) can resolve, but \(10^{13}\) cannot.
+
+\begin{Shaded}
+\begin{Highlighting}[numbers=left,,]
+\NormalTok{\textless{}\textless{}txt{-}sqrt\textgreater{}\textgreater{}}
+\NormalTok{(}\KeywordTok{sqrt} \DecValTok{1000000000000}\NormalTok{)}
+\end{Highlighting}
+\end{Shaded}
+
+1000000.0
+
+So, my definition of \texttt{sqrt}:
 
 \hypertarget{sqrt}{%
 \label{sqrt}}%
@@ -735,8 +807,8 @@ So, my final definition of \texttt{sqrt}:
 \hypertarget{exercise-1.8}{%
 \section{Exercise 1.8}\label{exercise-1.8}}
 
-\hypertarget{q-7}{%
-\subsection{Q}\label{q-7}}
+\hypertarget{question-7}{%
+\subsection{Question}\label{question-7}}
 
 Newton's method for cube roots is based on the fact that if y is an
 approximation to the cube root of x, then a better approximation is
@@ -751,8 +823,8 @@ square-root procedure. (In 1.3.4 we will see how to implement Newton's
 method in general as an abstraction of these square-root and cube-root
 procedures.)
 
-\hypertarget{a1}{%
-\subsection{A1}\label{a1}}
+\hypertarget{diary-1}{%
+\subsection{Diary}\label{diary-1}}
 
 My first attempt works, but needs an arbitrary limit to stop infinite
 loops:
@@ -762,6 +834,7 @@ loops:
 \begin{Shaded}
 \begin{Highlighting}[numbers=left,,]
 \NormalTok{\textless{}\textless{}square\textgreater{}\textgreater{}}
+\NormalTok{\textless{}\textless{}try{-}these\textgreater{}\textgreater{}}
 \NormalTok{(}\ExtensionTok{define}\FunctionTok{ }\NormalTok{(cb{-}good{-}enough? guess x)}
 \NormalTok{  (}\OperatorTok{=}\NormalTok{ (cb{-}improve guess x) guess))}
 \NormalTok{(}\ExtensionTok{define}\FunctionTok{ }\NormalTok{(cb{-}improve guess x)}
@@ -802,8 +875,8 @@ that (again due to floating point)
 unless you initialize your guess with a slightly different value, so
 let's do 1.1 instead.
 
-\hypertarget{a2}{%
-\subsection{A2}\label{a2}}
+\hypertarget{answer-7}{%
+\subsection{Answer}\label{answer-7}}
 
 \hypertarget{cbrt}{%
 \label{cbrt}}%
@@ -851,8 +924,8 @@ let's do 1.1 instead.
 \hypertarget{exercise-1.9}{%
 \section{Exercise 1.9}\label{exercise-1.9}}
 
-\hypertarget{q-8}{%
-\subsection{Q}\label{q-8}}
+\hypertarget{question-8}{%
+\subsection{Question}\label{question-8}}
 
 Each of the following two procedures defines a method for adding two
 positive integers in terms of the procedures inc, which increments its
@@ -877,8 +950,8 @@ procedure in evaluating
 \VERB|\NormalTok{(}\OperatorTok{+} \DecValTok{4} \DecValTok{5}\NormalTok{)}|.
 Are these processes iterative or recursive?
 
-\hypertarget{a-7}{%
-\subsection{A}\label{a-7}}
+\hypertarget{answer-8}{%
+\subsection{Answer}\label{answer-8}}
 
 The first procedure is recursive, while the second is iterative though
 tail-recursion.
@@ -918,8 +991,8 @@ tail-recursion.
 \hypertarget{exercise-1.10}{%
 \section{Exercise 1.10}\label{exercise-1.10}}
 
-\hypertarget{q-9}{%
-\subsection{Q}\label{q-9}}
+\hypertarget{question-9}{%
+\subsection{Question}\label{question-9}}
 
 The following procedure computes a mathematical function called
 Ackermann's function.
@@ -973,8 +1046,8 @@ procedures \texttt{f}, \texttt{g}, and \texttt{h} for positive integer
 values of \(n\). For example, \VERB|\NormalTok{(k n)}| computes
 \(5n^2\).
 
-\hypertarget{a-8}{%
-\subsection{A}\label{a-8}}
+\hypertarget{answer-9}{%
+\subsection{Answer}\label{answer-9}}
 
 \hypertarget{f}{%
 \subsubsection{\texorpdfstring{\texttt{f}}{f}}\label{f}}
@@ -1068,8 +1141,8 @@ h(n)={}^{n}2
 \hypertarget{exercise-1.11}{%
 \section{Exercise 1.11}\label{exercise-1.11}}
 
-\hypertarget{q-10}{%
-\subsection{Q}\label{q-10}}
+\hypertarget{question-10}{%
+\subsection{Question}\label{question-10}}
 
 A function \(f\) is defined by the rule that: \[
 f(n)=n \text{ if } n<3
@@ -1082,8 +1155,8 @@ f(n)=f(n-1)+2f(n-2)+3f(n-3) \text{ if } n \geq 3
 Write a procedure that computes \(f\) by means of a recursive process.
 Write a procedure that computes \(f\) by means of an iterative process.
 
-\hypertarget{a-9}{%
-\subsection{A}\label{a-9}}
+\hypertarget{answer-10}{%
+\subsection{Answer}\label{answer-10}}
 
 \hypertarget{recursive}{%
 \subsubsection{Recursive}\label{recursive}}
@@ -1218,8 +1291,8 @@ Write a procedure that computes \(f\) by means of an iterative process.
 \hypertarget{exercise-1.12}{%
 \section{Exercise 1.12}\label{exercise-1.12}}
 
-\hypertarget{q-11}{%
-\subsection{Q}\label{q-11}}
+\hypertarget{question-11}{%
+\subsection{Question}\label{question-11}}
 
 The following pattern of numbers is called Pascal's triangle.
 
@@ -1230,8 +1303,8 @@ inside the triangle is the sum of the two numbers above it. Write a
 procedure that computes elements of Pascal's triangle by means of a
 recursive process.
 
-\hypertarget{a-10}{%
-\subsection{A}\label{a-10}}
+\hypertarget{answer-11}{%
+\subsection{Answer}\label{answer-11}}
 
 I guess I'll rotate the triangle 45 degrees to make it the top-left
 corner of an infinite spreadsheet.
@@ -1285,8 +1358,8 @@ The test code was much harder to write than the actual solution.
 \hypertarget{exercise-1.13}{%
 \section{Exercise 1.13}\label{exercise-1.13}}
 
-\hypertarget{q-12}{%
-\subsection{Q}\label{q-12}}
+\hypertarget{question-12}{%
+\subsection{Question}\label{question-12}}
 
 Prove that \(\text{Fib}(n)\) is the closest integer to
 \(\frac{ϕ^n}{\sqrt{5}}\) where Phi is \(\frac{1 + \sqrt{5}}{2}\). Hint:
@@ -1297,8 +1370,8 @@ the Fibonacci numbers to prove that
  \text{Fib}(n) = \frac{ϕ^n - Υ^n}{\sqrt{5}}
 \]
 
-\hypertarget{a-11}{%
-\subsection{A}\label{a-11}}
+\hypertarget{answer-12}{%
+\subsection{Answer}\label{answer-12}}
 
 I don't know how to write a proof yet, but I can make functions to
 demonstrate it.
@@ -1418,14 +1491,14 @@ aggressively modifying it in order to get a graph out of it.
 \end{Highlighting}
 \end{Shaded}
 
-\hypertarget{q-13}{%
-\subsection{Q}\label{q-13}}
+\hypertarget{question-13}{%
+\subsection{Question}\label{question-13}}
 
 Draw the tree illustrating the process generated by the count-change
 procedure of 1.2.2 in making change for 11 cents.
 
-\hypertarget{a-12}{%
-\subsection{A}\label{a-12}}
+\hypertarget{answer-13}{%
+\subsection{Answer}\label{answer-13}}
 
 I want to generate this graph algorithmically.
 
@@ -1511,14 +1584,14 @@ So, the graph of \texttt{(count-change\ 11)} is:
 
 \includegraphics{fig/cc-11.png}
 
-\hypertarget{q2}{%
-\subsection{Q2}\label{q2}}
+\hypertarget{question-2-1}{%
+\subsection{Question 2}\label{question-2-1}}
 
 What are the orders of growth of the space and number of steps used by
 this process as the amount to be changed increases?
 
-\hypertarget{a2-1}{%
-\subsection{A2}\label{a2-1}}
+\hypertarget{answer-2-1}{%
+\subsection{Answer 2}\label{answer-2-1}}
 
 Let's look at this via the number of function calls needed for value
 \texttt{n}. Instead of returning an integer, I'll return a pair where
@@ -1655,8 +1728,8 @@ as a tool of empowerment until now.
 \hypertarget{exercise-1.15}{%
 \section{Exercise 1.15}\label{exercise-1.15}}
 
-\hypertarget{q1}{%
-\subsection{Q1}\label{q1}}
+\hypertarget{question-1-1}{%
+\subsection{Question 1}\label{question-1-1}}
 
 The sine of an angle (specified in radians) can be computed by making
 use of the approximation \(\sin x ≈ x\) if \(x\) is sufficiently small,
@@ -1682,8 +1755,8 @@ considered ``sufficiently small'' if its magnitude is not greater than
 How many times is the procedure \texttt{p} applied when
 \VERB|\NormalTok{(sine }\FloatTok{12.15}\NormalTok{)}| is evaluated?
 
-\hypertarget{a1-1}{%
-\subsection{A1}\label{a1-1}}
+\hypertarget{answer-1-1}{%
+\subsection{Answer 1}\label{answer-1-1}}
 
 Let's find out!
 
@@ -1720,15 +1793,15 @@ Let's find out!
 
 \texttt{p} is evaluated 5 times.
 
-\hypertarget{q2-1}{%
-\subsection{Q2}\label{q2-1}}
+\hypertarget{question-2-2}{%
+\subsection{Question 2}\label{question-2-2}}
 
 What is the order of growth in space and number of steps (as a function
 of \texttt{a}) used by the process generated by the sine procedure when
 \VERB|\NormalTok{(sine a)}| is evaluated?
 
-\hypertarget{a2-2}{%
-\subsection{A2}\label{a2-2}}
+\hypertarget{answer-2-2}{%
+\subsection{Answer 2}\label{answer-2-2}}
 
 \hypertarget{1-15-tab1}{%
 \label{1-15-tab1}}%
@@ -1860,5 +1933,11 @@ We can also prove this for the time by benchmarking the function:
 \end{Shaded}
 
 \includegraphics{fig/1-15-bench.png}
+
+\hypertarget{exercise-1.16}{%
+\section{Exercise 1.16}\label{exercise-1.16}}
+
+\hypertarget{question-14}{%
+\subsection{Question}\label{question-14}}
 
 \end{document}

@@ -1,3 +1,9 @@
+#+org-update-heading-mod-times: t
+# ^ Automatically updated modification metadata per-section
+
+#+STARTUP: overview
+#+auto_tangle: t
+
 # ORG-BABEL DEFAULTS
 #+PROPERTY: header-args :tangle no :noeval :exports both :cache yes :results output wrap :noweb no-export :comments noweb :session default
 #+PROPERTY: header-args:gnuplot :prelude "reset"
@@ -5,9 +11,6 @@
 # #+BEGIN_SRC scheme -n :eval no-export :tangle yes :exports both
 # For their dependencies:
 # #+BEGIN_SRC scheme :eval no-export :tangle yes :results silent
-
-#+STARTUP: overview
-#+auto_tangle: t
 
 #+PANDOC_OPTIONS: standalone:t
 # FIXME: this doesn't appear to do anything. Be sure to run pandoc with -s
@@ -17,10 +20,14 @@
 #+LATEX_HEADER: \listfiles
 # listfiles causes latex to make a list of all files used during processing
 
-#+title: SICP Chapter 1
+#+title: SICP Chapter 1 Answers
 #+AUTHOR: ProducerMatt
 
 * HOW THIS DOCUMENT IS MADE
+:PROPERTIES:
+:HASH:     191038617830492512
+:MODIFIED: 2022-08-23 17:19
+:END:
 **TODO**
 #+NAME: testing
 #+BEGIN_SRC scheme -n :exports both :eval no-export :results value
@@ -38,18 +45,34 @@
 ^ Dynamically evaluated when you press "enter" on the ~BEGIN_SRC~ block!
 
 *** Also consider:
+:PROPERTIES:
+:HASH:     191038617830492512
+:MODIFIED: 2022-08-23 17:16
+:END:
 - ~:results output~ for what the code prints
 - ~:exports code~ or ~:exports results~ to just get one or the other
 
 \(a + (\pi \times b)\) <~ inline Latex btw :)
 
 *** Current command for conversion
+:PROPERTIES:
+:HASH:     191038617830492512
+:MODIFIED: 2022-08-23 17:16
+:END:
 #+BEGIN_SRC sh :noeval
 pandoc --from org --to latex 1.org -o 1.tex -s; xelatex 1.tex
 #+END_SRC
 
 ** Helpers for org-mode tables
+:PROPERTIES:
+:HASH:     191038617830492512
+:MODIFIED: 2022-08-23 17:16
+:END:
 *** ~try-these~
+:PROPERTIES:
+:HASH:     191038617830492512
+:MODIFIED: 2022-08-23 17:16
+:END:
 Takes function ~f~ and list ~testvals~ and applies ~f~ to each item ~i~. For
 each ~i~ returns a list with ~i~ and the result. Useful dor making tables with a
 column for input and a column for output.
@@ -69,14 +92,22 @@ column for input and a column for output.
          l)))
 #+end_src
 *** ~transpose-list~
+:PROPERTIES:
+:HASH:     191038617830492512
+:MODIFIED: 2022-08-23 17:16
+:END:
 "Rotate" a list, for example from src_scheme{'(1 2 3)} to
 src_scheme{'('(1) '(2) '(3))}
 #+NAME: transpose-list
 #+BEGIN_SRC scheme -n :eval no-export :tangle yes :results silent
 (define (transpose-list l)
-  (map (λ (i) (list i)) l))
+  (map list l))
 #+end_src
 *** ~print-as-rows~
+:PROPERTIES:
+:HASH:     191038617830492512
+:MODIFIED: 2022-08-23 17:16
+:END:
 For manually printing items in rows to stdout. Not currently used.
 #+NAME: print-as-rows
 #+BEGIN_SRC scheme -n :eval no-export :tangle yes :results silent
@@ -104,11 +135,23 @@ For manually printing items in rows to stdout. Not currently used.
         (apply print-as-rows d))))
 #+end_src
 * Exercise 1.1
-** Q
+:PROPERTIES:
+:HASH:     -277441515328139857
+:MODIFIED: 2022-08-23 17:16
+:END:
+** Question
+:PROPERTIES:
+:HASH:     -277441515328139857
+:MODIFIED: 2022-08-23 17:19
+:END:
 Below is a sequence of expressions. What is the result printed by the
 interpreter in response to each expression? Assume that the sequence is to be
 evaluated in the order in which it is presented.
-** A
+** Answer
+:PROPERTIES:
+:HASH:     -277441515328139857
+:MODIFIED: 2022-08-23 17:19
+:END:
 #+BEGIN_SRC scheme -n :results none
 10 ;; 10
 (+ 5 3 4) ;; 12
@@ -133,13 +176,25 @@ evaluated in the order in which it is presented.
 #+END_SRC
 
 * Exercise 1.2
-** Q
+:PROPERTIES:
+:HASH:     -277441515328139845
+:MODIFIED: 2022-08-23 17:16
+:END:
+** Question
+:PROPERTIES:
+:HASH:     -277441515328139845
+:MODIFIED: 2022-08-23 17:16
+:END:
 Translate the following expression into prefix form:
 \[
   \frac{5 + 2 + (2 - 3 - (6 + \frac{4}{5})))}
             {3(6 - 2)(2 - 7)}
 \]
-** A
+** Answer
+:PROPERTIES:
+:HASH:     -277441515328139845
+:MODIFIED: 2022-08-23 17:16
+:END:
 #+NAME: EX1-2
 #+BEGIN_SRC scheme -n :eval no-export :exports both :results value
 (/ (+ 5 2 (- 2 3 (+ 6 (/ 4 5))))
@@ -152,16 +207,32 @@ Translate the following expression into prefix form:
 :end:
 
 * Exercise 1.3
+:PROPERTIES:
+:HASH:     -277441515328139897
+:MODIFIED: 2022-08-23 17:16
+:END:
 ** Text
+:PROPERTIES:
+:HASH:     -277441515328139897
+:MODIFIED: 2022-08-23 17:16
+:END:
 #+NAME: square
 #+BEGIN_SRC scheme -n :eval no-export :results silent :tangle yes
 (define (square x)
   (* x x))
 #+END_SRC
-** Q
+** Question
+:PROPERTIES:
+:HASH:     -277441515328139897
+:MODIFIED: 2022-08-23 17:16
+:END:
 Define a procedure that takes three numbers as arguments and returns the sum of
 the squares of the two larger numbers.
-** A
+** Answer
+:PROPERTIES:
+:HASH:     -277441515328139897
+:MODIFIED: 2022-08-23 17:16
+:END:
 #+NAME: EX1-3
 #+BEGIN_SRC scheme -n :eval no-export :tangle yes :exports both :results value table
 <<square>>
@@ -170,8 +241,7 @@ the squares of the two larger numbers.
 (define (square-2of3 a b c)
   (cond ((and (>= a b) (>= b c)) (sum-square a b))
         ((and (>= a b) (> c b)) (sum-square a c))
-        ((and (> b a) (>= c a)) (sum-square b c))
-        (else "This shouldn't happen")))
+        (else (sum-square b c))
 #+END_SRC
 #+BEGIN_SRC scheme -n :eval no-export :tangle no :exports both :results value table
 <<EX1-3>>
@@ -189,7 +259,15 @@ the squares of the two larger numbers.
 :end:
 
 * Exercise 1.4
-** Q
+:PROPERTIES:
+:HASH:     -277441515328139885
+:MODIFIED: 2022-08-23 17:16
+:END:
+** Question
+:PROPERTIES:
+:HASH:     -277441515328139885
+:MODIFIED: 2022-08-23 17:16
+:END:
 Observe that our model of evaluation allows for combinations whose operators are
 compound expressions. Use this observation to describe the behavior of the
 following procedure:
@@ -200,7 +278,11 @@ following procedure:
   ((if (> b 0) + -) a b))
 #+END_SRC
 
-** A
+** Answer
+:PROPERTIES:
+:HASH:     -277441515328139885
+:MODIFIED: 2022-08-23 17:16
+:END:
 This code accepts the variables ~a~ and ~b~, and if ~b~ is positive, it adds ~a~
 and ~b~. However, if ~b~ is zero or negative, it subtracts them. This decision
 is made by using the ~+~ and ~-~ procedures as the results of an if expression,
@@ -213,7 +295,15 @@ else: a - b
 #+END_SRC
 
 * Exercise 1.5
-** Q
+:PROPERTIES:
+:HASH:     -277441515328139777
+:MODIFIED: 2022-08-23 17:16
+:END:
+** Question
+:PROPERTIES:
+:HASH:     -277441515328139777
+:MODIFIED: 2022-08-23 17:16
+:END:
 Ben Bitdiddle has invented a test to determine whether the interpreter he is
 faced with is using applicative-order evaluation or normal-order evaluation. He
 defines the following two procedures:
@@ -239,7 +329,11 @@ for the special form if is the same whether the interpreter is using normal or
 applicative order: The predicate expression is evaluated first, and the result
 determines whether to evaluate the consequent or the alternative expression.)
 
-** A
+** Answer
+:PROPERTIES:
+:HASH:     -277441515328139777
+:MODIFIED: 2022-08-23 17:16
+:END:
 In either type of language, src_scheme{(define (p) (p))} is an infinite
 loop. However, a normal-order language will encounter the special form, return
 ~0~, and never evaluate ~(p)~. An applicative-order language evaluates the
@@ -247,7 +341,15 @@ arguments to src_scheme{(test 0 (p))}, thus triggering the infinite
 loop.
 
 * Exercise 1.6
+:PROPERTIES:
+:HASH:     -277441515328139797
+:MODIFIED: 2022-08-23 17:16
+:END:
 ** Text code
+:PROPERTIES:
+:HASH:     -277441515328139797
+:MODIFIED: 2022-08-23 17:16
+:END:
 #+NAME: abs
 #+BEGIN_SRC scheme -n :eval no-export :tangle yes :results silent
 (define (abs x)
@@ -280,7 +382,11 @@ loop.
   (sqrt-iter 1.0 x))
 #+END_SRC
 
-** Q
+** Question
+:PROPERTIES:
+:HASH:     -277441515328139797
+:MODIFIED: 2022-08-23 17:16
+:END:
 Exercise 1.6: Alyssa P. Hacker doesn’t see why if needs to be provided as a
 special form. “Why can’t I just define it as an ordinary procedure in terms of
 cond?” she asks. Alyssa’s friend Eva Lu Ator claims this can indeed be done, and
@@ -314,20 +420,36 @@ Delighted, Alyssa uses new-if to rewrite the square-root program:
 
 What happens when Alyssa attempts to use this to compute square roots? Explain.
 
-** A
+** Answer
+:PROPERTIES:
+:HASH:     -277441515328139797
+:MODIFIED: 2022-08-23 17:16
+:END:
 Using Alyssa's ~new-if~ leads to an infinite loop because the recursive call to
 ~sqrt-iter~ is evaluated before the actual call to ~new-if~. This is because
 ~if~ and ~cond~ are special forms that change the way evaluation is handled;
 whichever branch is chosen leaves the other branches unevaluated.
 
 * Exercise 1.7
+:PROPERTIES:
+:HASH:     -277441515328139817
+:MODIFIED: 2022-08-23 17:16
+:END:
 ** Text
+:PROPERTIES:
+:HASH:     -277441515328139817
+:MODIFIED: 2022-08-23 17:16
+:END:
 #+NAME: mean-square
 #+BEGIN_SRC scheme -n :eval no-export :tangle yes :results silent
 (define (mean-square x y)
   (average (square x) (square y)))
 #+END_SRC
-** Q
+** Question
+:PROPERTIES:
+:HASH:     -277441515328139817
+:MODIFIED: 2022-08-23 17:16
+:END:
 The good-enough? test used in computing square roots will not be very effective
 for finding the square roots of very small numbers. Also, in real computers,
 arithmetic operations are almost always performed with limited precision. This
@@ -337,44 +459,21 @@ strategy for implementing good-enough? is to watch how guess changes from one
 iteration to the next and to stop when the change is a very small fraction of
 the guess. Design a square-root procedure that uses this kind of end test. Does
 this work better for small and large numbers?
-** A
-The current method has decreasing accuracy with smaller numbers. Notice the
-steady divergence from correct answers here (should be decreasing powers of
-0.1):
-#+NAME: EX1-7-t1
-#+BEGIN_SRC scheme -n :eval no-export :tangle no :exports both :results value table
-<<txt-sqrt>>
-<<try-these>>
-(try-these sqrt 0.01 0.0001 0.000001 0.00000001 0.0000000001)
-#+END_SRC
-
-#+RESULTS[b2aaaf48d742a7df9331cff3b730a799ad550cfe]: EX1-7-t1
-:results:
-|   0.01 |  0.10032578510960605 |
-| 0.0001 |  0.03230844833048122 |
-|  1e-06 | 0.031260655525445276 |
-|  1e-08 |  0.03125010656242753 |
-|  1e-10 |  0.03125000106562499 |
-:end:
-
-And for larger numbers, an infinite loop will eventually be reached. \(10^{12}\)
-can resolve, but \(10^{13}\) cannot.
-
-#+BEGIN_SRC scheme -n :eval no-export :tangle no :exports both :results value
-<<txt-sqrt>>
-(sqrt 1000000000000)
-#+END_SRC
-
-#+RESULTS[452bf3da7286d9fc1e3d621aeb715eafef650536]:
-:results:
-1000000.0
-:end:
-
+** Diary
+:PROPERTIES:
+:HASH:     -277441515328139817
+:MODIFIED: 2022-08-23 17:34
+:END:
+*** Solving
+:PROPERTIES:
+:HASH:     -277441515328139817
+:MODIFIED: 2022-08-23 17:34
+:END:
 My original answer was this, which compares the previous iteration until the new
 and old are within an arbitrary \(dx\).
 
 #+NAME: inferior-good-enough
-#+BEGIN_SRC scheme -n :tangle yes
+#+BEGIN_SRC scheme -n :tangle no
 <<txt-sqrt>>
 (define (inferior-good-enough? guess lastguess)
   (<=
@@ -428,7 +527,109 @@ reaches the precision limit of the system:
    (= (improve guess x) guess))
 #+END_SRC
 
-So, my final definition of ~sqrt~:
+*** Imroving (sqrt) by avoiding extra (improve) call
+:PROPERTIES:
+:HASH:     -277441515328139817
+:MODIFIED: 2022-08-23 17:34
+:END:
+**** Non-optimized
+:PROPERTIES:
+:HASH:     -277441515328139817
+:MODIFIED: 2022-08-23 17:34
+:END:
+#+BEGIN_SRC scheme -n :eval no-export :tangle sqrt-bench.scheme :exports both :results output
+(use-modules (ice-9 format))
+(load "../mattbench.scm")
+(define (average x y)
+  (/ (+ x y) 2))
+(define (improve guess x)
+  (average guess (/ x guess)))
+(define (good-enough? guess x)
+   (= (improve guess x) guess)) ;; improve call 1
+(define (sqrt-iter guess x)
+  (if (good-enough? guess x)
+      guess
+      (sqrt-iter (improve guess x) x))) ;; call 2
+(define (sqrt x)
+  (sqrt-iter 1.0 x))
+(newline)
+(display (mattbench (λ() (sqrt 69420)) 400000000))
+(newline)
+;; 4731.30 <- Benchmark results
+#+end_src
+
+**** Optimized
+:PROPERTIES:
+:HASH:     -277441515328139817
+:MODIFIED: 2022-08-23 17:34
+:END:
+#+BEGIN_SRC scheme -n :noeval :tangle sqrt-bench2.scheme :exports both :results output
+(use-modules (ice-9 format))
+(load "../mattbench.scm")
+(define (average x y)
+  (/ (+ x y) 2))
+(define (improve guess x)
+  (average guess (/ x guess)))
+(define (good-enough? guess nextguess x)
+  (= nextguess guess))
+(define (sqrt-iter guess x)
+  (let ((nextguess (improve guess x)))
+    (if (good-enough? guess nextguess x)
+        guess
+        (sqrt-iter nextguess x))))
+(define (sqrt x)
+  (sqrt-iter 1.0 x))
+(newline)
+(display (mattbench (λ() (sqrt 69420)) 400000000))
+(newline)
+#+end_src
+**** Benchmark results
+:PROPERTIES:
+:HASH:     -277441515328139817
+:MODIFIED: 2022-08-23 17:34
+:END:
+
+| Unoptimized | 4731.30 |
+| Optimized   | 2518.44 |
+
+** Answer
+:PROPERTIES:
+:HASH:     -277441515328139817
+:MODIFIED: 2022-08-23 17:16
+:END:
+The current method has decreasing accuracy with smaller numbers. Notice the
+steady divergence from correct answers here (should be decreasing powers of
+0.1):
+#+NAME: EX1-7-t1
+#+BEGIN_SRC scheme -n :eval no-export :tangle no :exports both :results value table
+<<txt-sqrt>>
+<<try-these>>
+(try-these sqrt 0.01 0.0001 0.000001 0.00000001 0.0000000001)
+#+END_SRC
+
+#+RESULTS[b2aaaf48d742a7df9331cff3b730a799ad550cfe]: EX1-7-t1
+:results:
+|   0.01 |  0.10032578510960605 |
+| 0.0001 |  0.03230844833048122 |
+|  1e-06 | 0.031260655525445276 |
+|  1e-08 |  0.03125010656242753 |
+|  1e-10 |  0.03125000106562499 |
+:end:
+
+And for larger numbers, an infinite loop will eventually be reached. \(10^{12}\)
+can resolve, but \(10^{13}\) cannot.
+
+#+BEGIN_SRC scheme -n :eval no-export :tangle no :exports both :results value
+<<txt-sqrt>>
+(sqrt 1000000000000)
+#+END_SRC
+
+#+RESULTS[452bf3da7286d9fc1e3d621aeb715eafef650536]:
+:results:
+1000000.0
+:end:
+
+So, my definition of ~sqrt~:
 #+NAME: sqrt
 #+BEGIN_SRC scheme -n :eval no-export :tangle yes :exports both :results value table
 <<average>>
@@ -460,7 +661,15 @@ So, my final definition of ~sqrt~:
 :end:
 
 * Exercise 1.8
-** Q
+:PROPERTIES:
+:HASH:     -277441515328139837
+:MODIFIED: 2022-08-23 17:16
+:END:
+** Question
+:PROPERTIES:
+:HASH:     -277441515328139837
+:MODIFIED: 2022-08-23 17:16
+:END:
 Newton’s method for cube roots is based on the fact that if y is an
 approximation to the cube root of x, then a better approximation is given by the
 value:
@@ -470,11 +679,16 @@ value:
 Use this formula to implement a cube-root procedure analogous to the square-root
 procedure. (In 1.3.4 we will see how to implement Newton’s method in general as
 an abstraction of these square-root and cube-root procedures.)
-** A1
+** Diary
+:PROPERTIES:
+:HASH:     -277441515328139837
+:MODIFIED: 2022-08-23 17:16
+:END:
 My first attempt works, but needs an arbitrary limit to stop infinite loops:
 #+NAME: EX1-8-A1
 #+BEGIN_SRC scheme -n :eval no-export :tangle no :exports both :results value table
 <<square>>
+<<try-these>>
 (define (cb-good-enough? guess x)
   (= (cb-improve guess x) guess))
 (define (cb-improve guess x)
@@ -509,7 +723,11 @@ improving when there's no more change occurring. Also while researching I
 discovered that (again due to floating point) src_scheme{(cbrt -2)} loops
 forever unless you initialize your guess with a slightly different value, so
 let's do 1.1 instead.
-** A2
+** Answer
+:PROPERTIES:
+:HASH:     -277441515328139837
+:MODIFIED: 2022-08-23 17:16
+:END:
 #+NAME: cbrt
 #+BEGIN_SRC scheme -n :eval no-export :tangle yes :exports code :results silent
 <<square>>
@@ -546,7 +764,15 @@ let's do 1.1 instead.
 :end:
 
 * Exercise 1.9
-** Q
+:PROPERTIES:
+:HASH:     -277441515328140209
+:MODIFIED: 2022-08-23 17:16
+:END:
+** Question
+:PROPERTIES:
+:HASH:     -277441515328140209
+:MODIFIED: 2022-08-23 17:16
+:END:
 Each of the following two procedures defines a method for adding two positive
 integers in terms of the procedures inc, which increments its argument by 1, and
 dec, which decrements its argument by 1.
@@ -565,10 +791,18 @@ dec, which decrements its argument by 1.
 
 Using the substitution model, illustrate the process generated by each procedure
 in evaluating src_scheme{(+ 4 5)}. Are these processes iterative or recursive?
-** A
+** Answer
+:PROPERTIES:
+:HASH:     -277441515328140209
+:MODIFIED: 2022-08-23 17:16
+:END:
 The first procedure is recursive, while the second is iterative though
 tail-recursion.
 *** recursive procedure
+:PROPERTIES:
+:HASH:     -277441515328140209
+:MODIFIED: 2022-08-23 17:16
+:END:
 #+BEGIN_SRC scheme -n :noeval :tangle no
 (+ 4 5)
 (inc (+ 3 5))
@@ -583,6 +817,10 @@ tail-recursion.
 #+END_SRC
 
 *** iterative procedure
+:PROPERTIES:
+:HASH:     -277441515328140209
+:MODIFIED: 2022-08-23 17:16
+:END:
 #+BEGIN_SRC scheme -n :noeval :tangle no
 (+ 4 5)
 (+ 3 6)
@@ -593,7 +831,15 @@ tail-recursion.
 #+END_SRC
 
 * Exercise 1.10
-** Q
+:PROPERTIES:
+:HASH:     -277441515348153693
+:MODIFIED: 2022-08-23 17:16
+:END:
+** Question
+:PROPERTIES:
+:HASH:     -277441515348153693
+:MODIFIED: 2022-08-23 17:16
+:END:
 The following procedure computes a mathematical function called Ackermann’s
 function.
 #+NAME: ackermann
@@ -639,8 +885,16 @@ Give concise mathematical definitions for the functions computed by the
 procedures ~f~, ~g~, and ~h~ for positive integer values of \(n\). For example,
 src_scheme{(k n)} computes \(5n^2\).
 
-** A
+** Answer
+:PROPERTIES:
+:HASH:     -277441515348153693
+:MODIFIED: 2022-08-23 17:16
+:END:
 *** ~f~
+:PROPERTIES:
+:HASH:     -277441515348153693
+:MODIFIED: 2022-08-23 17:16
+:END:
 
 #+BEGIN_SRC scheme -n :eval no-export :tangle no :exports both :results value table
 <<try-these>>
@@ -662,6 +916,10 @@ src_scheme{(k n)} computes \(5n^2\).
 f(n)=2n
 \]
 *** ~g~
+:PROPERTIES:
+:HASH:     -277441515348153693
+:MODIFIED: 2022-08-23 17:16
+:END:
 
 #+BEGIN_SRC scheme -n :eval no-export :tangle no :exports both :results value table
 <<try-these>>
@@ -686,6 +944,10 @@ g(n)=2^n
 \]
 
 *** ~h~
+:PROPERTIES:
+:HASH:     -277441515348153693
+:MODIFIED: 2022-08-23 17:16
+:END:
 
 #+BEGIN_SRC scheme -n :eval no-export :tangle no :exports both :results value table
 <<try-these>>
@@ -714,7 +976,15 @@ h(n)={}^{n}2
 \]
 
 * Exercise 1.11
-** Q
+:PROPERTIES:
+:HASH:     -277441515348153745
+:MODIFIED: 2022-08-23 17:16
+:END:
+** Question
+:PROPERTIES:
+:HASH:     -277441515348153745
+:MODIFIED: 2022-08-23 17:16
+:END:
 A function \(f\) is defined by the rule that:
 \[
 f(n)=n \text{ if } n<3
@@ -728,8 +998,16 @@ f(n)=f(n-1)+2f(n-2)+3f(n-3) \text{ if } n \geq 3
 
 Write a procedure that computes \(f\) by means of a recursive process. Write a
 procedure that computes \(f\) by means of an iterative process.
-** A
+** Answer
+:PROPERTIES:
+:HASH:     -277441515348153745
+:MODIFIED: 2022-08-23 17:16
+:END:
 *** Recursive
+:PROPERTIES:
+:HASH:     -277441515348153745
+:MODIFIED: 2022-08-23 17:16
+:END:
 #+NAME: EX1-11-fr
 #+BEGIN_SRC scheme -n :eval no-export :tangle no :exports code :results silent
 (define (fr n)
@@ -755,7 +1033,15 @@ procedure that computes \(f\) by means of an iterative process.
 :end:
 
 *** Iterative
+:PROPERTIES:
+:HASH:     -277441515348153745
+:MODIFIED: 2022-08-23 17:16
+:END:
 **** Attempt 1
+:PROPERTIES:
+:HASH:     -277441515348153745
+:MODIFIED: 2022-08-23 17:16
+:END:
 #+NAME: EX1-11-fi
 #+BEGIN_SRC scheme -n :eval no-export :tangle no :exports code :results silent
 ;; This seems like it could be better
@@ -794,6 +1080,10 @@ procedure that computes \(f\) by means of an iterative process.
 It works but it seems wasteful.
 
 **** Attempt 2
+:PROPERTIES:
+:HASH:     -277441515348153745
+:MODIFIED: 2022-08-23 17:16
+:END:
 #+NAME: EX1-11-fi2
 #+BEGIN_SRC scheme -n :eval no-export :tangle no :exports code :results silent
 (define (fi2 n)
@@ -830,7 +1120,15 @@ It works but it seems wasteful.
 I like that better.
 
 * Exercise 1.12
-** Q
+:PROPERTIES:
+:HASH:     -277441515348153733
+:MODIFIED: 2022-08-23 17:16
+:END:
+** Question
+:PROPERTIES:
+:HASH:     -277441515348153733
+:MODIFIED: 2022-08-23 17:16
+:END:
 The following pattern of numbers is called Pascal’s triangle.
 
 /Pretend there's a Pascal's triangle here./
@@ -838,7 +1136,11 @@ The following pattern of numbers is called Pascal’s triangle.
 The numbers at the edge of the triangle are all 1, and each number inside the
 triangle is the sum of the two numbers above it. Write a procedure that
 computes elements of Pascal’s triangle by means of a recursive process.
-** A
+** Answer
+:PROPERTIES:
+:HASH:     -277441515348153733
+:MODIFIED: 2022-08-23 17:16
+:END:
 I guess I'll rotate the triangle 45 degrees to make it the top-left corner of an
 infinite spreadsheet.
 
@@ -882,7 +1184,15 @@ infinite spreadsheet.
 The test code was much harder to write than the actual solution.
 
 * Exercise 1.13
-** Q
+:PROPERTIES:
+:HASH:     -277441515348153785
+:MODIFIED: 2022-08-23 17:16
+:END:
+** Question
+:PROPERTIES:
+:HASH:     -277441515348153785
+:MODIFIED: 2022-08-23 17:16
+:END:
 Prove that \(\text{Fib}(n)\) is the closest integer to
 \(\frac{ϕ^n}{\sqrt{5}}\) where Phi is \(\frac{1 + \sqrt{5}}{2}\). Hint: let
 \(Υ = \frac{1 - \sqrt{5}}{2}\). Use induction and the definition of the
@@ -892,11 +1202,19 @@ Fibonacci numbers to prove that
  \text{Fib}(n) = \frac{ϕ^n - Υ^n}{\sqrt{5}}
 \]
 
-** A
+** Answer
+:PROPERTIES:
+:HASH:     -277441515348153785
+:MODIFIED: 2022-08-23 17:16
+:END:
 I don't know how to write a proof yet, but I can make functions to
 demonstrate it.
 
 *** Fibonacci number generator
+:PROPERTIES:
+:HASH:     -277441515348153785
+:MODIFIED: 2022-08-23 17:16
+:END:
 #+NAME: fib-iter
 #+BEGIN_SRC scheme -n :eval no-export :tangle yes :exports code :results silent
 (define (fib-iter n)
@@ -911,6 +1229,10 @@ demonstrate it.
       (iter 2 1 1)))
 #+END_SRC
 *** Various algorithms relating to the question
+:PROPERTIES:
+:HASH:     -277441515348153785
+:MODIFIED: 2022-08-23 17:16
+:END:
 #+NAME: fib-phi
 #+BEGIN_SRC scheme -n :eval no-export :tangle yes :exports code :results silent
 <<sqrt>>
@@ -986,6 +1308,10 @@ plot data using 1:2 with lines title 'Fib(n) minus Fib-phi(n)'
 :end:
 
 * Exercise 1.14
+:PROPERTIES:
+:HASH:     648599674905962762
+:MODIFIED: 2022-08-23 17:16
+:END:
 Below is the default version of the count-change function. I'll be aggressively
 modifying it in order to get a graph out of it.
 #+NAME: count-change
@@ -1011,10 +1337,18 @@ modifying it in order to get a graph out of it.
         ((= kinds-of-coins 4) 25)
         ((= kinds-of-coins 5) 50)))
 #+end_src
-** Q
+** Question
+:PROPERTIES:
+:HASH:     648599674905962762
+:MODIFIED: 2022-08-23 17:16
+:END:
 Draw the tree illustrating the process generated by the count-change procedure
 of 1.2.2 in making change for 11 cents.
-** A
+** Answer
+:PROPERTIES:
+:HASH:     648599674905962762
+:MODIFIED: 2022-08-23 17:16
+:END:
 I want to generate this graph algorithmically.
 #+NAME: count-change-graphviz
 #+BEGIN_SRC scheme -n :eval no-export :tangle yes :exports code :results silent
@@ -1107,11 +1441,19 @@ $data
 [[file:fig/cc-11.png]]
 :end:
 
-** Q2
+** Question 2
+:PROPERTIES:
+:HASH:     648599674905962762
+:MODIFIED: 2022-08-23 17:16
+:END:
 What are the orders of growth of the space and number of steps used by this
 process as the amount to be changed increases?
 
-** A2
+** Answer 2
+:PROPERTIES:
+:HASH:     648599674905962762
+:MODIFIED: 2022-08-23 17:16
+:END:
 Let's look at this via the number of function calls needed for value ~n~. Instead
 of returning an integer, I'll return a pair where ~car~ is the number of ways to
 count change, and ~cdr~ is the number of function calls that have occurred down
@@ -1255,7 +1597,15 @@ don't think I really grasped the nature of math as a tool of empowerment until
 now.
 
 * Exercise 1.15
-** Q1
+:PROPERTIES:
+:HASH:     -277441515348153793
+:MODIFIED: 2022-08-23 17:16
+:END:
+** Question 1
+:PROPERTIES:
+:HASH:     -277441515348153793
+:MODIFIED: 2022-08-23 17:34
+:END:
 The sine of an angle (specified in radians) can be computed by making use of the
 approximation \(\sin x ≈ x\) if \(x\) is sufficiently small, and the
 trigonometric identity \(\sin x = 3\sin\frac{x}{3} − 4\sin^3\frac{x}{3}\)
@@ -1275,7 +1625,11 @@ angle is considered “sufficiently small” if its magnitude is not greater tha
 
 How many times is the procedure ~p~ applied when src_scheme{(sine 12.15)} is evaluated?
 
-** A1
+** Answer 1
+:PROPERTIES:
+:HASH:     -277441515348153793
+:MODIFIED: 2022-08-23 17:34
+:END:
 
 Let's find out!
 #+NAME: 1-15-p-measure
@@ -1303,12 +1657,20 @@ Let's find out!
 
 ~p~ is evaluated 5 times.
 
-** Q2
+** Question 2
+:PROPERTIES:
+:HASH:     -277441515348153793
+:MODIFIED: 2022-08-23 17:34
+:END:
 What is the order of growth in space and number of steps (as a function of ~a~)
 used by the process generated by the sine procedure when src_scheme{(sine a)} is
 evaluated?
 
-** A2
+** Answer 2
+:PROPERTIES:
+:HASH:     -277441515348153793
+:MODIFIED: 2022-08-23 17:34
+:END:
 #+NAME: 1-15-tab1
 #+BEGIN_SRC scheme -n :eval no-export :tangle no :exports both :results silent value table
 (use-srfis '(1))
@@ -1454,3 +1816,14 @@ plot 'Ex15/sine-bench.dat' using 1:2 with fillsteps title 'time to execute', \
 :results:
 [[file:fig/1-15-bench.png]]
 :end:
+
+* Exercise 1.16
+:PROPERTIES:
+:HASH:     -277441515348153813
+:MODIFIED: 2022-08-23 17:16
+:END:
+** Question
+:PROPERTIES:
+:HASH:     -277441515348153813
+:MODIFIED: 2022-08-23 17:16
+:END:

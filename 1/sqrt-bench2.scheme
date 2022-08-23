@@ -1,0 +1,20 @@
+;; [[file:Answers.org::*Optimized][Optimized:1]]
+(use-modules (ice-9 format))
+(load "../mattbench.scm")
+(define (average x y)
+  (/ (+ x y) 2))
+(define (improve guess x)
+  (average guess (/ x guess)))
+(define (good-enough? guess nextguess x)
+  (= nextguess guess))
+(define (sqrt-iter guess x)
+  (let ((nextguess (improve guess x)))
+    (if (good-enough? guess nextguess x)
+        guess
+        (sqrt-iter nextguess x))))
+(define (sqrt x)
+  (sqrt-iter 1.0 x))
+(newline)
+(display (mattbench (λ() (sqrt 69420)) 400000000))
+(newline)
+;; Optimized:1 ends here
