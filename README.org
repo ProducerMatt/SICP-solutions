@@ -1,0 +1,12 @@
+#+AUTHOR: ProducerMatt
+#+TITLE: My SICP Solutions
+
+This repo contains my solutions to exercises from the legendary textbook
+/Structure and Interpretation of Computer Programming/, or from associated
+problem sets and projects.
+
+I am doing solutions with Guile Scheme. In the past, I used heavily-commented
+Guile files combined with occasional Jupyter notebooks. Now, I'm using org-mode
+with Guile code blocks, plus Gnuplot for drawing plots. I hope to add a Nix file
+at some point so it's easy for others to load all the needed dependencies and
+mess around with my code.
