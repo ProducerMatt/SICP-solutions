@@ -1,5 +1,5 @@
-;; NOTE: placeholder due to weird compiler/emacs behavior that breaks SRFI-78
-;; (see check.scm) and friends
+;; Made this to dodge weird compiler/emacs behavior that breaks SRFI-78
+;; (see check.scm) and friends.
 
 (define undefined ;; Only way to return nothing in GNU Guile
     (if #t #f))   ;; TODO: consult with spiritual advisor
