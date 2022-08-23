@@ -1,4 +1,11 @@
 ;; BENCHMARK THE STUFF
+;; /*─────────────────────────────────────────────────────────────────╗
+;; │ To the extent possible under law, Matthew Pherigo has waived     │
+;; │ all copyright and related or neighboring rights to this file,    │
+;; │ as it is written in the following disclaimers:                   │
+;; │   • http://unlicense.org/                                        │
+;; ╚─────────────────────────────────────────────────────────────────*/
+
 (define (mattbench f n)
   ;; Executes lambda "f" n number of times, and returns how long it took
 
