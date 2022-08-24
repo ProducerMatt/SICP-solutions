@@ -1937,7 +1937,49 @@ We can also prove this for the time by benchmarking the function:
 \hypertarget{exercise-1.16}{%
 \section{Exercise 1.16}\label{exercise-1.16}}
 
+\hypertarget{text-2}{%
+\subsection{Text}\label{text-2}}
+
+\hypertarget{txt-expt}{%
+\label{txt-expt}}%
+\begin{Shaded}
+\begin{Highlighting}[numbers=left,,]
+\NormalTok{(}\ExtensionTok{define}\FunctionTok{ }\NormalTok{(expt{-}rec b n)}
+\NormalTok{  (}\KeywordTok{if}\NormalTok{ (}\OperatorTok{=}\NormalTok{ n }\DecValTok{0}\NormalTok{) }
+      \DecValTok{1} 
+\NormalTok{      (}\OperatorTok{*}\NormalTok{ b (expt{-}rec b (}\OperatorTok{{-}}\NormalTok{ n }\DecValTok{1}\NormalTok{)))))}
+
+\NormalTok{(}\ExtensionTok{define}\FunctionTok{ }\NormalTok{(expt{-}iter b n) }
+\NormalTok{  (}\ExtensionTok{define}\FunctionTok{ }\NormalTok{(iter counter product)}
+\NormalTok{    (}\KeywordTok{if}\NormalTok{ (}\OperatorTok{=}\NormalTok{ counter }\DecValTok{0}\NormalTok{)}
+\NormalTok{        product}
+\NormalTok{        (iter (}\OperatorTok{{-}}\NormalTok{ counter }\DecValTok{1}\NormalTok{)}
+\NormalTok{              (}\OperatorTok{*}\NormalTok{ b product))))}
+\NormalTok{  (iter n }\DecValTok{1}\NormalTok{))}
+
+\NormalTok{(}\ExtensionTok{define}\FunctionTok{ }\NormalTok{(fast{-}expt b n)}
+\NormalTok{  (}\KeywordTok{cond}\NormalTok{ ((}\OperatorTok{=}\NormalTok{ n }\DecValTok{0}\NormalTok{) }
+         \DecValTok{1}\NormalTok{)}
+\NormalTok{        ((}\KeywordTok{even?}\NormalTok{ n) }
+\NormalTok{         (square (fast{-}expt b (}\OperatorTok{/}\NormalTok{ n }\DecValTok{2}\NormalTok{))))}
+\NormalTok{        (}\KeywordTok{else} 
+\NormalTok{         (}\OperatorTok{*}\NormalTok{ b (fast{-}expt b (}\OperatorTok{{-}}\NormalTok{ n }\DecValTok{1}\NormalTok{))))))}
+\end{Highlighting}
+\end{Shaded}
+
 \hypertarget{question-14}{%
 \subsection{Question}\label{question-14}}
+
+Design a procedure that evolves an iterative exponentiation process that
+uses successive squaring and uses a logarithmic number of steps, as does
+fast-expt. (Hint: Using the observation that
+\((b^{n/2})^2=(b^2)^{n/2}\), keep, along with the exponent \(n\) and the
+base \(b\), an additional state variable \(a\) , and define the state
+transformation in such a way that the product \({ab}^n\) is unchanged
+from state to state. At the beginning of the process \(a\) is taken to
+be 1, and the answer is given by the value of \(a\) at the end of the
+process. In general, the technique of defining an \emph{invariant
+quantity} that remains unchanged from state to state is a powerful way
+to think about the design of iterative algorithms.)
 
 \end{document}

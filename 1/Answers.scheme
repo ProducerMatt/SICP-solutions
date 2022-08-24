@@ -334,3 +334,26 @@
       (let ((x (sine (/ angle 3.0))))
         (cons (p (car x)) (+ 1 (cdr x))))))
 ;; 1-15-p-measure ends here
+
+;; [[file:Answers.org::txt-expt][txt-expt]]
+(define (expt-rec b n)
+  (if (= n 0) 
+      1 
+      (* b (expt-rec b (- n 1)))))
+
+(define (expt-iter b n) 
+  (define (iter counter product)
+    (if (= counter 0)
+        product
+        (iter (- counter 1)
+              (* b product))))
+  (iter n 1))
+
+(define (fast-expt b n)
+  (cond ((= n 0) 
+         1)
+        ((even? n) 
+         (square (fast-expt b (/ n 2))))
+        (else 
+         (* b (fast-expt b (- n 1))))))
+;; txt-expt ends here
