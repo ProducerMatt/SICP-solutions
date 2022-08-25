@@ -246,6 +246,59 @@ For manually printing items in rows to stdout. Not currently used.
 \end{Highlighting}
 \end{Shaded}
 
+\hypertarget{print-table}{%
+\subsubsection{\texorpdfstring{\texttt{print-table}}{print-table}}\label{print-table}}
+
+Print \texttt{args} as a table separated by pipes. Optionally print
+spacer for colnames.
+
+\hypertarget{print-table}{%
+\label{print-table}}%
+\begin{Shaded}
+\begin{Highlighting}[numbers=left,,]
+\NormalTok{(}\ExtensionTok{define*}\FunctionTok{ }\NormalTok{(print{-}table table \#:key (colnames }\DecValTok{\#f}\NormalTok{))}
+\NormalTok{  (}\ExtensionTok{define*}\FunctionTok{ }\NormalTok{(print{-}row ll \#:key (fmt }\StringTok{" \textasciitilde{}s |"}\NormalTok{))}
+\NormalTok{    (format }\DecValTok{\#t} \StringTok{"\textasciitilde{}\&|"}\NormalTok{)}
+\NormalTok{    (map (λ(x) (format }\DecValTok{\#t}\NormalTok{ fmt x)) ll)}
+\NormalTok{    (format }\DecValTok{\#t} \StringTok{"\textasciitilde{}\%"}\NormalTok{))}
+\NormalTok{  (}\ExtensionTok{define}\FunctionTok{ }\NormalTok{(iter t)}
+\NormalTok{    (print{-}row (}\KeywordTok{car}\NormalTok{ t))}
+\NormalTok{    (}\KeywordTok{if}\NormalTok{ colnames}
+\NormalTok{        (print{-}row (}\KeywordTok{car}\NormalTok{ t) \#:fmt }\StringTok{"{-}{-}{-}|"}\NormalTok{))}
+\NormalTok{    (map print{-}row (}\KeywordTok{cdr}\NormalTok{ t)))}
+\NormalTok{  (}\KeywordTok{cond}\NormalTok{ ((}\KeywordTok{and}\NormalTok{ (}\OperatorTok{=} \DecValTok{1}\NormalTok{ (}\KeywordTok{length}\NormalTok{ table))}
+\NormalTok{              (}\KeywordTok{list?}\NormalTok{ (}\KeywordTok{car}\NormalTok{ table))) (iter (}\KeywordTok{car}\NormalTok{ table)))}
+\NormalTok{        ((}\OperatorTok{\textless{}=} \DecValTok{1}\NormalTok{ (}\KeywordTok{length}\NormalTok{ table)) (iter table))}
+\NormalTok{        (}\KeywordTok{else} \KeywordTok{error} \StringTok{"Invalid Input??"}\NormalTok{)))}
+\end{Highlighting}
+\end{Shaded}
+
+\hypertarget{print-table-test}{%
+\label{print-table-test}}%
+\begin{Shaded}
+\begin{Highlighting}[numbers=left,,]
+\NormalTok{\textless{}\textless{}print{-}table\textgreater{}\textgreater{}}
+\NormalTok{(}\KeywordTok{let*}\NormalTok{ ((l (iota }\DecValTok{3}\NormalTok{))}
+\NormalTok{      (table (}\KeywordTok{list}
+\NormalTok{              (}\KeywordTok{list}\NormalTok{ \textquotesingle{}column{-}1 \textquotesingle{}column{-}2 \textquotesingle{}column{-}3 \textquotesingle{}column{-}4)}
+\NormalTok{              (}\KeywordTok{cons}\NormalTok{ \textquotesingle{}row{-}a l)}
+\NormalTok{              (}\KeywordTok{cons}\NormalTok{ \textquotesingle{}row{-}b l)}
+\NormalTok{              (}\KeywordTok{cons}\NormalTok{ \textquotesingle{}row{-}c l))))}
+\NormalTok{  (print{-}table table \#:colnames }\DecValTok{\#t}\NormalTok{ ))}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{longtable}[]{@{}llll@{}}
+\toprule
+column-1 & column-2 & column-3 & column-4 \\
+\midrule
+\endhead
+row-a & 0 & 1 & 2 \\
+row-b & 0 & 1 & 2 \\
+row-c & 0 & 1 & 2 \\
+\bottomrule
+\end{longtable}
+
 \hypertarget{exercise-1.1}{%
 \section{Exercise 1.1}\label{exercise-1.1}}
 
@@ -343,7 +396,7 @@ sum of the squares of the two larger numbers.
 \NormalTok{(}\ExtensionTok{define}\FunctionTok{ }\NormalTok{(square{-}2of3 a b c)}
 \NormalTok{  (}\KeywordTok{cond}\NormalTok{ ((}\KeywordTok{and}\NormalTok{ (}\OperatorTok{\textgreater{}=}\NormalTok{ a b) (}\OperatorTok{\textgreater{}=}\NormalTok{ b c)) (sum{-}square a b))}
 \NormalTok{        ((}\KeywordTok{and}\NormalTok{ (}\OperatorTok{\textgreater{}=}\NormalTok{ a b) (}\OperatorTok{\textgreater{}}\NormalTok{ c b)) (sum{-}square a c))}
-\NormalTok{        (}\KeywordTok{else}\NormalTok{ (sum{-}square b c))}
+\NormalTok{        (}\KeywordTok{else}\NormalTok{ (sum{-}square b c))))}
 \end{Highlighting}
 \end{Shaded}
 
@@ -1985,6 +2038,9 @@ to think about the design of iterative algorithms.)
 \hypertarget{diary-2}{%
 \subsection{Diary}\label{diary-2}}
 
+First I made this program which tries to use a false equivalence:
+\[ab^2 = (a + 1)b^{n - 1}\]
+
 \hypertarget{fast-expt-iter-fail1}{%
 \label{fast-expt-iter-fail1}}%
 \begin{Shaded}
@@ -2009,25 +2065,12 @@ to think about the design of iterative algorithms.)
 \begin{Highlighting}[numbers=left,,]
 \NormalTok{\textless{}\textless{}fast{-}expt{-}iter{-}fail1\textgreater{}\textgreater{}}
 \NormalTok{\textless{}\textless{}try{-}these\textgreater{}\textgreater{}}
-\NormalTok{(try{-}these (λ(x) (fast{-}expt{-}iter }\DecValTok{2}\NormalTok{ x)) (}\KeywordTok{cdr}\NormalTok{ (iota }\DecValTok{11}\NormalTok{)))}
+\NormalTok{(fast{-}expt{-}iter }\DecValTok{2} \DecValTok{6}\NormalTok{)}
 \end{Highlighting}
 \end{Shaded}
 
-\begin{longtable}[]{@{}ll@{}}
-\toprule
-\endhead
-1 & 2 \\
-2 & 4 \\
-3 & 8 \\
-4 & 16 \\
-5 & 32 \\
-6 & 32 \\
-7 & 48 \\
-8 & 256 \\
-9 & 512 \\
-10 & 512 \\
-\bottomrule
-\end{longtable}
+Here's what the internal state looks like during \(2^6\) (correct answer
+is 64):
 
 \begin{longtable}[]{@{}lll@{}}
 \toprule
@@ -2039,6 +2082,68 @@ base & power & variable \\
 4 & 2 & 2 \\
 16 & 1 & 2 \\
 32 & 1 & 1 \\
+\bottomrule
+\end{longtable}
+
+\hypertarget{answer-14}{%
+\subsection{Answer}\label{answer-14}}
+
+There are two key transforms to a faster algorithm. The first was
+already shown in the text:
+
+\[
+    ab^n \to a(b^2)^{n/2}
+\]
+
+The second which I needed to deduce was this:
+
+\[
+    ab^n \to ((a \times b) \times b)^{n - 1}
+\]
+
+The solution essentially follows this logic:
+
+\begin{itemize}
+\tightlist
+\item
+  initialize \(a\) to 1
+\item
+  If \( n \) is 1, return \(b * a\)
+\item
+  else if \(n\) is even, halve \(n\), square \(b\), and iterate
+\item
+  else \(n\) is odd, so subtract 1 from \(n\) and \(a \to a \times b\)
+\end{itemize}
+
+\hypertarget{fast-expt-iter-fail2}{%
+\label{fast-expt-iter-fail2}}%
+\begin{Shaded}
+\begin{Highlighting}[numbers=left,,]
+\NormalTok{\textless{}\textless{}square\textgreater{}\textgreater{}}
+\NormalTok{(}\ExtensionTok{define}\FunctionTok{ }\NormalTok{(fast{-}expt{-}iter b n)}
+\NormalTok{  (}\ExtensionTok{define}\FunctionTok{ }\NormalTok{(iter b n a)}
+\NormalTok{    (}\KeywordTok{cond}\NormalTok{ ((}\OperatorTok{=}\NormalTok{ n }\DecValTok{1}\NormalTok{) (}\OperatorTok{*}\NormalTok{ b a))}
+\NormalTok{          ((}\KeywordTok{even?}\NormalTok{ n) (iter (square b)}
+\NormalTok{                         (}\OperatorTok{/}\NormalTok{ n }\DecValTok{2}\NormalTok{)}
+\NormalTok{                         a))}
+\NormalTok{          (}\KeywordTok{else}\NormalTok{ (iter b (}\OperatorTok{{-}}\NormalTok{ n }\DecValTok{1}\NormalTok{) (}\OperatorTok{*}\NormalTok{ b a)))))}
+\NormalTok{  (iter b n }\DecValTok{1}\NormalTok{))}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{longtable}[]{@{}ll@{}}
+\toprule
+\endhead
+1 & 3 \\
+2 & 9 \\
+3 & 27 \\
+4 & 81 \\
+5 & 243 \\
+6 & 729 \\
+7 & 2187 \\
+8 & 6561 \\
+9 & 19683 \\
+10 & 59049 \\
 \bottomrule
 \end{longtable}
 

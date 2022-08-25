@@ -1908,6 +1908,8 @@ In general, the technique of defining an /invariant quantity/ that remains
 unchanged from state to state is a powerful way to think about the design of
 iterative algorithms.)
 ** Diary
+First I made this program which tries to use a false equivalence:
+\[ab^2 = (a + 1)b^{n - 1}\]
 #+NAME: fast-expt-iter-fail1
 #+BEGIN_SRC scheme -n :eval no-export :tangle yes :exports code :results silent
 <<square>>
@@ -1925,33 +1927,14 @@ iterative algorithms.)
   (iter b n 1))
 #+end_src
 
-#+BEGIN_SRC scheme -n :eval no-export :tangle no :exports code :results value table
-<<fast-expt-iter-fail1>>
-<<try-these>>
-(try-these (λ(x) (fast-expt-iter 2 x)) (cdr (iota 11)))
-#+end_src
-
-#+RESULTS[20c89dc11491fac4bf6312b450e149fa385fcd87]:
-:results:
-|  1 |   2 |
-|  2 |   4 |
-|  3 |   8 |
-|  4 |  16 |
-|  5 |  32 |
-|  6 |  32 |
-|  7 |  48 |
-|  8 | 256 |
-|  9 | 512 |
-| 10 | 512 |
-:end:
-
-#+BEGIN_SRC scheme -n :eval no-export :tangle no :exports no :results output table :colnames yes
+#+BEGIN_SRC scheme -n :eval no-export :tangle no :exports both :results output table :colnames yes
 <<fast-expt-iter-fail1>>
 <<try-these>>
 (fast-expt-iter 2 6)
 #+end_src
 
-#+RESULTS[37635baa1b18ff8ce2d38ded346e3cccad079636]:
+Here's what the internal state looks like during \(2^6\) (correct answer is 64):
+#+RESULTS[314048443b97e46f3f43465460b4f52dc1e4a12c]:
 :results:
 | base | power | variable |
 |------+-------+----------|
@@ -1962,3 +1945,56 @@ iterative algorithms.)
 |   32 |     1 |        1 |
 :end:
 
+** Answer
+
+There are two key transforms to a faster algorithm. The first was already shown
+in the text:
+
+\[
+    ab^n \to a(b^2)^{n/2}
+\]
+
+The second which I needed to deduce was this:
+
+\[
+    ab^n \to ((a \times b) \times b)^{n - 1}
+\]
+
+The solution essentially follows this logic:
+- initialize \(a\) to 1
+- If \( n \) is 1, return \(b * a\)
+- else if \(n\) is even, halve \(n\), square \(b\), and iterate
+- else \(n\) is odd, so subtract 1 from \(n\) and \(a \to a \times b\)
+
+#+NAME: fast-expt-iter
+#+BEGIN_SRC scheme -n :eval no-export :tangle yes :exports code :results silent
+<<square>>
+(define (fast-expt-iter b n)
+  (define (iter b n a)
+    (cond ((= n 1) (* b a))
+          ((even? n) (iter (square b)
+                         (/ n 2)
+                         a))
+          (else (iter b (- n 1) (* b a)))))
+  (iter b n 1))
+#+end_src
+
+#+BEGIN_SRC scheme -n :eval no-export :tangle no :exports yes :results value table
+<<fast-expt-iter>>
+<<try-these>>
+(try-these (λ(x) (fast-expt-iter 3 x)) (cdr (iota 11)))
+#+end_src
+
+#+RESULTS[ae537d78c52d471bef9f5b0951596dc3d4340603]:
+:results:
+|  1 |     3 |
+|  2 |     9 |
+|  3 |    27 |
+|  4 |    81 |
+|  5 |   243 |
+|  6 |   729 |
+|  7 |  2187 |
+|  8 |  6561 |
+|  9 | 19683 |
+| 10 | 59049 |
+:end:

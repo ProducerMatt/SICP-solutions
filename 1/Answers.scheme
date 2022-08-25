@@ -43,6 +43,49 @@
         (apply print-as-rows d))))
 ;; print-as-rows ends here
 
+;; [[file:Answers.org::print-table][print-table]]
+(define* (print-table table #:key (colnames #f))
+  (define* (print-row ll #:key (fmt " ~s |"))
+    (format #t "~&|")
+    (map (λ(x) (format #t fmt x)) ll)
+    (format #t "~%"))
+  (define (iter t)
+    (print-row (car t))
+    (if colnames
+        (print-row (car t) #:fmt "---|"))
+    (map print-row (cdr t)))
+  (cond ((and (= 1 (length table))
+              (list? (car table))) (iter (car table)))
+        ((<= 1 (length table)) (iter table))
+        (else error "Invalid Input??")))
+;; print-table ends here
+
+;; [[file:Answers.org::print-table-test][print-table-test]]
+;; [[[[file:~/SICP-group/1/Answers.org::print-table][print-table]]][print-table]]
+(define* (print-table table #:key (colnames #f))
+  (define* (print-row ll #:key (fmt " ~s |"))
+    (format #t "~&|")
+    (map (λ(x) (format #t fmt x)) ll)
+    (format #t "~%"))
+  (define (iter t)
+    (print-row (car t))
+    (if colnames
+        (print-row (car t) #:fmt "---|"))
+    (map print-row (cdr t)))
+  (cond ((and (= 1 (length table))
+              (list? (car table))) (iter (car table)))
+        ((<= 1 (length table)) (iter table))
+        (else error "Invalid Input??")))
+;; print-table ends here
+(let* ((l (iota 3))
+      (table (list
+              (list 'column-1 'column-2 'column-3 'column-4)
+              (cons 'row-a l)
+              (cons 'row-b l)
+              (cons 'row-c l))))
+  (print-table table #:colnames #t ))
+;; print-table-test ends here
+
 ;; [[file:Answers.org::square][square]]
 (define (square x)
   (* x x))
@@ -58,7 +101,7 @@
 (define (square-2of3 a b c)
   (cond ((and (>= a b) (>= b c)) (sum-square a b))
         ((and (>= a b) (> c b)) (sum-square a c))
-        (else (sum-square b c))
+        (else (sum-square b c))))
 ;; EX1-3 ends here
 
 ;; [[file:Answers.org::abs][abs]]
@@ -376,3 +419,18 @@
   (format #t "~&|--|--|--|~%")
   (iter b n 1))
 ;; fast-expt-iter-fail1 ends here
+
+;; [[file:Answers.org::fast-expt-iter-fail2][fast-expt-iter-fail2]]
+;; [[[[file:~/SICP-group/1/Answers.org::square][square]]][square]]
+(define (square x)
+  (* x x))
+;; square ends here
+(define (fast-expt-iter b n)
+  (define (iter b n a)
+    (cond ((= n 1) (* b a))
+          ((even? n) (iter (square b)
+                         (/ n 2)
+                         a))
+          (else (iter b (- n 1) (* b a)))))
+  (iter b n 1))
+;; fast-expt-iter-fail2 ends here
