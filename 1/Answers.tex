@@ -1982,4 +1982,64 @@ process. In general, the technique of defining an \emph{invariant
 quantity} that remains unchanged from state to state is a powerful way
 to think about the design of iterative algorithms.)
 
+\hypertarget{diary-2}{%
+\subsection{Diary}\label{diary-2}}
+
+\hypertarget{fast-expt-iter-fail1}{%
+\label{fast-expt-iter-fail1}}%
+\begin{Shaded}
+\begin{Highlighting}[numbers=left,,]
+\NormalTok{\textless{}\textless{}square\textgreater{}\textgreater{}}
+\NormalTok{(}\ExtensionTok{define}\FunctionTok{ }\NormalTok{(fast{-}expt{-}iter b n)}
+\NormalTok{  (}\ExtensionTok{define}\FunctionTok{ }\NormalTok{(iter b n a)}
+\NormalTok{    (format }\DecValTok{\#t} \StringTok{"\textasciitilde{}\&|\textasciitilde{}s\textasciitilde{}/\textasciitilde{}/|\textasciitilde{}s\textasciitilde{}/\textasciitilde{}/|\textasciitilde{}s|\textasciitilde{}\%"}\NormalTok{ b n a)}
+\NormalTok{    (}\KeywordTok{cond}\NormalTok{ ((}\OperatorTok{=}\NormalTok{ n }\DecValTok{1}\NormalTok{) (}\KeywordTok{begin}\NormalTok{ (format }\DecValTok{\#t} \StringTok{"\textasciitilde{}\&|\textasciitilde{}s\textasciitilde{}/\textasciitilde{}/|\textasciitilde{}s\textasciitilde{}/\textasciitilde{}/|\textasciitilde{}s|\textasciitilde{}\%"}\NormalTok{ (}\OperatorTok{*}\NormalTok{ b a) }\DecValTok{1} \DecValTok{1}\NormalTok{)}
+\NormalTok{                          (}\OperatorTok{*}\NormalTok{ b a)))}
+\NormalTok{          ((}\KeywordTok{even?}\NormalTok{ n) (iter (square b)}
+\NormalTok{                         (}\OperatorTok{/}\NormalTok{ n }\DecValTok{2}\NormalTok{)}
+\NormalTok{                         a))}
+\NormalTok{          (}\KeywordTok{else}\NormalTok{ (iter b (}\OperatorTok{{-}}\NormalTok{ n }\DecValTok{1}\NormalTok{) (}\OperatorTok{+}\NormalTok{ a }\DecValTok{1}\NormalTok{)))))}
+\NormalTok{  (format }\DecValTok{\#t} \StringTok{"|\textasciitilde{}a\textasciitilde{}/|\textasciitilde{}a\textasciitilde{}/|\textasciitilde{}a|\textasciitilde{}\%"} \StringTok{"base"} \StringTok{"power"} \StringTok{"variable"}\NormalTok{)}
+\NormalTok{  (format }\DecValTok{\#t} \StringTok{"\textasciitilde{}\&|{-}{-}|{-}{-}|{-}{-}|\textasciitilde{}\%"}\NormalTok{)}
+\NormalTok{  (iter b n }\DecValTok{1}\NormalTok{))}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{Shaded}
+\begin{Highlighting}[numbers=left,,]
+\NormalTok{\textless{}\textless{}fast{-}expt{-}iter{-}fail1\textgreater{}\textgreater{}}
+\NormalTok{\textless{}\textless{}try{-}these\textgreater{}\textgreater{}}
+\NormalTok{(try{-}these (λ(x) (fast{-}expt{-}iter }\DecValTok{2}\NormalTok{ x)) (}\KeywordTok{cdr}\NormalTok{ (iota }\DecValTok{11}\NormalTok{)))}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{longtable}[]{@{}ll@{}}
+\toprule
+\endhead
+1 & 2 \\
+2 & 4 \\
+3 & 8 \\
+4 & 16 \\
+5 & 32 \\
+6 & 32 \\
+7 & 48 \\
+8 & 256 \\
+9 & 512 \\
+10 & 512 \\
+\bottomrule
+\end{longtable}
+
+\begin{longtable}[]{@{}lll@{}}
+\toprule
+base & power & variable \\
+\midrule
+\endhead
+2 & 6 & 1 \\
+4 & 3 & 1 \\
+4 & 2 & 2 \\
+16 & 1 & 2 \\
+32 & 1 & 1 \\
+\bottomrule
+\end{longtable}
+
 \end{document}

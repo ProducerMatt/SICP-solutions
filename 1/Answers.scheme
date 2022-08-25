@@ -357,3 +357,22 @@
         (else 
          (* b (fast-expt b (- n 1))))))
 ;; txt-expt ends here
+
+;; [[file:Answers.org::fast-expt-iter-fail1][fast-expt-iter-fail1]]
+;; [[[[file:~/SICP-group/1/Answers.org::square][square]]][square]]
+(define (square x)
+  (* x x))
+;; square ends here
+(define (fast-expt-iter b n)
+  (define (iter b n a)
+    (format #t "~&|~s~/~/|~s~/~/|~s|~%" b n a)
+    (cond ((= n 1) (begin (format #t "~&|~s~/~/|~s~/~/|~s|~%" (* b a) 1 1)
+                          (* b a)))
+          ((even? n) (iter (square b)
+                         (/ n 2)
+                         a))
+          (else (iter b (- n 1) (+ a 1)))))
+  (format #t "|~a~/|~a~/|~a|~%" "base" "power" "variable")
+  (format #t "~&|--|--|--|~%")
+  (iter b n 1))
+;; fast-expt-iter-fail1 ends here

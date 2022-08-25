@@ -1861,3 +1861,58 @@ be 1, and the answer is given by the value of \(a\) at the end of the process.
 In general, the technique of defining an /invariant quantity/ that remains
 unchanged from state to state is a powerful way to think about the design of
 iterative algorithms.)
+** Diary
+#+NAME: fast-expt-iter-fail1
+#+BEGIN_SRC scheme -n :eval no-export :tangle yes :exports code :results silent
+<<square>>
+(define (fast-expt-iter b n)
+  (define (iter b n a)
+    (format #t "~&|~s~/~/|~s~/~/|~s|~%" b n a)
+    (cond ((= n 1) (begin (format #t "~&|~s~/~/|~s~/~/|~s|~%" (* b a) 1 1)
+                          (* b a)))
+          ((even? n) (iter (square b)
+                         (/ n 2)
+                         a))
+          (else (iter b (- n 1) (+ a 1)))))
+  (format #t "|~a~/|~a~/|~a|~%" "base" "power" "variable")
+  (format #t "~&|--|--|--|~%")
+  (iter b n 1))
+#+end_src
+
+#+BEGIN_SRC scheme -n :eval no-export :tangle no :exports code :results value table
+<<fast-expt-iter-fail1>>
+<<try-these>>
+(try-these (λ(x) (fast-expt-iter 2 x)) (cdr (iota 11)))
+#+end_src
+
+#+RESULTS[20c89dc11491fac4bf6312b450e149fa385fcd87]:
+:results:
+|  1 |   2 |
+|  2 |   4 |
+|  3 |   8 |
+|  4 |  16 |
+|  5 |  32 |
+|  6 |  32 |
+|  7 |  48 |
+|  8 | 256 |
+|  9 | 512 |
+| 10 | 512 |
+:end:
+
+#+BEGIN_SRC scheme -n :eval no-export :tangle no :exports no :results output table :colnames yes
+<<fast-expt-iter-fail1>>
+<<try-these>>
+(fast-expt-iter 2 6)
+#+end_src
+
+#+RESULTS[37635baa1b18ff8ce2d38ded346e3cccad079636]:
+:results:
+| base | power | variable |
+|------+-------+----------|
+|    2 |     6 |        1 |
+|    4 |     3 |        1 |
+|    4 |     2 |        2 |
+|   16 |     1 |        2 |
+|   32 |     1 |        1 |
+:end:
+
