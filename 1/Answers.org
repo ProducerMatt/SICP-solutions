@@ -241,7 +241,7 @@ the squares of the two larger numbers.
 (define (square-2of3 a b c)
   (cond ((and (>= a b) (>= b c)) (sum-square a b))
         ((and (>= a b) (> c b)) (sum-square a c))
-        (else (sum-square b c))
+        (else (sum-square b c))))
 #+END_SRC
 #+BEGIN_SRC scheme -n :eval no-export :tangle no :exports both :results value table
 <<EX1-3>>
