@@ -134,6 +134,52 @@ For manually printing items in rows to stdout. Not currently used.
         '()
         (apply print-as-rows d))))
 #+end_src
+*** ~print-table~
+Print ~args~ as a table separated by pipes. Optionally print spacer for
+colnames.
+#+NAME: print-table
+#+BEGIN_SRC scheme -n :eval no-export :tangle yes :results output :export code
+(define* (print-table table #:key (colnames #f))
+  (define* (print-row ll #:key (fmt " ~s |"))
+    (format #t "~&|")
+    (map (λ(x) (format #t fmt x)) ll)
+    (format #t "~%"))
+  (define (iter t)
+    (print-row (car t))
+    (if colnames
+        (print-row (car t) #:fmt "---|"))
+    (map print-row (cdr t)))
+  (cond ((and (= 1 (length table))
+              (list? (car table))) (iter (car table)))
+        ((<= 1 (length table)) (iter table))
+        (else error "Invalid Input??")))
+#+end_src
+
+#+RESULTS[73c7a29680bdb543cecf9a03b0a7b23ba0876e0f]: print-table
+:results:
+:end:
+
+#+NAME: print-table-test
+#+BEGIN_SRC scheme -n :eval no-export :tangle yes :results table output :export no :rownames yes :colnames yes
+<<print-table>>
+(let* ((l (iota 3))
+      (table (list
+              (list 'column-1 'column-2 'column-3 'column-4)
+              (cons 'row-a l)
+              (cons 'row-b l)
+              (cons 'row-c l))))
+  (print-table table #:colnames #t ))
+#+end_src
+
+#+RESULTS[edaab3e41fe9c157a30419fdce96f73827c93808]: print-table-test
+:results:
+| column-1 | column-2 | column-3 | column-4 |
+|----------+----------+----------+----------|
+| row-a    |        0 |        1 |        2 |
+| row-b    |        0 |        1 |        2 |
+| row-c    |        0 |        1 |        2 |
+:end:
+
 * Exercise 1.1
 :PROPERTIES:
 :HASH:     -277441515328139857
