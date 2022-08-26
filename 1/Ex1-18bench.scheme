@@ -1,0 +1,22 @@
+;; [[file:Answers.org::*Comparison benchmarks:][Comparison benchmarks::1]]
+(load "../mattbench.scm")
+;; [[[[file:~/SICP-group/1/Answers.org::fast-mult-iter][fast-mult-iter]]][fast-mult-iter]]
+(define (double x)
+  (+ x x))
+(define (halve x)
+  (/ x 2))
+(define (fast-mult a b)
+  (define (iter a b c)
+    (cond ((= b 0) 0)
+          ((= b 1) (+ a c))
+          ((even? b)
+           (iter (double a) (halve b) c))
+          (else (iter a (- b 1) (+ a c)))))
+  (iter a b 0))
+;; fast-mult-iter ends here
+
+
+(list (list "fast-mult-rec" "fast-mult-iter")
+      (list (mattbench (λ() (fast-mult-rec 32 32)) 1000)
+            (mattbench (λ() (fast-mult 32 32)) 1000)))
+;; Comparison benchmarks::1 ends here

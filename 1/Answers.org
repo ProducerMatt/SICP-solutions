@@ -1946,7 +1946,6 @@ Here's what the internal state looks like during \(2^6\) (correct answer is 64):
 :end:
 
 ** Answer
-
 There are two key transforms to a faster algorithm. The first was already shown
 in the text:
 
@@ -1997,4 +1996,120 @@ The solution essentially follows this logic:
 |  8 |  6561 |
 |  9 | 19683 |
 | 10 | 59049 |
+:end:
+
+* Exercise 1.17
+** Question
+The exponentiation algorithms in this section are based on performing
+exponentiation by means of repeated multiplication. In a similar way, one can
+perform integer multiplication by means of repeated addition. The following
+multiplication procedure (in which it is assumed that our language can only add,
+not multiply) is analogous to the expt procedure:
+
+#+BEGIN_SRC scheme -n
+(define (* a b)
+  (if (= b 0)
+      0
+      (+ a (* a (- b 1)))))
+#+end_src
+
+This algorithm takes a number of steps that is linear in \( b \). Now suppose we
+include, together with addition, operations double, which doubles an integer,
+and halve, which divides an (even) integer by 2. Using these, design a
+multiplication procedure analogous to fast-expt that uses a logarithmic number
+of steps.
+
+** Answer
+#+NAME: fast-mult
+#+BEGIN_SRC scheme -n :eval no-export :tangle yes :exports code :results silent
+(define (double x)
+  (+ x x))
+(define (halve x)
+  (/ x 2))
+(define (fast-mult-rec a b)
+  (cond ((= b 0) 0)
+        ((even? b)
+         (double (fast-mult-rec a (halve b)))) ; This was kind of a stretch to think of.G
+         ;(fast-mult (double a) (halve b))) <== My first instinct is iterative
+        (else (+ a (fast-mult-rec a (- b 1))))))
+#+end_src
+
+Proof it works:
+
+#+BEGIN_SRC scheme -n :eval no-export :tangle no :exports yes :results value table
+<<fast-mult-rec>>
+<<try-these>>
+(try-these (λ(x) (fast-mult-rec 3 x)) (cdr (iota 11)))
+#+end_src
+
+#+RESULTS[3ce2cd1f0e04c83aac17e721c2e17a937fc0cb25]:
+:results:
+|  1 |  3 |
+|  2 |  6 |
+|  3 |  9 |
+|  4 | 12 |
+|  5 | 15 |
+|  6 | 18 |
+|  7 | 21 |
+|  8 | 24 |
+|  9 | 27 |
+| 10 | 30 |
+:end:
+
+* Exercise 1.18
+** Question
+Using the results of [[*Exercise 1.16][Exercise 1.16]] and [[*Exercise 1.17][Exercise 1.17]], devise a procedure that
+generates an iterative process for multiplying two integers in terms of adding,
+doubling, and halving and uses a logarithmic number of steps.
+** Diary
+*** Comparison benchmarks:
+
+#+BEGIN_SRC scheme -n :eval no-export :tangle Ex1-18bench.scheme :exports both :results silent
+(load "../mattbench.scm")
+<<fast-mult-iter>>
+<<fast-mult-rec>>
+
+(list (list "fast-mult-rec" "fast-mult-iter")
+      (list (mattbench (λ() (fast-mult-rec 32 32)) 1000)
+            (mattbench (λ() (fast-mult 32 32)) 1000)))
+#+END_SRC
+*** Hall of shame
+Some of my /very/ incorrect ideas:
+\[ab = (a+1)(b-1)\]
+\[ab = \big(a+\Big(\frac{a}{2}\Big)(b-1)\big)\]
+\[ab+c = \big(a(b-1)+(b+c)\big)\]
+** Answer
+#+NAME: fast-mult-iter
+#+BEGIN_SRC scheme -n :eval no-export :tangle yes :exports code :results silent
+(define (double x)
+  (+ x x))
+(define (halve x)
+  (/ x 2))
+(define (fast-mult a b)
+  (define (iter a b c)
+    (cond ((= b 0) 0)
+          ((= b 1) (+ a c))
+          ((even? b)
+           (iter (double a) (halve b) c))
+          (else (iter a (- b 1) (+ a c)))))
+  (iter a b 0))
+#+end_src
+#+BEGIN_SRC scheme -n :eval no-export :tangle no :exports yes :results value table
+<<fast-mult-iter>>
+<<try-these>>
+(try-these (λ(x) (fast-mult 3 x)) (cdr (iota 11)))
+#+end_src
+
+#+RESULTS[900f6cc983a51f9e0902587546cbd7d746845b50]:
+:results:
+|  1 |  3 |
+|  2 |  6 |
+|  3 |  9 |
+|  4 | 12 |
+|  5 | 15 |
+|  6 | 18 |
+|  7 | 21 |
+|  8 | 24 |
+|  9 | 27 |
+| 10 | 30 |
 :end:

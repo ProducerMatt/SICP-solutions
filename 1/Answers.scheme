@@ -420,7 +420,7 @@
   (iter b n 1))
 ;; fast-expt-iter-fail1 ends here
 
-;; [[file:Answers.org::fast-expt-iter-fail2][fast-expt-iter-fail2]]
+;; [[file:Answers.org::fast-expt-iter][fast-expt-iter]]
 ;; [[[[file:~/SICP-group/1/Answers.org::square][square]]][square]]
 (define (square x)
   (* x x))
@@ -433,4 +433,32 @@
                          a))
           (else (iter b (- n 1) (* b a)))))
   (iter b n 1))
-;; fast-expt-iter-fail2 ends here
+;; fast-expt-iter ends here
+
+;; [[file:Answers.org::fast-mult][fast-mult]]
+(define (double x)
+  (+ x x))
+(define (halve x)
+  (/ x 2))
+(define (fast-mult-rec a b)
+  (cond ((= b 0) 0)
+        ((even? b)
+         (double (fast-mult-rec a (halve b)))) ; This was kind of a stretch to think of.G
+         ;(fast-mult (double a) (halve b))) <== My first instinct is iterative
+        (else (+ a (fast-mult-rec a (- b 1))))))
+;; fast-mult ends here
+
+;; [[file:Answers.org::fast-mult-iter][fast-mult-iter]]
+(define (double x)
+  (+ x x))
+(define (halve x)
+  (/ x 2))
+(define (fast-mult a b)
+  (define (iter a b c)
+    (cond ((= b 0) 0)
+          ((= b 1) (+ a c))
+          ((even? b)
+           (iter (double a) (halve b) c))
+          (else (iter a (- b 1) (+ a c)))))
+  (iter a b 0))
+;; fast-mult-iter ends here
