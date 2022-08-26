@@ -435,7 +435,7 @@
   (iter b n 1))
 ;; fast-expt-iter ends here
 
-;; [[file:Answers.org::fast-mult][fast-mult]]
+;; [[file:Answers.org::fast-mult-rec][fast-mult-rec]]
 (define (double x)
   (+ x x))
 (define (halve x)
@@ -446,7 +446,7 @@
          (double (fast-mult-rec a (halve b)))) ; This was kind of a stretch to think of.G
          ;(fast-mult (double a) (halve b))) <== My first instinct is iterative
         (else (+ a (fast-mult-rec a (- b 1))))))
-;; fast-mult ends here
+;; fast-mult-rec ends here
 
 ;; [[file:Answers.org::fast-mult-iter][fast-mult-iter]]
 (define (double x)

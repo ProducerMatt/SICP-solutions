@@ -14,9 +14,36 @@
           (else (iter a (- b 1) (+ a c)))))
   (iter a b 0))
 ;; fast-mult-iter ends here
-
-
-(list (list "fast-mult-rec" "fast-mult-iter")
-      (list (mattbench (λ() (fast-mult-rec 32 32)) 1000)
-            (mattbench (λ() (fast-mult 32 32)) 1000)))
+;; [[[[file:~/SICP-group/1/Answers.org::fast-mult-rec][fast-mult-rec]]][fast-mult-rec]]
+(define (double x)
+  (+ x x))
+(define (halve x)
+  (/ x 2))
+(define (fast-mult-rec a b)
+  (cond ((= b 0) 0)
+        ((even? b)
+         (double (fast-mult-rec a (halve b)))) ; This was kind of a stretch to think of.G
+         ;(fast-mult (double a) (halve b))) <== My first instinct is iterative
+        (else (+ a (fast-mult-rec a (- b 1))))))
+;; fast-mult-rec ends here
+;; [[[[file:~/SICP-group/1/Answers.org::print-table][print-table]]][print-table]]
+(define* (print-table table #:key (colnames #f))
+  (define* (print-row ll #:key (fmt " ~s |"))
+    (format #t "~&|")
+    (map (λ(x) (format #t fmt x)) ll)
+    (format #t "~%"))
+  (define (iter t)
+    (print-row (car t))
+    (if colnames
+        (print-row (car t) #:fmt "---|"))
+    (map print-row (cdr t)))
+  (cond ((and (= 1 (length table))
+              (list? (car table))) (iter (car table)))
+        ((<= 1 (length table)) (iter table))
+        (else error "Invalid Input??")))
+;; print-table ends here
+(print-table (list (list "fast-mult-rec" "fast-mult-iter")
+                   (list (mattbench (λ() (fast-mult-rec 32 32)) 10000000)
+                         (mattbench (λ() (fast-mult 32 32)) 10000000)))
+             #:colnames #t)
 ;; Comparison benchmarks::1 ends here

@@ -2177,8 +2177,8 @@ that uses a logarithmic number of steps.
 \hypertarget{answer-15}{%
 \subsection{Answer}\label{answer-15}}
 
-\hypertarget{fast-mult}{%
-\label{fast-mult}}%
+\hypertarget{fast-mult-rec}{%
+\label{fast-mult-rec}}%
 \begin{Shaded}
 \begin{Highlighting}[numbers=left,,]
 \NormalTok{(}\ExtensionTok{define}\FunctionTok{ }\NormalTok{(double x)}
@@ -2234,12 +2234,24 @@ logarithmic number of steps.
 \NormalTok{(}\KeywordTok{load} \StringTok{"../mattbench.scm"}\NormalTok{)}
 \NormalTok{\textless{}\textless{}fast{-}mult{-}iter\textgreater{}\textgreater{}}
 \NormalTok{\textless{}\textless{}fast{-}mult{-}rec\textgreater{}\textgreater{}}
-
-\NormalTok{(}\KeywordTok{list}\NormalTok{ (}\KeywordTok{list} \StringTok{"fast{-}mult{-}rec"} \StringTok{"fast{-}mult{-}iter"}\NormalTok{)}
-\NormalTok{      (}\KeywordTok{list}\NormalTok{ (mattbench (λ() (fast{-}mult{-}rec }\DecValTok{32} \DecValTok{32}\NormalTok{)) }\DecValTok{1000}\NormalTok{)}
-\NormalTok{            (mattbench (λ() (fast{-}mult }\DecValTok{32} \DecValTok{32}\NormalTok{)) }\DecValTok{1000}\NormalTok{)))}
+\NormalTok{\textless{}\textless{}print{-}table\textgreater{}\textgreater{}}
+\NormalTok{(print{-}table (}\KeywordTok{list}\NormalTok{ (}\KeywordTok{list} \StringTok{"fast{-}mult{-}rec"} \StringTok{"fast{-}mult{-}iter"}\NormalTok{)}
+\NormalTok{                   (}\KeywordTok{list}\NormalTok{ (mattbench (λ() (fast{-}mult{-}rec }\DecValTok{32} \DecValTok{32}\NormalTok{)) }\DecValTok{10000000}\NormalTok{)}
+\NormalTok{                         (mattbench (λ() (fast{-}mult }\DecValTok{32} \DecValTok{32}\NormalTok{)) }\DecValTok{10000000}\NormalTok{)))}
+\NormalTok{             \#:colnames }\DecValTok{\#t}\NormalTok{)}
 \end{Highlighting}
 \end{Shaded}
+
+\begin{longtable}[]{@{}ll@{}}
+\toprule
+"fast-mult-rec" & "fast-mult-iter" \\
+\midrule
+\endhead
+196.89 & 166.35 \\
+\bottomrule
+\end{longtable}
+
+So the iterative version takes 0.84 times less to do \(32 \times 32\).
 
 \hypertarget{hall-of-shame}{%
 \subsubsection{Hall of shame}\label{hall-of-shame}}

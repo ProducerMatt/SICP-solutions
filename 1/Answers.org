@@ -47,7 +47,7 @@
 *** Also consider:
 :PROPERTIES:
 :HASH:     191038617830492512
-:MODIFIED: 2022-08-23 17:16
+:MODIFIED: 2022-08-25 19:52
 :END:
 - ~:results output~ for what the code prints
 - ~:exports code~ or ~:exports results~ to just get one or the other
@@ -57,7 +57,7 @@
 *** Current command for conversion
 :PROPERTIES:
 :HASH:     191038617830492512
-:MODIFIED: 2022-08-23 17:16
+:MODIFIED: 2022-08-25 19:52
 :END:
 #+BEGIN_SRC sh :noeval
 pandoc --from org --to latex 1.org -o 1.tex -s; xelatex 1.tex
@@ -66,12 +66,12 @@ pandoc --from org --to latex 1.org -o 1.tex -s; xelatex 1.tex
 ** Helpers for org-mode tables
 :PROPERTIES:
 :HASH:     191038617830492512
-:MODIFIED: 2022-08-23 17:16
+:MODIFIED: 2022-08-25 19:52
 :END:
 *** ~try-these~
 :PROPERTIES:
 :HASH:     191038617830492512
-:MODIFIED: 2022-08-23 17:16
+:MODIFIED: 2022-08-25 19:52
 :END:
 Takes function ~f~ and list ~testvals~ and applies ~f~ to each item ~i~. For
 each ~i~ returns a list with ~i~ and the result. Useful dor making tables with a
@@ -94,7 +94,7 @@ column for input and a column for output.
 *** ~transpose-list~
 :PROPERTIES:
 :HASH:     191038617830492512
-:MODIFIED: 2022-08-23 17:16
+:MODIFIED: 2022-08-25 19:52
 :END:
 "Rotate" a list, for example from src_scheme{'(1 2 3)} to
 src_scheme{'('(1) '(2) '(3))}
@@ -106,7 +106,7 @@ src_scheme{'('(1) '(2) '(3))}
 *** ~print-as-rows~
 :PROPERTIES:
 :HASH:     191038617830492512
-:MODIFIED: 2022-08-23 17:16
+:MODIFIED: 2022-08-25 19:52
 :END:
 For manually printing items in rows to stdout. Not currently used.
 #+NAME: print-as-rows
@@ -135,6 +135,10 @@ For manually printing items in rows to stdout. Not currently used.
         (apply print-as-rows d))))
 #+end_src
 *** ~print-table~
+:PROPERTIES:
+:HASH:     191038617830492512
+:MODIFIED: 2022-08-25 19:52
+:END:
 Print ~args~ as a table separated by pipes. Optionally print spacer for
 colnames.
 #+NAME: print-table
@@ -1869,6 +1873,10 @@ plot 'Ex15/sine-bench.dat' using 1:2 with fillsteps title 'time to execute', \
 :MODIFIED: 2022-08-23 17:16
 :END:
 ** Text
+:PROPERTIES:
+:HASH:     -277441515348153813
+:MODIFIED: 2022-08-25 19:45
+:END:
 #+NAME: txt-expt
 #+BEGIN_SRC scheme -n :eval no-export :tangle yes :exports code :results silent
 (define (expt-rec b n)
@@ -1908,6 +1916,10 @@ In general, the technique of defining an /invariant quantity/ that remains
 unchanged from state to state is a powerful way to think about the design of
 iterative algorithms.)
 ** Diary
+:PROPERTIES:
+:HASH:     -277441515348153813
+:MODIFIED: 2022-08-25 19:45
+:END:
 First I made this program which tries to use a false equivalence:
 \[ab^2 = (a + 1)b^{n - 1}\]
 #+NAME: fast-expt-iter-fail1
@@ -1946,6 +1958,10 @@ Here's what the internal state looks like during \(2^6\) (correct answer is 64):
 :end:
 
 ** Answer
+:PROPERTIES:
+:HASH:     -277441515348153813
+:MODIFIED: 2022-08-25 19:45
+:END:
 There are two key transforms to a faster algorithm. The first was already shown
 in the text:
 
@@ -1999,7 +2015,15 @@ The solution essentially follows this logic:
 :end:
 
 * Exercise 1.17
+:PROPERTIES:
+:HASH:     -277441515348153833
+:MODIFIED: 2022-08-25 19:45
+:END:
 ** Question
+:PROPERTIES:
+:HASH:     -277441515348153833
+:MODIFIED: 2022-08-25 19:48
+:END:
 The exponentiation algorithms in this section are based on performing
 exponentiation by means of repeated multiplication. In a similar way, one can
 perform integer multiplication by means of repeated addition. The following
@@ -2020,7 +2044,11 @@ multiplication procedure analogous to fast-expt that uses a logarithmic number
 of steps.
 
 ** Answer
-#+NAME: fast-mult
+:PROPERTIES:
+:HASH:     -277441515348153833
+:MODIFIED: 2022-08-25 19:48
+:END:
+#+NAME: fast-mult-rec
 #+BEGIN_SRC scheme -n :eval no-export :tangle yes :exports code :results silent
 (define (double x)
   (+ x x))
@@ -2057,28 +2085,59 @@ Proof it works:
 :end:
 
 * Exercise 1.18
+:PROPERTIES:
+:HASH:     -277441515348153853
+:MODIFIED: 2022-08-25 19:45
+:END:
 ** Question
+:PROPERTIES:
+:HASH:     -277441515348153853
+:MODIFIED: 2022-08-25 19:49
+:END:
 Using the results of [[*Exercise 1.16][Exercise 1.16]] and [[*Exercise 1.17][Exercise 1.17]], devise a procedure that
 generates an iterative process for multiplying two integers in terms of adding,
 doubling, and halving and uses a logarithmic number of steps.
 ** Diary
+:PROPERTIES:
+:HASH:     -1788218004225908716
+:MODIFIED: 2022-08-25 19:45
+:END:
 *** Comparison benchmarks:
+:PROPERTIES:
+:HASH:     -406723858729605953
+:MODIFIED: 2022-08-25 19:57
+:END:
 
-#+BEGIN_SRC scheme -n :eval no-export :tangle Ex1-18bench.scheme :exports both :results silent
+#+BEGIN_SRC scheme -n :tangle Ex1-18bench.scheme :exports code :results silent
 (load "../mattbench.scm")
 <<fast-mult-iter>>
 <<fast-mult-rec>>
-
-(list (list "fast-mult-rec" "fast-mult-iter")
-      (list (mattbench (λ() (fast-mult-rec 32 32)) 1000)
-            (mattbench (λ() (fast-mult 32 32)) 1000)))
+<<print-table>>
+(print-table (list (list "fast-mult-rec" "fast-mult-iter")
+                   (list (mattbench (λ() (fast-mult-rec 32 32)) 10000000)
+                         (mattbench (λ() (fast-mult 32 32)) 10000000)))
+             #:colnames #t)
 #+END_SRC
+
+| "fast-mult-rec" | "fast-mult-iter" |
+|-----------------+------------------|
+|          196.89 |           166.35 |
+
+So the iterative version takes 0.84 times less to do \(32 \times 32\).
 *** Hall of shame
+:PROPERTIES:
+:HASH:     -1459603659927941339
+:MODIFIED: 2022-08-25 19:46
+:END:
 Some of my /very/ incorrect ideas:
 \[ab = (a+1)(b-1)\]
 \[ab = \big(a+\Big(\frac{a}{2}\Big)(b-1)\big)\]
 \[ab+c = \big(a(b-1)+(b+c)\big)\]
 ** Answer
+:PROPERTIES:
+:HASH:     -1831088607246953991
+:MODIFIED: 2022-08-25 19:57
+:END:
 #+NAME: fast-mult-iter
 #+BEGIN_SRC scheme -n :eval no-export :tangle yes :exports code :results silent
 (define (double x)
