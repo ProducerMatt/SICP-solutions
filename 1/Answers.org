@@ -1,4 +1,4 @@
-#+org-update-heading-mod-times: t
+# -*-org-update-heading-mod-times: t-*-
 # ^ Automatically updated modification metadata per-section
 
 #+STARTUP: overview
