@@ -1,5 +1,4 @@
-# -*-org-update-heading-mod-times: t-*-
-# ^ Automatically updated modification metadata per-section
+#+OPTIONS: toc stat prop
 
 #+STARTUP: overview
 #+auto_tangle: t
