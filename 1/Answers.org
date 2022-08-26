@@ -2172,3 +2172,137 @@ Some of my /very/ incorrect ideas:
 |  9 | 27 |
 | 10 | 30 |
 :end:
+
+* Exercise 1.19
+:PROPERTIES:
+:HASH:     -277441515348154865
+:MODIFIED: 2022-08-25 21:28
+:END:
+** Question
+:PROPERTIES:
+:HASH:     -277441515348154865
+:MODIFIED: 2022-08-26 17:24
+:END:
+There is a clever algorithm for computing the Fibonacci numbers in a logarithmic
+number of steps. Recall the transformation of the state variables a and b in the
+~fib-iter~ process of section 1-2-2:
+
+\[a <- a + b\text{ and }b <- a\]
+
+Call this transformation T, and observe that applying T over and over again n
+times, starting with 1 and 0, produces the pair _Fib_(n + 1) and _Fib_(n). In
+other words, the Fibonacci numbers are produced by applying \( T^n \), the nth
+power of the transformation T, starting with the pair (1,0). Now consider T to
+be the special case of p = 0 and q = 1 in a family of transformations \(
+T_{(pq)} \), where \( T_{(pq)} \) transforms the pair (a,b) according to \( a <-
+bq + aq + ap \) and \( b <- bp + aq \). Show that if we apply such a
+transformation \( T_{(pq)} \) twice, the effect is the same as using a single
+transformation \( T_{(p'q')} \) of the same form, and compute p' and q' in terms
+of p and q. This gives us an explicit way to square these transformations, and
+thus we can compute \( T^n \) using successive squaring, as in the `fast-expt'
+procedure. Put this all together to complete the following procedure, which runs
+in a logarithmic number of steps:
+#+BEGIN_SRC scheme -n :noeval :tangle no :exports code :results silent
+(define (fib n)
+  (fib-iter 1 0 0 1 n))
+
+(define (fib-iter a b p q count)
+  (cond ((= count 0) b)
+        ((even? count)
+         (fib-iter a
+                   b
+                   <??>      ; compute p'
+                   <??>      ; compute q'
+                   (/ count 2)))
+        (else (fib-iter (+ (* b q) (* a q) (* a p))
+                        (+ (* b p) (* a q))
+                        p
+                        q
+                        (- count 1)))))
+#+END_SRC
+
+** Diary
+:PROPERTIES:
+:HASH:     -277441515348154865
+:MODIFIED: 2022-08-26 17:24
+:END:
+More succinctly put:
+
+\[
+    \text{Fib}_n \begin{cases}
+        a \leftarrow a + b\\
+        b \leftarrow a
+    \end{cases}
+\]
+\[
+    \text{Fib-iter}_{abpq} \begin{cases}
+        a \leftarrow bq + aq + ap\\
+        b \leftarrow bp + aq
+    \end{cases}
+\]
+
+And in the case of my higher-level function I write later:
+\[
+    \text{T}_{pq}: a,b\mapsto \begin{cases}
+        a \leftarrow bq + aq + ap\\
+        b \leftarrow bp + aq
+    \end{cases}
+\]
+
+** Answer
+:PROPERTIES:
+:HASH:     -277441515348154865
+:MODIFIED: 2022-08-26 17:25
+:END:
+#+NAME: fib-iter-T
+#+BEGIN_SRC scheme -n :eval no-export :tangle yes :exports code :results silent
+(define (fib-rec n)
+  (cond ((= n 0) 0)
+        ((= n 1) 1)
+        (else (+ (fib-rec (- n 1))
+                 (fib-rec (- n 2))))))
+(define (fib n)
+  (fib-iter 1 0 0 1 n))
+
+(define (fib-iter a b p q count)
+  (cond ((= count 0) b)
+        ((even? count)
+         (fib-iter a
+                   b
+                   (+ (* p p)
+                      (* q q))      ; compute p'
+                   (+ (* p q)
+                      (* q q)
+                      (* q p))      ; compute q'
+                   (/ count 2)))
+        (else (fib-iter (+ (* b q) (* a q) (* a p))
+                        (+ (* b p) (* a q))
+                        p
+                        q
+                        (- count 1)))))
+#+END_SRC
+
+#+NAME: fib-iter-test
+#+BEGIN_SRC scheme -n :eval no-export :tangle no :exports results :results value table :colnames yes
+(use-srfis '(1))
+<<fib-iter-T>>
+(let* ((l (cdr (iota 10)))
+       (fr (map fib-rec l))
+       (fi (map fib l)))
+  (cons (list "n" "fib-rec" "fib-iter")
+        (zip l fr fi)))
+#+END_SRC
+
+#+RESULTS[cb0486d64121e11bc67b9d79dc8831099f46c360]: fib-iter-test
+:results:
+| n | fib-rec | fib-iter |
+| 1 |       1 |        1 |
+| 2 |       1 |        1 |
+| 3 |       2 |        2 |
+| 4 |       3 |        3 |
+| 5 |       5 |        5 |
+| 6 |       8 |        8 |
+| 7 |      13 |       13 |
+| 8 |      21 |       21 |
+| 9 |      34 |       34 |
+:end:
