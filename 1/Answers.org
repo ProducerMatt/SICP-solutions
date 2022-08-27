@@ -13,19 +13,32 @@
 
 #+PANDOC_OPTIONS: standalone:t
 # FIXME: this doesn't appear to do anything. Be sure to run pandoc with -s
+#+latex_class: article
 
-#+LATEX_CMD: xelatex
+# NOTE: "draft" MARKS OVERFLOWING LINES WITH AN UGLY BLACK SQUARE. CHANGE TO "FINAL" WHEN FINISHED``
+#+latex_class_options: [final,fleqn,titlepage]
+#+description:
+#+keywords:
+#+subtitle:
+#+latex_engraved_theme:
+
+#+LATEX_CMD: xelatex -shell-escape -interaction nonstopmode
+#+LATEX_COMPILER: xelatex
+#+LATEX_HEADER: \usepackage{fontspec}
 #+LATEX_HEADER: \setmonofont[Mapping=tex-text,Scale=MatchLowercase]{FiraMono-Regular}
+#+LATEX_HEADER: \usepackage[cache=false]{minted}
+# #+LATEX_HEADER: \usemintedstyle{colorful}
 #+LATEX_HEADER: \listfiles
 # listfiles causes latex to make a list of all files used during processing
 
 #+title: SICP Chapter 1 Answers
 #+AUTHOR: ProducerMatt
+#+date: \today
 
 * HOW THIS DOCUMENT IS MADE
 :PROPERTIES:
 :HASH:     191038617830492512
-:MODIFIED: 2022-08-23 17:19
+:MODIFIED: 2022-08-26 19:22
 :END:
 **TODO**
 #+NAME: testing
@@ -45,8 +58,8 @@
 
 *** Also consider:
 :PROPERTIES:
-:HASH:     191038617830492512
-:MODIFIED: 2022-08-25 19:52
+:HASH:     984354512207954897
+:MODIFIED: 2022-08-26 17:38
 :END:
 - ~:results output~ for what the code prints
 - ~:exports code~ or ~:exports results~ to just get one or the other
@@ -55,8 +68,8 @@
 
 *** Current command for conversion
 :PROPERTIES:
-:HASH:     191038617830492512
-:MODIFIED: 2022-08-25 19:52
+:HASH:     -1166077056727287923
+:MODIFIED: 2022-08-26 17:38
 :END:
 #+BEGIN_SRC sh :noeval
 pandoc --from org --to latex 1.org -o 1.tex -s; xelatex 1.tex
@@ -64,13 +77,13 @@ pandoc --from org --to latex 1.org -o 1.tex -s; xelatex 1.tex
 
 ** Helpers for org-mode tables
 :PROPERTIES:
-:HASH:     191038617830492512
-:MODIFIED: 2022-08-25 19:52
+:HASH:     1502731935010979174
+:MODIFIED: 2022-08-26 17:38
 :END:
 *** ~try-these~
 :PROPERTIES:
-:HASH:     191038617830492512
-:MODIFIED: 2022-08-25 19:52
+:HASH:     1992669018667795488
+:MODIFIED: 2022-08-26 17:38
 :END:
 Takes function ~f~ and list ~testvals~ and applies ~f~ to each item ~i~. For
 each ~i~ returns a list with ~i~ and the result. Useful dor making tables with a
@@ -92,8 +105,8 @@ column for input and a column for output.
 #+end_src
 *** ~transpose-list~
 :PROPERTIES:
-:HASH:     191038617830492512
-:MODIFIED: 2022-08-25 19:52
+:HASH:     2258068321098239991
+:MODIFIED: 2022-08-26 17:38
 :END:
 "Rotate" a list, for example from src_scheme{'(1 2 3)} to
 src_scheme{'('(1) '(2) '(3))}
@@ -104,8 +117,8 @@ src_scheme{'('(1) '(2) '(3))}
 #+end_src
 *** ~print-as-rows~
 :PROPERTIES:
-:HASH:     191038617830492512
-:MODIFIED: 2022-08-25 19:52
+:HASH:     -2130820535467875613
+:MODIFIED: 2022-08-26 17:38
 :END:
 For manually printing items in rows to stdout. Not currently used.
 #+NAME: print-as-rows
@@ -135,8 +148,8 @@ For manually printing items in rows to stdout. Not currently used.
 #+end_src
 *** ~print-table~
 :PROPERTIES:
-:HASH:     191038617830492512
-:MODIFIED: 2022-08-25 19:52
+:HASH:     -998451298958318835
+:MODIFIED: 2022-08-26 19:22
 :END:
 Print ~args~ as a table separated by pipes. Optionally print spacer for
 colnames.
@@ -186,20 +199,20 @@ colnames.
 * Exercise 1.1
 :PROPERTIES:
 :HASH:     -277441515328139857
-:MODIFIED: 2022-08-23 17:16
+:MODIFIED: 2022-08-26 17:38
 :END:
 ** Question
 :PROPERTIES:
-:HASH:     -277441515328139857
-:MODIFIED: 2022-08-23 17:19
+:HASH:     -240234932911995108
+:MODIFIED: 2022-08-26 17:38
 :END:
 Below is a sequence of expressions. What is the result printed by the
 interpreter in response to each expression? Assume that the sequence is to be
 evaluated in the order in which it is presented.
 ** Answer
 :PROPERTIES:
-:HASH:     -277441515328139857
-:MODIFIED: 2022-08-23 17:19
+:HASH:     -1534762839609086073
+:MODIFIED: 2022-08-26 17:38
 :END:
 #+BEGIN_SRC scheme -n :results none
 10 ;; 10
@@ -227,12 +240,12 @@ evaluated in the order in which it is presented.
 * Exercise 1.2
 :PROPERTIES:
 :HASH:     -277441515328139845
-:MODIFIED: 2022-08-23 17:16
+:MODIFIED: 2022-08-26 17:38
 :END:
 ** Question
 :PROPERTIES:
-:HASH:     -277441515328139845
-:MODIFIED: 2022-08-23 17:16
+:HASH:     2117817785272229491
+:MODIFIED: 2022-08-26 17:38
 :END:
 Translate the following expression into prefix form:
 \[
@@ -241,8 +254,8 @@ Translate the following expression into prefix form:
 \]
 ** Answer
 :PROPERTIES:
-:HASH:     -277441515328139845
-:MODIFIED: 2022-08-23 17:16
+:HASH:     1030258379303738274
+:MODIFIED: 2022-08-26 19:22
 :END:
 #+NAME: EX1-2
 #+BEGIN_SRC scheme -n :eval no-export :exports both :results value
@@ -258,12 +271,12 @@ Translate the following expression into prefix form:
 * Exercise 1.3
 :PROPERTIES:
 :HASH:     -277441515328139897
-:MODIFIED: 2022-08-23 17:16
+:MODIFIED: 2022-08-26 17:38
 :END:
 ** Text
 :PROPERTIES:
-:HASH:     -277441515328139897
-:MODIFIED: 2022-08-23 17:16
+:HASH:     -314678576523364156
+:MODIFIED: 2022-08-26 17:38
 :END:
 #+NAME: square
 #+BEGIN_SRC scheme -n :eval no-export :results silent :tangle yes
@@ -272,15 +285,15 @@ Translate the following expression into prefix form:
 #+END_SRC
 ** Question
 :PROPERTIES:
-:HASH:     -277441515328139897
-:MODIFIED: 2022-08-23 17:16
+:HASH:     -1368232597066430424
+:MODIFIED: 2022-08-26 17:38
 :END:
 Define a procedure that takes three numbers as arguments and returns the sum of
 the squares of the two larger numbers.
 ** Answer
 :PROPERTIES:
-:HASH:     -277441515328139897
-:MODIFIED: 2022-08-23 17:16
+:HASH:     641045645466241455
+:MODIFIED: 2022-08-26 19:22
 :END:
 #+NAME: EX1-3
 #+BEGIN_SRC scheme -n :eval no-export :tangle yes :exports both :results value table
@@ -310,12 +323,12 @@ the squares of the two larger numbers.
 * Exercise 1.4
 :PROPERTIES:
 :HASH:     -277441515328139885
-:MODIFIED: 2022-08-23 17:16
+:MODIFIED: 2022-08-26 17:38
 :END:
 ** Question
 :PROPERTIES:
-:HASH:     -277441515328139885
-:MODIFIED: 2022-08-23 17:16
+:HASH:     2213995374373483980
+:MODIFIED: 2022-08-26 17:38
 :END:
 Observe that our model of evaluation allows for combinations whose operators are
 compound expressions. Use this observation to describe the behavior of the
@@ -329,8 +342,8 @@ following procedure:
 
 ** Answer
 :PROPERTIES:
-:HASH:     -277441515328139885
-:MODIFIED: 2022-08-23 17:16
+:HASH:     -463227238528439804
+:MODIFIED: 2022-08-26 17:38
 :END:
 This code accepts the variables ~a~ and ~b~, and if ~b~ is positive, it adds ~a~
 and ~b~. However, if ~b~ is zero or negative, it subtracts them. This decision
@@ -346,12 +359,12 @@ else: a - b
 * Exercise 1.5
 :PROPERTIES:
 :HASH:     -277441515328139777
-:MODIFIED: 2022-08-23 17:16
+:MODIFIED: 2022-08-26 17:38
 :END:
 ** Question
 :PROPERTIES:
-:HASH:     -277441515328139777
-:MODIFIED: 2022-08-23 17:16
+:HASH:     -1281780727754087902
+:MODIFIED: 2022-08-26 17:38
 :END:
 Ben Bitdiddle has invented a test to determine whether the interpreter he is
 faced with is using applicative-order evaluation or normal-order evaluation. He
@@ -380,8 +393,8 @@ determines whether to evaluate the consequent or the alternative expression.)
 
 ** Answer
 :PROPERTIES:
-:HASH:     -277441515328139777
-:MODIFIED: 2022-08-23 17:16
+:HASH:     -1574299705312589468
+:MODIFIED: 2022-08-26 17:38
 :END:
 In either type of language, src_scheme{(define (p) (p))} is an infinite
 loop. However, a normal-order language will encounter the special form, return
@@ -392,12 +405,12 @@ loop.
 * Exercise 1.6
 :PROPERTIES:
 :HASH:     -277441515328139797
-:MODIFIED: 2022-08-23 17:16
+:MODIFIED: 2022-08-26 17:38
 :END:
 ** Text code
 :PROPERTIES:
-:HASH:     -277441515328139797
-:MODIFIED: 2022-08-23 17:16
+:HASH:     251917545759368169
+:MODIFIED: 2022-08-26 17:38
 :END:
 #+NAME: abs
 #+BEGIN_SRC scheme -n :eval no-export :tangle yes :results silent
@@ -433,8 +446,8 @@ loop.
 
 ** Question
 :PROPERTIES:
-:HASH:     -277441515328139797
-:MODIFIED: 2022-08-23 17:16
+:HASH:     -755993105050517346
+:MODIFIED: 2022-08-26 17:38
 :END:
 Exercise 1.6: Alyssa P. Hacker doesn’t see why if needs to be provided as a
 special form. “Why can’t I just define it as an ordinary procedure in terms of
@@ -471,8 +484,8 @@ What happens when Alyssa attempts to use this to compute square roots? Explain.
 
 ** Answer
 :PROPERTIES:
-:HASH:     -277441515328139797
-:MODIFIED: 2022-08-23 17:16
+:HASH:     479186323337173908
+:MODIFIED: 2022-08-26 17:38
 :END:
 Using Alyssa's ~new-if~ leads to an infinite loop because the recursive call to
 ~sqrt-iter~ is evaluated before the actual call to ~new-if~. This is because
@@ -482,12 +495,12 @@ whichever branch is chosen leaves the other branches unevaluated.
 * Exercise 1.7
 :PROPERTIES:
 :HASH:     -277441515328139817
-:MODIFIED: 2022-08-23 17:16
+:MODIFIED: 2022-08-26 17:38
 :END:
 ** Text
 :PROPERTIES:
-:HASH:     -277441515328139817
-:MODIFIED: 2022-08-23 17:16
+:HASH:     1246126165912792681
+:MODIFIED: 2022-08-26 17:38
 :END:
 #+NAME: mean-square
 #+BEGIN_SRC scheme -n :eval no-export :tangle yes :results silent
@@ -496,8 +509,8 @@ whichever branch is chosen leaves the other branches unevaluated.
 #+END_SRC
 ** Question
 :PROPERTIES:
-:HASH:     -277441515328139817
-:MODIFIED: 2022-08-23 17:16
+:HASH:     1930386887386267823
+:MODIFIED: 2022-08-26 17:38
 :END:
 The good-enough? test used in computing square roots will not be very effective
 for finding the square roots of very small numbers. Also, in real computers,
@@ -510,13 +523,13 @@ the guess. Design a square-root procedure that uses this kind of end test. Does
 this work better for small and large numbers?
 ** Diary
 :PROPERTIES:
-:HASH:     -277441515328139817
-:MODIFIED: 2022-08-23 17:34
+:HASH:     -1788218004225908716
+:MODIFIED: 2022-08-26 17:38
 :END:
 *** Solving
 :PROPERTIES:
-:HASH:     -277441515328139817
-:MODIFIED: 2022-08-23 17:34
+:HASH:     270345950499082105
+:MODIFIED: 2022-08-26 19:22
 :END:
 My original answer was this, which compares the previous iteration until the new
 and old are within an arbitrary \(dx\).
@@ -578,13 +591,13 @@ reaches the precision limit of the system:
 
 *** Imroving (sqrt) by avoiding extra (improve) call
 :PROPERTIES:
-:HASH:     -277441515328139817
-:MODIFIED: 2022-08-23 17:34
+:HASH:     1583219289118995623
+:MODIFIED: 2022-08-26 17:38
 :END:
 **** Non-optimized
 :PROPERTIES:
-:HASH:     -277441515328139817
-:MODIFIED: 2022-08-23 17:34
+:HASH:     1567928397053724282
+:MODIFIED: 2022-08-26 17:38
 :END:
 #+BEGIN_SRC scheme -n :eval no-export :tangle sqrt-bench.scheme :exports both :results output
 (use-modules (ice-9 format))
@@ -609,8 +622,8 @@ reaches the precision limit of the system:
 
 **** Optimized
 :PROPERTIES:
-:HASH:     -277441515328139817
-:MODIFIED: 2022-08-23 17:34
+:HASH:     1639397556755738236
+:MODIFIED: 2022-08-26 17:38
 :END:
 #+BEGIN_SRC scheme -n :noeval :tangle sqrt-bench2.scheme :exports both :results output
 (use-modules (ice-9 format))
@@ -634,8 +647,8 @@ reaches the precision limit of the system:
 #+end_src
 **** Benchmark results
 :PROPERTIES:
-:HASH:     -277441515328139817
-:MODIFIED: 2022-08-23 17:34
+:HASH:     -719343061954415580
+:MODIFIED: 2022-08-26 17:38
 :END:
 
 | Unoptimized | 4731.30 |
@@ -643,8 +656,8 @@ reaches the precision limit of the system:
 
 ** Answer
 :PROPERTIES:
-:HASH:     -277441515328139817
-:MODIFIED: 2022-08-23 17:16
+:HASH:     -1900347560999622200
+:MODIFIED: 2022-08-26 19:22
 :END:
 The current method has decreasing accuracy with smaller numbers. Notice the
 steady divergence from correct answers here (should be decreasing powers of
@@ -712,12 +725,12 @@ So, my definition of ~sqrt~:
 * Exercise 1.8
 :PROPERTIES:
 :HASH:     -277441515328139837
-:MODIFIED: 2022-08-23 17:16
+:MODIFIED: 2022-08-26 17:38
 :END:
 ** Question
 :PROPERTIES:
-:HASH:     -277441515328139837
-:MODIFIED: 2022-08-23 17:16
+:HASH:     999585118044777738
+:MODIFIED: 2022-08-26 17:38
 :END:
 Newton’s method for cube roots is based on the fact that if y is an
 approximation to the cube root of x, then a better approximation is given by the
@@ -730,8 +743,8 @@ procedure. (In 1.3.4 we will see how to implement Newton’s method in general a
 an abstraction of these square-root and cube-root procedures.)
 ** Diary
 :PROPERTIES:
-:HASH:     -277441515328139837
-:MODIFIED: 2022-08-23 17:16
+:HASH:     337697419477148821
+:MODIFIED: 2022-08-26 19:22
 :END:
 My first attempt works, but needs an arbitrary limit to stop infinite loops:
 #+NAME: EX1-8-A1
@@ -774,8 +787,8 @@ forever unless you initialize your guess with a slightly different value, so
 let's do 1.1 instead.
 ** Answer
 :PROPERTIES:
-:HASH:     -277441515328139837
-:MODIFIED: 2022-08-23 17:16
+:HASH:     162143204823063972
+:MODIFIED: 2022-08-26 19:22
 :END:
 #+NAME: cbrt
 #+BEGIN_SRC scheme -n :eval no-export :tangle yes :exports code :results silent
@@ -815,12 +828,12 @@ let's do 1.1 instead.
 * Exercise 1.9
 :PROPERTIES:
 :HASH:     -277441515328140209
-:MODIFIED: 2022-08-23 17:16
+:MODIFIED: 2022-08-26 17:38
 :END:
 ** Question
 :PROPERTIES:
-:HASH:     -277441515328140209
-:MODIFIED: 2022-08-23 17:16
+:HASH:     277977606674766450
+:MODIFIED: 2022-08-26 17:38
 :END:
 Each of the following two procedures defines a method for adding two positive
 integers in terms of the procedures inc, which increments its argument by 1, and
@@ -842,15 +855,15 @@ Using the substitution model, illustrate the process generated by each procedure
 in evaluating src_scheme{(+ 4 5)}. Are these processes iterative or recursive?
 ** Answer
 :PROPERTIES:
-:HASH:     -277441515328140209
-:MODIFIED: 2022-08-23 17:16
+:HASH:     1251757604301525519
+:MODIFIED: 2022-08-26 17:38
 :END:
 The first procedure is recursive, while the second is iterative though
 tail-recursion.
 *** recursive procedure
 :PROPERTIES:
-:HASH:     -277441515328140209
-:MODIFIED: 2022-08-23 17:16
+:HASH:     -76625388089557495
+:MODIFIED: 2022-08-26 17:38
 :END:
 #+BEGIN_SRC scheme -n :noeval :tangle no
 (+ 4 5)
@@ -867,8 +880,8 @@ tail-recursion.
 
 *** iterative procedure
 :PROPERTIES:
-:HASH:     -277441515328140209
-:MODIFIED: 2022-08-23 17:16
+:HASH:     -29123701382022959
+:MODIFIED: 2022-08-26 17:38
 :END:
 #+BEGIN_SRC scheme -n :noeval :tangle no
 (+ 4 5)
@@ -882,12 +895,12 @@ tail-recursion.
 * Exercise 1.10
 :PROPERTIES:
 :HASH:     -277441515348153693
-:MODIFIED: 2022-08-23 17:16
+:MODIFIED: 2022-08-26 17:38
 :END:
 ** Question
 :PROPERTIES:
-:HASH:     -277441515348153693
-:MODIFIED: 2022-08-23 17:16
+:HASH:     1209263294553448284
+:MODIFIED: 2022-08-26 19:22
 :END:
 The following procedure computes a mathematical function called Ackermann’s
 function.
@@ -936,13 +949,13 @@ src_scheme{(k n)} computes \(5n^2\).
 
 ** Answer
 :PROPERTIES:
-:HASH:     -277441515348153693
-:MODIFIED: 2022-08-23 17:16
+:HASH:     192242311344818076
+:MODIFIED: 2022-08-26 17:38
 :END:
 *** ~f~
 :PROPERTIES:
-:HASH:     -277441515348153693
-:MODIFIED: 2022-08-23 17:16
+:HASH:     -1387766314449222100
+:MODIFIED: 2022-08-26 19:22
 :END:
 
 #+BEGIN_SRC scheme -n :eval no-export :tangle no :exports both :results value table
@@ -966,8 +979,8 @@ f(n)=2n
 \]
 *** ~g~
 :PROPERTIES:
-:HASH:     -277441515348153693
-:MODIFIED: 2022-08-23 17:16
+:HASH:     422281891619198959
+:MODIFIED: 2022-08-26 19:22
 :END:
 
 #+BEGIN_SRC scheme -n :eval no-export :tangle no :exports both :results value table
@@ -994,8 +1007,8 @@ g(n)=2^n
 
 *** ~h~
 :PROPERTIES:
-:HASH:     -277441515348153693
-:MODIFIED: 2022-08-23 17:16
+:HASH:     1127748076874559629
+:MODIFIED: 2022-08-26 19:22
 :END:
 
 #+BEGIN_SRC scheme -n :eval no-export :tangle no :exports both :results value table
@@ -1027,12 +1040,12 @@ h(n)={}^{n}2
 * Exercise 1.11
 :PROPERTIES:
 :HASH:     -277441515348153745
-:MODIFIED: 2022-08-23 17:16
+:MODIFIED: 2022-08-26 17:38
 :END:
 ** Question
 :PROPERTIES:
-:HASH:     -277441515348153745
-:MODIFIED: 2022-08-23 17:16
+:HASH:     -196000837748389465
+:MODIFIED: 2022-08-26 17:38
 :END:
 A function \(f\) is defined by the rule that:
 \[
@@ -1049,13 +1062,13 @@ Write a procedure that computes \(f\) by means of a recursive process. Write a
 procedure that computes \(f\) by means of an iterative process.
 ** Answer
 :PROPERTIES:
-:HASH:     -277441515348153745
-:MODIFIED: 2022-08-23 17:16
+:HASH:     192242311344818076
+:MODIFIED: 2022-08-26 17:38
 :END:
 *** Recursive
 :PROPERTIES:
-:HASH:     -277441515348153745
-:MODIFIED: 2022-08-23 17:16
+:HASH:     216761209183713208
+:MODIFIED: 2022-08-26 19:22
 :END:
 #+NAME: EX1-11-fr
 #+BEGIN_SRC scheme -n :eval no-export :tangle no :exports code :results silent
@@ -1083,13 +1096,13 @@ procedure that computes \(f\) by means of an iterative process.
 
 *** Iterative
 :PROPERTIES:
-:HASH:     -277441515348153745
-:MODIFIED: 2022-08-23 17:16
+:HASH:     1564580900512644637
+:MODIFIED: 2022-08-26 17:38
 :END:
 **** Attempt 1
 :PROPERTIES:
-:HASH:     -277441515348153745
-:MODIFIED: 2022-08-23 17:16
+:HASH:     1777610143272671295
+:MODIFIED: 2022-08-26 19:22
 :END:
 #+NAME: EX1-11-fi
 #+BEGIN_SRC scheme -n :eval no-export :tangle no :exports code :results silent
@@ -1130,8 +1143,8 @@ It works but it seems wasteful.
 
 **** Attempt 2
 :PROPERTIES:
-:HASH:     -277441515348153745
-:MODIFIED: 2022-08-23 17:16
+:HASH:     150000914104361530
+:MODIFIED: 2022-08-26 19:22
 :END:
 #+NAME: EX1-11-fi2
 #+BEGIN_SRC scheme -n :eval no-export :tangle no :exports code :results silent
@@ -1171,12 +1184,12 @@ I like that better.
 * Exercise 1.12
 :PROPERTIES:
 :HASH:     -277441515348153733
-:MODIFIED: 2022-08-23 17:16
+:MODIFIED: 2022-08-26 17:38
 :END:
 ** Question
 :PROPERTIES:
-:HASH:     -277441515348153733
-:MODIFIED: 2022-08-23 17:16
+:HASH:     -2045985635038643761
+:MODIFIED: 2022-08-26 17:38
 :END:
 The following pattern of numbers is called Pascal’s triangle.
 
@@ -1187,8 +1200,8 @@ triangle is the sum of the two numbers above it. Write a procedure that
 computes elements of Pascal’s triangle by means of a recursive process.
 ** Answer
 :PROPERTIES:
-:HASH:     -277441515348153733
-:MODIFIED: 2022-08-23 17:16
+:HASH:     -16768084855213394
+:MODIFIED: 2022-08-26 19:22
 :END:
 I guess I'll rotate the triangle 45 degrees to make it the top-left corner of an
 infinite spreadsheet.
@@ -1235,12 +1248,12 @@ The test code was much harder to write than the actual solution.
 * Exercise 1.13
 :PROPERTIES:
 :HASH:     -277441515348153785
-:MODIFIED: 2022-08-23 17:16
+:MODIFIED: 2022-08-26 17:38
 :END:
 ** Question
 :PROPERTIES:
-:HASH:     -277441515348153785
-:MODIFIED: 2022-08-23 17:16
+:HASH:     1078714917340889481
+:MODIFIED: 2022-08-26 17:38
 :END:
 Prove that \(\text{Fib}(n)\) is the closest integer to
 \(\frac{ϕ^n}{\sqrt{5}}\) where Phi is \(\frac{1 + \sqrt{5}}{2}\). Hint: let
@@ -1253,16 +1266,16 @@ Fibonacci numbers to prove that
 
 ** Answer
 :PROPERTIES:
-:HASH:     -277441515348153785
-:MODIFIED: 2022-08-23 17:16
+:HASH:     -612114531098695071
+:MODIFIED: 2022-08-26 17:38
 :END:
 I don't know how to write a proof yet, but I can make functions to
 demonstrate it.
 
 *** Fibonacci number generator
 :PROPERTIES:
-:HASH:     -277441515348153785
-:MODIFIED: 2022-08-23 17:16
+:HASH:     548767840489457177
+:MODIFIED: 2022-08-26 17:38
 :END:
 #+NAME: fib-iter
 #+BEGIN_SRC scheme -n :eval no-export :tangle yes :exports code :results silent
@@ -1279,8 +1292,8 @@ demonstrate it.
 #+END_SRC
 *** Various algorithms relating to the question
 :PROPERTIES:
-:HASH:     -277441515348153785
-:MODIFIED: 2022-08-23 17:16
+:HASH:     1588643827220100164
+:MODIFIED: 2022-08-26 19:22
 :END:
 #+NAME: fib-phi
 #+BEGIN_SRC scheme -n :eval no-export :tangle yes :exports code :results silent
@@ -1359,7 +1372,7 @@ plot data using 1:2 with lines title 'Fib(n) minus Fib-phi(n)'
 * Exercise 1.14
 :PROPERTIES:
 :HASH:     648599674905962762
-:MODIFIED: 2022-08-23 17:16
+:MODIFIED: 2022-08-26 17:38
 :END:
 Below is the default version of the count-change function. I'll be aggressively
 modifying it in order to get a graph out of it.
@@ -1388,15 +1401,15 @@ modifying it in order to get a graph out of it.
 #+end_src
 ** Question
 :PROPERTIES:
-:HASH:     648599674905962762
-:MODIFIED: 2022-08-23 17:16
+:HASH:     -1879862839264136989
+:MODIFIED: 2022-08-26 17:38
 :END:
 Draw the tree illustrating the process generated by the count-change procedure
 of 1.2.2 in making change for 11 cents.
 ** Answer
 :PROPERTIES:
-:HASH:     648599674905962762
-:MODIFIED: 2022-08-23 17:16
+:HASH:     -15858471323431586
+:MODIFIED: 2022-08-26 19:22
 :END:
 I want to generate this graph algorithmically.
 #+NAME: count-change-graphviz
@@ -1492,16 +1505,16 @@ $data
 
 ** Question 2
 :PROPERTIES:
-:HASH:     648599674905962762
-:MODIFIED: 2022-08-23 17:16
+:HASH:     2216178561340014015
+:MODIFIED: 2022-08-26 17:38
 :END:
 What are the orders of growth of the space and number of steps used by this
 process as the amount to be changed increases?
 
 ** Answer 2
 :PROPERTIES:
-:HASH:     648599674905962762
-:MODIFIED: 2022-08-23 17:16
+:HASH:     -1808380878872128158
+:MODIFIED: 2022-08-26 19:22
 :END:
 Let's look at this via the number of function calls needed for value ~n~. Instead
 of returning an integer, I'll return a pair where ~car~ is the number of ways to
@@ -1648,12 +1661,12 @@ now.
 * Exercise 1.15
 :PROPERTIES:
 :HASH:     -277441515348153793
-:MODIFIED: 2022-08-23 17:16
+:MODIFIED: 2022-08-26 17:38
 :END:
 ** Question 1
 :PROPERTIES:
-:HASH:     -277441515348153793
-:MODIFIED: 2022-08-23 17:34
+:HASH:     2255669517659272649
+:MODIFIED: 2022-08-26 17:38
 :END:
 The sine of an angle (specified in radians) can be computed by making use of the
 approximation \(\sin x ≈ x\) if \(x\) is sufficiently small, and the
@@ -1676,8 +1689,8 @@ How many times is the procedure ~p~ applied when src_scheme{(sine 12.15)} is eva
 
 ** Answer 1
 :PROPERTIES:
-:HASH:     -277441515348153793
-:MODIFIED: 2022-08-23 17:34
+:HASH:     -1733408443974711317
+:MODIFIED: 2022-08-26 19:22
 :END:
 
 Let's find out!
@@ -1708,8 +1721,8 @@ Let's find out!
 
 ** Question 2
 :PROPERTIES:
-:HASH:     -277441515348153793
-:MODIFIED: 2022-08-23 17:34
+:HASH:     -463878967800877866
+:MODIFIED: 2022-08-26 17:38
 :END:
 What is the order of growth in space and number of steps (as a function of ~a~)
 used by the process generated by the sine procedure when src_scheme{(sine a)} is
@@ -1717,8 +1730,8 @@ evaluated?
 
 ** Answer 2
 :PROPERTIES:
-:HASH:     -277441515348153793
-:MODIFIED: 2022-08-23 17:34
+:HASH:     -1975797722825174304
+:MODIFIED: 2022-08-26 19:22
 :END:
 #+NAME: 1-15-tab1
 #+BEGIN_SRC scheme -n :eval no-export :tangle no :exports both :results silent value table
@@ -1869,12 +1882,12 @@ plot 'Ex15/sine-bench.dat' using 1:2 with fillsteps title 'time to execute', \
 * Exercise 1.16
 :PROPERTIES:
 :HASH:     -277441515348153813
-:MODIFIED: 2022-08-23 17:16
+:MODIFIED: 2022-08-26 17:38
 :END:
 ** Text
 :PROPERTIES:
-:HASH:     -277441515348153813
-:MODIFIED: 2022-08-25 19:45
+:HASH:     262200868809106071
+:MODIFIED: 2022-08-26 17:38
 :END:
 #+NAME: txt-expt
 #+BEGIN_SRC scheme -n :eval no-export :tangle yes :exports code :results silent
@@ -1901,8 +1914,8 @@ plot 'Ex15/sine-bench.dat' using 1:2 with fillsteps title 'time to execute', \
 #+end_src
 ** Question
 :PROPERTIES:
-:HASH:     -277441515348153813
-:MODIFIED: 2022-08-23 17:16
+:HASH:     -2135198250672614643
+:MODIFIED: 2022-08-26 17:38
 :END:
 Design a procedure that evolves an iterative exponentiation process that uses
 successive squaring and uses a logarithmic number of steps, as does fast-expt.
@@ -1916,8 +1929,8 @@ unchanged from state to state is a powerful way to think about the design of
 iterative algorithms.)
 ** Diary
 :PROPERTIES:
-:HASH:     -277441515348153813
-:MODIFIED: 2022-08-25 19:45
+:HASH:     -2305672157661715319
+:MODIFIED: 2022-08-26 19:22
 :END:
 First I made this program which tries to use a false equivalence:
 \[ab^2 = (a + 1)b^{n - 1}\]
@@ -1958,8 +1971,8 @@ Here's what the internal state looks like during \(2^6\) (correct answer is 64):
 
 ** Answer
 :PROPERTIES:
-:HASH:     -277441515348153813
-:MODIFIED: 2022-08-25 19:45
+:HASH:     239739561694856155
+:MODIFIED: 2022-08-26 19:22
 :END:
 There are two key transforms to a faster algorithm. The first was already shown
 in the text:
@@ -2016,12 +2029,12 @@ The solution essentially follows this logic:
 * Exercise 1.17
 :PROPERTIES:
 :HASH:     -277441515348153833
-:MODIFIED: 2022-08-25 19:45
+:MODIFIED: 2022-08-26 17:38
 :END:
 ** Question
 :PROPERTIES:
-:HASH:     -277441515348153833
-:MODIFIED: 2022-08-25 19:48
+:HASH:     1439358947760226713
+:MODIFIED: 2022-08-26 17:38
 :END:
 The exponentiation algorithms in this section are based on performing
 exponentiation by means of repeated multiplication. In a similar way, one can
@@ -2044,8 +2057,8 @@ of steps.
 
 ** Answer
 :PROPERTIES:
-:HASH:     -277441515348153833
-:MODIFIED: 2022-08-25 19:48
+:HASH:     910143068084876234
+:MODIFIED: 2022-08-26 19:22
 :END:
 #+NAME: fast-mult-rec
 #+BEGIN_SRC scheme -n :eval no-export :tangle yes :exports code :results silent
@@ -2086,12 +2099,12 @@ Proof it works:
 * Exercise 1.18
 :PROPERTIES:
 :HASH:     -277441515348153853
-:MODIFIED: 2022-08-25 19:45
+:MODIFIED: 2022-08-26 17:38
 :END:
 ** Question
 :PROPERTIES:
-:HASH:     -277441515348153853
-:MODIFIED: 2022-08-25 19:49
+:HASH:     89617576442465465
+:MODIFIED: 2022-08-26 17:38
 :END:
 Using the results of [[*Exercise 1.16][Exercise 1.16]] and [[*Exercise 1.17][Exercise 1.17]], devise a procedure that
 generates an iterative process for multiplying two integers in terms of adding,
@@ -2099,12 +2112,12 @@ doubling, and halving and uses a logarithmic number of steps.
 ** Diary
 :PROPERTIES:
 :HASH:     -1788218004225908716
-:MODIFIED: 2022-08-25 19:45
+:MODIFIED: 2022-08-26 17:38
 :END:
 *** Comparison benchmarks:
 :PROPERTIES:
 :HASH:     -406723858729605953
-:MODIFIED: 2022-08-25 19:57
+:MODIFIED: 2022-08-26 17:38
 :END:
 
 #+BEGIN_SRC scheme -n :tangle Ex1-18bench.scheme :exports code :results silent
@@ -2126,7 +2139,7 @@ So the iterative version takes 0.84 times less to do \(32 \times 32\).
 *** Hall of shame
 :PROPERTIES:
 :HASH:     -1459603659927941339
-:MODIFIED: 2022-08-25 19:46
+:MODIFIED: 2022-08-26 17:38
 :END:
 Some of my /very/ incorrect ideas:
 \[ab = (a+1)(b-1)\]
@@ -2134,8 +2147,8 @@ Some of my /very/ incorrect ideas:
 \[ab+c = \big(a(b-1)+(b+c)\big)\]
 ** Answer
 :PROPERTIES:
-:HASH:     -1831088607246953991
-:MODIFIED: 2022-08-25 19:57
+:HASH:     -1831088604025728519
+:MODIFIED: 2022-08-26 19:22
 :END:
 #+NAME: fast-mult-iter
 #+BEGIN_SRC scheme -n :eval no-export :tangle yes :exports code :results silent
@@ -2175,12 +2188,12 @@ Some of my /very/ incorrect ideas:
 * Exercise 1.19
 :PROPERTIES:
 :HASH:     -277441515348154865
-:MODIFIED: 2022-08-25 21:28
+:MODIFIED: 2022-08-26 17:38
 :END:
 ** Question
 :PROPERTIES:
-:HASH:     -277441515348154865
-:MODIFIED: 2022-08-26 17:24
+:HASH:     -697293996410977432
+:MODIFIED: 2022-08-26 17:38
 :END:
 There is a clever algorithm for computing the Fibonacci numbers in a logarithmic
 number of steps. Recall the transformation of the state variables a and b in the
@@ -2222,8 +2235,8 @@ in a logarithmic number of steps:
 
 ** Diary
 :PROPERTIES:
-:HASH:     -277441515348154865
-:MODIFIED: 2022-08-26 17:24
+:HASH:     -10565556827259663
+:MODIFIED: 2022-08-26 17:38
 :END:
 More succinctly put:
 
@@ -2250,8 +2263,8 @@ And in the case of my higher-level function I write later:
 
 ** Answer
 :PROPERTIES:
-:HASH:     -277441515348154865
-:MODIFIED: 2022-08-26 17:25
+:HASH:     2063757385951579924
+:MODIFIED: 2022-08-26 19:22
 :END:
 #+NAME: fib-iter-T
 #+BEGIN_SRC scheme -n :eval no-export :tangle yes :exports code :results silent
