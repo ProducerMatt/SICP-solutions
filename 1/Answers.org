@@ -2295,26 +2295,29 @@ And in the case of my higher-level function I write later:
 #+END_SRC
 
 #+NAME: fib-iter-test
-#+BEGIN_SRC scheme -n :eval no-export :tangle no :exports results :results value table :colnames yes
+#+BEGIN_SRC scheme -n :eval no-export :tangle no :exports results :results output table :colnames yes
 (use-srfis '(1))
 <<fib-iter-T>>
+<<print-table>>
 (let* ((l (cdr (iota 10)))
        (fr (map fib-rec l))
        (fi (map fib l)))
-  (cons (list "n" "fib-rec" "fib-iter")
-        (zip l fr fi)))
+  (print-table (cons (list "n" "fib-rec" "fib-iter")
+                     (zip l fr fi))
+               #:colnames #t))
 #+END_SRC
 
-#+RESULTS[cb0486d64121e11bc67b9d79dc8831099f46c360]: fib-iter-test
+#+RESULTS[30d4713e3cba0984d5cc3e0b400adc130f553a29]: fib-iter-test
 :results:
-| n | fib-rec | fib-iter |
-| 1 |       1 |        1 |
-| 2 |       1 |        1 |
-| 3 |       2 |        2 |
-| 4 |       3 |        3 |
-| 5 |       5 |        5 |
-| 6 |       8 |        8 |
-| 7 |      13 |       13 |
-| 8 |      21 |       21 |
-| 9 |      34 |       34 |
+| "n" | "fib-rec" | "fib-iter" |
+|-----+-----------+------------|
+|   1 |         1 |          1 |
+|   2 |         1 |          1 |
+|   3 |         2 |          2 |
+|   4 |         3 |          3 |
+|   5 |         5 |          5 |
+|   6 |         8 |          8 |
+|   7 |        13 |         13 |
+|   8 |        21 |         21 |
+|   9 |        34 |         34 |
 :end:
