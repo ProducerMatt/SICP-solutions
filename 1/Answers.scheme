@@ -508,3 +508,10 @@
                         q
                         (- count 1)))))
 ;; fib-iter-T ends here
+
+;; [[file:Answers.org::*Text][Text:1]]
+(define (gcd a b)
+  (if (= b 0)
+      a
+      (gcd b (remainder a b))))
+;; Text:1 ends here

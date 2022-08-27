@@ -2364,3 +2364,124 @@ the attached list. so src_scheme{(T 0 1)} returns a fib function.
 |   8 |        21 |         21 |
 |   9 |        34 |         34 |
 :end:
+
+* Exercise 1.20
+** Text
+#+BEGIN_SRC scheme -n :eval no-export :tangle yes :exports code :results silent
+(define (gcd a b)
+  (if (= b 0)
+      a
+      (gcd b (remainder a b))))
+#+END_SRC
+** Question
+The process that a procedure generates is of course dependent on the rules used
+by the interpreter. As an example, consider the iterative ~gcd~ procedure given
+above. Suppose we were to interpret this procedure using normal-order
+evaluation, as discussed in 1.1.5. (The normal-order-evaluation rule for ~if~ is
+described in Exercise 1.5.) Using the substitution method (for normal order),
+illustrate the process generated in evaluating src_scheme{(gcd 206 40)} and indicate the
+remainder operations that are actually performed. How many remainder operations
+are actually performed in the normal-order evaluation of src_scheme{(gcd 206 40)}? In the
+applicative-order evaluation?
+
+** Answer
+I struggled to understand this, but the key here is that normal-order evaluation
+causes the unevaluated expressions to be duplicated, meaning they get evaluated
+multiple times.
+
+*** Applicative order
+#+begin_src scheme
+call (gcd 206 40)
+(if)
+(gcd 40 (remainder 206 40))
+eval remainder before call
+call (gcd 40 6)
+(if)
+(gcd 6 (remainder 40 6))
+eval remainder before call
+call (gcd 6 4)
+(if)
+(gcd 2 (remainder 4 2))
+eval remainder before call
+call (gcd 2 0)
+(if)
+;; => 2
+#+end_src
+
+#+begin_src scheme
+;; call gcd
+(gcd 206 40)
+
+;; eval conditional
+(if (= 40 0)
+    206
+    (gcd 40 (remainder 206 40)))
+
+;; recurse
+(gcd 40 (remainder 206 40))
+
+; encounter conditional
+(if (= (remainder 206 40) 0)
+    40
+    (gcd (remainder 206 40)
+         (remainder 40 (remainder 206 40))))
+
+; evaluate 1 remainder
+(if (= 6 0)
+    40
+    (gcd (remainder 206 40)
+         (remainder 40 (remainder 206 40))))
+
+; recurse
+(gcd (remainder 206 40)
+     (remainder 40 (remainder 206 40)))
+
+; encounter conditional
+(if (= (remainder 40 (remainder 206 40)) 0)
+    (remainder 206 40)
+    (gcd (remainder 40 (remainder 206 40))
+         (remainder (remainder 206 40) (remainder 40 (remainder 206 40)))))
+
+; eval 2 remainder
+(if (= 4 0)
+    (remainder 206 40)
+    (gcd (remainder 40 (remainder 206 40))
+         (remainder (remainder 206 40) (remainder 40 (remainder 206 40)))))
+
+; recurse
+(gcd (remainder 40 (remainder 206 40))
+     (remainder (remainder 206 40) (remainder 40 (remainder 206 40))))
+
+; encounter conditional
+(if (= (remainder (remainder 206 40) (remainder 40 (remainder 206 40))) 0)
+    (remainder 40 (remainder 206 40))
+    (gcd (remainder (remainder 206 40) (remainder 40 (remainder 206 40)))
+         (remainder (remainder 40 (remainder 206 40)) (remainder (remainder 206 40) (remainder 40 (remainder 206 40))))))
+
+; eval 4 remainders
+(if (= 2 0)
+    (remainder 40 (remainder 206 40))
+    (gcd (remainder (remainder 206 40) (remainder 40 (remainder 206 40)))
+         (remainder (remainder 40 (remainder 206 40)) (remainder (remainder 206 40) (remainder 40 (remainder 206 40))))))
+
+; recurse
+(gcd (remainder (remainder 206 40) (remainder 40 (remainder 206 40)))
+     (remainder (remainder 40 (remainder 206 40)) (remainder (remainder 206 40) (remainder 40 (remainder 206 40)))))
+
+; encounter conditional
+(if (= (remainder (remainder 40 (remainder 206 40)) (remainder (remainder 206 40) (remainder 40 (remainder 206 40)))) 0)
+    (remainder (remainder 206 40) (remainder 40 (remainder 206 40)))
+    (gcd (remainder (remainder 40 (remainder 206 40)) (remainder (remainder 206 40) (remainder 40 (remainder 206 40)))) (remainder a  (remainder (remainder 40 (remainder 206 40)) (remainder (remainder 206 40) (remainder 40 (remainder 206 40)))))))
+
+; eval 7 remainders
+(if (= 0 0)
+    (remainder (remainder 206 40) (remainder 40 (remainder 206 40)))
+    (gcd (remainder (remainder 40 (remainder 206 40)) (remainder (remainder 206 40) (remainder 40 (remainder 206 40)))) (remainder a  (remainder (remainder 40 (remainder 206 40)) (remainder (remainder 206 40) (remainder 40 (remainder 206 40)))))))
+
+; eval 4 remainders
+(remainder (remainder 206 40) (remainder 40 (remainder 206 40)))
+; => 2
+#+end_src
+
+So, in normal-order eval, remainder is called 18 times, while in applicative order
+it's called 5 times.
