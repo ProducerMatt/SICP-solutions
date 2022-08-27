@@ -463,6 +463,25 @@
   (iter a b 0))
 ;; fast-mult-iter ends here
 
+;; [[file:Answers.org::T-func][T-func]]
+(define (T p q)
+  (λ (a b)
+    (cons (+ (* b q) (* a q) (* a p))
+          (+ (* b p) (* a q)))))
+
+(define T-fib
+  (T 0 1))
+
+;; Repeatedly apply T functions:
+(define (Tr f n)
+  (Tr-iter f n 0 1))
+(define (Tr-iter f n a b)
+  (if (= n 0)
+      a
+      (let ((l (f a b)))
+        (Tr-iter f (- n 1) (car l) (cdr l)))))
+;; T-func ends here
+
 ;; [[file:Answers.org::fib-iter-T][fib-iter-T]]
 (define (fib-rec n)
   (cond ((= n 0) 0)
