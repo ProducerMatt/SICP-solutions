@@ -26,7 +26,7 @@
 #+LATEX_COMPILER: xelatex
 #+LATEX_HEADER: \usepackage{fontspec}
 #+LATEX_HEADER: \setmonofont[Mapping=tex-text,Scale=MatchLowercase]{FiraMono-Regular}
-#+LATEX_HEADER: \usepackage[cache=false]{minted}
+#+LATEX_HEADER: \usepackage[cache=true]{minted}
 #+LATEX_HEADER: \usemintedstyle{colorful}
 #+LATEX_HEADER: \listfiles
 # listfiles causes latex to make a list of all files used during processing
