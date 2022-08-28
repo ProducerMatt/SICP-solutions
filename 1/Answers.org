@@ -2520,3 +2520,211 @@ following numbers: 199, 1999, 19999.
 :results:
 | 199 | 1999 | 7 |
 :end:
+
+* Exercise 1.22
+** Question
+Most Lisp implementations include a primitive called runtime that returns an
+integer that specifies the amount of time the system has been running (measured,
+for example, in microseconds). The following timed-prime-test procedure, when
+called with an integer n, prints n and checks to see if n is prime. If n is
+prime, the procedure prints three asterisks followed by the amount of time used
+in performing the test.
+#+NAME: prime-smallest-divisor
+#+BEGIN_SRC scheme -n :eval no-export :tangle yes :exports code :results output
+<<find-divisor-txt>>
+(define (prime? n)
+  (= n (smallest-divisor n)))
+#+END_SRC
+#+NAME: timed-prime-test-txt
+#+BEGIN_SRC scheme -n :eval no-export :tangle yes :exports code :results output
+<<prime-smallest-divisor>>
+(define (timed-prime-test n)
+  (newline)
+  (display n) ;; Guile compatible \downarrow
+  (start-prime-test n (get-internal-run-time)))
+(define (start-prime-test n start-time)
+  (if (prime? n)
+      (begin
+        (report-prime (- (get-internal-run-time) 
+                       start-time))
+        n)
+      #f))
+(define (report-prime elapsed-time)
+  (display " *** ")
+  (display elapsed-time))
+#+END_SRC
+
+Using this procedure, write a procedure search-for-primes that checks the
+primality of consecutive odd integers in a specified range. Use your procedure
+to find the three smallest primes larger than 1000; larger than 10,000; larger
+than 100,000; larger than 1,000,000. Note the time needed to test each prime.
+Since the testing algorithm has order of growth of \(\Theta(\sqrt{n})\), you
+should expect that testing for primes around 10,000 should take about
+\(\sqrt{10}\) times as long as testing for primes around 1000. Do your timing
+data bear this out? How well do the data for 100,000 and 1,000,000 support the
+\(\Theta(\sqrt{n})\) prediction? Is your result compatible with the notion that
+programs on your machine run in time proportional to the number of steps
+required for the computation?
+
+** Answer
+*** Part 1
+So this question is a little funky, because modern machines are so fast that the
+single-run times can seriously vary.
+
+#+NAME: search-primes-basic
+#+BEGIN_SRC scheme -n :eval no-export :tangle no :exports both :results output
+<<timed-prime-test-txt>>
+(define (search-for-primes minimum goal)
+  (define m (if (even? minimum)
+                (+ minimum 1)
+                (minimum)))
+  (search-for-primes-iter m '() goal))
+(define (search-for-primes-iter n lst goal)
+  (if (= goal 0)
+      lst
+      (let ((x (timed-prime-test n)))
+        (if (not (equal? x #f))
+            (search-for-primes-iter (+ n 2) (cons x lst) (- goal 1))
+            (search-for-primes-iter (+ n 2) lst goal)))))
+#+END_SRC
+
+#+BEGIN_SRC scheme -n :eval no-export :tangle no :exports both :results output
+<<search-primes-basic>>
+(let ((lt1000-1 (search-for-primes 1000 3)))
+  (list "Primes > 1000" lt1000-1))
+#+END_SRC
+
+#+RESULTS[45f881dc19262a7fda581492404471d2ff4bb7ef]:
+:results:
+
+1001
+1003
+1005
+1007
+1009 *** 1926
+1011
+1013 *** 1427
+1015
+1017
+1019 *** 1382
+:end:
+
+There's proof it works. And here are the answers to the question:
+
+#+BEGIN_SRC scheme -n :eval no-export :tangle no :exports both :results value table :rownames yes
+<<search-primes-basic>>
+(let ((lt1000-1 (search-for-primes 1000 3))
+      (lt10000-1 (search-for-primes 10000 3))
+      (lt100000-1 (search-for-primes 100000 3))
+      (lt100000000-1 (search-for-primes 1000000 3)))
+  (list
+   (list "Primes > 1000" (reverse lt1000-1))
+   (list "Primes > 10000" (reverse lt10000-1))
+   (list "Primes > 100000" (reverse lt100000-1))
+   (list "Primes > 100000000" (reverse lt100000000-1))
+   ))
+#+END_SRC
+
+#+RESULTS[1591ff4ac17eefbd2a343012149c10f419199b20]:
+:results:
+| Primes > 1000      | (1009 1013 1019)          |
+| Primes > 10000     | (10007 10009 10037)       |
+| Primes > 100000    | (100003 100019 100043)    |
+| Primes > 100000000 | (1000003 1000033 1000037) |
+:end:
+
+*** Part 2
+Repeatedly re-running, it I see it occasionally jump to twice the time. I'm not
+happy with this, so I'm going to refactor to use the ~mattbench2~ utility from
+the root of the project folder.
+
+#+NAME: mattbench2
+#+begin_src scheme :tangle yes :exports code :eval no-export :results output
+(define (mattbench2 f n)
+  ;; Executes "f" for n times, and returns how long it took.
+  ;; f is a lambda that takes no arguments, a.k.a. a "thunk"
+  
+  ;; Returns a dotted pair with car(last execution results) and cdr(time taken divided by iterations n)
+
+  (define (time-getter) (get-internal-run-time))
+  (define start-time (time-getter))
+  (define (how-long) (- (time-getter) start-time))
+
+  (define (iter i)
+    (f)
+    (if (<= i 0)
+        (f) ;; return the results of the function
+        (iter (- i 1))))
+
+  (list (iter n) ;; result of last call of f
+        (/ (how-long) (* n 1.0))));; Divide by iterations so changed n has no effect
+#+end_src
+
+I'm going to get some more precise times. First, I need a prime searching variant that doesn't bother benchmarking. This will call ~prime?~, which will be bound later since we'll be trying different methods.
+#+NAME: search-for-primes-untimed
+#+BEGIN_SRC scheme -n :eval no-export :tangle yes :exports code :results silent
+(define (search-for-primes minimum goal)
+  (define m (if (even? minimum)
+                (+ minimum 1)
+                (minimum)))
+  (search-for-primes-iter m '() goal))
+(define (search-for-primes-iter n lst goal)
+  (if (= goal 0)
+      lst
+      (let ((x (prime? n)))
+        (if (not (equal? x #f))
+            (search-for-primes-iter (+ n 2) (cons n lst) (- goal 1))
+            (search-for-primes-iter (+ n 2) lst goal)))))
+#+END_SRC
+
+I can benchmark these functions like so:
+#+NAME: smallest-divisor-benchmark
+#+BEGIN_SRC scheme -n :noeval :tangle no :exports both :results output table :colnames yes :rownames :yes
+<<mattbench2>>
+<<prime-smallest-divisor>>
+<<search-for-primes-untimed>>
+<<print-table>>
+
+(define benchmark-iterations 100000)
+(define (testit name f)
+  (list name
+        (cadr (mattbench2 (λ() (f 1000 3)) benchmark-iterations))
+        (cadr (mattbench2 (λ() (f 10000 3)) benchmark-iterations))
+        (cadr (mattbench2 (λ() (f 100000 3)) benchmark-iterations))
+        (cadr (mattbench2 (λ() (f 1000000 3)) benchmark-iterations))))
+
+(print-table
+ (list (list "function" ">1000" ">100000" ">1000000" ">10000000")
+       (testit "smallest-divisor" search-for-primes))
+    #:colnames #t)
+#+END_SRC
+
+Here are the results (run externally from Org-Mode):
+
+| function         |      >1000 |     >100000 |    >1000000 |    >10000000 |
+|------------------+------------+-------------+-------------+--------------|
+| smallest-divisor | 5449.59114 | 20678.07188 | 53432.40465 | 122270.00802 |
+
+
+#+BEGIN_COMMENT
+*** Final comparison
+#+BEGIN_SRC scheme -n :eval no-export :tangle primebenchmark.scheme :exports both :results output table :colnames yes :rownames :yes
+<<mattbench2>>
+<<prime-smallest-divisor>>
+<<search-for-primes-untimed>>
+<<print-table>>
+
+(define benchmark-iterations 1)
+(define (testit name f)
+  (list name
+        (cadr (mattbench2 (λ() (f 1000 3)) benchmark-iterations))
+        (cadr (mattbench2 (λ() (f 10000 3)) benchmark-iterations))
+        (cadr (mattbench2 (λ() (f 100000 3)) benchmark-iterations))
+        (cadr (mattbench2 (λ() (f 1000000 3)) benchmark-iterations))))
+
+(print-table
+ (list (list "function" ">1000" ">100000" ">1000000" ">10000000")
+       (testit "smallest-divisor" search-for-primes))
+    #:colnames #t)
+#+END_SRC
+#+END_COMMENT
