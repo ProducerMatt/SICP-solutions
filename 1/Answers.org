@@ -29,6 +29,9 @@
 #+LATEX_HEADER: \usepackage[cache=true]{minted}
 #+LATEX_HEADER: \usemintedstyle{colorful}
 #+LATEX_HEADER: \listfiles
+#+LATEX_HEADER: \definecolor{my-bg}{rgb}{0.96,0.96,0.96}
+#+LATEX_HEADER: \setminted{bgcolor=my-bg}
+# #+LATEX_HEADER: \setmonofont[Ligatures=TeX]{inconsolata} % needs lualatex
 # listfiles causes latex to make a list of all files used during processing
 
 #+title: SICP Chapter 1 Answers
