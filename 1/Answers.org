@@ -155,20 +155,30 @@ Print ~args~ as a table separated by pipes. Optionally print spacer for
 colnames.
 #+NAME: print-table
 #+BEGIN_SRC scheme -n :eval no-export :tangle yes :results output :export code
-(define* (print-table table #:key (colnames #f))
-  (define* (print-row ll #:key (fmt " ~s |"))
-    (format #t "~&|")
-    (map (λ(x) (format #t fmt x)) ll)
-    (format #t "~%"))
-  (define (iter t)
-    (print-row (car t))
-    (if colnames
-        (print-row (car t) #:fmt "---|"))
-    (map print-row (cdr t)))
-  (cond ((and (= 1 (length table))
-              (list? (car table))) (iter (car table)))
-        ((<= 1 (length table)) (iter table))
-        (else error "Invalid Input??")))
+(use-modules (ice-9 format))
+(define* (print-table table #:key (colnames #f) (mode #f))
+  (let ((fmtstr
+         (cond ((or (eq? mode #f)
+                    (equal? mode "display")
+                    (equal? mode "~a"))
+                " ~a |")    ;; print objects for human viewing
+               ((or (eq? mode #t)
+                    (equal? mode "write")
+                    (equal? mode "~s"))
+                " ~s |")))) ;; print objects for correctly (read)ing back
+    (define* (print-row ll #:key (fmt fmtstr))
+      (format #t "~&|")
+      (map (λ(x) (format #t fmt x)) ll)
+      (format #t "~%"))
+    (define (iter t)
+      (print-row (car t))
+      (if colnames
+          (print-row (car t) #:fmt "---|"))
+      (map print-row (cdr t)))
+    (cond ((and (= 1 (length table))
+                (list? (car table))) (iter (car table)))
+          ((<= 1 (length table)) (iter table))
+          (else error "Invalid Input??"))))
 #+end_src
 
 #+RESULTS[73c7a29680bdb543cecf9a03b0a7b23ba0876e0f]: print-table
@@ -2367,6 +2377,7 @@ the attached list. so src_scheme{(T 0 1)} returns a fib function.
 
 * Exercise 1.20
 ** Text
+#+NAME: gcd
 #+BEGIN_SRC scheme -n :eval no-export :tangle yes :exports code :results silent
 (define (gcd a b)
   (if (= b 0)
@@ -2643,7 +2654,7 @@ the root of the project folder.
   ;; Executes "f" for n times, and returns how long it took.
   ;; f is a lambda that takes no arguments, a.k.a. a "thunk"
   
-  ;; Returns a dotted pair with car(last execution results) and cdr(time taken divided by iterations n)
+  ;; Returns a list with car(last execution results) and cadr(time taken divided by iterations n)
 
   (define (time-getter) (get-internal-run-time))
   (define start-time (time-getter))
@@ -2652,7 +2663,7 @@ the root of the project folder.
   (define (iter i)
     (f)
     (if (<= i 0)
-        (f) ;; return the results of the function
+        (f) ;; return the results of the last function call
         (iter (- i 1))))
 
   (list (iter n) ;; result of last call of f
@@ -2700,13 +2711,52 @@ I can benchmark these functions like so:
 
 Here are the results (run externally from Org-Mode):
 
+#+NAME: 1-22-smd
 | function         |      >1000 |     >100000 |    >1000000 |    >10000000 |
 |------------------+------------+-------------+-------------+--------------|
 | smallest-divisor | 5449.59114 | 20678.07188 | 53432.40465 | 122270.00802 |
 
+#+NAME: 1-22-smd-massage
+#+BEGIN_SRC scheme :eval no-export :results value table :var data=1-22-smd :export none
+;(map (lambda(x y) (list x y))
+<<transpose-list>>
+(use-srfis '(1))
+(zip
+     '(1000 10000 100000 1000000)
+     (cdar data))
+#+END_SRC
+
+#+RESULTS[982ccf0ad10221fa2fbcb42d4b9b745740dbc99d]: 1-22-smd-massage
+:results:
+|    1000 |   5449.59114 |
+|   10000 |  20678.07188 |
+|  100000 |  53432.40465 |
+| 1000000 | 122270.00802 |
+:end:
+
+#+begin_src gnuplot :var data=1-22-smd-massage :file fig/1-22-1.png :exports both :eval no-export :rownames no :colnames no
+reset
+set logscale x
+set xlabel 'minimum number'
+set title 'time to run prime search (x scaled log)'
+
+f(x) = sqrt((x * a) + 1000)
+fit f(x) data using 1:2 via a
+
+plot data using 1:2 with lines title 'time to find primes', \
+     data using 1:(f($1)) with lines title \
+     sprintf('sqrt(x * %.2f + 1000)', a)
+#+end_src
+
+#+RESULTS[5a13affb6685ffdb56ef416870e4bed83b395317]:
+:results:
+[[file:fig/1-22-1.png]]
+:end:
+
 
 #+BEGIN_COMMENT
 *** Final comparison
+//TODO//
 #+BEGIN_SRC scheme -n :eval no-export :tangle primebenchmark.scheme :exports both :results output table :colnames yes :rownames :yes
 <<mattbench2>>
 <<prime-smallest-divisor>>

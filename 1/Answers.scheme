@@ -44,38 +44,58 @@
 ;; print-as-rows ends here
 
 ;; [[file:Answers.org::print-table][print-table]]
-(define* (print-table table #:key (colnames #f))
-  (define* (print-row ll #:key (fmt " ~s |"))
-    (format #t "~&|")
-    (map (λ(x) (format #t fmt x)) ll)
-    (format #t "~%"))
-  (define (iter t)
-    (print-row (car t))
-    (if colnames
-        (print-row (car t) #:fmt "---|"))
-    (map print-row (cdr t)))
-  (cond ((and (= 1 (length table))
-              (list? (car table))) (iter (car table)))
-        ((<= 1 (length table)) (iter table))
-        (else error "Invalid Input??")))
+(use-modules (ice-9 format))
+(define* (print-table table #:key (colnames #f) (mode #f))
+  (let ((fmtstr
+         (cond ((or (eq? mode #f)
+                    (equal? mode "display")
+                    (equal? mode "~a"))
+                " ~a |")    ;; print objects for human viewing
+               ((or (eq? mode #t)
+                    (equal? mode "write")
+                    (equal? mode "~s"))
+                " ~s |")))) ;; print objects for correctly (read)ing back
+    (define* (print-row ll #:key (fmt fmtstr))
+      (format #t "~&|")
+      (map (λ(x) (format #t fmt x)) ll)
+      (format #t "~%"))
+    (define (iter t)
+      (print-row (car t))
+      (if colnames
+          (print-row (car t) #:fmt "---|"))
+      (map print-row (cdr t)))
+    (cond ((and (= 1 (length table))
+                (list? (car table))) (iter (car table)))
+          ((<= 1 (length table)) (iter table))
+          (else error "Invalid Input??"))))
 ;; print-table ends here
 
 ;; [[file:Answers.org::print-table-test][print-table-test]]
 ;; [[[[file:~/SICP-group/1/Answers.org::print-table][print-table]]][print-table]]
-(define* (print-table table #:key (colnames #f))
-  (define* (print-row ll #:key (fmt " ~s |"))
-    (format #t "~&|")
-    (map (λ(x) (format #t fmt x)) ll)
-    (format #t "~%"))
-  (define (iter t)
-    (print-row (car t))
-    (if colnames
-        (print-row (car t) #:fmt "---|"))
-    (map print-row (cdr t)))
-  (cond ((and (= 1 (length table))
-              (list? (car table))) (iter (car table)))
-        ((<= 1 (length table)) (iter table))
-        (else error "Invalid Input??")))
+(use-modules (ice-9 format))
+(define* (print-table table #:key (colnames #f) (mode #f))
+  (let ((fmtstr
+         (cond ((or (eq? mode #f)
+                    (equal? mode "display")
+                    (equal? mode "~a"))
+                " ~a |")    ;; print objects for human viewing
+               ((or (eq? mode #t)
+                    (equal? mode "write")
+                    (equal? mode "~s"))
+                " ~s |")))) ;; print objects for correctly (read)ing back
+    (define* (print-row ll #:key (fmt fmtstr))
+      (format #t "~&|")
+      (map (λ(x) (format #t fmt x)) ll)
+      (format #t "~%"))
+    (define (iter t)
+      (print-row (car t))
+      (if colnames
+          (print-row (car t) #:fmt "---|"))
+      (map print-row (cdr t)))
+    (cond ((and (= 1 (length table))
+                (list? (car table))) (iter (car table)))
+          ((<= 1 (length table)) (iter table))
+          (else error "Invalid Input??"))))
 ;; print-table ends here
 (let* ((l (iota 3))
       (table (list
@@ -509,9 +529,132 @@
                         (- count 1)))))
 ;; fib-iter-T ends here
 
-;; [[file:Answers.org::*Text][Text:1]]
+;; [[file:Answers.org::gcd][gcd]]
 (define (gcd a b)
   (if (= b 0)
       a
       (gcd b (remainder a b))))
-;; Text:1 ends here
+;; gcd ends here
+
+;; [[file:Answers.org::find-divisor-txt][find-divisor-txt]]
+;; [[[[file:~/SICP-group/1/Answers.org::square][square]]][square]]
+(define (square x)
+  (* x x))
+;; square ends here
+(define (smallest-divisor n)
+  (find-divisor n 2))
+
+(define (find-divisor n test-divisor)
+  (cond ((> (square test-divisor) n) 
+         n)
+        ((divides? test-divisor n) 
+         test-divisor)
+        (else (find-divisor 
+               n 
+               (+ test-divisor 1)))))
+
+(define (divides? a b)
+  (= (remainder b a) 0))
+;; find-divisor-txt ends here
+
+;; [[file:Answers.org::prime-smallest-divisor][prime-smallest-divisor]]
+;; [[[[file:~/SICP-group/1/Answers.org::find-divisor-txt][find-divisor-txt]]][find-divisor-txt]]
+;; [[[[file:~/SICP-group/1/Answers.org::square][square]]][square]]
+(define (square x)
+  (* x x))
+;; square ends here
+(define (smallest-divisor n)
+  (find-divisor n 2))
+
+(define (find-divisor n test-divisor)
+  (cond ((> (square test-divisor) n) 
+         n)
+        ((divides? test-divisor n) 
+         test-divisor)
+        (else (find-divisor 
+               n 
+               (+ test-divisor 1)))))
+
+(define (divides? a b)
+  (= (remainder b a) 0))
+;; find-divisor-txt ends here
+(define (prime? n)
+  (= n (smallest-divisor n)))
+;; prime-smallest-divisor ends here
+
+;; [[file:Answers.org::timed-prime-test-txt][timed-prime-test-txt]]
+;; [[[[file:~/SICP-group/1/Answers.org::prime-smallest-divisor][prime-smallest-divisor]]][prime-smallest-divisor]]
+;; [[[[file:~/SICP-group/1/Answers.org::find-divisor-txt][find-divisor-txt]]][find-divisor-txt]]
+;; [[[[file:~/SICP-group/1/Answers.org::square][square]]][square]]
+(define (square x)
+  (* x x))
+;; square ends here
+(define (smallest-divisor n)
+  (find-divisor n 2))
+
+(define (find-divisor n test-divisor)
+  (cond ((> (square test-divisor) n) 
+         n)
+        ((divides? test-divisor n) 
+         test-divisor)
+        (else (find-divisor 
+               n 
+               (+ test-divisor 1)))))
+
+(define (divides? a b)
+  (= (remainder b a) 0))
+;; find-divisor-txt ends here
+(define (prime? n)
+  (= n (smallest-divisor n)))
+;; prime-smallest-divisor ends here
+(define (timed-prime-test n)
+  (newline)
+  (display n) ;; Guile compatible \downarrow
+  (start-prime-test n (get-internal-run-time)))
+(define (start-prime-test n start-time)
+  (if (prime? n)
+      (begin
+        (report-prime (- (get-internal-run-time) 
+                       start-time))
+        n)
+      #f))
+(define (report-prime elapsed-time)
+  (display " *** ")
+  (display elapsed-time))
+;; timed-prime-test-txt ends here
+
+;; [[file:Answers.org::mattbench2][mattbench2]]
+(define (mattbench2 f n)
+  ;; Executes "f" for n times, and returns how long it took.
+  ;; f is a lambda that takes no arguments, a.k.a. a "thunk"
+  
+  ;; Returns a list with car(last execution results) and cadr(time taken divided by iterations n)
+
+  (define (time-getter) (get-internal-run-time))
+  (define start-time (time-getter))
+  (define (how-long) (- (time-getter) start-time))
+
+  (define (iter i)
+    (f)
+    (if (<= i 0)
+        (f) ;; return the results of the last function call
+        (iter (- i 1))))
+
+  (list (iter n) ;; result of last call of f
+        (/ (how-long) (* n 1.0))));; Divide by iterations so changed n has no effect
+;; mattbench2 ends here
+
+;; [[file:Answers.org::search-for-primes-untimed][search-for-primes-untimed]]
+(define (search-for-primes minimum goal)
+  (define m (if (even? minimum)
+                (+ minimum 1)
+                (minimum)))
+  (search-for-primes-iter m '() goal))
+(define (search-for-primes-iter n lst goal)
+  (if (= goal 0)
+      lst
+      (let ((x (prime? n)))
+        (if (not (equal? x #f))
+            (search-for-primes-iter (+ n 2) (cons n lst) (- goal 1))
+            (search-for-primes-iter (+ n 2) lst goal)))))
+;; search-for-primes-untimed ends here
