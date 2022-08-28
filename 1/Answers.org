@@ -2588,26 +2588,25 @@ single-run times can seriously vary.
             (search-for-primes-iter (+ n 2) lst goal)))))
 #+END_SRC
 
-#+BEGIN_SRC scheme -n :eval no-export :tangle no :exports both :results output
+#+BEGIN_SRC scheme -n :eval no-export :tangle no :exports both :results output code
 <<search-primes-basic>>
 (let ((lt1000-1 (search-for-primes 1000 3)))
   (list "Primes > 1000" lt1000-1))
 #+END_SRC
 
-#+RESULTS[45f881dc19262a7fda581492404471d2ff4bb7ef]:
-:results:
-
+#+RESULTS[789a768bd75038c772a9f1e759006de07b1106de]:
+#+begin_src scheme
 1001
 1003
 1005
 1007
-1009 *** 1926
+1009 *** 1651
 1011
-1013 *** 1427
+1013 *** 1425
 1015
 1017
-1019 *** 1382
-:end:
+1019 *** 1375
+#+end_src
 
 There's proof it works. And here are the answers to the question:
 
