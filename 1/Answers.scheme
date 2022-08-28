@@ -45,7 +45,7 @@
 
 ;; [[file:Answers.org::print-table][print-table]]
 (use-modules (ice-9 format))
-(define* (print-table table #:key (colnames #f) (mode #f))
+(define* (print-row ll #:key (mode #f))
   (let ((fmtstr
          (cond ((or (eq? mode #f)
                     (equal? mode "display")
@@ -54,26 +54,28 @@
                ((or (eq? mode #t)
                     (equal? mode "write")
                     (equal? mode "~s"))
-                " ~s |")))) ;; print objects for correctly (read)ing back
-    (define* (print-row ll #:key (fmt fmtstr))
+                " ~s |") ;; print objects for correctly (read)ing back
+               ((string? mode)
+                mode)))) ;; pass custom format string
       (format #t "~&|")
-      (map (λ(x) (format #t fmt x)) ll)
-      (format #t "~%"))
+      (map (λ(x) (format #t fmtstr x)) ll)
+      (format #t "~%")))
+(define* (print-table table #:key (colnames #f) (mode #f))
     (define (iter t)
-      (print-row (car t))
+      (print-row (car t) #:mode mode)
       (if colnames
-          (print-row (car t) #:fmt "---|"))
-      (map print-row (cdr t)))
+          (print-row (car t) #:mode "---|"))
+      (map (λ(x) (print-row x #:mode mode)) (cdr t)))
     (cond ((and (= 1 (length table))
                 (list? (car table))) (iter (car table)))
           ((<= 1 (length table)) (iter table))
-          (else error "Invalid Input??"))))
+          (else error "Invalid Input??")))
 ;; print-table ends here
 
 ;; [[file:Answers.org::print-table-test][print-table-test]]
 ;; [[[[file:~/SICP-group/1/Answers.org::print-table][print-table]]][print-table]]
 (use-modules (ice-9 format))
-(define* (print-table table #:key (colnames #f) (mode #f))
+(define* (print-row ll #:key (mode #f))
   (let ((fmtstr
          (cond ((or (eq? mode #f)
                     (equal? mode "display")
@@ -82,20 +84,22 @@
                ((or (eq? mode #t)
                     (equal? mode "write")
                     (equal? mode "~s"))
-                " ~s |")))) ;; print objects for correctly (read)ing back
-    (define* (print-row ll #:key (fmt fmtstr))
+                " ~s |") ;; print objects for correctly (read)ing back
+               ((string? mode)
+                mode)))) ;; pass custom format string
       (format #t "~&|")
-      (map (λ(x) (format #t fmt x)) ll)
-      (format #t "~%"))
+      (map (λ(x) (format #t fmtstr x)) ll)
+      (format #t "~%")))
+(define* (print-table table #:key (colnames #f) (mode #f))
     (define (iter t)
-      (print-row (car t))
+      (print-row (car t) #:mode mode)
       (if colnames
-          (print-row (car t) #:fmt "---|"))
-      (map print-row (cdr t)))
+          (print-row (car t) #:mode "---|"))
+      (map (λ(x) (print-row x #:mode mode)) (cdr t)))
     (cond ((and (= 1 (length table))
                 (list? (car table))) (iter (car table)))
           ((<= 1 (length table)) (iter table))
-          (else error "Invalid Input??"))))
+          (else error "Invalid Input??")))
 ;; print-table ends here
 (let* ((l (iota 3))
       (table (list

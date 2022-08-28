@@ -1,4 +1,4 @@
-;; [[file:Answers.org::*Final comparison][Final comparison:1]]
+;; [[file:Answers.org::smallest-divisor-benchmark][smallest-divisor-benchmark]]
 ;; [[[[file:~/SICP-group/1/Answers.org::mattbench2][mattbench2]]][mattbench2]]
 (define (mattbench2 f n)
   ;; Executes "f" for n times, and returns how long it took.
@@ -59,7 +59,7 @@
 ;; search-for-primes-untimed ends here
 ;; [[[[file:~/SICP-group/1/Answers.org::print-table][print-table]]][print-table]]
 (use-modules (ice-9 format))
-(define* (print-table table #:key (colnames #f) (mode #f))
+(define* (print-row ll #:key (mode #f))
   (let ((fmtstr
          (cond ((or (eq? mode #f)
                     (equal? mode "display")
@@ -68,32 +68,31 @@
                ((or (eq? mode #t)
                     (equal? mode "write")
                     (equal? mode "~s"))
-                " ~s |")))) ;; print objects for correctly (read)ing back
-    (define* (print-row ll #:key (fmt fmtstr))
+                " ~s |") ;; print objects for correctly (read)ing back
+               ((string? mode)
+                mode)))) ;; pass custom format string
       (format #t "~&|")
-      (map (λ(x) (format #t fmt x)) ll)
-      (format #t "~%"))
+      (map (λ(x) (format #t fmtstr x)) ll)
+      (format #t "~%")))
+(define* (print-table table #:key (colnames #f) (mode #f))
     (define (iter t)
-      (print-row (car t))
+      (print-row (car t) #:mode mode)
       (if colnames
-          (print-row (car t) #:fmt "---|"))
-      (map print-row (cdr t)))
+          (print-row (car t) #:mode "---|"))
+      (map (λ(x) (print-row x #:mode mode)) (cdr t)))
     (cond ((and (= 1 (length table))
                 (list? (car table))) (iter (car table)))
           ((<= 1 (length table)) (iter table))
-          (else error "Invalid Input??"))))
+          (else error "Invalid Input??")))
 ;; print-table ends here
 
-(define benchmark-iterations 1)
-(define (testit name f)
-  (list name
-        (cadr (mattbench2 (λ() (f 1000 3)) benchmark-iterations))
+(define benchmark-iterations 100000)
+(define (testit f)
+  (list (cadr (mattbench2 (λ() (f 1000 3)) benchmark-iterations))
         (cadr (mattbench2 (λ() (f 10000 3)) benchmark-iterations))
         (cadr (mattbench2 (λ() (f 100000 3)) benchmark-iterations))
         (cadr (mattbench2 (λ() (f 1000000 3)) benchmark-iterations))))
 
-(print-table
- (list (list "function" ">1000" ">100000" ">1000000" ">10000000")
-       (testit "smallest-divisor" search-for-primes))
-    #:colnames #t)
-;; Final comparison:1 ends here
+(print-row
+ (testit search-for-primes))
+;; smallest-divisor-benchmark ends here
