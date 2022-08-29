@@ -2714,7 +2714,7 @@ I can benchmark these functions like so:
 Here are the results (run externally from Org-Mode):
 
 #+NAME: 1-22-smd
-| 5396.105071 | 20821.150618 | 53665.47429 | 122047.742337 |
+| 5507.42497 | 20913.71497 | 53778.74737 | 122135.60511 |
 
 #+NAME: 1-22-smd-massage
 #+BEGIN_SRC scheme :eval no-export :results value table :var data=1-22-smd :export none :rownames no :colnames no
@@ -2726,12 +2726,12 @@ Here are the results (run externally from Org-Mode):
      (car data))
 #+END_SRC
 
-#+RESULTS[76ee27a660faaba8b6218dc3f144a22f56305544]: 1-22-smd-massage
+#+RESULTS[7f957fb07db766a81fb407e4002a834e2969ff32]: 1-22-smd-massage
 :results:
-|    1000 |   5396.105071 |
-|   10000 |  20821.150618 |
-|  100000 |   53665.47429 |
-| 1000000 | 122047.742337 |
+|    1000 |   5507.42497 |
+|   10000 |  20913.71497 |
+|  100000 |  53778.74737 |
+| 1000000 | 122135.60511 |
 :end:
 
 #+begin_src gnuplot :var data=1-22-smd-massage :file fig/1-22-1.png :exports both :eval no-export :rownames no :colnames no
@@ -2748,7 +2748,7 @@ plot data using 1:2 with linespoints title 'time to find primes', \
      sprintf('sqrt(x * %.2f + 1000)', a)
 #+end_src
 
-#+RESULTS[b58014bd4e9d73dc4e68ec53ce3fc2fbcf165167]:
+#+RESULTS[27d02bff03e8cb41df0bcd04f4c853b65910088d]:
 :results:
 [[file:fig/1-22-1.png]]
 :end:
