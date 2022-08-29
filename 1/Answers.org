@@ -2758,6 +2758,111 @@ sure where the fault lies. I don't struggle to understand things like "this
 algorithm is slower than this other one," but when asked to find or prove the
 \(\Theta\) notation I'm pretty clueless;
 
+* Exercise 1.23
+** Question
+The ~smallest-divisor~ procedure shown at the start of this section does lots of
+needless testing: After it checks to see if the number is divisible by 2 there
+is no point in checking to see if it is divisible by any larger even numbers.
+This suggests that the values used for test-divisor should not be 2, 3, 4, 5, 6,
+…, but rather 2, 3, 5, 7, 9, …. To implement this change, define a procedure
+~next~ that returns 3 if its input is equal to 2 and otherwise returns its input
+plus 2. Modify the smallest-divisor procedure to use src_scheme{(next test-divisor)} instead
+of src_scheme{(+ test-divisor 1)}. With ~timed-prime-test~ incorporating this modified version
+of ~smallest-divisor~, run the test for each of the 12 primes found in Exercise
+1.22. Since this modification halves the number of test steps, you should expect
+it to run about twice as fast. Is this expectation confirmed? If not, what is
+the observed ratio of the speeds of the two algorithms, and how do you explain
+the fact that it is different from 2?
+** Answer
+#+NAME: find-divisor-faster
+#+BEGIN_SRC scheme -n :eval no-export :tangle yes :exports code :results silent
+<<square>>
+(define (smallest-divisor n)
+  (find-divisor n 2))
+
+(define (next n)
+  (if (= n 2)
+      3
+      (+ n 1)))
+
+(define (find-divisor n test-divisor)
+  (cond ((> (square test-divisor) n) 
+         n)
+        ((divides? test-divisor n) 
+         test-divisor)
+        (else (find-divisor 
+               n 
+               (next test-divisor)))))
+
+(define (divides? a b)
+  (= (remainder b a) 0))
+#+END_SRC
+#+NAME: smallest-divisor-benchmark
+#+BEGIN_SRC scheme -n :noeval :tangle primebench-smdf.scheme :exports code
+<<mattbench2>>
+<<find-divisor-faster>>
+(define (prime? n)
+  (= n (smallest-divisor n)))
+<<search-for-primes-untimed>>
+<<print-table>>
+
+(define benchmark-iterations 100000)
+(define (testit f)
+  (list (cadr (mattbench2 (λ() (f 1000 3)) benchmark-iterations))
+        (cadr (mattbench2 (λ() (f 10000 3)) benchmark-iterations))
+        (cadr (mattbench2 (λ() (f 100000 3)) benchmark-iterations))
+        (cadr (mattbench2 (λ() (f 1000000 3)) benchmark-iterations))))
+
+(print-row
+ (testit search-for-primes))
+#+END_SRC
+
+#+NAME: 1-22-smdf
+| 6366.99462 | 24845.9193 | 64756.73693 | 143869.63561 |
+
+#+NAME: 1-22-smdf-massage
+#+BEGIN_SRC scheme :eval no-export :results output table :var smd=1-22-smd smdf=1-22-smdf :export results :rownames no :colnames no
+;(map (lambda(x y) (list x y))
+<<print-table>>
+(use-srfis '(1))
+(print-table (zip
+     '("min" 1000 10000 100000 1000000)
+     (cons "(+ 1)" (car smd))
+     (cons "(next)" (car smdf)))
+             #:colnames #t)
+#+END_SRC
+
+#+RESULTS[6abc5093fcb47049c1f59787f38f46df0ab29317]: 1-22-smdf-massage
+:results:
+|     min |        (+ 1) |       (next) |
+|---------+--------------+--------------|
+|    1000 |   5507.42497 |   6366.99462 |
+|   10000 |  20913.71497 |   24845.9193 |
+|  100000 |  53778.74737 |  64756.73693 |
+| 1000000 | 122135.60511 | 143869.63561 |
+:end:
+
+#+begin_src gnuplot :var data=1-22-smdf-massage :file fig/1-22-2.png :exports both :eval no-export :rownames no :colnames no
+reset
+set logscale x
+set xlabel 'minimum number'
+set ylabel 'time'
+set title 'time to run prime search (x scaled log)'
+
+f(x) = sqrt((x * a) + 1000)
+fit f(x) data using 1:2 via a
+
+plot data using 1:2 with linespoints title '(+ 1)', \
+     data using 1:3 with linespoints title '(next)', \
+     data using 1:(f($1)) with linespoints title \
+     sprintf('sqrt(x * %.2f + 1000)', a)
+#+end_src
+
+#+RESULTS[c322c2d0a246417bd67c453d08745cfeee31ef67]:
+:results:
+[[file:fig/1-22-2.png]]
+:end:
+
 *** Final comparison
 //TODO//
 #+BEGIN_SRC scheme -n :eval no-export :tangle no :exports both :results output table :colnames yes :rownames :yes
