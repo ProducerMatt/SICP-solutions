@@ -781,3 +781,26 @@
 (define (divides? a b)
   (= (remainder b a) 0))
 ;; find-divisor-faster-real ends here
+
+;; [[file:Answers.org::find-divisor-faster-real2][find-divisor-faster-real2]]
+;; [[[[file:~/SICP-group/1/Answers.org::square][square]]][square]]
+(define (square x)
+  (* x x))
+;; square ends here
+(define (smallest-divisor n)
+  (if (divides? 2 n)                  ;; check for division by 2
+      2
+      (find-divisor n 3)))            ;; start find-divisor at 3
+
+(define (find-divisor n test-divisor)
+  (cond ((> (square test-divisor) n) 
+         n)
+        ((divides? test-divisor n) 
+         test-divisor)
+        (else (find-divisor 
+               n 
+               (+ 2 test-divisor))))) ;; just increase by 2
+
+(define (divides? a b)
+  (= (remainder b a) 0))
+;; find-divisor-faster-real2 ends here

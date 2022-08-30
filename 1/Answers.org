@@ -2827,7 +2827,7 @@ of ~smallest-divisor~, run the test for each of the 12 primes found in Exercise
 it to run about twice as fast. Is this expectation confirmed? If not, what is
 the observed ratio of the speeds of the two algorithms, and how do you explain
 the fact that it is different from 2?
-** Answer
+** A Comedy of Error (just the one)
 #+NAME: find-divisor-faster
 #+BEGIN_SRC scheme -n :eval no-export :tangle yes :exports code :results silent
 <<square>>
@@ -2920,6 +2920,7 @@ Oh, that's why.
       (+ n 1))) ;; <-- D'oh.
 #+END_SRC
 
+** Answer
 Ok, let's try that again.
 
 #+NAME: find-divisor-faster-real
@@ -3007,7 +3008,154 @@ plot data using 2:xticlabels(1) with linespoints, \
 [[file:fig/1-22-3.png]]
 :end:
 
-I had a lot of trouble getting this one to compile, I have to restart Emacs in order to get it to render.
+I had a lot of trouble getting this one to compile, I have to restart Emacs in
+order to get it to render.
+
+Anyways, there's the speedup that was expected. Let's compare the ratios.
+
+Defining a new average that takes arbitrary numbers of arguments:
+#+NAME: average-varargs
+#+BEGIN_SRC scheme :eval no-export :results silent output :var smd=1-22-smd smdf=1-22-smdf smdff=1-22-smdff :export code :rownames no :colnames no
+(define (average . args)
+  (let ((len (length args)))
+    (/ (apply + args) len)))
+#+END_SRC
+
+Using it for percentage comparisons:
+#+BEGIN_SRC scheme :eval no-export :results value table :var smd=1-22-smd smdf=1-22-smdf smdff=1-22-smdff :export both :rownames no :colnames no
+<<average-varargs>>
+(list (cons "% speedup for broken (next)"
+            (cons (format #f "~2$%"
+                          (apply average
+                                 (map (λ (x y) (* 100 (/ x y)))
+                                      (car smd) (car smdf))))
+                  #nil))
+      (cons "% speedup for real (next)"
+            (cons (format #f "~2$%"
+                          (apply average
+                                 (map (λ (x y) (* 100 (/ x y)))
+                                      (car smd) (car smdff))))
+                  #nil)))
+#+END_SRC
+
+#+RESULTS[6c5b471c24bb1e0fa43ce89ab354a29586b8dc54]:
+:results:
+| % speedup for broken (next) |  81.93% |
+| % speedup for real (next)   | 155.25% |
+:end:
+
+Since this changed algorithm cuts out almost half of the steps, you might expect
+something more like a 200% speedup. Let's try optimizing it further. Two observations:
+
+1. The condition src_scheme{(divides? 2 n)} only needs to be run once at the
+   start of the program.
+2. Because it only needs to be run once, it doesn't need to be a separate
+   function at all.
+
+#+NAME: find-divisor-faster-real2
+#+BEGIN_SRC scheme -n :eval no-export :tangle yes :exports code :results silent
+<<square>>
+(define (smallest-divisor n)
+  (if (divides? 2 n)                  ;; check for division by 2
+      2
+      (find-divisor n 3)))            ;; start find-divisor at 3
+
+(define (find-divisor n test-divisor)
+  (cond ((> (square test-divisor) n) 
+         n)
+        ((divides? test-divisor n) 
+         test-divisor)
+        (else (find-divisor 
+               n 
+               (+ 2 test-divisor))))) ;; just increase by 2
+
+(define (divides? a b)
+  (= (remainder b a) 0))
+#+END_SRC
+#+NAME: smallest-divisor-benchmark-real2
+#+BEGIN_SRC scheme -n :noeval :tangle primebench/smdff2.scheme :exports code
+<<mattbench2>>
+<<find-divisor-faster-real2>>
+(define (prime? n)
+  (= n (smallest-divisor n)))
+<<search-for-primes-untimed>>
+<<print-table>>
+
+(define benchmark-iterations 500000)
+(define (testit f)
+  (list (cadr (mattbench2 (λ() (f 1000 3)) benchmark-iterations))
+        (cadr (mattbench2 (λ() (f 10000 3)) benchmark-iterations))
+        (cadr (mattbench2 (λ() (f 100000 3)) benchmark-iterations))
+        (cadr (mattbench2 (λ() (f 1000000 3)) benchmark-iterations))))
+
+(print-row
+ (testit search-for-primes))
+#+END_SRC
+
+
+#+NAME: 1-22-smdff2
+| 3151.259574 | 11245.20428 | 27803.067944 | 61997.275154 |
+
+#+NAME: 1-22-smdff2-massage
+#+BEGIN_SRC scheme :eval no-export :results value table :var smd=1-22-smd smdf=1-22-smdf smdff=1-22-smdff smdff2=1-22-smdff2 :export results :rownames no :colnames no
+<<print-table-spaced>>
+(use-srfis '(1))
+(zip '("min" "---" 1000 10000 100000 1000000)
+     (append '("(+1)" "---") (car smd))
+     (append '("(next-broken)" "---") (car smdf))
+     (append '("(next-fixed)" "---") (car smdff))
+     (append '("integrated" "---") (car smdff2)))
+#+END_SRC
+
+#+RESULTS[39aed0154d20c6f0dee74c868a7613701ebb1dea]: 1-22-smdff2-massage
+:results:
+|     min |          (+1) | (next-broken) | (next-fixed) |   integrated |
+|     --- |           --- |           --- |          --- |          --- |
+|    1000 |   5425.223086 |   6456.538118 |    3863.7424 |  3151.259574 |
+|   10000 |  20772.332491 |  25550.757304 | 13519.209814 |  11245.20428 |
+|  100000 |  53577.240193 |  66746.041644 | 33520.676384 | 27803.067944 |
+| 1000000 | 121986.712395 | 148505.580638 | 73005.539932 | 61997.275154 |
+:end:
+
+#+begin_src gnuplot :var data=1-22-smdff2-massage :file fig/1-22-4.png :exports results :rownames no :colnames no :hlines no :cache no
+reset
+set key autotitle columnheader
+set logscale x
+set xlabel 'minimum number'
+set xtics rotate by -45
+set ylabel 'time'
+set title 'time to run prime search (x scaled log)'
+
+plot data using 2:xticlabels(1) with linespoints, \
+     data using 3:xticlabels(1) with linespoints, \
+     data using 4:xticlabels(1) with linespoints, \
+     data using 5:xticlabels(1) with linespoints
+#+end_src
+
+#+RESULTS:
+:results:
+file:fig/1-22-4.png
+:end:
+
+#+BEGIN_SRC scheme :eval no-export :results value table :var smd=1-22-smd smdf=1-22-smdf smdff=1-22-smdff smdff2=1-22-smdff2 :export results :rownames no :colnames no
+<<average-varargs>>
+(define (print-percentage name lista listb)
+  (list (format #f "% speedup for ~a" name)
+        (format #f "~2$%"
+                (apply average
+                       (map (λ (x y) (* 100 (/ x y)))
+                            lista listb)))))
+(list (print-percentage "broken (next)" (car smd) (car smdf))
+      (print-percentage "real (next)" (car smd) (car smdff))
+      (print-percentage "optimized" (car smd) (car smdff2)))
+#+END_SRC
+
+#+RESULTS[2a8c88e516dcf2998063353d1be32f3b9838c7de]:
+:results:
+| % speedup for broken (next) |  81.93% |
+| % speedup for real (next)   | 155.25% |
+| % speedup for optimized     | 186.59% |
+:end:
 
 *** Final comparison
 //TODO//
