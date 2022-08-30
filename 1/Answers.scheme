@@ -110,6 +110,73 @@
   (print-table table #:colnames #t ))
 ;; print-table-test ends here
 
+;; [[file:Answers.org::print-table-spaced][print-table-spaced]]
+(use-modules (ice-9 format))
+(define* (print-row ll #:key (mode #f))
+  (let ((fmtstr
+         (cond ((or (eq? mode #f)
+                    (equal? mode "display")
+                    (equal? mode "~a"))
+                " ~a")    ;; print objects for human viewing
+               ((or (eq? mode #t)
+                    (equal? mode "write")
+                    (equal? mode "~s"))
+                " ~s") ;; print objects for correctly (read)ing back
+               ((string? mode)
+                mode)))) ;; pass custom format string
+    
+      (format #t "~&") ;; ensure start of new line
+      (map (λ(x) (format #t fmtstr x)) ll)
+      (format #t "~%")))
+
+(define* (print-table table #:key (colnames #f) (mode #f))
+    (define (iter t)
+      (print-row (car t) #:mode mode)
+      (map (λ(x) (print-row x #:mode mode)) (cdr t)))
+    (cond ((and (= 1 (length table))
+                (list? (car table))) (iter (car table)))
+          ((<= 1 (length table)) (iter table))
+          (else error "Invalid Input??")))
+;; print-table-spaced ends here
+
+;; [[file:Answers.org::print-table-spaced-test][print-table-spaced-test]]
+;; [[[[file:~/SICP-group/1/Answers.org::print-table-spaced][print-table-spaced]]][print-table-spaced]]
+(use-modules (ice-9 format))
+(define* (print-row ll #:key (mode #f))
+  (let ((fmtstr
+         (cond ((or (eq? mode #f)
+                    (equal? mode "display")
+                    (equal? mode "~a"))
+                " ~a")    ;; print objects for human viewing
+               ((or (eq? mode #t)
+                    (equal? mode "write")
+                    (equal? mode "~s"))
+                " ~s") ;; print objects for correctly (read)ing back
+               ((string? mode)
+                mode)))) ;; pass custom format string
+    
+      (format #t "~&") ;; ensure start of new line
+      (map (λ(x) (format #t fmtstr x)) ll)
+      (format #t "~%")))
+
+(define* (print-table table #:key (colnames #f) (mode #f))
+    (define (iter t)
+      (print-row (car t) #:mode mode)
+      (map (λ(x) (print-row x #:mode mode)) (cdr t)))
+    (cond ((and (= 1 (length table))
+                (list? (car table))) (iter (car table)))
+          ((<= 1 (length table)) (iter table))
+          (else error "Invalid Input??")))
+;; print-table-spaced ends here
+(let* ((l (iota 3))
+      (table (list
+              (list 'column-1 'column-2 'column-3 'column-4)
+              (cons 'row-a l)
+              (cons 'row-b l)
+              (cons 'row-c l))))
+  (print-table table))
+;; print-table-spaced-test ends here
+
 ;; [[file:Answers.org::square][square]]
 (define (square x)
   (* x x))
@@ -148,7 +215,7 @@
 (define (improve guess x)
   (average guess (/ x guess)))
 
-;; [[[[file:~/SICP-group/1/Answers.org::square][square]]][square]]
+;; [[[[file:~/SICP-group/1/Answers.org::txt-sqrt][txt-sqrt]]][square]]
 (define (square x)
   (* x x))
 ;; square ends here
@@ -176,7 +243,7 @@
 ;; mean-square ends here
 
 ;; [[file:Answers.org::sqrt][sqrt]]
-;; [[[[file:~/SICP-group/1/Answers.org::average][average]]][average]]
+;; [[[[file:~/SICP-group/1/Answers.org::sqrt][sqrt]]][average]]
 (define (average x y)
   (/ (+ x y) 2))
 ;; average ends here
@@ -193,7 +260,7 @@
 ;; sqrt ends here
 
 ;; [[file:Answers.org::cbrt][cbrt]]
-;; [[[[file:~/SICP-group/1/Answers.org::square][square]]][square]]
+;; [[[[file:~/SICP-group/1/Answers.org::cbrt][cbrt]]][square]]
 (define (square x)
   (* x x))
 ;; square ends here
@@ -263,7 +330,7 @@
 
 ;; [[file:Answers.org::fib-phi][fib-phi]]
 ;; [[[[file:~/SICP-group/1/Answers.org::sqrt][sqrt]]][sqrt]]
-;; [[[[file:~/SICP-group/1/Answers.org::average][average]]][average]]
+;; [[[[file:~/SICP-group/1/Answers.org::sqrt][sqrt]]][average]]
 (define (average x y)
   (/ (+ x y) 2))
 ;; average ends here
@@ -426,7 +493,7 @@
 ;; txt-expt ends here
 
 ;; [[file:Answers.org::fast-expt-iter-fail1][fast-expt-iter-fail1]]
-;; [[[[file:~/SICP-group/1/Answers.org::square][square]]][square]]
+;; [[[[file:~/SICP-group/1/Answers.org::fast-expt-iter-fail1][fast-expt-iter-fail1]]][square]]
 (define (square x)
   (* x x))
 ;; square ends here
@@ -445,7 +512,7 @@
 ;; fast-expt-iter-fail1 ends here
 
 ;; [[file:Answers.org::fast-expt-iter][fast-expt-iter]]
-;; [[[[file:~/SICP-group/1/Answers.org::square][square]]][square]]
+;; [[[[file:~/SICP-group/1/Answers.org::fast-expt-iter][fast-expt-iter]]][square]]
 (define (square x)
   (* x x))
 ;; square ends here
@@ -541,7 +608,7 @@
 ;; gcd ends here
 
 ;; [[file:Answers.org::find-divisor-txt][find-divisor-txt]]
-;; [[[[file:~/SICP-group/1/Answers.org::square][square]]][square]]
+;; [[[[file:~/SICP-group/1/Answers.org::find-divisor-txt][find-divisor-txt]]][square]]
 (define (square x)
   (* x x))
 ;; square ends here
@@ -563,7 +630,7 @@
 
 ;; [[file:Answers.org::prime-smallest-divisor][prime-smallest-divisor]]
 ;; [[[[file:~/SICP-group/1/Answers.org::find-divisor-txt][find-divisor-txt]]][find-divisor-txt]]
-;; [[[[file:~/SICP-group/1/Answers.org::square][square]]][square]]
+;; [[[[file:~/SICP-group/1/Answers.org::find-divisor-txt][find-divisor-txt]]][square]]
 (define (square x)
   (* x x))
 ;; square ends here
@@ -588,8 +655,8 @@
 
 ;; [[file:Answers.org::timed-prime-test-txt][timed-prime-test-txt]]
 ;; [[[[file:~/SICP-group/1/Answers.org::prime-smallest-divisor][prime-smallest-divisor]]][prime-smallest-divisor]]
-;; [[[[file:~/SICP-group/1/Answers.org::find-divisor-txt][find-divisor-txt]]][find-divisor-txt]]
-;; [[[[file:~/SICP-group/1/Answers.org::square][square]]][square]]
+;; [[[[file:~/SICP-group/1/Answers.org::prime-smallest-divisor][prime-smallest-divisor]]][find-divisor-txt]]
+;; [[[[file:~/SICP-group/1/Answers.org::prime-smallest-divisor][prime-smallest-divisor]]][square]]
 (define (square x)
   (* x x))
 ;; square ends here
@@ -662,3 +729,29 @@
             (search-for-primes-iter (+ n 2) (cons n lst) (- goal 1))
             (search-for-primes-iter (+ n 2) lst goal)))))
 ;; search-for-primes-untimed ends here
+
+;; [[file:Answers.org::find-divisor-faster][find-divisor-faster]]
+;; [[[[file:~/SICP-group/1/Answers.org::find-divisor-faster][find-divisor-faster]]][square]]
+(define (square x)
+  (* x x))
+;; square ends here
+(define (smallest-divisor n)
+  (find-divisor n 2))
+
+(define (next n)
+  (if (= n 2)
+      3
+      (+ n 1)))
+
+(define (find-divisor n test-divisor)
+  (cond ((> (square test-divisor) n) 
+         n)
+        ((divides? test-divisor n) 
+         test-divisor)
+        (else (find-divisor 
+               n 
+               (next test-divisor)))))
+
+(define (divides? a b)
+  (= (remainder b a) 0))
+;; find-divisor-faster ends here

@@ -211,6 +211,58 @@ colnames.
 | row-c    |        0 |        1 |        2 |
 :end:
 
+*** ~print-table~ (spaces only)
+TODO: Merge these together.
+#+NAME: print-table-spaced
+#+BEGIN_SRC scheme -n :eval no-export :tangle yes :results output :export code
+(use-modules (ice-9 format))
+(define* (print-row ll #:key (mode #f))
+  (let ((fmtstr
+         (cond ((or (eq? mode #f)
+                    (equal? mode "display")
+                    (equal? mode "~a"))
+                " ~a")    ;; print objects for human viewing
+               ((or (eq? mode #t)
+                    (equal? mode "write")
+                    (equal? mode "~s"))
+                " ~s") ;; print objects for correctly (read)ing back
+               ((string? mode)
+                mode)))) ;; pass custom format string
+    
+      (format #t "~&") ;; ensure start of new line
+      (map (λ(x) (format #t fmtstr x)) ll)
+      (format #t "~%")))
+
+(define* (print-table table #:key (colnames #f) (mode #f))
+    (define (iter t)
+      (print-row (car t) #:mode mode)
+      (map (λ(x) (print-row x #:mode mode)) (cdr t)))
+    (cond ((and (= 1 (length table))
+                (list? (car table))) (iter (car table)))
+          ((<= 1 (length table)) (iter table))
+          (else error "Invalid Input??")))
+#+end_src
+
+#+NAME: print-table-spaced-test
+#+BEGIN_SRC scheme -n :eval no-export :tangle yes :results table output :export no :rownames yes :colnames yes
+<<print-table-spaced>>
+(let* ((l (iota 3))
+      (table (list
+              (list 'column-1 'column-2 'column-3 'column-4)
+              (cons 'row-a l)
+              (cons 'row-b l)
+              (cons 'row-c l))))
+  (print-table table))
+#+end_src
+
+#+RESULTS[497a369e75d67018fb5cb6e0beecd5fbddb3468f]: print-table-spaced-test
+:results:
+ column-1 column-2 column-3 column-4
+ row-a 0 1 2
+ row-b 0 1 2
+ row-c 0 1 2
+:end:
+
 * Exercise 1.1
 :PROPERTIES:
 :HASH:     -277441515328139857
@@ -2694,13 +2746,13 @@ I'm going to get some more precise times. First, I need a prime searching varian
 
 I can benchmark these functions like so:
 #+NAME: smallest-divisor-benchmark
-#+BEGIN_SRC scheme -n :noeval :tangle primebench-smd.scheme :exports both :results output table :colnames yes :rownames :yes
+#+BEGIN_SRC scheme -n :noeval :tangle primebench/smd.scheme :exports both :results output table :colnames yes :rownames :yes
 <<mattbench2>>
 <<prime-smallest-divisor>>
 <<search-for-primes-untimed>>
 <<print-table>>
 
-(define benchmark-iterations 100000)
+(define benchmark-iterations 1000000)
 (define (testit f)
   (list (cadr (mattbench2 (λ() (f 1000 3)) benchmark-iterations))
         (cadr (mattbench2 (λ() (f 10000 3)) benchmark-iterations))
@@ -2714,7 +2766,7 @@ I can benchmark these functions like so:
 Here are the results (run externally from Org-Mode):
 
 #+NAME: 1-22-smd
-| 5507.42497 | 20913.71497 | 53778.74737 | 122135.60511 |
+| 5425.223086 | 20772.332491 | 53577.240193 | 121986.712395 |
 
 #+NAME: 1-22-smd-massage
 #+BEGIN_SRC scheme :eval no-export :results value table :var data=1-22-smd :export none :rownames no :colnames no
@@ -2726,26 +2778,27 @@ Here are the results (run externally from Org-Mode):
      (car data))
 #+END_SRC
 
-#+RESULTS[7f957fb07db766a81fb407e4002a834e2969ff32]: 1-22-smd-massage
+#+RESULTS[d7791f01b4f72498262d52b8327962e122163a15]: 1-22-smd-massage
 :results:
-|    1000 |   5507.42497 |
-|   10000 |  20913.71497 |
-|  100000 |  53778.74737 |
-| 1000000 | 122135.60511 |
+|    1000 |   5425.223086 |
+|   10000 |  20772.332491 |
+|  100000 |  53577.240193 |
+| 1000000 | 121986.712395 |
 :end:
 
-#+begin_src gnuplot :var data=1-22-smd-massage :file fig/1-22-1.png :exports both :eval no-export :rownames no :colnames no
+#+begin_src gnuplot :var data=1-22-smd-massage :file fig/1-22-1.png :exports results :eval no-export :rownames no :colnames no
 reset
 set logscale x
 set xlabel 'minimum number'
+set xtics rotate by -45
 set title 'time to run prime search (x scaled log)'
 
-f(x) = sqrt((x * a) + 1000)
-fit f(x) data using 1:2 via a
+f(x) = sqrt((x * a) + b)
+fit f(x) data using 1:2 via a,b
 
 plot data using 1:2 with linespoints title 'time to find primes', \
      data using 1:(f($1)) with linespoints title \
-     sprintf('sqrt(x * %.2f + 1000)', a)
+     sprintf('sqrt(x * %.2f + %.2f)', a, b)
 #+end_src
 
 #+RESULTS[27d02bff03e8cb41df0bcd04f4c853b65910088d]:
@@ -2798,7 +2851,7 @@ the fact that it is different from 2?
   (= (remainder b a) 0))
 #+END_SRC
 #+NAME: smallest-divisor-benchmark
-#+BEGIN_SRC scheme -n :noeval :tangle primebench-smdf.scheme :exports code
+#+BEGIN_SRC scheme -n :noeval :tangle primebench/smdf.scheme :exports code
 <<mattbench2>>
 <<find-divisor-faster>>
 (define (prime? n)
@@ -2806,7 +2859,7 @@ the fact that it is different from 2?
 <<search-for-primes-untimed>>
 <<print-table>>
 
-(define benchmark-iterations 100000)
+(define benchmark-iterations 1000000)
 (define (testit f)
   (list (cadr (mattbench2 (λ() (f 1000 3)) benchmark-iterations))
         (cadr (mattbench2 (λ() (f 10000 3)) benchmark-iterations))
@@ -2818,50 +2871,45 @@ the fact that it is different from 2?
 #+END_SRC
 
 #+NAME: 1-22-smdf
-| 6366.99462 | 24845.9193 | 64756.73693 | 143869.63561 |
+| 6456.538118 | 25550.757304 | 66746.041644 | 148505.580638 |
+
 
 #+NAME: 1-22-smdf-massage
-#+BEGIN_SRC scheme :eval no-export :results output table :var smd=1-22-smd smdf=1-22-smdf :export results :rownames no :colnames no
-;(map (lambda(x y) (list x y))
-<<print-table>>
+#+BEGIN_SRC scheme :eval no-export :results value table :var smd=1-22-smd smdf=1-22-smdf :export results :rownames no :colnames no
+<<print-table-spaced>>
 (use-srfis '(1))
-(print-table (zip
-     '("min" 1000 10000 100000 1000000)
-     (cons "(+ 1)" (car smd))
+(zip '("min" 1000 10000 100000 1000000)
+     (cons "(+1)" (car smd))
      (cons "(next)" (car smdf)))
-             #:colnames #t)
 #+END_SRC
 
-#+RESULTS[6abc5093fcb47049c1f59787f38f46df0ab29317]: 1-22-smdf-massage
+#+RESULTS[c27614e8028f15b657e68959798c723a002730b3]: 1-22-smdf-massage
 :results:
-|     min |        (+ 1) |       (next) |
-|---------+--------------+--------------|
+|     min |         (+1) |       (next) |
 |    1000 |   5507.42497 |   6366.99462 |
 |   10000 |  20913.71497 |   24845.9193 |
 |  100000 |  53778.74737 |  64756.73693 |
 | 1000000 | 122135.60511 | 143869.63561 |
 :end:
 
-#+begin_src gnuplot :var data=1-22-smdf-massage :file fig/1-22-2.png :exports both :eval no-export :rownames no :colnames no
+#+begin_src gnuplot :var data=1-22-smdf-massage :file fig/1-22-2.png :exports results :eval no-export :rownames no :colnames no :cache no
 reset
 set logscale x
 set xlabel 'minimum number'
+set xtics rotate by -45
 set ylabel 'time'
 set title 'time to run prime search (x scaled log)'
 
-f(x) = sqrt((x * a) + 1000)
-fit f(x) data using 1:2 via a
-
-plot data using 1:2 with linespoints title '(+ 1)', \
-     data using 1:3 with linespoints title '(next)', \
-     data using 1:(f($1)) with linespoints title \
-     sprintf('sqrt(x * %.2f + 1000)', a)
+plot data using 2:xticlabels(1) with linespoints title '(+ 1)', \
+     data using 3:xticlabels(1) with linespoints title '(next)'
 #+end_src
 
-#+RESULTS[c322c2d0a246417bd67c453d08745cfeee31ef67]:
+#+RESULTS[a092c209836cb659130fe0ad3bff2d3f23674f1b]:
 :results:
 [[file:fig/1-22-2.png]]
 :end:
+
+So it's /slower/ than before. Why?
 
 *** Final comparison
 //TODO//
