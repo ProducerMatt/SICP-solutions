@@ -4,7 +4,8 @@
 #+auto_tangle: t
 
 # ORG-BABEL DEFAULTS
-#+PROPERTY: header-args :tangle no :noeval :exports both :cache yes :results output wrap :noweb no-export :comments noweb :session default
+#+PROPERTY: header-args :tangle no :noeval :exports both :cache yes :results output wrap :noweb no-export :comments noweb
+#+PROPERTY: header-args:scheme :session scheme
 #+PROPERTY: header-args:gnuplot :prelude "reset"
 # For the actual answers their dependencies use a header like this:
 # #+BEGIN_SRC scheme -n :eval no-export :tangle yes :exports both
@@ -29,10 +30,10 @@
 #+LATEX_HEADER: \usepackage[cache=true]{minted}
 #+LATEX_HEADER: \usemintedstyle{colorful}
 #+LATEX_HEADER: \listfiles
+# listfiles causes latex to make a list of all files used during processing
 # #+LATEX_HEADER: \definecolor{my-bg}{rgb}{0.96,0.96,0.96}
 # #+LATEX_HEADER: \setminted{bgcolor=grey}
 # #+LATEX_HEADER: \setmonofont[Ligatures=TeX]{inconsolata} % needs lualatex
-# listfiles causes latex to make a list of all files used during processing
 
 #+title: SICP Chapter 1 Answers
 #+AUTHOR: ProducerMatt
@@ -2910,6 +2911,103 @@ plot data using 2:xticlabels(1) with linespoints title '(+ 1)', \
 :end:
 
 So it's /slower/ than before. Why?
+
+Oh, that's why.
+#+BEGIN_SRC scheme
+(define (next n)
+  (if (= n 2)
+      3
+      (+ n 1))) ;; <-- D'oh.
+#+END_SRC
+
+Ok, let's try that again.
+
+#+NAME: find-divisor-faster-real
+#+BEGIN_SRC scheme -n :eval no-export :tangle yes :exports code :results silent
+<<square>>
+(define (smallest-divisor n)
+  (find-divisor n 2))
+
+(define (next n)
+  (if (= n 2)
+      3
+      (+ n 2)))
+
+(define (find-divisor n test-divisor)
+  (cond ((> (square test-divisor) n) 
+         n)
+        ((divides? test-divisor n) 
+         test-divisor)
+        (else (find-divisor 
+               n 
+               (next test-divisor)))))
+
+(define (divides? a b)
+  (= (remainder b a) 0))
+#+END_SRC
+#+NAME: smallest-divisor-benchmark-real
+#+BEGIN_SRC scheme -n :noeval :tangle primebench/smdff.scheme :exports code
+<<mattbench2>>
+<<find-divisor-faster-real>>
+(define (prime? n)
+  (= n (smallest-divisor n)))
+<<search-for-primes-untimed>>
+<<print-table>>
+
+(define benchmark-iterations 500000)
+(define (testit f)
+  (list (cadr (mattbench2 (λ() (f 1000 3)) benchmark-iterations))
+        (cadr (mattbench2 (λ() (f 10000 3)) benchmark-iterations))
+        (cadr (mattbench2 (λ() (f 100000 3)) benchmark-iterations))
+        (cadr (mattbench2 (λ() (f 1000000 3)) benchmark-iterations))))
+
+(print-row
+ (testit search-for-primes))
+#+END_SRC
+
+#+NAME: 1-22-smdff
+| 3863.7424 | 13519.209814 | 33520.676384 | 73005.539932 |
+
+#+NAME: 1-22-smdff-massage
+#+BEGIN_SRC scheme :eval no-export :results value table :var smd=1-22-smd smdf=1-22-smdf smdff=1-22-smdff :export results :rownames no :colnames no
+<<print-table-spaced>>
+(use-srfis '(1))
+(zip '("min" "---" 1000 10000 100000 1000000)
+     (append '("(+1)" "---") (car smd))
+     (append '("(next-broken)" "---") (car smdf))
+     (append '("(next-fixed)" "---") (car smdff)))
+#+END_SRC
+
+#+RESULTS[3a23c115d64c3bee2872b55f0746322d1d80471e]: 1-22-smdff-massage
+:results:
+|     min |          (+1) | (next-broken) | (next-fixed) |
+|     --- |           --- |           --- |          --- |
+|    1000 |   5425.223086 |   6456.538118 |    3863.7424 |
+|   10000 |  20772.332491 |  25550.757304 | 13519.209814 |
+|  100000 |  53577.240193 |  66746.041644 | 33520.676384 |
+| 1000000 | 121986.712395 | 148505.580638 | 73005.539932 |
+:end:
+
+#+begin_src gnuplot :var data=1-22-smdff-massage :file fig/1-22-3.png :exports results :noeval :rownames no :colnames no :hlines no :cache no
+reset
+set key autotitle columnheader
+set logscale x
+set xlabel 'minimum number'
+set xtics rotate by -45
+set ylabel 'time'
+set title 'time to run prime search (x scaled log)'
+
+plot data using 2:xticlabels(1) with linespoints, \
+     data using 3:xticlabels(1) with linespoints, \
+     data using 4:xticlabels(1) with linespoints
+#+end_src
+
+#+RESULTS:
+:results:
+[[file:fig/1-22-3.png]]
+:end:
+
+I had a lot of trouble getting this one to compile, I have to restart Emacs in order to get it to render.
 
 *** Final comparison
 //TODO//

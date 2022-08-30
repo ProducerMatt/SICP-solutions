@@ -26,7 +26,7 @@
          ;(fast-mult (double a) (halve b))) <== My first instinct is iterative
         (else (+ a (fast-mult-rec a (- b 1))))))
 ;; fast-mult-rec ends here
-;; [[[[file:~/SICP-group/1/Answers.org::*Comparison benchmarks:][Comparison benchmarks:]]][print-table]]
+;; [[[[file:~/SICP-group/1/Answers.org::print-table][print-table]]][print-table]]
 (use-modules (ice-9 format))
 (define* (print-row ll #:key (mode #f))
   (let ((fmtstr

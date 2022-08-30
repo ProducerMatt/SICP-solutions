@@ -215,7 +215,7 @@
 (define (improve guess x)
   (average guess (/ x guess)))
 
-;; [[[[file:~/SICP-group/1/Answers.org::txt-sqrt][txt-sqrt]]][square]]
+;; [[[[file:~/SICP-group/1/Answers.org::square][square]]][square]]
 (define (square x)
   (* x x))
 ;; square ends here
@@ -243,7 +243,7 @@
 ;; mean-square ends here
 
 ;; [[file:Answers.org::sqrt][sqrt]]
-;; [[[[file:~/SICP-group/1/Answers.org::sqrt][sqrt]]][average]]
+;; [[[[file:~/SICP-group/1/Answers.org::average][average]]][average]]
 (define (average x y)
   (/ (+ x y) 2))
 ;; average ends here
@@ -260,7 +260,7 @@
 ;; sqrt ends here
 
 ;; [[file:Answers.org::cbrt][cbrt]]
-;; [[[[file:~/SICP-group/1/Answers.org::cbrt][cbrt]]][square]]
+;; [[[[file:~/SICP-group/1/Answers.org::square][square]]][square]]
 (define (square x)
   (* x x))
 ;; square ends here
@@ -330,7 +330,7 @@
 
 ;; [[file:Answers.org::fib-phi][fib-phi]]
 ;; [[[[file:~/SICP-group/1/Answers.org::sqrt][sqrt]]][sqrt]]
-;; [[[[file:~/SICP-group/1/Answers.org::sqrt][sqrt]]][average]]
+;; [[[[file:~/SICP-group/1/Answers.org::average][average]]][average]]
 (define (average x y)
   (/ (+ x y) 2))
 ;; average ends here
@@ -493,7 +493,7 @@
 ;; txt-expt ends here
 
 ;; [[file:Answers.org::fast-expt-iter-fail1][fast-expt-iter-fail1]]
-;; [[[[file:~/SICP-group/1/Answers.org::fast-expt-iter-fail1][fast-expt-iter-fail1]]][square]]
+;; [[[[file:~/SICP-group/1/Answers.org::square][square]]][square]]
 (define (square x)
   (* x x))
 ;; square ends here
@@ -512,7 +512,7 @@
 ;; fast-expt-iter-fail1 ends here
 
 ;; [[file:Answers.org::fast-expt-iter][fast-expt-iter]]
-;; [[[[file:~/SICP-group/1/Answers.org::fast-expt-iter][fast-expt-iter]]][square]]
+;; [[[[file:~/SICP-group/1/Answers.org::square][square]]][square]]
 (define (square x)
   (* x x))
 ;; square ends here
@@ -608,7 +608,7 @@
 ;; gcd ends here
 
 ;; [[file:Answers.org::find-divisor-txt][find-divisor-txt]]
-;; [[[[file:~/SICP-group/1/Answers.org::find-divisor-txt][find-divisor-txt]]][square]]
+;; [[[[file:~/SICP-group/1/Answers.org::square][square]]][square]]
 (define (square x)
   (* x x))
 ;; square ends here
@@ -630,7 +630,7 @@
 
 ;; [[file:Answers.org::prime-smallest-divisor][prime-smallest-divisor]]
 ;; [[[[file:~/SICP-group/1/Answers.org::find-divisor-txt][find-divisor-txt]]][find-divisor-txt]]
-;; [[[[file:~/SICP-group/1/Answers.org::find-divisor-txt][find-divisor-txt]]][square]]
+;; [[[[file:~/SICP-group/1/Answers.org::square][square]]][square]]
 (define (square x)
   (* x x))
 ;; square ends here
@@ -655,8 +655,8 @@
 
 ;; [[file:Answers.org::timed-prime-test-txt][timed-prime-test-txt]]
 ;; [[[[file:~/SICP-group/1/Answers.org::prime-smallest-divisor][prime-smallest-divisor]]][prime-smallest-divisor]]
-;; [[[[file:~/SICP-group/1/Answers.org::prime-smallest-divisor][prime-smallest-divisor]]][find-divisor-txt]]
-;; [[[[file:~/SICP-group/1/Answers.org::prime-smallest-divisor][prime-smallest-divisor]]][square]]
+;; [[[[file:~/SICP-group/1/Answers.org::find-divisor-txt][find-divisor-txt]]][find-divisor-txt]]
+;; [[[[file:~/SICP-group/1/Answers.org::square][square]]][square]]
 (define (square x)
   (* x x))
 ;; square ends here
@@ -731,7 +731,7 @@
 ;; search-for-primes-untimed ends here
 
 ;; [[file:Answers.org::find-divisor-faster][find-divisor-faster]]
-;; [[[[file:~/SICP-group/1/Answers.org::find-divisor-faster][find-divisor-faster]]][square]]
+;; [[[[file:~/SICP-group/1/Answers.org::square][square]]][square]]
 (define (square x)
   (* x x))
 ;; square ends here
@@ -755,3 +755,29 @@
 (define (divides? a b)
   (= (remainder b a) 0))
 ;; find-divisor-faster ends here
+
+;; [[file:Answers.org::find-divisor-faster-real][find-divisor-faster-real]]
+;; [[[[file:~/SICP-group/1/Answers.org::square][square]]][square]]
+(define (square x)
+  (* x x))
+;; square ends here
+(define (smallest-divisor n)
+  (find-divisor n 2))
+
+(define (next n)
+  (if (= n 2)
+      3
+      (+ n 2)))
+
+(define (find-divisor n test-divisor)
+  (cond ((> (square test-divisor) n) 
+         n)
+        ((divides? test-divisor n) 
+         test-divisor)
+        (else (find-divisor 
+               n 
+               (next test-divisor)))))
+
+(define (divides? a b)
+  (= (remainder b a) 0))
+;; find-divisor-faster-real ends here
