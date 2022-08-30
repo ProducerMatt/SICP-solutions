@@ -158,7 +158,7 @@ For manually printing items in rows to stdout. Not currently used.
 Print ~args~ as a table separated by pipes. Optionally print spacer for
 colnames.
 #+NAME: print-table
-#+BEGIN_SRC scheme -n :eval no-export :tangle yes :results output :export code
+#+BEGIN_SRC scheme -n :eval no-export :tangle yes :results output :exports code
 (use-modules (ice-9 format))
 (define* (print-row ll #:key (mode #f))
   (let ((fmtstr
@@ -192,7 +192,7 @@ colnames.
 :end:
 
 #+NAME: print-table-test
-#+BEGIN_SRC scheme -n :eval no-export :tangle yes :results table output :export no :rownames yes :colnames yes
+#+BEGIN_SRC scheme -n :eval no-export :tangle yes :results table output :exports no :rownames yes :colnames yes
 <<print-table>>
 (let* ((l (iota 3))
       (table (list
@@ -215,7 +215,7 @@ colnames.
 *** ~print-table~ (spaces only)
 TODO: Merge these together.
 #+NAME: print-table-spaced
-#+BEGIN_SRC scheme -n :eval no-export :tangle yes :results output :export code
+#+BEGIN_SRC scheme -n :eval no-export :tangle yes :results output :exports code
 (use-modules (ice-9 format))
 (define* (print-row ll #:key (mode #f))
   (let ((fmtstr
@@ -245,7 +245,7 @@ TODO: Merge these together.
 #+end_src
 
 #+NAME: print-table-spaced-test
-#+BEGIN_SRC scheme -n :eval no-export :tangle yes :results table output :export no :rownames yes :colnames yes
+#+BEGIN_SRC scheme -n :eval no-export :tangle yes :results table output :exports no :rownames yes :colnames yes
 <<print-table-spaced>>
 (let* ((l (iota 3))
       (table (list
@@ -2770,7 +2770,7 @@ Here are the results (run externally from Org-Mode):
 | 5425.223086 | 20772.332491 | 53577.240193 | 121986.712395 |
 
 #+NAME: 1-22-smd-massage
-#+BEGIN_SRC scheme :eval no-export :results value table :var data=1-22-smd :export none :rownames no :colnames no
+#+BEGIN_SRC scheme :eval no-export :results value table :var data=1-22-smd :exports none :rownames no :colnames no
 ;(map (lambda(x y) (list x y))
 <<transpose-list>>
 (use-srfis '(1))
@@ -2876,7 +2876,7 @@ the fact that it is different from 2?
 
 
 #+NAME: 1-22-smdf-massage
-#+BEGIN_SRC scheme :eval no-export :results value table :var smd=1-22-smd smdf=1-22-smdf :export results :rownames no :colnames no
+#+BEGIN_SRC scheme :eval no-export :results value table :var smd=1-22-smd smdf=1-22-smdf :exports results :rownames no :colnames no
 <<print-table-spaced>>
 (use-srfis '(1))
 (zip '("min" 1000 10000 100000 1000000)
@@ -2970,7 +2970,7 @@ Ok, let's try that again.
 | 3863.7424 | 13519.209814 | 33520.676384 | 73005.539932 |
 
 #+NAME: 1-22-smdff-massage
-#+BEGIN_SRC scheme :eval no-export :results value table :var smd=1-22-smd smdf=1-22-smdf smdff=1-22-smdff :export results :rownames no :colnames no
+#+BEGIN_SRC scheme :eval no-export :results value table :var smd=1-22-smd smdf=1-22-smdf smdff=1-22-smdff :exports results :rownames no :colnames no
 <<print-table-spaced>>
 (use-srfis '(1))
 (zip '("min" "---" 1000 10000 100000 1000000)
@@ -3015,14 +3015,14 @@ Anyways, there's the speedup that was expected. Let's compare the ratios.
 
 Defining a new average that takes arbitrary numbers of arguments:
 #+NAME: average-varargs
-#+BEGIN_SRC scheme :eval no-export :results silent output :var smd=1-22-smd smdf=1-22-smdf smdff=1-22-smdff :export code :rownames no :colnames no
+#+BEGIN_SRC scheme :eval no-export :results silent output :var smd=1-22-smd smdf=1-22-smdf smdff=1-22-smdff :exports code :rownames no :colnames no
 (define (average . args)
   (let ((len (length args)))
     (/ (apply + args) len)))
 #+END_SRC
 
 Using it for percentage comparisons:
-#+BEGIN_SRC scheme :eval no-export :results value table :var smd=1-22-smd smdf=1-22-smdf smdff=1-22-smdff :export both :rownames no :colnames no
+#+BEGIN_SRC scheme :eval no-export :results value table :var smd=1-22-smd smdf=1-22-smdf smdff=1-22-smdff :exports both :rownames no :colnames no
 <<average-varargs>>
 (list (cons "% speedup for broken (next)"
             (cons (format #f "~2$%"
@@ -3097,7 +3097,7 @@ something more like a 200% speedup. Let's try optimizing it further. Two observa
 | 3151.259574 | 11245.20428 | 27803.067944 | 61997.275154 |
 
 #+NAME: 1-22-smdff2-massage
-#+BEGIN_SRC scheme :eval no-export :results value table :var smd=1-22-smd smdf=1-22-smdf smdff=1-22-smdff smdff2=1-22-smdff2 :export results :rownames no :colnames no
+#+BEGIN_SRC scheme :eval no-export :results value table :var smd=1-22-smd smdf=1-22-smdf smdff=1-22-smdff smdff2=1-22-smdff2 :exports results :rownames no :colnames no
 <<print-table-spaced>>
 (use-srfis '(1))
 (zip '("min" "---" 1000 10000 100000 1000000)
@@ -3137,7 +3137,7 @@ plot data using 2:xticlabels(1) with linespoints, \
 file:fig/1-22-4.png
 :end:
 
-#+BEGIN_SRC scheme :eval no-export :results value table :var smd=1-22-smd smdf=1-22-smdf smdff=1-22-smdff smdff2=1-22-smdff2 :export results :rownames no :colnames no
+#+BEGIN_SRC scheme :eval no-export :results value table :var smd=1-22-smd smdf=1-22-smdf smdff=1-22-smdff smdff2=1-22-smdff2 :exports results :rownames no :colnames no
 <<average-varargs>>
 (define (print-percentage name lista listb)
   (list (format #f "% speedup for ~a" name)
