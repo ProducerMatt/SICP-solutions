@@ -3157,13 +3157,238 @@ file:fig/1-22-4.png
 | % speedup for optimized     | 186.59% |
 :end:
 
-*** Final comparison
-//TODO//
-#+BEGIN_SRC scheme -n :eval no-export :tangle no :exports both :results output table :colnames yes :rownames :yes
+* Exercise 1.24
+** Text
+#+NAME: expmod
+#+BEGIN_SRC scheme :eval no-export :results output silent :exports code
+<<square>>
+(define (expmod base exp m)
+  (cond ((= exp 0) 1)
+        ((even? exp)
+         (remainder 
+          (square (expmod base (/ exp 2) m))
+          m))
+        (else
+         (remainder 
+          (* base (expmod base (- exp 1) m))
+          m))))
+#+END_SRC
+#+NAME: fermat-test
+#+BEGIN_SRC scheme :eval no-export :results output silent :exports code
+(define (fermat-test n)
+  (define (try-it a)
+    (= (expmod a n n) a))
+  (try-it (+ 1 (random (- n 1)))))
+#+END_SRC
+#+NAME: fast-prime
+#+BEGIN_SRC scheme :eval no-export :results output silent :exports code
+(define (fast-prime? n times)
+  (cond ((= times 0) #t)
+        ((fermat-test n) 
+         (fast-prime? n (- times 1)))
+        (else #f)))
+#+END_SRC
+** Question
+Modify the ~timed-prime-test~ procedure of Exercise 1.22 to use ~fast-prime?~ (the
+Fermat method), and test each of the 12 primes you found in that exercise. Since
+the Fermat test has \(\Theta(\text{log}n)\) growth, how would you expect the
+time to test primes near 1,000,000 to compare with the time needed to test
+primes near 1000? Do your data bear this out? Can you explain any discrepancy
+you find?
+
+** Answer
+#+NAME: fermat-bench
+#+BEGIN_SRC scheme -n :noeval :tangle primebench/fermat.scheme :exports code
+<<mattbench2>>
+<<expmod>>
+<<fermat-test>>
+<<fast-prime>>
+(define fermat-iterations 2)
+(define (prime? n)
+  (fast-prime? n fermat-iterations))
+<<search-for-primes-untimed>>
 <<print-table>>
 
-(print-table
- (list (list "function" ">1000" ">100000" ">1000000" ">10000000")
-       (list "smallest-divisor" smd)) ;; TODO: IMPORT TABLES
-    #:colnames #t)
+(define benchmark-iterations 500000)
+(define (testit f)
+  (list (cadr (mattbench2 (λ() (f 1000 3)) benchmark-iterations))
+        (cadr (mattbench2 (λ() (f 10000 3)) benchmark-iterations))
+        (cadr (mattbench2 (λ() (f 100000 3)) benchmark-iterations))
+        (cadr (mattbench2 (λ() (f 1000000 3)) benchmark-iterations))))
+
+(print-row
+ (testit search-for-primes))
 #+END_SRC
+
+#+NAME: 1-24-fermat
+| 11175.799722 | 23518.62116 | 32150.745642 | 32679.766448 |
+
+#+NAME: 1-24-massage
+#+BEGIN_SRC scheme :eval no-export :results value table :var smd=1-22-smd smdff2=1-22-smdff2 fermat=1-24-fermat :exports results :rownames no :colnames no
+<<print-table-spaced>>
+(use-srfis '(1))
+(zip '("min" "---" 1000 10000 100000 1000000)
+     (append '("(+1)" "---") (car smd))
+     (append '("integrated" "---") (car smdff2))
+     (append '("fermat (2 guesses)" "---") (car fermat)))
+#+END_SRC
+
+#+RESULTS[c9241299552f4a1e84ecbb973fb1d1f9cca04fca]: 1-24-massage
+:results:
+|     min |          (+1) |   integrated | fermat (2 guesses) |
+|     --- |           --- |          --- |                --- |
+|    1000 |   5425.223086 |  3151.259574 |       11175.799722 |
+|   10000 |  20772.332491 |  11245.20428 |        23518.62116 |
+|  100000 |  53577.240193 | 27803.067944 |       32150.745642 |
+| 1000000 | 121986.712395 | 61997.275154 |       32679.766448 |
+:end:
+
+#+begin_src gnuplot :var data=1-24-massage :file fig/1-24-1.png :exports results :rownames no :colnames no :hlines no :cache no
+reset
+set key autotitle columnheader
+set logscale x
+set xlabel 'minimum number'
+set xtics rotate by -45
+set ylabel 'time'
+set title 'time to run prime search (x scaled log)'
+
+plot data using 2:xticlabels(1) with linespoints, \
+     data using 3:xticlabels(1) with linespoints, \
+     data using 4:xticlabels(1) with linespoints, \
+     data using 5:xticlabels(1) with linespoints
+#+end_src
+
+#+RESULTS:
+:results:
+file:fig/1-24-1.png
+:end:
+
+It definitely looks to be advancing much slower than the other methods. I'd like
+to see more of the function.
+
+#+NAME: smallest-divisor-benchmark-real3
+#+BEGIN_SRC scheme -n :noeval :tangle primebench/more.scheme :exports code
+<<mattbench2>>
+<<find-divisor-faster-real>>
+(define (prime? n)
+  (= n (smallest-divisor n)))
+<<search-for-primes-untimed>>
+<<print-table>>
+
+(define benchmark-iterations 500000)
+(define (testit f)
+  (list (cadr (mattbench2 (λ() (f 1000 3)) benchmark-iterations))
+        (cadr (mattbench2 (λ() (f 10000 3)) benchmark-iterations))
+        (cadr (mattbench2 (λ() (f 100000 3)) benchmark-iterations))
+        (cadr (mattbench2 (λ() (f 1000000 3)) benchmark-iterations))
+        (cadr (mattbench2 (λ() (f 10000000 3)) benchmark-iterations))
+        (cadr (mattbench2 (λ() (f 100000000 3)) benchmark-iterations))
+        (cadr (mattbench2 (λ() (f 1000000000 3)) benchmark-iterations))
+        (cadr (mattbench2 (λ() (f 10000000000 3)) benchmark-iterations))
+        (cadr (mattbench2 (λ() (f 100000000000 3)) benchmark-iterations))
+        (cadr (mattbench2 (λ() (f 1000000000000 3)) benchmark-iterations))))
+
+(print-row
+ (testit search-for-primes))
+#+END_SRC
+
+#+NAME: fermat-bench2
+#+BEGIN_SRC scheme -n :noeval :tangle primebench/more.scheme :exports code
+<<mattbench2>>
+<<expmod>>
+<<fermat-test>>
+<<fast-prime>>
+(define fermat-iterations 100)
+(define (prime? n)
+  (fast-prime? n fermat-iterations))
+<<search-for-primes-untimed>>
+<<print-table>>
+
+(define benchmark-iterations 500000)
+(define (testit f)
+  (list (cadr (mattbench2 (λ() (f 1000 3)) benchmark-iterations))
+        (cadr (mattbench2 (λ() (f 10000 3)) benchmark-iterations))
+        (cadr (mattbench2 (λ() (f 100000 3)) benchmark-iterations))
+        (cadr (mattbench2 (λ() (f 1000000 3)) benchmark-iterations))
+        (cadr (mattbench2 (λ() (f 10000000 3)) benchmark-iterations))
+        (cadr (mattbench2 (λ() (f 100000000 3)) benchmark-iterations))
+        (cadr (mattbench2 (λ() (f 1000000000 3)) benchmark-iterations))
+        (cadr (mattbench2 (λ() (f 10000000000 3)) benchmark-iterations))
+        (cadr (mattbench2 (λ() (f 100000000000 3)) benchmark-iterations))
+        (cadr (mattbench2 (λ() (f 1000000000000 3)) benchmark-iterations))))
+
+(print-row
+ (testit search-for-primes))
+#+END_SRC
+
+#+NAME: smd-vs-fermat
+|   3686.3282 |  13351.8894 |  33088.8276 |  72938.5112 |   301546.52 |  685713.651 | 2072180.8884 | 7102494.7096 | 20348753.9118 | 61468319.545 |
+| 239784.3956 | 331190.6826 | 400637.4218 | 472016.2916 | 647131.1474 | 673495.7498 |  713456.7276 | 3017270.7806 |  3983199.8268 | 4181357.7304 |
+
+#+NAME: 1-24-massage2
+#+BEGIN_SRC scheme :eval no-export :results value :var table=smd-vs-fermat :exports results :rownames no :colnames no
+<<print-table-spaced>>
+(use-srfis '(1))
+(zip '("min" "---" 1000 10000 100000 1000000 10000000 100000000 1000000000 10000000000 100000000000 1000000000000)
+     (append '("integrated" "---") (car table))
+     (append '("fermat (100 guesses)" "---") (cadr table)))
+#+END_SRC
+
+#+RESULTS[0e95ab08096d4858fdb0501cb7a047bcec2f3c10]: 1-24-massage2
+:results:
+|           min |    integrated | fermat (100 guesses) |
+|           --- |           --- |                  --- |
+|          1000 |     3686.3282 |          239784.3956 |
+|         10000 |    13351.8894 |          331190.6826 |
+|        100000 |    33088.8276 |          400637.4218 |
+|       1000000 |    72938.5112 |          472016.2916 |
+|      10000000 |     301546.52 |          647131.1474 |
+|     100000000 |    685713.651 |          673495.7498 |
+|    1000000000 |  2072180.8884 |          713456.7276 |
+|   10000000000 |  7102494.7096 |         3017270.7806 |
+|  100000000000 | 20348753.9118 |         3983199.8268 |
+| 1000000000000 |  61468319.545 |         4181357.7304 |
+:end:
+
+#+begin_src gnuplot :var data=1-24-massage2 :file fig/1-24-2.png :exports results :rownames no :colnames no :hlines no :cache no :eval no-export
+reset
+set key autotitle columnheader
+set logscale xy
+set xlabel 'minimum number'
+set xtics rotate by -45
+set ylabel 'time'
+set title 'time to run prime search (x\&y scaled log)'
+
+plot data using 2:xticlabels(1) with linespoints, \
+     data using 3:xticlabels(1) with linespoints
+#+end_src
+
+#+RESULTS:
+:results:
+file:fig/1-24-2.png
+:end:
+
+* Exercise 1.25
+** Question
+Alyssa P. Hacker complains that we went to a lot of extra work in writing
+~expmod~. After all, she says, since we already know how to compute
+exponentials, we could have simply written
+
+#+BEGIN_SRC scheme -n :tangle no
+(define (expmod base exp m)
+  (remainder (fast-expt base exp) m))
+#+END_SRC
+
+Is she correct? Would this procedure serve as well for our fast prime tester?
+Explain.
+
+** Answer
+In Alyssa's version of ~expmod~, the result of the ~fast-expt~ operation is
+/extremely/ large. For example, in the process of checking for divisors of
+1,001, the number 455 will be tried. src_scheme{(expt 455 1001)} produces an
+integer 2,661 digits long. This is just one of the thousands of exponentiations
+that ~smallest-divisor~ will perform. It's best to avoid this, so we use to our
+advantage the fact that we only need to know the remainder of the
+exponentiations. ~expmod~ does the remainder after every exponentiation
+operation, significantly reducing the memory requirements, as well as helping
+with the other slowdowns associated with handling "bignums".
