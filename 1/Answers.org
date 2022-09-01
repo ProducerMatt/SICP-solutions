@@ -3389,6 +3389,107 @@ In Alyssa's version of ~expmod~, the result of the ~fast-expt~ operation is
 integer 2,661 digits long. This is just one of the thousands of exponentiations
 that ~smallest-divisor~ will perform. It's best to avoid this, so we use to our
 advantage the fact that we only need to know the remainder of the
-exponentiations. ~expmod~ does the remainder after every exponentiation
-operation, significantly reducing the memory requirements, as well as helping
-with the other slowdowns associated with handling "bignums".
+exponentiations. ~expmod~ breaks down the exponentiation into smaller steps and
+performs ~remainder~ after every step, significantly reducing the memory
+requirements.
+
+As an example, let's trace (some of) the execution of src_scheme{(expmod 455 1001 1001)}:
+
+#+BEGIN_SRC scheme
+(expmod 455 1001 1001)
+>  (even? 1001)
+>  #f
+>  (expmod 455 1000 1001)
+>  >  (even? 1000)
+>  >  #t
+>  >  (expmod 455 500 1001)
+>  >  >  (even? 500)
+>  >  >  #t
+;; ...
+>  >  >  x11 (expmod 455 2 1001)
+>  >  >  x11 >  (even? 2)
+>  >  >  x11 >  #t
+>  >  >  x11 >  (expmod 455 1 1001)
+>  >  >  x11 >  >  (even? 1)
+>  >  >  x11 >  >  #f
+>  >  >  x11 >  >  (expmod 455 0 1001)
+>  >  >  x11 >  >  1
+>  >  >  x11 >  455
+>  >  >  x11 >  (square 455)
+>  >  >  x11 >  207025
+>  >  >  x11 819
+;; ...
+>  >  >  (square 364)
+>  >  >  132496
+>  >  364
+>  >  (square 364)
+>  >  132496
+>  364
+455
+#+END_SRC
+
+You can see that the numbers remain quite manageable throughout this process. So
+taking these extra steps actually leads to an algorithm that performs better.
+
+* Exercise 1.26
+** Question
+Louis Reasoner is having great difficulty doing Exercise 1.24. His ~fast-prime?~ test seems to run more slowly than his ~prime?~ test. Louis calls his friend Eva Lu Ator over to help. When they examine Louis’s code, they find that he has rewritten the ~expmod~ procedure to use an explicit multiplication, rather than calling ~square~:
+
+#+begin_src scheme -n
+(define (expmod base exp m)
+  (cond ((= exp 0) 1)
+        ((even? exp)
+         (remainder 
+          (* (expmod base (/ exp 2) m) ;; <== hmm.
+             (expmod base (/ exp 2) m))
+          m))
+        (else
+         (remainder 
+          (* base 
+             (expmod base (- exp 1) m))
+          m))))
+#+end_src
+
+“I don’t see what difference that could make,” says Louis. “I do.” says Eva. “By
+writing the procedure like that, you have transformed the \(\Theta(\log n)\)
+process into a \(\Theta(n)\) process.” Explain.
+
+** Answer
+Making the same function call twice isn't the same as using a variable twice --
+Louis' version doubles the work, having two processes solving the exact same
+problem. Since the number of processes used increases exponentially, this turns
+\(\log n\) into \(n\).
+
+* Exercise 1.27
+** Question
+Demonstrate that the Carmichael numbers listed in Footnote 1.47 really do fool
+the Fermat test. That is, write a procedure that takes an integer \(n\) and
+tests whether \(a^n\) is congruent to \(a\) modulo \(n\) for every \(a < n\),
+and try your procedure on the given Carmichael numbers.
+#+NAME: carmichael
+| 561 | 1105 | 1729 | 2465 | 2821 | 6601 |
+** Answer
+#+NAME: car-test
+#+begin_src scheme -n :tangle yes :results silent :exports code :eval no-export
+<<expmod>>
+(define (car-test n)
+  (define (check a)
+    (= (remainder (expt a n) n)
+       (remainder (modulo a n) n)))
+  (every check
+           (cddr (iota n))))
+#+end_src
+
+#+NAME: car-test
+#+BEGIN_SRC scheme -n :results value code :exports both :eval no-export
+<<car-test>>
+(list (car-test 12) ; <== false (not prime)
+      (car-test 1009);<== true  (real prime)
+      (car-test 561));<== true  (not prime,
+                     ;      Carmichael number)
+#+END_SRC
+
+#+RESULTS[942adcfd272a3e4ea79bf62bd22e523a1599e8b0]: car-test
+#+begin_src scheme
+(#f #t #t)
+#+end_src

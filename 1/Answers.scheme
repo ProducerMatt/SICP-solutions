@@ -804,3 +804,28 @@
 (define (divides? a b)
   (= (remainder b a) 0))
 ;; find-divisor-faster-real2 ends here
+
+;; [[file:Answers.org::car-test][car-test]]
+;; [[[[file:~/SICP-group/1/Answers.org::expmod][expmod]]][expmod]]
+;; [[[[file:~/SICP-group/1/Answers.org::square][square]]][square]]
+(define (square x)
+  (* x x))
+;; square ends here
+(define (expmod base exp m)
+  (cond ((= exp 0) 1)
+        ((even? exp)
+         (remainder 
+          (square (expmod base (/ exp 2) m))
+          m))
+        (else
+         (remainder 
+          (* base (expmod base (- exp 1) m))
+          m))))
+;; expmod ends here
+(define (car-test n)
+  (define (check a)
+    (= (remainder (expt a n) n)
+       (remainder (modulo a n) n)))
+  (every check
+           (cddr (iota n))))
+;; car-test ends here
