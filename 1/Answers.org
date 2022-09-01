@@ -3275,7 +3275,7 @@ to see more of the function.
 <<search-for-primes-untimed>>
 <<print-table>>
 
-(define benchmark-iterations 500000)
+(define benchmark-iterations 100000)
 (define (testit f)
   (list (cadr (mattbench2 (λ() (f 1000 3)) benchmark-iterations))
         (cadr (mattbench2 (λ() (f 10000 3)) benchmark-iterations))
@@ -3304,7 +3304,7 @@ to see more of the function.
 <<search-for-primes-untimed>>
 <<print-table>>
 
-(define benchmark-iterations 500000)
+(define benchmark-iterations 100000)
 (define (testit f)
   (list (cadr (mattbench2 (λ() (f 1000 3)) benchmark-iterations))
         (cadr (mattbench2 (λ() (f 10000 3)) benchmark-iterations))
@@ -3322,8 +3322,9 @@ to see more of the function.
 #+END_SRC
 
 #+NAME: smd-vs-fermat
-|   3686.3282 |  13351.8894 |  33088.8276 |  72938.5112 |   301546.52 |  685713.651 | 2072180.8884 | 7102494.7096 | 20348753.9118 | 61468319.545 |
-| 239784.3956 | 331190.6826 | 400637.4218 | 472016.2916 | 647131.1474 | 673495.7498 |  713456.7276 | 3017270.7806 |  3983199.8268 | 4181357.7304 |
+| 3802.45146 | 13397.91871 | 32948.31241 | 73237.64777 | 299326.76182 | 678512.75719 | 2064911.33345 | 7065717.58395 | 20198370.27007 | 60956807.83034 |
+| 237945.8945 | 319761.90842 | 391573.47557 | 448501.96232 | 614009.08547 | 661205.34772 | 700058.30723 | 2852221.29076 | 3717690.96246 | 3995948.05596 |
+
 
 #+NAME: 1-24-massage2
 #+BEGIN_SRC scheme :eval no-export :results value :var table=smd-vs-fermat :exports results :rownames no :colnames no
@@ -3334,20 +3335,20 @@ to see more of the function.
      (append '("fermat (100 guesses)" "---") (cadr table)))
 #+END_SRC
 
-#+RESULTS[0e95ab08096d4858fdb0501cb7a047bcec2f3c10]: 1-24-massage2
+#+RESULTS[7524e2c0a297987b6bf024a6164e93e6b71ca7f2]: 1-24-massage2
 :results:
-|           min |    integrated | fermat (100 guesses) |
-|           --- |           --- |                  --- |
-|          1000 |     3686.3282 |          239784.3956 |
-|         10000 |    13351.8894 |          331190.6826 |
-|        100000 |    33088.8276 |          400637.4218 |
-|       1000000 |    72938.5112 |          472016.2916 |
-|      10000000 |     301546.52 |          647131.1474 |
-|     100000000 |    685713.651 |          673495.7498 |
-|    1000000000 |  2072180.8884 |          713456.7276 |
-|   10000000000 |  7102494.7096 |         3017270.7806 |
-|  100000000000 | 20348753.9118 |         3983199.8268 |
-| 1000000000000 |  61468319.545 |         4181357.7304 |
+|           min |     integrated | fermat (100 guesses) |
+|           --- |            --- |                  --- |
+|          1000 |     3802.45146 |          237945.8945 |
+|         10000 |    13397.91871 |         319761.90842 |
+|        100000 |    32948.31241 |         391573.47557 |
+|       1000000 |    73237.64777 |         448501.96232 |
+|      10000000 |   299326.76182 |         614009.08547 |
+|     100000000 |   678512.75719 |         661205.34772 |
+|    1000000000 |  2064911.33345 |         700058.30723 |
+|   10000000000 |  7065717.58395 |        2852221.29076 |
+|  100000000000 | 20198370.27007 |        3717690.96246 |
+| 1000000000000 | 60956807.83034 |        3995948.05596 |
 :end:
 
 #+begin_src gnuplot :var data=1-24-massage2 :file fig/1-24-2.png :exports results :rownames no :colnames no :hlines no :cache no :eval no-export
@@ -3367,6 +3368,9 @@ plot data using 2:xticlabels(1) with linespoints, \
 :results:
 file:fig/1-24-2.png
 :end:
+
+For the life of me I have no idea what that bump is. Maybe it needs more
+aggressive bignum processing there?
 
 * Exercise 1.25
 ** Question
