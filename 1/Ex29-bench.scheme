@@ -1,0 +1,95 @@
+;; [[file:Answers.org::*Answer][Answer:2]]
+;; [[[[file:~/SICP-group/1/Answers.org::mattbench2][mattbench2]]][mattbench2]]
+(define (mattbench2 f n)
+  ;; Executes "f" for n times, and returns how long it took.
+  ;; f is a lambda that takes no arguments, a.k.a. a "thunk"
+  
+  ;; Returns a list with car(last execution results) and cadr(time taken divided by iterations n)
+
+  (define (time-getter) (get-internal-run-time))
+  (define start-time (time-getter))
+  (define (how-long) (- (time-getter) start-time))
+
+  (define (iter i)
+    (f)
+    (if (<= i 0)
+        (f) ;; return the results of the last function call
+        (iter (- i 1))))
+
+  (list (iter n) ;; result of last call of f
+        (/ (how-long) (* n 1.0))));; Divide by iterations so changed n has no effect
+;; mattbench2 ends here
+;; [[[[file:~/SICP-group/1/Answers.org::print-table][print-table]]][print-table]]
+(use-modules (ice-9 format))
+(define* (print-row ll #:key (mode #f))
+  (let ((fmtstr
+         (cond ((or (eq? mode #f)
+                    (equal? mode "display")
+                    (equal? mode "~a"))
+                " ~a |")    ;; print objects for human viewing
+               ((or (eq? mode #t)
+                    (equal? mode "write")
+                    (equal? mode "~s"))
+                " ~s |") ;; print objects for correctly (read)ing back
+               ((string? mode)
+                mode)))) ;; pass custom format string
+      (format #t "~&|")
+      (map (λ(x) (format #t fmtstr x)) ll)
+      (format #t "~%")))
+(define* (print-table table #:key (colnames #f) (mode #f))
+    (define (iter t)
+      (print-row (car t) #:mode mode)
+      (if colnames
+          (print-row (car t) #:mode "---|"))
+      (map (λ(x) (print-row x #:mode mode)) (cdr t)))
+    (cond ((and (= 1 (length table))
+                (list? (car table))) (iter (car table)))
+          ((<= 1 (length table)) (iter table))
+          (else error "Invalid Input??")))
+;; print-table ends here
+(define (cube x)
+  (* x x x))
+;; [[[[file:~/SICP-group/1/Answers.org::sum][sum]]][sum]]
+(define (sum term a next b)
+  (if (> a b)
+      0
+      (+ (term a)
+         (sum term (next a) next b))))
+;; sum ends here
+;; [[[[file:~/SICP-group/1/Answers.org::integral][integral]]][integral]]
+(define (integral f a b dx)
+  (define (add-dx x)
+    (+ x dx))
+  (* (sum f (+ a (/ dx 2.0)) add-dx b)
+     dx))
+;; integral ends here
+;; [[[[file:~/SICP-group/1/Answers.org::int-simp][int-simp]]][int-simp]]
+(define (int-simp f a b n)
+  (define h
+    (/ (- b a)
+     n))
+  (define (gety k)
+    (f (+ a (* k h))))
+  (define (series-y sum k) ;; start with sum = y_0
+    (cond ((= k n) (+ sum (gety k)));; and k = 1
+          ((even? k) (series-y
+                      (+ sum (* 2 (gety k)))
+                      (+ 1 k)))
+          (else (series-y
+                 (+ sum (* 4 (gety k)))
+                 (+ 1 k)))))
+  (define sum-of-series (series-y (gety a) 1)) ;; (f a) = y_0
+  (* (/ h 3) sum-of-series))
+;; int-simp ends here
+
+(define iterations 100000) ;; benchmark iterations
+(define (run-test1)
+  (integral cube 0.0 1.0 0.0008))
+(define (run-test2)
+  (int-simp cube 0.0 1.0 1000.0))
+(print-table (list (list "integral dx:0.0008" "int-simp i:1000")
+                   (list (run-test1) (run-test2))
+                   (list (cadr (mattbench2 run-test1 iterations))
+                         (cadr (mattbench2 run-test2 iterations))))
+             #:colnames #t)
+;; Answer:2 ends here

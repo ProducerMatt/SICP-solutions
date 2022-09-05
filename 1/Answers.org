@@ -3380,3 +3380,54 @@ value of the integral, computed using Simpson's Rule. Use your procedure to
 integrate ~cube~ between 0 and 1 (with \(n = 100\) and \(n = 1000\)), and
 compare the results to those of the ~integral~ procedure shown above.
 ** Answer
+#+NAME: int-simp
+#+BEGIN_SRC scheme -n :eval no-export :results output silent :exports code
+(define (int-simp f a b n)
+  (define h
+    (/ (- b a)
+     n))
+  (define (gety k)
+    (f (+ a (* k h))))
+  (define (series-y sum k) ;; start with sum = y_0
+    (cond ((= k n) (+ sum (gety k)));; and k = 1
+          ((even? k) (series-y
+                      (+ sum (* 2 (gety k)))
+                      (+ 1 k)))
+          (else (series-y
+                 (+ sum (* 4 (gety k)))
+                 (+ 1 k)))))
+  (define sum-of-series (series-y (gety a) 1)) ;; (f a) = y_0
+  (* (/ h 3) sum-of-series))
+#+END_SRC
+
+Let's compare these at equal levels of computational difficulty.
+#+BEGIN_SRC scheme -n :eval no-export :exports results :results output table :tangle Ex29-bench.scheme
+<<mattbench2>>
+<<print-table>>
+(define (cube x)
+  (* x x x))
+<<sum>>
+<<integral>>
+<<int-simp>>
+
+(define iterations 100000) ;; benchmark iterations
+(define (run-test1)
+  (integral cube 0.0 1.0 0.0008))
+(define (run-test2)
+  (int-simp cube 0.0 1.0 1000.0))
+(print-table (list (list "integral dx:0.0008" "int-simp i:1000")
+                   (list (run-test1) (run-test2))
+                   (list (cadr (mattbench2 run-test1 iterations))
+                         (cadr (mattbench2 run-test2 iterations))))
+             #:colnames #t)
+#+END_SRC
+
+#+RESULTS[f1ab42d01728399d2e9c3b9f8c996a3766a58da4]:
+:results:
+|  integral dx:0.0008 |     int-simp i:1000 |
+|---------------------+---------------------|
+| 0.24999992000001311 | 0.25000000000000006 |
+|         321816.2755 |         330405.8918 |
+:end:
+
+So, more accurate for roughly the same effort or less.
