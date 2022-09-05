@@ -3347,6 +3347,23 @@ mr false-positives Carmichaels: #f
 #+END_SRC
 
 * Exercise 1.29
+** Text
+#+NAME: sum
+#+BEGIN_SRC scheme -n :eval no-export :results output silent :exports code
+(define (sum term a next b)
+  (if (> a b)
+      0
+      (+ (term a)
+         (sum term (next a) next b))))
+#+END_SRC
+#+NAME: integral
+#+BEGIN_SRC scheme -n :eval no-export :results output silent :exports code
+(define (integral f a b dx)
+  (define (add-dx x)
+    (+ x dx))
+  (* (sum f (+ a (/ dx 2.0)) add-dx b)
+     dx))
+#+END_SRC
 ** Question
 Simpson's Rule is a more accurate method of numerical integration than the
 method illustrated above. Using Simpson's Rule, the integral of a function \(f\)
