@@ -1156,7 +1156,7 @@ exponential increase of the Fibonacci sequence itself.
 
 
 
-#+begin_src gnuplot :var data=1-13-tab2 :file fig/1-13.png :exports results :eval no-export
+#+begin_src gnuplot :var data=1-13-tab2 :file 1/fig/1-13.png :exports results :eval no-export
 reset # helps with various issues in execution
 set xlabel 'values of n'
 set logscale y
@@ -1266,7 +1266,7 @@ digraph {
 }
 #+end_src
 
-#+BEGIN_SRC dot :file fig/cc-test.png :exports results :var data=count-change-test :eval no-export
+#+BEGIN_SRC dot :file 1/fig/cc-test.png :exports results :var data=count-change-test :eval no-export
 $data
 #+end_src
 
@@ -1282,7 +1282,7 @@ So, the graph of ~(count-change 11)~ is:
 (count-change 11)
 #+end_src
 
-#+BEGIN_SRC dot :file fig/cc-11.png :exports results :var data=count-change-11 :eval no-export
+#+BEGIN_SRC dot :file 1/fig/cc-11.png :exports results :var data=count-change-11 :eval no-export
 $data
 #+end_src
 
@@ -1366,7 +1366,7 @@ that branch of the tree.
   (zip vals (map car mine) (map cdr mine)))
 #+end_src
 
-#+begin_src gnuplot :var data=cc-calls-100 :file fig/cc-100.png :exports results :eval no-export
+#+begin_src gnuplot :var data=cc-calls-100 :file 1/fig/cc-100.png :exports results :eval no-export
 reset # helps with various issues in execution
 set key top left
 set logscale y
@@ -1531,7 +1531,7 @@ Example output:
 :end:
 #+BEGIN_COMMENT
 #+NAME: 1-15-smoothfill
-#+begin_src gnuplot :var data=1-15-tab1 :file fig/1-15-smoothfill.png :exports none :eval no-export
+#+begin_src gnuplot :var data=1-15-tab1 :file 1/fig/1-15-smoothfill.png :exports none :eval no-export
 # This graph has a cool filled difference, but unfortunately I can't do
 # steps with it, so it's disabled. :(
 reset # helps with various issues in execution
@@ -1553,7 +1553,7 @@ plot data using 1:2:(f($1)) with filledcurves title 'function calls', \
 :end:
 #+END_COMMENT
 
-#+begin_src gnuplot :var data=1-15-tab1 :file fig/1-15-step.png :exports both :eval no-export
+#+begin_src gnuplot :var data=1-15-tab1 :file 1/fig/1-15-step.png :exports both :eval no-export
 reset # helps with various issues in execution
 set xlabel 'values of x'
 set logscale x
@@ -1618,7 +1618,7 @@ We can also prove this for the time by benchmarking the function:
          vals times))))
 #+END_SRC
 
-#+begin_src gnuplot :file fig/1-15-bench.png :exports both :eval no-export
+#+begin_src gnuplot :file 1/fig/1-15-bench.png :exports both :eval no-export
 reset # helps with various issues in execution
 set xtics 0.5
 set xlabel 'values of x'
@@ -2407,7 +2407,7 @@ Here are the results (run externally from Org-Mode):
 | 1000000 | 121986.712395 |
 :end:
 
-#+begin_src gnuplot :var data=1-22-smd-massage :file fig/1-22-1.png :exports results :eval no-export :rownames no :colnames no
+#+begin_src gnuplot :var data=1-22-smd-massage :file 1/fig/1-22-1.png :exports results :eval no-export :rownames no :colnames no
 reset
 set logscale x
 set xlabel 'minimum number'
@@ -2513,7 +2513,7 @@ the fact that it is different from 2?
 | 1000000 | 122135.60511 | 143869.63561 |
 :end:
 
-#+begin_src gnuplot :var data=1-22-smdf-massage :file fig/1-22-2.png :exports results :eval no-export :rownames no :colnames no :cache no
+#+begin_src gnuplot :var data=1-22-smdf-massage :file 1/fig/1-22-2.png :exports results :eval no-export :rownames no :colnames no :cache no
 reset
 set logscale x
 set xlabel 'minimum number'
@@ -2609,7 +2609,7 @@ Ok, let's try that again.
 | 1000000 | 121986.712395 | 148505.580638 | 73005.539932 |
 :end:
 
-#+begin_src gnuplot :var data=1-22-smdff-massage :file fig/1-22-3.png :exports results :noeval :rownames no :colnames no :hlines no :cache no
+#+begin_src gnuplot :var data=1-22-smdff-massage :file 1/fig/1-22-3.png :exports results :noeval :rownames no :colnames no :hlines no :cache no
 reset
 set key autotitle columnheader
 set logscale x
@@ -2737,7 +2737,7 @@ something more like a 200% speedup. Let's try optimizing it further. Two observa
 | 1000000 | 121986.712395 | 148505.580638 | 73005.539932 | 61997.275154 |
 :end:
 
-#+begin_src gnuplot :var data=1-22-smdff2-massage :file fig/1-22-4.png :exports results :rownames no :colnames no :hlines no :cache no
+#+begin_src gnuplot :var data=1-22-smdff2-massage :file 1/fig/1-22-4.png :exports results :rownames no :colnames no :hlines no :cache no
 reset
 set key autotitle columnheader
 set logscale x
@@ -2863,7 +2863,7 @@ you find?
 | 1000000 | 121986.712395 | 61997.275154 |       32679.766448 |
 :end:
 
-#+begin_src gnuplot :var data=1-24-massage :file fig/1-24-1.png :exports results :rownames no :colnames no :hlines no :cache no
+#+begin_src gnuplot :var data=1-24-massage :file 1/fig/1-24-1.png :exports results :rownames no :colnames no :hlines no :cache no
 reset
 set key autotitle columnheader
 set logscale x
@@ -2971,7 +2971,7 @@ to see more of the function.
 | 1000000000000 | 60956807.83034 |        3995948.05596 |
 :end:
 
-#+begin_src gnuplot :var data=1-24-massage2 :file fig/1-24-2.png :exports results :rownames no :colnames no :hlines no :cache no :eval no-export
+#+begin_src gnuplot :var data=1-24-massage2 :file 1/fig/1-24-2.png :exports results :rownames no :colnames no :hlines no :cache no :eval no-export
 reset
 set key autotitle columnheader
 set logscale xy
