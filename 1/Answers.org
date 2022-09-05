@@ -3401,7 +3401,7 @@ compare the results to those of the ~integral~ procedure shown above.
 #+END_SRC
 
 Let's compare these at equal levels of computational difficulty.
-#+BEGIN_SRC scheme -n :eval no-export :exports results :results output table :tangle Ex29-bench.scheme
+#+BEGIN_SRC scheme -n :noeval :exports both :results output table :tangle Ex29-bench.scheme
 <<mattbench2>>
 <<print-table>>
 (define (cube x)
@@ -3431,3 +3431,45 @@ Let's compare these at equal levels of computational difficulty.
 :end:
 
 So, more accurate for roughly the same effort or less.
+
+* Exercise 1.30
+** Question
+The ~sum~ procedure above generates a linear recursion. The procedure can be
+rewritten so that the sum is performed iteratively. Show how to do this by
+filling in the missing expressions in the following definition:
+
+** Answer
+#+NAME: sum-iter
+#+BEGIN_SRC scheme -n :eval no-export :exports code :results silent
+(define (sum-iter term a next b)
+  (define (iter a result)
+    (if (> a b)
+        result
+        (iter (next a) (+ result (term a)))))
+  (iter a 0))
+#+END_SRC
+
+Let's check the stats!
+#+NAME: sum-bench
+#+BEGIN_SRC scheme -n :noeval :exports results :results output :tangle Ex30-bench.scheme
+<<print-table>>
+<<mattbench2>>
+<<sum>>
+<<sum-iter>>
+(define iterations 1000000)
+(define (test1)
+  (sum + 1 1+ 1000))
+(define (test2)
+  (sum-iter + 1 1+ 1000))
+(print-table (list
+              (list "recursive" "iterative")
+              (list (cadr (mattbench2 test1 iterations))
+                   (cadr (mattbench2 test2 iterations))))
+             #:colnames #t)
+#+END_SRC
+
+#+RESULTS:
+|    recursive |    iterative |
+|--------------+--------------|
+| 30051.080005 | 19568.685587 |
+
