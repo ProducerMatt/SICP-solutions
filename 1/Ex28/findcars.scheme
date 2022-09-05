@@ -1,0 +1,63 @@
+;; [[file:../Answers.org::findcars][findcars]]
+(use-srfis '(1))
+;; [[[[file:~/SICP-group/1/Answers.org::findcars][findcars]]][expmod]]
+;; [[[[file:~/SICP-group/1/Answers.org::findcars][findcars]]][square]]
+(define (square x)
+  (* x x))
+;; square ends here
+(define (expmod base exp m)
+  (cond ((= exp 0) 1)
+        ((even? exp)
+         (remainder 
+          (square (expmod base (/ exp 2) m))
+          m))
+        (else
+         (remainder 
+          (* base (expmod base (- exp 1) m))
+          m))))
+;; expmod ends here
+;; [[[[file:~/SICP-group/1/Answers.org::fermat-prime?][fermat-prime?]]][fermat-prime?]]
+;; fermat prime test but checks *every* value from 2 to n-1
+(define (fermat-prime? n)
+  (define (iter a)
+    (if (= a n)
+        #f
+        (if (= (expmod a n n) a)
+            #t
+            (iter (+ 1 a)))))
+  (iter 2))
+;; fermat-prime? ends here
+;; [[[[file:~/SICP-group/1/Answers.org::findcars][findcars]]][find-divisor-faster-real]]
+;; [[[[file:~/SICP-group/1/Answers.org::findcars][findcars]]][square]]
+(define (square x)
+  (* x x))
+;; square ends here
+(define (smallest-divisor n)
+  (find-divisor n 2))
+
+(define (next n)
+  (if (= n 2)
+      3
+      (+ n 2)))
+
+(define (find-divisor n test-divisor)
+  (cond ((> (square test-divisor) n) 
+         n)
+        ((divides? test-divisor n) 
+         test-divisor)
+        (else (find-divisor 
+               n 
+               (next test-divisor)))))
+
+(define (divides? a b)
+  (= (remainder b a) 0))
+;; find-divisor-faster-real ends here
+(define (prime? n)
+  (= n (smallest-divisor n)))
+(call-with-output-file "Data/carmichael-verification.txt" (λ(port)
+     (write (filter
+             (λ(x) (and (fermat-prime? x)
+                        (not (prime? x))))
+             (iota (- 1000000 1000) 1000))
+            port)))
+;; findcars ends here

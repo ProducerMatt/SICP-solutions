@@ -3101,7 +3101,7 @@ and try your procedure on the given Carmichael numbers.
            (cddr (iota n))))
 #+end_src
 
-#+NAME: car-test
+#+NAME: car-test-check
 #+BEGIN_SRC scheme noeval :exports code :eval no-export
 <<car-test>>
 (list (car-test 12) ; <== false (not prime)
@@ -3131,3 +3131,217 @@ procedure to signal if it discovers a nontrivial square root of 1, and use this
 to implement the Miller-Rabin test with a procedure analogous to fermat-test.
 Check your procedure by testing various known primes and non-primes. Hint: One
 convenient way to make ~expmod~ signal is to have it return 0.
+** Analysis
+For the sake of verifying this, I want to get a bigger list of primes and
+Carmichael numbers to verify against. I'll save them using Guile's built in
+read/write functions that save Lisp lists to text:
+#+NAME: findsomeprimes
+#+BEGIN_SRC scheme :eval no-export :results output :exports code :tangle Ex28/findsomeprimes.scheme
+<<find-divisor-faster-real>>
+(define (prime? n)
+  (= n (smallest-divisor n)))
+(call-with-output-file "Data/primes-1k_to_1mil.txt" (λ(port)
+  (write (filter prime? (iota (- 1000000 1000) 1000))
+         port)))
+#+END_SRC
+
+#+RESULTS[0f3510a537b7f8589cc3db849395109db85e1bad]: findsomeprimes
+:results:
+:end:
+
+#+NAME: fermat-prime?
+#+BEGIN_SRC scheme :eval no-export :results output silent :exports code
+;; fermat prime test but checks *every* value from 2 to n-1
+(define (fermat-prime? n)
+  (define (iter a)
+    (if (= a n)
+        #f
+        (if (= (expmod a n n) a)
+            #t
+            (iter (+ 1 a)))))
+  (iter 2))
+#+END_SRC
+
+#+NAME: findcars
+#+BEGIN_SRC scheme :eval no-export :results output silent :exports code :tangle Ex28/findcars.scheme
+(use-srfis '(1))
+<<expmod>>
+<<fermat-prime?>>
+<<find-divisor-faster-real>>
+(define (prime? n)
+  (= n (smallest-divisor n)))
+(call-with-output-file "Data/carmichael-verification.txt" (λ(port)
+     (write (filter
+             (λ(x) (and (fermat-prime? x)
+                        (not (prime? x))))
+             (iota (- 1000000 1000) 1000))
+            port)))
+#+END_SRC
+
+#+RESULTS[f22e6e43bbdef62eb6751b13eea84f5371bf8e89]: findcars
+:results:
+:end:
+
+This will be useful in various future functions:
+#+NAME: get-lists-of-primes
+#+BEGIN_SRC scheme :eval no-export :results output silent :exports code :cache no
+(define list-of-primes (call-with-input-file "Data/primes-1k_to_1mil.txt" read))
+(define list-of-carmichaels (call-with-input-file "Data/carmichael.txt" read))
+#+END_SRC
+
+#+BEGIN_SRC scheme :eval no-export :results output :exports both :cache no
+(use-srfis '(1))
+<<expmod>>
+<<fermat-prime?>>
+<<find-divisor-faster-real>>
+(define (prime? n)
+  (= n (smallest-divisor n)))
+<<get-lists-of-primes>>
+(define prime-is-working
+  (and (and-map prime? list-of-primes)
+       (not (and-map prime? list-of-carmichaels))))
+(format #t "(prime?) is working: ~a~%"
+        (if prime-is-working
+            "Yes"
+            "No"))
+(define fermat-is-vulnerable
+  (and (and-map fermat-prime? list-of-primes)
+       (and-map fermat-prime? list-of-carmichaels)))
+(format #t "(fermat-prime?) is vulnerable: ~a~%"
+        (if fermat-is-vulnerable
+            "Yes"
+            "No"))
+#+END_SRC
+
+#+RESULTS:
+:results:
+(prime?) is working: Yes
+(fermat-prime?) is vulnerable: Yes
+:end:
+
+** Answer
+#+NAME: expmod-mr
+#+BEGIN_SRC scheme -n :eval no-export :results output silent :exports code
+<<square>>
+(define (expmod-mr base exp m)
+  (cond ((= exp 0) 1)
+        ((even? exp)
+         (let ((sqr
+                (square (expmod-mr base (/ exp 2) m))))
+           (if (= 1 (modulo sqr m))
+               0
+               (remainder sqr m))))
+        (else
+         (remainder 
+          (* base (expmod-mr base (- exp 1) m))
+          m))))
+#+END_SRC
+#+NAME: mr-test
+#+BEGIN_SRC scheme :eval no-export :results output silent :exports code
+(define (mr-test n)
+  (define (try-it a)
+    (let ((it (expmod-mr a n n)))
+      (or (= it a)
+          (= it 0))))
+  (try-it (+ 1 (random (- n 1)))))
+#+END_SRC
+#+NAME: mr-prime
+#+BEGIN_SRC scheme :eval no-export :results output silent :exports code
+(define (mr-prime? n times)
+  (cond ((= times 0) #t)
+        ((mr-test n) 
+         (mr-prime? n (- times 1)))
+        (else #f)))
+#+END_SRC
+
+#+NAME: mr-verification
+#+BEGIN_SRC scheme :eval no-export :results value :exports both :tangle Ex28/mr_check.scheme
+<<expmod-mr>>
+<<mr-test>>
+<<mr-prime>>
+(define mr-times 100)
+<<get-lists-of-primes>>
+(format #t "      mr detects primes: ~a~%mr false-positives Carmichaels: ~a~%"
+        (and-map (λ(x)(mr-prime? x mr-times)) list-of-primes)
+      (and-map (λ(x)(mr-prime? x mr-times)) list-of-carmichaels))
+#+END_SRC
+
+#+RESULTS[949daa71bbf35095f8025130b9fb179b5308e7fa]: mr-verification
+#+BEGIN_SRC 
+      mr detects primes: #t
+mr false-positives Carmichaels: #t
+#+END_SRC
+
+Shoot. And I thought I did a very literal interpretation of what the book asked.
+
+Ah, I see the problem. I need to keep track of what the pre-squaring number was
+and use that to determine whether the square is valid or not.
+
+#+NAME: expmod-mr2
+#+BEGIN_SRC scheme -n :eval no-export :results output silent :exports code
+<<square>>
+(define (expmod-mr base exp m)
+  (cond ((= exp 0) 1)
+        ((even? exp)
+         ;; Keep result and remainder seperate
+         (let* ((result (expmod-mr base (/ exp 2) m))
+                (rem (remainder (square result) m)))
+           (if (and (not (= result 1))
+                    (not (= result (- m 1)))
+                    (= 1 rem))
+               0 ;; non-trivial sqrt mod 1 is found
+               rem)))
+        (else
+         (remainder 
+          (* base (expmod-mr base (- exp 1) m))
+          m))))
+#+END_SRC
+#+NAME: mr-verification2
+#+BEGIN_SRC scheme :noeval :exports none :tangle Ex28/mr_check2.scheme
+<<expmod-mr2>>
+<<mr-test>>
+<<mr-prime>>
+(define mr-times 100)
+<<get-lists-of-primes>>
+(format #t "      mr detects primes: ~a~%mr false-positives Carmichaels: ~a~%"
+        (and-map (λ(x)(mr-prime? x mr-times)) list-of-primes)
+      (and-map (λ(x)(mr-prime? x mr-times)) list-of-carmichaels))
+#+END_SRC
+
+Unfortunately this one has the same problem. What's the issue?
+
+Sadly, there's a massive issue in ~mr-test~.
+#+BEGIN_SRC scheme +n :eval no-export :results output silent :exports code
+(define (mr-test n)
+  (define (try-it a)
+    (let ((it (expmod-mr a n n))) ;; Should be "a (- n 1) n"
+      (or (= it a)    ;; Should be (= it 1)
+          (= it 0)))) ;; Two strikes, you're out
+  (try-it (+ 1 (random (- n 1)))))
+#+END_SRC
+
+One more time.
+#+NAME: mr-test2
+#+BEGIN_SRC scheme +n :eval no-export :results output silent :exports code
+(define (mr-test n)
+  (define (try-it a)
+    (= 1 (expmod-mr a (- n 1) n)))
+  (try-it (+ 1 (random (- n 1)))))
+#+END_SRC
+
+#+NAME: mr-verification2
+#+BEGIN_SRC scheme -n :exports both :results output raw :tangle Ex28/mr_check3.scheme
+<<expmod-mr2>>
+<<mr-test2>>
+<<mr-prime>>
+(define mr-times 100)
+<<get-lists-of-primes>>
+(format #t "      mr detects primes: ~a~%mr false-positives Carmichaels: ~a~%"
+        (and-map (λ(x)(mr-prime? x mr-times)) list-of-primes)
+      (and-map (λ(x)(mr-prime? x mr-times)) list-of-carmichaels))
+#+END_SRC
+
+#+BEGIN_SRC
+     mr detects primes: #t
+mr false-positives Carmichaels: #f
+#+END_SRC

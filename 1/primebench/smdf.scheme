@@ -1,5 +1,5 @@
 ;; [[file:../Answers.org::smallest-divisor-benchmark][smallest-divisor-benchmark]]
-;; [[[[file:~/SICP-group/1/Answers.org::mattbench2][mattbench2]]][mattbench2]]
+;; [[[[file:~/SICP-group/1/Answers.org::smallest-divisor-benchmark][smallest-divisor-benchmark]]][mattbench2]]
 (define (mattbench2 f n)
   ;; Executes "f" for n times, and returns how long it took.
   ;; f is a lambda that takes no arguments, a.k.a. a "thunk"
@@ -20,7 +20,7 @@
         (/ (how-long) (* n 1.0))));; Divide by iterations so changed n has no effect
 ;; mattbench2 ends here
 ;; [[[[file:~/SICP-group/1/Answers.org::find-divisor-faster][find-divisor-faster]]][find-divisor-faster]]
-;; [[[[file:~/SICP-group/1/Answers.org::square][square]]][square]]
+;; [[[[file:~/SICP-group/1/Answers.org::find-divisor-faster][find-divisor-faster]]][square]]
 (define (square x)
   (* x x))
 ;; square ends here
@@ -46,7 +46,7 @@
 ;; find-divisor-faster ends here
 (define (prime? n)
   (= n (smallest-divisor n)))
-;; [[[[file:~/SICP-group/1/Answers.org::search-for-primes-untimed][search-for-primes-untimed]]][search-for-primes-untimed]]
+;; [[[[file:~/SICP-group/1/Answers.org::smallest-divisor-benchmark][smallest-divisor-benchmark]]][search-for-primes-untimed]]
 (define (search-for-primes minimum goal)
   (define m (if (even? minimum)
                 (+ minimum 1)
@@ -60,7 +60,7 @@
             (search-for-primes-iter (+ n 2) (cons n lst) (- goal 1))
             (search-for-primes-iter (+ n 2) lst goal)))))
 ;; search-for-primes-untimed ends here
-;; [[[[file:~/SICP-group/1/Answers.org::print-table][print-table]]][print-table]]
+;; [[[[file:~/SICP-group/1/Answers.org::smallest-divisor-benchmark][smallest-divisor-benchmark]]][print-table]]
 (use-modules (ice-9 format))
 (define* (print-row ll #:key (mode #f))
   (let ((fmtstr

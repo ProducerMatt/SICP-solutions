@@ -1,0 +1,44 @@
+;; [[file:../Answers.org::mr-verification2][mr-verification2]]
+;; [[[[file:~/SICP-group/1/Answers.org::mr-verification2][mr-verification2]]][expmod-mr2]]
+;; [[[[file:~/SICP-group/1/Answers.org::mr-verification2][mr-verification2]]][square]]
+(define (square x)
+  (* x x))
+;; square ends here
+(define (expmod-mr base exp m)
+  (cond ((= exp 0) 1)
+        ((even? exp)
+         ;; Keep result and remainder seperate
+         (let* ((result (expmod-mr base (/ exp 2) m))
+                (rem (remainder (square result) m)))
+           (if (and (not (= result 1))
+                    (not (= result (- m 1)))
+                    (= 1 rem))
+               0 ;; non-trivial sqrt mod 1 is found
+               rem)))
+        (else
+         (remainder 
+          (* base (expmod-mr base (- exp 1) m))
+          m))))
+;; expmod-mr2 ends here
+;; [[[[file:~/SICP-group/1/Answers.org::mr-test2][mr-test2]]][mr-test2]]
+(define (mr-test n)
+  (define (try-it a)
+    (= 1 (expmod-mr a (- n 1) n)))
+  (try-it (+ 1 (random (- n 1)))))
+;; mr-test2 ends here
+;; [[[[file:~/SICP-group/1/Answers.org::mr-verification2][mr-verification2]]][mr-prime]]
+(define (mr-prime? n times)
+  (cond ((= times 0) #t)
+        ((mr-test n) 
+         (mr-prime? n (- times 1)))
+        (else #f)))
+;; mr-prime ends here
+(define mr-times 100)
+;; [[[[file:~/SICP-group/1/Answers.org::mr-verification2][mr-verification2]]][get-lists-of-primes]]
+(define list-of-primes (call-with-input-file "Data/primes-1k_to_1mil.txt" read))
+(define list-of-carmichaels (call-with-input-file "Data/carmichael.txt" read))
+;; get-lists-of-primes ends here
+(format #t "      mr detects primes: ~a~%mr false-positives Carmichaels: ~a~%"
+        (and-map (λ(x)(mr-prime? x mr-times)) list-of-primes)
+      (and-map (λ(x)(mr-prime? x mr-times)) list-of-carmichaels))
+;; mr-verification2 ends here
