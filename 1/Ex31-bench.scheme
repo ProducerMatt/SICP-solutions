@@ -1,0 +1,84 @@
+;; [[file:Answers.org::product-bench][product-bench]]
+;; [[[[file:~/SICP-group/1/Answers.org::mattbench2][mattbench2]]][mattbench2]]
+(define (mattbench2 f n)
+  ;; Executes "f" for n times, and returns how long it took.
+  ;; f is a lambda that takes no arguments, a.k.a. a "thunk"
+  
+  ;; Returns a list with car(last execution results) and cadr(time taken divided by iterations n)
+
+  (define (time-getter) (get-internal-run-time))
+  (define start-time (time-getter))
+  (define (how-long) (- (time-getter) start-time))
+
+  (define (iter i)
+    (f)
+    (if (<= i 0)
+        (f) ;; return the results of the last function call
+        (iter (- i 1))))
+
+  (list (iter n) ;; result of last call of f
+        (/ (how-long) (* n 1.0))));; Divide by iterations so changed n has no effect
+;; mattbench2 ends here
+;; [[[[file:~/SICP-group/1/Answers.org::print-table][print-table]]][print-table]]
+(use-modules (ice-9 format))
+(define* (print-row ll #:key (mode #f))
+  (let ((fmtstr
+         (cond ((or (eq? mode #f)
+                    (equal? mode "display")
+                    (equal? mode "~a"))
+                " ~a |")    ;; print objects for human viewing
+               ((or (eq? mode #t)
+                    (equal? mode "write")
+                    (equal? mode "~s"))
+                " ~s |") ;; print objects for correctly (read)ing back
+               ((string? mode)
+                mode)))) ;; pass custom format string
+      (format #t "~&|")
+      (map (λ(x) (format #t fmtstr x)) ll)
+      (format #t "~%")))
+(define* (print-table table #:key (colnames #f) (mode #f))
+    (define (iter t)
+      (print-row (car t) #:mode mode)
+      (if colnames
+          (print-row (car t) #:mode "---|"))
+      (map (λ(x) (print-row x #:mode mode)) (cdr t)))
+    (cond ((and (= 1 (length table))
+                (list? (car table))) (iter (car table)))
+          ((<= 1 (length table)) (iter table))
+          (else error "Invalid Input??")))
+;; print-table ends here
+;; [[[[file:~/SICP-group/1/Answers.org::product-iter][product-iter]]][product-iter]]
+(define (product-iter term a next b)
+  (define (iter a result)
+    (if (> a b)
+        result
+        (iter (next a) (* result (term a)))))
+  (iter a 1)) ;; start at 1 so it's not always 0
+;; product-iter ends here
+(define (pi-product n)
+  (define (div x)
+    (let ((x1 (- x 1))
+          (x2 (+ x 1)))
+      (* (/ x x1) (/ x x2))))
+  (* 2.0 (product-iter div 2 (lambda (z) (+ z 2)) n)))
+;; [[[[file:~/SICP-group/1/Answers.org::product-rec][product-rec]]][product-rec]]
+(define (product-rec term a next b)
+  (if (> a b)
+      1
+      (* (term a)
+         (product-rec term (next a) next b))))
+;; product-rec ends here
+(define (pi-product-rec n)
+  (define (div x)
+    (let ((x1 (- x 1))
+          (x2 (+ x 1)))
+      (* (/ x x1) (/ x x2))))
+  (* 2.0 (product-rec div 2 (lambda (z) (+ z 2)) n)))
+
+(define iterations 50000)
+(print-table
+ (list (list "iterative" "recursive")
+       (list (cadr (mattbench2 (λ()(pi-product 1000)) iterations))
+             (cadr (mattbench2 (λ()(pi-product-rec 1000)) iterations))))
+ #:colnames #t)
+;; product-bench ends here
