@@ -1,7 +1,7 @@
 ;; [[file:../Answers.org::findcars][findcars]]
 (use-srfis '(1))
-;; [[[[file:~/SICP-group/1/Answers.org::findcars][findcars]]][expmod]]
-;; [[[[file:~/SICP-group/1/Answers.org::findcars][findcars]]][square]]
+;; [[[[file:~/SICP-group/1/Answers.org::expmod][expmod]]][expmod]]
+;; [[[[file:~/SICP-group/1/Answers.org::square][square]]][square]]
 (define (square x)
   (* x x))
 ;; square ends here
@@ -27,8 +27,8 @@
             (iter (+ 1 a)))))
   (iter 2))
 ;; fermat-prime? ends here
-;; [[[[file:~/SICP-group/1/Answers.org::findcars][findcars]]][find-divisor-faster-real]]
-;; [[[[file:~/SICP-group/1/Answers.org::findcars][findcars]]][square]]
+;; [[[[file:~/SICP-group/1/Answers.org::find-divisor-faster-real][find-divisor-faster-real]]][find-divisor-faster-real]]
+;; [[[[file:~/SICP-group/1/Answers.org::square][square]]][square]]
 (define (square x)
   (* x x))
 ;; square ends here

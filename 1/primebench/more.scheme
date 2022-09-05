@@ -1,5 +1,5 @@
 ;; [[file:../Answers.org::smallest-divisor-benchmark-real3][smallest-divisor-benchmark-real3]]
-;; [[[[file:~/SICP-group/1/Answers.org::smallest-divisor-benchmark-real3][smallest-divisor-benchmark-real3]]][mattbench2]]
+;; [[[[file:~/SICP-group/1/Answers.org::mattbench2][mattbench2]]][mattbench2]]
 (define (mattbench2 f n)
   ;; Executes "f" for n times, and returns how long it took.
   ;; f is a lambda that takes no arguments, a.k.a. a "thunk"
@@ -19,8 +19,8 @@
   (list (iter n) ;; result of last call of f
         (/ (how-long) (* n 1.0))));; Divide by iterations so changed n has no effect
 ;; mattbench2 ends here
-;; [[[[file:~/SICP-group/1/Answers.org::smallest-divisor-benchmark-real3][smallest-divisor-benchmark-real3]]][find-divisor-faster-real]]
-;; [[[[file:~/SICP-group/1/Answers.org::smallest-divisor-benchmark-real3][smallest-divisor-benchmark-real3]]][square]]
+;; [[[[file:~/SICP-group/1/Answers.org::find-divisor-faster-real][find-divisor-faster-real]]][find-divisor-faster-real]]
+;; [[[[file:~/SICP-group/1/Answers.org::square][square]]][square]]
 (define (square x)
   (* x x))
 ;; square ends here
@@ -46,7 +46,7 @@
 ;; find-divisor-faster-real ends here
 (define (prime? n)
   (= n (smallest-divisor n)))
-;; [[[[file:~/SICP-group/1/Answers.org::smallest-divisor-benchmark-real3][smallest-divisor-benchmark-real3]]][search-for-primes-untimed]]
+;; [[[[file:~/SICP-group/1/Answers.org::search-for-primes-untimed][search-for-primes-untimed]]][search-for-primes-untimed]]
 (define (search-for-primes minimum goal)
   (define m (if (even? minimum)
                 (+ minimum 1)
@@ -60,7 +60,7 @@
             (search-for-primes-iter (+ n 2) (cons n lst) (- goal 1))
             (search-for-primes-iter (+ n 2) lst goal)))))
 ;; search-for-primes-untimed ends here
-;; [[[[file:~/SICP-group/1/Answers.org::smallest-divisor-benchmark-real3][smallest-divisor-benchmark-real3]]][print-table]]
+;; [[[[file:~/SICP-group/1/Answers.org::print-table][print-table]]][print-table]]
 (use-modules (ice-9 format))
 (define* (print-row ll #:key (mode #f))
   (let ((fmtstr
@@ -107,7 +107,7 @@
 ;; smallest-divisor-benchmark-real3 ends here
 
 ;; [[file:../Answers.org::fermat-bench2][fermat-bench2]]
-;; [[[[file:~/SICP-group/1/Answers.org::fermat-bench2][fermat-bench2]]][mattbench2]]
+;; [[[[file:~/SICP-group/1/Answers.org::mattbench2][mattbench2]]][mattbench2]]
 (define (mattbench2 f n)
   ;; Executes "f" for n times, and returns how long it took.
   ;; f is a lambda that takes no arguments, a.k.a. a "thunk"
@@ -127,8 +127,8 @@
   (list (iter n) ;; result of last call of f
         (/ (how-long) (* n 1.0))));; Divide by iterations so changed n has no effect
 ;; mattbench2 ends here
-;; [[[[file:~/SICP-group/1/Answers.org::fermat-bench2][fermat-bench2]]][expmod]]
-;; [[[[file:~/SICP-group/1/Answers.org::fermat-bench2][fermat-bench2]]][square]]
+;; [[[[file:~/SICP-group/1/Answers.org::expmod][expmod]]][expmod]]
+;; [[[[file:~/SICP-group/1/Answers.org::square][square]]][square]]
 (define (square x)
   (* x x))
 ;; square ends here
@@ -143,13 +143,13 @@
           (* base (expmod base (- exp 1) m))
           m))))
 ;; expmod ends here
-;; [[[[file:~/SICP-group/1/Answers.org::fermat-bench2][fermat-bench2]]][fermat-test]]
+;; [[[[file:~/SICP-group/1/Answers.org::fermat-test][fermat-test]]][fermat-test]]
 (define (fermat-test n)
   (define (try-it a)
     (= (expmod a n n) a))
   (try-it (+ 1 (random (- n 1)))))
 ;; fermat-test ends here
-;; [[[[file:~/SICP-group/1/Answers.org::fermat-bench2][fermat-bench2]]][fast-prime]]
+;; [[[[file:~/SICP-group/1/Answers.org::fast-prime][fast-prime]]][fast-prime]]
 (define (fast-prime? n times)
   (cond ((= times 0) #t)
         ((fermat-test n) 
@@ -159,7 +159,7 @@
 (define fermat-iterations 100)
 (define (prime? n)
   (fast-prime? n fermat-iterations))
-;; [[[[file:~/SICP-group/1/Answers.org::fermat-bench2][fermat-bench2]]][search-for-primes-untimed]]
+;; [[[[file:~/SICP-group/1/Answers.org::search-for-primes-untimed][search-for-primes-untimed]]][search-for-primes-untimed]]
 (define (search-for-primes minimum goal)
   (define m (if (even? minimum)
                 (+ minimum 1)
@@ -173,7 +173,7 @@
             (search-for-primes-iter (+ n 2) (cons n lst) (- goal 1))
             (search-for-primes-iter (+ n 2) lst goal)))))
 ;; search-for-primes-untimed ends here
-;; [[[[file:~/SICP-group/1/Answers.org::fermat-bench2][fermat-bench2]]][print-table]]
+;; [[[[file:~/SICP-group/1/Answers.org::print-table][print-table]]][print-table]]
 (use-modules (ice-9 format))
 (define* (print-row ll #:key (mode #f))
   (let ((fmtstr

@@ -1,6 +1,6 @@
 ;; [[file:../Answers.org::mr-verification2][mr-verification2]]
 ;; [[[[file:~/SICP-group/1/Answers.org::expmod-mr2][expmod-mr2]]][expmod-mr2]]
-;; [[[[file:~/SICP-group/1/Answers.org::expmod-mr2][expmod-mr2]]][square]]
+;; [[[[file:~/SICP-group/1/Answers.org::square][square]]][square]]
 (define (square x)
   (* x x))
 ;; square ends here
@@ -20,7 +20,7 @@
           (* base (expmod-mr base (- exp 1) m))
           m))))
 ;; expmod-mr2 ends here
-;; [[[[file:~/SICP-group/1/Answers.org::mr-verification2][mr-verification2]]][mr-test]]
+;; [[[[file:~/SICP-group/1/Answers.org::mr-test][mr-test]]][mr-test]]
 (define (mr-test n)
   (define (try-it a)
     (let ((it (expmod-mr a n n)))
@@ -28,7 +28,7 @@
           (= it 0))))
   (try-it (+ 1 (random (- n 1)))))
 ;; mr-test ends here
-;; [[[[file:~/SICP-group/1/Answers.org::mr-verification2][mr-verification2]]][mr-prime]]
+;; [[[[file:~/SICP-group/1/Answers.org::mr-prime][mr-prime]]][mr-prime]]
 (define (mr-prime? n times)
   (cond ((= times 0) #t)
         ((mr-test n) 
@@ -36,7 +36,7 @@
         (else #f)))
 ;; mr-prime ends here
 (define mr-times 100)
-;; [[[[file:~/SICP-group/1/Answers.org::mr-verification2][mr-verification2]]][get-lists-of-primes]]
+;; [[[[file:~/SICP-group/1/Answers.org::get-lists-of-primes][get-lists-of-primes]]][get-lists-of-primes]]
 (define list-of-primes (call-with-input-file "Data/primes-1k_to_1mil.txt" read))
 (define list-of-carmichaels (call-with-input-file "Data/carmichael.txt" read))
 ;; get-lists-of-primes ends here

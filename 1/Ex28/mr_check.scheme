@@ -1,6 +1,6 @@
 ;; [[file:../Answers.org::mr-verification][mr-verification]]
 ;; [[[[file:~/SICP-group/1/Answers.org::expmod-mr][expmod-mr]]][expmod-mr]]
-;; [[[[file:~/SICP-group/1/Answers.org::expmod-mr][expmod-mr]]][square]]
+;; [[[[file:~/SICP-group/1/Answers.org::square][square]]][square]]
 (define (square x)
   (* x x))
 ;; square ends here
