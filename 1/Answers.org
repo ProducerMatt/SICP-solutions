@@ -41,6 +41,9 @@
 #+date: \today
 
 * HOW THIS DOCUMENT IS MADE
+:PROPERTIES:
+:UNNUMBERED:
+:end:
 **TODO**
 #+NAME: testing
 #+BEGIN_SRC scheme -n :exports both :eval no-export :results value
