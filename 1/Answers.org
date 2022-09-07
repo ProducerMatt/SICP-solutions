@@ -3699,7 +3699,7 @@ Show how to express the following using ~filtered-accumulate~:
 #+END_SRC
 
 *** A
-the sum of the squares of the prime numbers in the interval \(a\) to \(b\)
+Find the sum of the squares of the prime numbers in the interval \(a\) to \(b\)
 (assuming that you have a ~prime?~ predicate already written)
 
 #+BEGIN_SRC scheme -n :eval no-export :results output :results both
@@ -3737,6 +3737,38 @@ SUCCEED at many primes correct
 :end:
 
 *** B
-the product of all the positive integers less than \(n\) that are relatively
-prime to \(n\) (i.e., all positive integers \(i < n\) such that
+Find the product of all the positive integers less than \(n\) that are
+relatively prime to \(n\) (i.e., all positive integers \(i < n\) such that
 \(\textsc{gcd}(i, n) = 1\).
+
+#+BEGIN_SRC scheme -n :eval no-export :results output :results both
+(load "mattcheck.scm")
+(define (square x)
+  (* x x))
+(define (id x) x)
+<<filtered-accumulate-iter>>
+<<gcd>>
+(define (relative-prime? x y)
+  (= 1 (gcd x y)))
+
+(define (Ex_1-33B n)
+  (filtered-accumulate-iter
+   (λ(i) (relative-prime? i n))
+   ,* 1 id
+   1 1+ (1- n)))
+
+(define (alternate n)
+  (apply *
+         (filter (λ(i) (relative-prime? i n))
+                 (iota (- n 1) 1))))
+
+(mattcheck-equal "Ex_1-33B"
+                 (Ex_1-33B 100)
+                 (alternate 100))
+#+END_SRC
+
+#+RESULTS[55bb2d7ee1ab4c812a9f57fd811be17be87b2093]:
+:results:
+
+SUCCEED at Ex_1-33B
+:end:
