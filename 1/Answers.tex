@@ -1,4 +1,4 @@
-% Created 2022-09-06 Tue 23:35
+% Created 2022-09-07 Wed 16:43
 % Intended LaTeX compiler: xelatex
 \documentclass[final,fleqn,titlepage]{article}
 \usepackage{graphicx}
@@ -32,7 +32,7 @@
 
 
 \section*{HOW THIS DOCUMENT IS MADE}
-\label{sec:orgddaa906}
+\label{sec:org9f9b707}
 \textbf{\textbf{TODO}}
 \begin{minted}[breaklines=true,breakanywhere=true,linenos=true]{scheme}
 (define (foo a b)
@@ -46,7 +46,7 @@
 \^{} Dynamically evaluated when you press ``enter'' on the \texttt{BEGIN\_SRC} block!
 
 \subsubsection*{Also consider:}
-\label{sec:org27a6085}
+\label{sec:org226810b}
 \begin{itemize}
 \item \texttt{:results output} for what the code prints
 \item \texttt{:exports code} or \texttt{:exports results} to just get one or the other
@@ -55,15 +55,15 @@
 \(a + (\pi \times b)\) <\textasciitilde{} inline Latex btw :)
 
 \subsubsection*{Current command for conversion}
-\label{sec:org7e47ba9}
+\label{sec:orge2ba6fe}
 \begin{minted}[breaklines=true,breakanywhere=true,linenos=true]{sh}
 pandoc --from org --to latex 1.org -o 1.tex -s; xelatex 1.tex
 \end{minted}
 
 \subsection*{Helpers for org-mode tables}
-\label{sec:orgd3eec6e}
+\label{sec:orga7d066b}
 \subsubsection*{\texttt{try-these}}
-\label{sec:org9e3943d}
+\label{sec:orgced101e}
 Takes function \texttt{f} and list \texttt{testvals} and applies \texttt{f} to each item \texttt{i}. For
 each \texttt{i} returns a list with \texttt{i} and the result. Useful dor making tables with a
 column for input and a column for output.
@@ -82,7 +82,7 @@ column for input and a column for output.
          l)))
 \end{minted}
 \subsubsection*{\texttt{transpose-list}}
-\label{sec:org57fefaf}
+\label{sec:org80fd803}
 ``Rotate'' a list, for example from \mintinline[breaklines=true,breakanywhere=true,linenos=true]{scheme}{'(1 2 3)} to
 \mintinline[breaklines=true,breakanywhere=true,linenos=true]{scheme}{'('(1) '(2) '(3))}
 \begin{minted}[breaklines=true,breakanywhere=true,linenos=true]{scheme}
@@ -90,7 +90,7 @@ column for input and a column for output.
   (map list l))
 \end{minted}
 \subsubsection*{\texttt{print-as-rows}}
-\label{sec:orge32e221}
+\label{sec:org63d453c}
 For manually printing items in rows to stdout. Can be helpful for gnuplot.
 \begin{minted}[breaklines=true,breakanywhere=true,linenos=true]{scheme}
 (define (p-nl a)
@@ -117,7 +117,7 @@ For manually printing items in rows to stdout. Can be helpful for gnuplot.
         (apply print-as-rows d))))
 \end{minted}
 \subsubsection*{\texttt{print-table}}
-\label{sec:org668c3c5}
+\label{sec:org8a88f6f}
 Print \texttt{args} as a table separated by pipes. Optionally print spacer for
 colnames.
 \begin{minted}[breaklines=true,breakanywhere=true,linenos=true]{scheme}
@@ -171,7 +171,7 @@ row-c & 0 & 1 & 2\\
 \end{center}
 
 \subsubsection*{\texttt{print-table} (spaces only)}
-\label{sec:org7525733}
+\label{sec:org744bc8d}
 TODO: Merge these together.
 \begin{minted}[breaklines=true,breakanywhere=true,linenos=true]{scheme}
 (use-modules (ice-9 format))
@@ -219,14 +219,14 @@ row-b 0 1 2
 row-c 0 1 2
 
 \section{Exercise 1.1}
-\label{sec:org308d491}
+\label{sec:org1de1623}
 \subsection{Question}
-\label{sec:org221953d}
+\label{sec:orgbae29bb}
 Below is a sequence of expressions. What is the result printed by the
 interpreter in response to each expression? Assume that the sequence is to be
 evaluated in the order in which it is presented.
 \subsection{Answer}
-\label{sec:org634a1a0}
+\label{sec:org509b6c9}
 \begin{minted}[breaklines=true,breakanywhere=true,linenos=true]{scheme}
 10 ;; 10
 (+ 5 3 4) ;; 12
@@ -251,16 +251,16 @@ evaluated in the order in which it is presented.
 \end{minted}
 
 \section{Exercise 1.2}
-\label{sec:orgbc0736c}
+\label{sec:org329b60c}
 \subsection{Question}
-\label{sec:org8f101dd}
+\label{sec:orge6d9db5}
 Translate the following expression into prefix form:
 \[
   \frac{5 + 2 + (2 - 3 - (6 + \frac{4}{5})))}
             {3(6 - 2)(2 - 7)}
 \]
 \subsection{Answer}
-\label{sec:org8c16b96}
+\label{sec:orga515898}
 \begin{minted}[breaklines=true,breakanywhere=true,linenos=true]{scheme}
 (/ (+ 5 2 (- 2 3 (+ 6 (/ 4 5))))
    (* 3 (- 6 2) (- 2 7)))
@@ -269,19 +269,19 @@ Translate the following expression into prefix form:
 1/75
 
 \section{Exercise 1.3}
-\label{sec:org8334618}
+\label{sec:org68fb920}
 \subsection{Text}
-\label{sec:org8414d89}
+\label{sec:org4caba5c}
 \begin{minted}[breaklines=true,breakanywhere=true,linenos=true]{scheme}
 (define (square x)
   (* x x))
 \end{minted}
 \subsection{Question}
-\label{sec:orga419f53}
+\label{sec:org0a6c8d2}
 Define a procedure that takes three numbers as arguments and returns the sum of
 the squares of the two larger numbers.
 \subsection{Answer}
-\label{sec:org5ac9522}
+\label{sec:org13df121}
 \begin{minted}[breaklines=true,breakanywhere=true,linenos=true]{scheme}
 <<square>>
 (define (sum-square x y)
@@ -308,9 +308,9 @@ the squares of the two larger numbers.
 \end{center}
 
 \section{Exercise 1.4}
-\label{sec:org903c47c}
+\label{sec:org4d61ecd}
 \subsection{Question}
-\label{sec:org62e93d6}
+\label{sec:org9f19cda}
 Observe that our model of evaluation allows for combinations whose operators are
 compound expressions. Use this observation to describe the behavior of the
 following procedure:
@@ -321,7 +321,7 @@ following procedure:
 \end{minted}
 
 \subsection{Answer}
-\label{sec:org37edafe}
+\label{sec:org1ad22e3}
 This code accepts the variables \texttt{a} and \texttt{b}, and if \texttt{b} is positive, it adds \texttt{a}
 and \texttt{b}. However, if \texttt{b} is zero or negative, it subtracts them. This decision
 is made by using the \texttt{+} and \texttt{-} procedures as the results of an if expression,
@@ -334,9 +334,9 @@ else: a - b
 \end{minted}
 
 \section{Exercise 1.5}
-\label{sec:org4b7b181}
+\label{sec:org8c531ab}
 \subsection{Question}
-\label{sec:org41fa935}
+\label{sec:org653c493}
 Ben Bitdiddle has invented a test to determine whether the interpreter he is
 faced with is using applicative-order evaluation or normal-order evaluation. He
 defines the following two procedures:
@@ -363,7 +363,7 @@ applicative order: The predicate expression is evaluated first, and the result
 determines whether to evaluate the consequent or the alternative expression.)
 
 \subsection{Answer}
-\label{sec:org6a350d5}
+\label{sec:orga14edcb}
 In either type of language, \mintinline[breaklines=true,breakanywhere=true,linenos=true]{scheme}{(define (p) (p))} is an infinite
 loop. However, a normal-order language will encounter the special form, return
 \texttt{0}, and never evaluate \texttt{(p)}. An applicative-order language evaluates the
@@ -371,9 +371,9 @@ arguments to \mintinline[breaklines=true,breakanywhere=true,linenos=true]{scheme
 loop.
 
 \section{Exercise 1.6}
-\label{sec:org78909bc}
+\label{sec:org8886207}
 \subsection{Text code}
-\label{sec:orgaea5e2f}
+\label{sec:org17a72c9}
 \begin{minted}[breaklines=true,breakanywhere=true,linenos=true]{scheme}
 (define (abs x)
   (if (< x 0)
@@ -404,7 +404,7 @@ loop.
 \end{minted}
 
 \subsection{Question}
-\label{sec:org3c4c5db}
+\label{sec:org979fbff}
 Exercise 1.6: Alyssa P. Hacker doesn’t see why if needs to be provided as a
 special form. “Why can’t I just define it as an ordinary procedure in terms of
 cond?” she asks. Alyssa’s friend Eva Lu Ator claims this can indeed be done, and
@@ -439,22 +439,22 @@ Delighted, Alyssa uses new-if to rewrite the square-root program:
 What happens when Alyssa attempts to use this to compute square roots? Explain.
 
 \subsection{Answer}
-\label{sec:orgbf67cea}
+\label{sec:orgc1596b3}
 Using Alyssa's \texttt{new-if} leads to an infinite loop because the recursive call to
 \texttt{sqrt-iter} is evaluated before the actual call to \texttt{new-if}. This is because
 \texttt{if} and \texttt{cond} are special forms that change the way evaluation is handled;
 whichever branch is chosen leaves the other branches unevaluated.
 
 \section{Exercise 1.7}
-\label{sec:orgc3043c3}
+\label{sec:orgda1d999}
 \subsection{Text}
-\label{sec:org94ba59e}
+\label{sec:org913b5c3}
 \begin{minted}[breaklines=true,breakanywhere=true,linenos=true]{scheme}
 (define (mean-square x y)
   (average (square x) (square y)))
 \end{minted}
 \subsection{Question}
-\label{sec:orgad2f8bb}
+\label{sec:orgb7e4741}
 The good-enough? test used in computing square roots will not be very effective
 for finding the square roots of very small numbers. Also, in real computers,
 arithmetic operations are almost always performed with limited precision. This
@@ -465,9 +465,9 @@ iteration to the next and to stop when the change is a very small fraction of
 the guess. Design a square-root procedure that uses this kind of end test. Does
 this work better for small and large numbers?
 \subsection{Diary}
-\label{sec:org4a6f551}
+\label{sec:orgdfa18cd}
 \subsubsection{Solving}
-\label{sec:org0ed6eed}
+\label{sec:org3226357}
 My original answer was this, which compares the previous iteration until the new
 and old are within an arbitrary \(dx\).
 
@@ -522,10 +522,10 @@ reaches the precision limit of the system:
 \end{minted}
 
 \subsubsection{Imroving (sqrt) by avoiding extra (improve) call}
-\label{sec:org9eb56f7}
+\label{sec:org0718f63}
 \begin{enumerate}
 \item Non-optimized
-\label{sec:org87545f7}
+\label{sec:orgef2c30b}
 \begin{minted}[breaklines=true,breakanywhere=true,linenos=true]{scheme}
 (use-modules (ice-9 format))
 (load "../mattbench.scm")
@@ -548,7 +548,7 @@ reaches the precision limit of the system:
 \end{minted}
 
 \item Optimized
-\label{sec:org0f273d8}
+\label{sec:org332b7cc}
 \begin{minted}[breaklines=true,breakanywhere=true,linenos=true]{scheme}
 (use-modules (ice-9 format))
 (load "../mattbench.scm")
@@ -570,7 +570,7 @@ reaches the precision limit of the system:
 (newline)
 \end{minted}
 \item Benchmark results
-\label{sec:orgb89b2b3}
+\label{sec:org82a128d}
 
 \begin{center}
 \begin{tabular}{lr}
@@ -581,7 +581,7 @@ Optimized & 2518.44\\
 \end{enumerate}
 
 \subsection{Answer}
-\label{sec:org060e713}
+\label{sec:orgb56c378}
 The current method has decreasing accuracy with smaller numbers. Notice the
 steady divergence from correct answers here (should be decreasing powers of
 0.1):
@@ -642,9 +642,9 @@ So, my definition of \texttt{sqrt}:
 \end{center}
 
 \section{Exercise 1.8}
-\label{sec:org13e5550}
+\label{sec:orgc78f9bc}
 \subsection{Question}
-\label{sec:org459ebc2}
+\label{sec:orgc992ed1}
 Newton’s method for cube roots is based on the fact that if y is an
 approximation to the cube root of x, then a better approximation is given by the
 value:
@@ -655,7 +655,7 @@ Use this formula to implement a cube-root procedure analogous to the square-root
 procedure. (In 1.3.4 we will see how to implement Newton’s method in general as
 an abstraction of these square-root and cube-root procedures.)
 \subsection{Diary}
-\label{sec:org4a180fb}
+\label{sec:org1ec9210}
 My first attempt works, but needs an arbitrary limit to stop infinite loops:
 \begin{minted}[breaklines=true,breakanywhere=true,linenos=true]{scheme}
 <<square>>
@@ -696,7 +696,7 @@ discovered that (again due to floating point) \mintinline[breaklines=true,breaka
 forever unless you initialize your guess with a slightly different value, so
 let's do 1.1 instead.
 \subsection{Answer}
-\label{sec:org08ceab6}
+\label{sec:org8f366af}
 \begin{minted}[breaklines=true,breakanywhere=true,linenos=true]{scheme}
 <<square>>
 (define (cb-good-enough? nextguess guess lastguess x)
@@ -733,9 +733,9 @@ let's do 1.1 instead.
 \end{center}
 
 \section{Exercise 1.9}
-\label{sec:org438abdb}
+\label{sec:org65cec81}
 \subsection{Question}
-\label{sec:org97ce193}
+\label{sec:orgc3ada57}
 Each of the following two procedures defines a method for adding two positive
 integers in terms of the procedures inc, which increments its argument by 1, and
 dec, which decrements its argument by 1.
@@ -755,11 +755,11 @@ dec, which decrements its argument by 1.
 Using the substitution model, illustrate the process generated by each procedure
 in evaluating \mintinline[breaklines=true,breakanywhere=true,linenos=true]{scheme}{(+ 4 5)}. Are these processes iterative or recursive?
 \subsection{Answer}
-\label{sec:org47933eb}
+\label{sec:org3b8887f}
 The first procedure is recursive, while the second is iterative though
 tail-recursion.
 \subsubsection{recursive procedure}
-\label{sec:org3477fda}
+\label{sec:org1db7f40}
 \begin{minted}[breaklines=true,breakanywhere=true,linenos=true]{scheme}
 (+ 4 5)
 (inc (+ 3 5))
@@ -774,7 +774,7 @@ tail-recursion.
 \end{minted}
 
 \subsubsection{iterative procedure}
-\label{sec:org8611e29}
+\label{sec:orge829078}
 \begin{minted}[breaklines=true,breakanywhere=true,linenos=true]{scheme}
 (+ 4 5)
 (+ 3 6)
@@ -785,9 +785,9 @@ tail-recursion.
 \end{minted}
 
 \section{Exercise 1.10}
-\label{sec:org101ed6d}
+\label{sec:orgae22226}
 \subsection{Question}
-\label{sec:org5b97335}
+\label{sec:org0204702}
 The following procedure computes a mathematical function called Ackermann’s
 function.
 \begin{minted}[breaklines=true,breakanywhere=true,linenos=true]{scheme}
@@ -827,9 +827,9 @@ procedures \texttt{f}, \texttt{g}, and \texttt{h} for positive integer values of
 \mintinline[breaklines=true,breakanywhere=true,linenos=true]{scheme}{(k n)} computes \(5n^2\).
 
 \subsection{Answer}
-\label{sec:orgeee46f6}
+\label{sec:org1eff751}
 \subsubsection{\texttt{f}}
-\label{sec:org4cb3159}
+\label{sec:org003fd9c}
 
 \begin{minted}[breaklines=true,breakanywhere=true,linenos=true]{scheme}
 <<try-these>>
@@ -852,7 +852,7 @@ procedures \texttt{f}, \texttt{g}, and \texttt{h} for positive integer values of
 f(n)=2n
 \]
 \subsubsection{\texttt{g}}
-\label{sec:orgde201b2}
+\label{sec:orgca89e1a}
 
 \begin{minted}[breaklines=true,breakanywhere=true,linenos=true]{scheme}
 <<try-these>>
@@ -878,7 +878,7 @@ g(n)=2^n
 \]
 
 \subsubsection{\texttt{h}}
-\label{sec:org9e17dc7}
+\label{sec:org5d440d9}
 
 \begin{minted}[breaklines=true,breakanywhere=true,linenos=true]{scheme}
 <<try-these>>
@@ -908,9 +908,9 @@ h(n)={}^{n}2
 \]
 
 \section{Exercise 1.11}
-\label{sec:orgd47df1d}
+\label{sec:org4e18bc6}
 \subsection{Question}
-\label{sec:orge6f4e90}
+\label{sec:orgcfcfa97}
 A function \(f\) is defined by the rule that:
 \[
 f(n)=n \text{ if } n<3
@@ -925,9 +925,9 @@ f(n)=f(n-1)+2f(n-2)+3f(n-3) \text{ if } n \geq 3
 Write a procedure that computes \(f\) by means of a recursive process. Write a
 procedure that computes \(f\) by means of an iterative process.
 \subsection{Answer}
-\label{sec:org171f268}
+\label{sec:org621dcde}
 \subsubsection{Recursive}
-\label{sec:orgead7567}
+\label{sec:orgbb62570}
 \begin{minted}[breaklines=true,breakanywhere=true,linenos=true]{scheme}
 (define (fr n)
   (if (< n 3)
@@ -953,10 +953,10 @@ procedure that computes \(f\) by means of an iterative process.
 \end{center}
 
 \subsubsection{Iterative}
-\label{sec:orge2bcfb6}
+\label{sec:org1f2a911}
 \begin{enumerate}
 \item Attempt 1
-\label{sec:orgf081fa3}
+\label{sec:orge5ef6c6}
 \begin{minted}[breaklines=true,breakanywhere=true,linenos=true]{scheme}
 ;; This seems like it could be better
 (define (fi n)
@@ -995,7 +995,7 @@ procedure that computes \(f\) by means of an iterative process.
 It works but it seems wasteful.
 
 \item Attempt 2
-\label{sec:orga6d6de3}
+\label{sec:orgba40dc9}
 \begin{minted}[breaklines=true,breakanywhere=true,linenos=true]{scheme}
 (define (fi2 n)
   (define (formula a b c)
@@ -1033,9 +1033,9 @@ I like that better.
 \end{enumerate}
 
 \section{Exercise 1.12}
-\label{sec:org97129d0}
+\label{sec:org320464f}
 \subsection{Question}
-\label{sec:org4d35d2e}
+\label{sec:org56fc2d9}
 The following pattern of numbers is called Pascal’s triangle.
 
 \emph{Pretend there's a Pascal's triangle here.}
@@ -1044,7 +1044,7 @@ The numbers at the edge of the triangle are all 1, and each number inside the
 triangle is the sum of the two numbers above it. Write a procedure that
 computes elements of Pascal’s triangle by means of a recursive process.
 \subsection{Answer}
-\label{sec:org3b19fbf}
+\label{sec:orga2bbe93}
 I guess I'll rotate the triangle 45 degrees to make it the top-left corner of an
 infinite spreadsheet.
 
@@ -1088,9 +1088,9 @@ infinite spreadsheet.
 The test code was much harder to write than the actual solution.
 
 \section{Exercise 1.13}
-\label{sec:org172e8d9}
+\label{sec:org7626610}
 \subsection{Question}
-\label{sec:org5e9b78a}
+\label{sec:orgbcb50fc}
 Prove that \(\text{Fib}(n)\) is the closest integer to
 \(\frac{ϕ^n}{\sqrt{5}}\) where Phi is \(\frac{1 + \sqrt{5}}{2}\). Hint: let
 \(Υ = \frac{1 - \sqrt{5}}{2}\). Use induction and the definition of the
@@ -1101,12 +1101,12 @@ Fibonacci numbers to prove that
 \]
 
 \subsection{Answer}
-\label{sec:org5433b61}
+\label{sec:org48a8539}
 I don't know how to write a proof yet, but I can make functions to
 demonstrate it.
 
 \subsubsection{Fibonacci number generator}
-\label{sec:org1afa01e}
+\label{sec:org9e6868e}
 \begin{minted}[breaklines=true,breakanywhere=true,linenos=true]{scheme}
 (define (fib-iter n)
   (define (iter i a b)
@@ -1120,7 +1120,7 @@ demonstrate it.
       (iter 2 1 1)))
 \end{minted}
 \subsubsection{Various algorithms relating to the question}
-\label{sec:orga2baea6}
+\label{sec:org6f0f234}
 \begin{minted}[breaklines=true,breakanywhere=true,linenos=true]{scheme}
 <<sqrt>>
 (define sqrt5
@@ -1170,7 +1170,7 @@ exponential increase of the Fibonacci sequence itself.
 \end{center}
 
 \section{Exercise 1.14}
-\label{sec:orgceb43fc}
+\label{sec:org0cda8c3}
 Below is the default version of the count-change function. I'll be aggressively
 modifying it in order to get a graph out of it.
 \begin{minted}[breaklines=true,breakanywhere=true,linenos=true]{scheme}
@@ -1196,11 +1196,11 @@ modifying it in order to get a graph out of it.
         ((= kinds-of-coins 5) 50)))
 \end{minted}
 \subsection{Question A}
-\label{sec:org904751c}
+\label{sec:org6c813d6}
 Draw the tree illustrating the process generated by the count-change procedure
 of 1.2.2 in making change for 11 cents.
 \subsection{Answer}
-\label{sec:org7933f80}
+\label{sec:org7691818}
 I want to generate this graph algorithmically.
 \begin{minted}[breaklines=true,breakanywhere=true,linenos=true]{scheme}
 ;; cursed global
@@ -1275,12 +1275,12 @@ So, the graph of \texttt{(count-change 11)} is:
 \end{center}
 
 \subsection{Question B}
-\label{sec:org2549b77}
+\label{sec:org3788f91}
 What are the orders of growth of the space and number of steps used by this
 process as the amount to be changed increases?
 
 \subsection{Answer 2}
-\label{sec:org03d8cb2}
+\label{sec:org8c533b7}
 Let's look at this via the number of function calls needed for value \texttt{n}. Instead
 of returning an integer, I'll return a pair where \texttt{car} is the number of ways to
 count change, and \texttt{cdr} is the number of function calls that have occurred down
@@ -1385,9 +1385,9 @@ don't think I really grasped the nature of math as a tool of empowerment until
 now.
 
 \section{Exercise 1.15}
-\label{sec:orgb8e473c}
+\label{sec:org73005e4}
 \subsection{Question A}
-\label{sec:org50c4a7d}
+\label{sec:orgf00b033}
 The sine of an angle (specified in radians) can be computed by making use of the
 approximation \(\sin x ≈ x\) if \(x\) is sufficiently small, and the
 trigonometric identity \(\sin x = 3\sin\frac{x}{3} − 4\sin^3\frac{x}{3}\)
@@ -1407,7 +1407,7 @@ angle is considered “sufficiently small” if its magnitude is not greater tha
 How many times is the procedure \texttt{p} applied when \mintinline[breaklines=true,breakanywhere=true,linenos=true]{scheme}{(sine 12.15)} is evaluated?
 
 \subsection{Answer 1}
-\label{sec:org964f327}
+\label{sec:org14663d1}
 
 Let's find out!
 \begin{minted}[breaklines=true,breakanywhere=true,linenos=true]{scheme}
@@ -1435,13 +1435,13 @@ Let's find out!
 \texttt{p} is evaluated 5 times.
 
 \subsection{Question B}
-\label{sec:org0373f56}
+\label{sec:org9b12472}
 What is the order of growth in space and number of steps (as a function of \texttt{a})
 used by the process generated by the sine procedure when \mintinline[breaklines=true,breakanywhere=true,linenos=true]{scheme}{(sine a)} is
 evaluated?
 
 \subsection{Answer 2}
-\label{sec:org5892aef}
+\label{sec:orgd0016eb}
 \begin{minted}[breaklines=true,breakanywhere=true,linenos=true]{scheme}
 (use-srfis '(1))
 <<1-15-p-measure>>
@@ -1564,9 +1564,9 @@ plot 'Ex15/sine-bench.dat' using 1:2 with fillsteps title 'time to execute', \
 \end{center}
 
 \section{Exercise 1.16}
-\label{sec:org55249d6}
+\label{sec:org82df6d2}
 \subsection{Text}
-\label{sec:org3bc13d0}
+\label{sec:org53b4c2a}
 \begin{minted}[breaklines=true,breakanywhere=true,linenos=true]{scheme}
 (define (expt-rec b n)
   (if (= n 0) 
@@ -1590,7 +1590,7 @@ plot 'Ex15/sine-bench.dat' using 1:2 with fillsteps title 'time to execute', \
          (* b (fast-expt b (- n 1))))))
 \end{minted}
 \subsection{Question}
-\label{sec:orga1ca458}
+\label{sec:org70ed7f1}
 Design a procedure that evolves an iterative exponentiation process that uses
 successive squaring and uses a logarithmic number of steps, as does fast-expt.
 (Hint: Using the observation that \((b^{n/2})^2=(b^2)^{n/2}\), keep, along with
@@ -1602,7 +1602,7 @@ In general, the technique of defining an \emph{invariant quantity} that remains
 unchanged from state to state is a powerful way to think about the design of
 iterative algorithms.)
 \subsection{Diary}
-\label{sec:orgbaaf60c}
+\label{sec:orgbd426e8}
 First I made this program which tries to use a false equivalence:
 \[ab^2 = (a + 1)b^{n - 1}\]
 \begin{minted}[breaklines=true,breakanywhere=true,linenos=true]{scheme}
@@ -1641,7 +1641,7 @@ base & power & variable\\
 \end{center}
 
 \subsection{Answer}
-\label{sec:org014146c}
+\label{sec:org7eeb20e}
 There are two key transforms to a faster algorithm. The first was already shown
 in the text:
 
@@ -1697,9 +1697,9 @@ The solution essentially follows this logic:
 \end{center}
 
 \section{Exercise 1.17}
-\label{sec:org5ed4f7f}
+\label{sec:org8034a44}
 \subsection{Question}
-\label{sec:orga2bea49}
+\label{sec:orgf655099}
 The exponentiation algorithms in this section are based on performing
 exponentiation by means of repeated multiplication. In a similar way, one can
 perform integer multiplication by means of repeated addition. The following
@@ -1720,7 +1720,7 @@ multiplication procedure analogous to fast-expt that uses a logarithmic number
 of steps.
 
 \subsection{Answer}
-\label{sec:org3ccb7e6}
+\label{sec:org5e58974}
 \begin{minted}[breaklines=true,breakanywhere=true,linenos=true]{scheme}
 (define (double x)
   (+ x x))
@@ -1758,16 +1758,16 @@ Proof it works:
 \end{center}
 
 \section{Exercise 1.18}
-\label{sec:org9eb7d76}
+\label{sec:org2b35f23}
 \subsection{Question}
-\label{sec:orga4f8e7e}
-Using the results of \hyperref[sec:org55249d6]{Exercise 1.16} and \hyperref[sec:org5ed4f7f]{Exercise 1.17}, devise a procedure that
+\label{sec:org44693ea}
+Using the results of \hyperref[sec:org82df6d2]{Exercise 1.16} and \hyperref[sec:org8034a44]{Exercise 1.17}, devise a procedure that
 generates an iterative process for multiplying two integers in terms of adding,
 doubling, and halving and uses a logarithmic number of steps.
 \subsection{Diary}
-\label{sec:org2cfa2eb}
+\label{sec:org3552be7}
 \subsubsection{Comparison benchmarks:}
-\label{sec:org74122a2}
+\label{sec:orgbb43609}
 
 \begin{minted}[breaklines=true,breakanywhere=true,linenos=true]{scheme}
 (load "../mattbench.scm")
@@ -1790,13 +1790,13 @@ doubling, and halving and uses a logarithmic number of steps.
 
 So the iterative version takes 0.84 times less to do \(32 \times 32\).
 \subsubsection{Hall of shame}
-\label{sec:org76d7d6f}
+\label{sec:orgb80c6b9}
 Some of my \emph{very} incorrect ideas:
 \[ab = (a+1)(b-1)\]
 \[ab = \big(a+\Big(\frac{a}{2}\Big)(b-1)\big)\]
 \[ab+c = \big(a(b-1)+(b+c)\big)\]
 \subsection{Answer}
-\label{sec:orge5f34cf}
+\label{sec:org4b7ecf3}
 \begin{minted}[breaklines=true,breakanywhere=true,linenos=true]{scheme}
 (define (double x)
   (+ x x))
@@ -1833,9 +1833,9 @@ Some of my \emph{very} incorrect ideas:
 \end{center}
 
 \section{Exercise 1.19}
-\label{sec:org16b723d}
+\label{sec:orgee95652}
 \subsection{Question}
-\label{sec:org03264ab}
+\label{sec:org56782d4}
 There is a clever algorithm for computing the Fibonacci numbers in a logarithmic
 number of steps. Recall the transformation of the state variables a and b in the
 \texttt{fib-iter} process of section 1-2-2:
@@ -1874,7 +1874,7 @@ in a logarithmic number of steps:
 \end{minted}
 
 \subsection{Diary}
-\label{sec:orge4f7293}
+\label{sec:org6333fbf}
 More succinctly put:
 
 \[
@@ -1941,7 +1941,7 @@ the attached list. so \mintinline[breaklines=true,breakanywhere=true,linenos=tru
 \end{center}
 
 \subsection{Answer}
-\label{sec:org3492b08}
+\label{sec:org5dffa58}
 \begin{minted}[breaklines=true,breakanywhere=true,linenos=true]{scheme}
 (define (fib-rec n)
   (cond ((= n 0) 0)
@@ -1986,9 +1986,9 @@ the attached list. so \mintinline[breaklines=true,breakanywhere=true,linenos=tru
 \end{center}
 
 \section{Exercise 1.20}
-\label{sec:orgdc46c9d}
+\label{sec:org5d2140c}
 \subsection{Text}
-\label{sec:orgd75b9c6}
+\label{sec:org1dc48b8}
 \begin{minted}[breaklines=true,breakanywhere=true,linenos=true]{scheme}
 (define (gcd a b)
   (if (= b 0)
@@ -1996,7 +1996,7 @@ the attached list. so \mintinline[breaklines=true,breakanywhere=true,linenos=tru
       (gcd b (remainder a b))))
 \end{minted}
 \subsection{Question}
-\label{sec:orgba5caf9}
+\label{sec:orge678fe4}
 The process that a procedure generates is of course dependent on the rules used
 by the interpreter. As an example, consider the iterative \texttt{gcd} procedure given
 above. Suppose we were to interpret this procedure using normal-order
@@ -2008,13 +2008,13 @@ are actually performed in the normal-order evaluation of \mintinline[breaklines=
 applicative-order evaluation?
 
 \subsection{Answer}
-\label{sec:org1277e97}
+\label{sec:orge5db413}
 I struggled to understand this, but the key here is that normal-order evaluation
 causes the unevaluated expressions to be duplicated, meaning they get evaluated
 multiple times.
 
 \subsubsection{Applicative order}
-\label{sec:org178367e}
+\label{sec:orga42508f}
 \begin{minted}[breaklines=true,breakanywhere=true,linenos=true]{scheme}
 call (gcd 206 40)
 (if)
@@ -2112,9 +2112,9 @@ So, in normal-order eval, remainder is called 18 times, while in applicative ord
 it's called 5 times.
 
 \section{Exercise 1.21}
-\label{sec:org53d5c01}
+\label{sec:orgbf065d2}
 \subsection{Text}
-\label{sec:orga10bc93}
+\label{sec:org948efa2}
 \begin{minted}[breaklines=true,breakanywhere=true,linenos=true]{scheme}
 <<square>>
 (define (smallest-divisor n)
@@ -2134,7 +2134,7 @@ it's called 5 times.
 \end{minted}
 
 \subsection{Question}
-\label{sec:orgf0af354}
+\label{sec:org0529ea4}
 Use the smallest-divisor procedure to find the smallest divisor of each of the
 following numbers: 199, 1999, 19999.
 
@@ -2150,9 +2150,9 @@ following numbers: 199, 1999, 19999.
 \end{center}
 
 \section{Exercise 1.22}
-\label{sec:org5c38ee7}
+\label{sec:org389b617}
 \subsection{Question}
-\label{sec:org1ad246c}
+\label{sec:org3acee9a}
 Most Lisp implementations include a primitive called runtime that returns an
 integer that specifies the amount of time the system has been running (measured,
 for example, in microseconds). The following timed-prime-test procedure, when
@@ -2195,9 +2195,9 @@ programs on your machine run in time proportional to the number of steps
 required for the computation?
 
 \subsection{Answer}
-\label{sec:org7310f22}
+\label{sec:orgd198bcb}
 \subsubsection{Part 1}
-\label{sec:orgf2b25ce}
+\label{sec:orgce1ce63}
 So this question is a little funky, because modern machines are so fast that the
 single-run times can seriously vary.
 
@@ -2262,7 +2262,7 @@ Primes > 100000000 & (1000003 1000033 1000037)\\
 \end{center}
 
 \subsubsection{Part 2}
-\label{sec:orgd55d891}
+\label{sec:orgbb8674b}
 Repeatedly re-running, it I see it occasionally jump to twice the time. I'm not
 happy with this, so I'm going to refactor to use the \texttt{mattbench2} utility from
 the root of the project folder.
@@ -2342,9 +2342,9 @@ algorithm is slower than this other one,'' but when asked to find or prove the
 \(\Theta\) notation I'm pretty clueless;
 
 \section{Exercise 1.23}
-\label{sec:orgc56aa99}
+\label{sec:org1a3fc91}
 \subsection{Question}
-\label{sec:org261e685}
+\label{sec:org0cc4e4d}
 The \texttt{smallest-divisor} procedure shown at the start of this section does lots of
 needless testing: After it checks to see if the number is divisible by 2 there
 is no point in checking to see if it is divisible by any larger even numbers.
@@ -2359,7 +2359,7 @@ it to run about twice as fast. Is this expectation confirmed? If not, what is
 the observed ratio of the speeds of the two algorithms, and how do you explain
 the fact that it is different from 2?
 \subsection{A Comedy of Error (just the one)}
-\label{sec:orgc2cb68b}
+\label{sec:org9fc8374}
 \begin{minted}[breaklines=true,breakanywhere=true,linenos=true]{scheme}
 <<square>>
 (define (smallest-divisor n)
@@ -2435,7 +2435,7 @@ Oh, that's why.
 \end{minted}
 
 \subsection{Answer}
-\label{sec:org7b63751}
+\label{sec:org811c52c}
 Ok, let's try that again.
 
 \begin{minted}[breaklines=true,breakanywhere=true,linenos=true]{scheme}
@@ -2619,9 +2619,9 @@ min & (+1) & (next-broken) & (next-fixed) & integrated\\
 \end{center}
 
 \section{Exercise 1.24}
-\label{sec:org18a9f41}
+\label{sec:org29e48c7}
 \subsection{Text}
-\label{sec:org6c842a7}
+\label{sec:org62cfe9c}
 \begin{minted}[breaklines=true,breakanywhere=true,linenos=true]{scheme}
 <<square>>
 (define (expmod base exp m)
@@ -2649,7 +2649,7 @@ min & (+1) & (next-broken) & (next-fixed) & integrated\\
         (else #f)))
 \end{minted}
 \subsection{Question}
-\label{sec:org46f9cf7}
+\label{sec:org3b6c3cc}
 Modify the \texttt{timed-prime-test} procedure of Exercise 1.22 to use \texttt{fast-prime?} (the
 Fermat method), and test each of the 12 primes you found in that exercise. Since
 the Fermat test has \(\Theta(\text{log}n)\) growth, how would you expect the
@@ -2658,7 +2658,7 @@ primes near 1000? Do your data bear this out? Can you explain any discrepancy
 you find?
 
 \subsection{Answer}
-\label{sec:org2c38865}
+\label{sec:orgbbdba40}
 \begin{minted}[breaklines=true,breakanywhere=true,linenos=true]{scheme}
 <<mattbench2>>
 <<expmod>>
@@ -2795,9 +2795,9 @@ For the life of me I have no idea what that bump is. Maybe it needs more
 aggressive bignum processing there?
 
 \section{Exercise 1.25}
-\label{sec:orgc2b1494}
+\label{sec:orgf55412b}
 \subsection{Question}
-\label{sec:org3ff326e}
+\label{sec:org9fcd89a}
 Alyssa P. Hacker complains that we went to a lot of extra work in writing
 \texttt{expmod}. After all, she says, since we already know how to compute
 exponentials, we could have simply written
@@ -2811,7 +2811,7 @@ Is she correct? Would this procedure serve as well for our fast prime tester?
 Explain.
 
 \subsection{Answer}
-\label{sec:org60585d1}
+\label{sec:orgd6a6966}
 In Alyssa's version of \texttt{expmod}, the result of the \texttt{fast-expt} operation is
 \emph{extremely} large. For example, in the process of checking for divisors of
 1,001, the number 455 will be tried. \mintinline[breaklines=true,breakanywhere=true,linenos=true]{scheme}{(expt 455 1001)} produces an
@@ -2861,9 +2861,9 @@ You can see that the numbers remain quite manageable throughout this process. So
 taking these extra steps actually leads to an algorithm that performs better.
 
 \section{Exercise 1.26}
-\label{sec:org72c32b7}
+\label{sec:org0267b4c}
 \subsection{Question}
-\label{sec:org3597fa7}
+\label{sec:orgf345940}
 Louis Reasoner is having great difficulty doing Exercise 1.24. His \texttt{fast-prime?} test seems to run more slowly than his \texttt{prime?} test. Louis calls his friend Eva Lu Ator over to help. When they examine Louis’s code, they find that he has rewritten the \texttt{expmod} procedure to use an explicit multiplication, rather than calling \texttt{square}:
 
 \begin{minted}[breaklines=true,breakanywhere=true,linenos=true]{scheme}
@@ -2886,16 +2886,16 @@ writing the procedure like that, you have transformed the \(\Theta(\log n)\)
 process into a \(\Theta(n)\) process.” Explain.
 
 \subsection{Answer}
-\label{sec:org73f99e3}
+\label{sec:org11adf7e}
 Making the same function call twice isn't the same as using a variable twice --
 Louis' version doubles the work, having two processes solving the exact same
 problem. Since the number of processes used increases exponentially, this turns
 \(\log n\) into \(n\).
 
 \section{Exercise 1.27}
-\label{sec:org06b4a6d}
+\label{sec:orgad7850d}
 \subsection{Question}
-\label{sec:orgf6ccd31}
+\label{sec:org7e3354e}
 Demonstrate that the Carmichael numbers listed in Footnote 1.47 really do fool
 the Fermat test. That is, write a procedure that takes an integer \(n\) and
 tests whether \(a^n\) is congruent to \(a\) modulo \(n\) for every \(a < n\),
@@ -2908,7 +2908,7 @@ and try your procedure on the given Carmichael numbers.
 \end{tabular}
 \end{table}
 \subsection{Answer}
-\label{sec:orgeb06bf5}
+\label{sec:org296653d}
 \begin{minted}[breaklines=true,breakanywhere=true,linenos=true]{scheme}
 <<expmod>>
 (define (car-test n)
@@ -2928,9 +2928,9 @@ and try your procedure on the given Carmichael numbers.
 \end{minted}
 
 \section{Exercise 1.28}
-\label{sec:org9e7e5bc}
+\label{sec:orgc83cc5d}
 \subsection{Question}
-\label{sec:org8374049}
+\label{sec:org69b742f}
 One variant of the Fermat test that cannot be fooled is called the Miller-Rabin
 test (Miller 1976; Rabin 1980). This starts from an alternate form of Fermat’s
 Little Theorem, which states that if \(n\) is a prime number and \(a\) is
@@ -2947,7 +2947,7 @@ to implement the Miller-Rabin test with a procedure analogous to fermat-test.
 Check your procedure by testing various known primes and non-primes. Hint: One
 convenient way to make \texttt{expmod} signal is to have it return 0.
 \subsection{Analysis}
-\label{sec:orgf48b210}
+\label{sec:orga9e31c5}
 For the sake of verifying this, I want to get a bigger list of primes and
 Carmichael numbers to verify against. I'll save them using Guile's built in
 read/write functions that save Lisp lists to text:
@@ -3021,7 +3021,7 @@ This will be useful in various future functions:
 (fermat-prime?) is vulnerable: Yes
 
 \subsection{Answer}
-\label{sec:org2e4dd93}
+\label{sec:orgce16a96}
 \begin{minted}[breaklines=true,breakanywhere=true,linenos=true]{scheme}
 <<square>>
 (define (expmod-mr base exp m)
@@ -3129,9 +3129,9 @@ mr false-positives Carmichaels: #f
 \end{verbatim}
 
 \section{Exercise 1.29}
-\label{sec:org5f9bd6e}
+\label{sec:org9501650}
 \subsection{Text}
-\label{sec:org71445d6}
+\label{sec:org5193841}
 \begin{minted}[breaklines=true,breakanywhere=true,linenos=true]{scheme}
 (define (sum term a next b)
   (if (> a b)
@@ -3147,7 +3147,7 @@ mr false-positives Carmichaels: #f
      dx))
 \end{minted}
 \subsection{Question}
-\label{sec:org89ca03d}
+\label{sec:orgcf2a81a}
 Simpson's Rule is a more accurate method of numerical integration than the
 method illustrated above. Using Simpson's Rule, the integral of a function \(f\)
 between \(a\) and \(b\) is approximated as
@@ -3163,7 +3163,7 @@ value of the integral, computed using Simpson's Rule. Use your procedure to
 integrate \texttt{cube} between 0 and 1 (with \(n = 100\) and \(n = 1000\)), and
 compare the results to those of the \texttt{integral} procedure shown above.
 \subsection{Answer}
-\label{sec:org899a2e8}
+\label{sec:orgdfc5816}
 \begin{minted}[breaklines=true,breakanywhere=true,linenos=true]{scheme}
 (define (int-simp f a b n)
   (define h
@@ -3217,15 +3217,15 @@ integral dx:0.0008 & int-simp i:1000\\
 So, more accurate for roughly the same effort or less.
 
 \section{Exercise 1.30}
-\label{sec:org20a3dbb}
+\label{sec:org6814dcb}
 \subsection{Question}
-\label{sec:org5569eaf}
+\label{sec:org2a57f01}
 The \texttt{sum} procedure above generates a linear recursion. The procedure can be
 rewritten so that the sum is performed iteratively. Show how to do this by
 filling in the missing expressions in the following definition:
 
 \subsection{Answer}
-\label{sec:org77ff09d}
+\label{sec:orgc1d2303}
 \begin{minted}[breaklines=true,breakanywhere=true,linenos=true]{scheme}
 (define (sum-iter term a next b)
   (define (iter a result)
@@ -3245,15 +3245,15 @@ recursive & iterative\\
 \end{center}
 
 \section{Exercise 1.31}
-\label{sec:org5eb6c2a}
+\label{sec:org5fea0b4}
 \subsection{Question A.1}
-\label{sec:org3232bde}
+\label{sec:org8064355}
 The \texttt{sum} procedure is only the simplest of a vast number of similar
 abstractions that can be captured as higher-order procedures. Write an analogous
 procedure called \texttt{product} that returns the product of the values of a function
 at points over a given range.
 \subsection{Answer 1.1}
-\label{sec:org2eb7f26}
+\label{sec:org2a1c1c9}
 \begin{minted}[breaklines=true,breakanywhere=true,linenos=true]{scheme}
 (define (product-iter term a next b)
   (define (iter a result)
@@ -3263,11 +3263,11 @@ at points over a given range.
   (iter a 1)) ;; start at 1 so it's not always 0
 \end{minted}
 \subsection{Question A.2}
-\label{sec:orge20d4ed}
+\label{sec:org0a63b41}
 Show how to define \texttt{factorial} in
 terms of \texttt{product}.
 \subsection{Answer 1.2}
-\label{sec:org6255997}
+\label{sec:org641aeb2}
 I was briefly stumped because \texttt{product} only counts upward. Then I realized
 that's just how it's presented and it can go either direction, since addition
 and multiplication are commutative. I look forward to building up a more
@@ -3286,7 +3286,7 @@ intuitive sense of numbers.
 \end{minted}
 
 \subsection{Question A.3}
-\label{sec:org1300b9a}
+\label{sec:org1a1555e}
 Also use \texttt{product} to compute approximations to
 \(\pi\) using the formula
 
@@ -3296,7 +3296,7 @@ Also use \texttt{product} to compute approximations to
 \]
 
 \subsection{Answer 1.3}
-\label{sec:org383b54c}
+\label{sec:org5941f09}
 Once this equation is encoded, you just need to multiply it by two to get \(\pi\).
 
 Fun fact: the formula is slightly wrong, it should start the series with \({1 \over 2}\).
@@ -3315,13 +3315,13 @@ Fun fact: the formula is slightly wrong, it should start the series with \({1 \o
 3.1415769458228726
 
 \subsection{Question B}
-\label{sec:org8f6c588}
+\label{sec:org0773cdf}
 If your product procedure generates a recursive process, write one that
 generates an iterative process. If it generates an iterative process, write one
 that generates a recursive process.
 
 \subsection{Answer 2}
-\label{sec:org9a8e993}
+\label{sec:org2fa9b09}
 \begin{minted}[breaklines=true,breakanywhere=true,linenos=true]{scheme}
 (define (product-rec term a next b)
   (if (> a b)
@@ -3365,9 +3365,9 @@ iterative & recursive\\
 \end{center}
 
 \section{Exercise 1.32}
-\label{sec:org73a4d86}
+\label{sec:org6e2d96b}
 \subsection{Question A}
-\label{sec:org21a669b}
+\label{sec:org696c31e}
 Show that \texttt{sum} and \texttt{product} are both special cases of a still more general
 notion called \texttt{accumulate} that combines a collection of terms, using some
 general accumulation function:
@@ -3384,7 +3384,7 @@ the terms run out. Write \texttt{accumulate} and show how \texttt{sum} and \text
 be defined as simple calls to \texttt{accumulate}.
 
 \subsection{Answer A}
-\label{sec:orgcbf608b}
+\label{sec:org6ea9076}
 When I first did this question, I struggled a lot before realizing \texttt{accumulate}
 was much closer to the exact definitions of sum/product than I thought.
 \begin{minted}[breaklines=true,breakanywhere=true,linenos=true]{scheme}
@@ -3421,13 +3421,13 @@ was much closer to the exact definitions of sum/product than I thought.
 5040
 
 \subsection{Question B}
-\label{sec:org84f29f8}
+\label{sec:orga9e8416}
 If your \texttt{accumulate} procedure generates a recursive process, write one
 that generates an iterative process.  If it generates an iterative process,
 write one that generates a recursive process.
 
 \subsection{Answer B}
-\label{sec:org70cbcc4}
+\label{sec:org67e9976}
 \begin{minted}[breaklines=true,breakanywhere=true,linenos=true]{scheme}
 (define (accumulate-rec combiner null-value term a next b)
   (if (> a b)
@@ -3436,4 +3436,77 @@ write one that generates a recursive process.
          (accumulate-rec combiner null-value
                          term (next a) next b))))
 \end{minted}
+
+\section{Question 1.33}
+\label{sec:orgbb7d67d}
+\subsection{Question A}
+\label{sec:org4c12ddb}
+\index{filter}
+You can obtain an even more general version of \texttt{accumulate} by introducing the
+notion of a filter on the terms to be combined. That is, combine only those
+terms derived from values in the range that satisfy a specified condition. The
+resulting \texttt{filtered-accumulate} abstraction takes the same arguments as
+accumulate, together with an additional predicate of one argument that specifies
+the filter. Write \texttt{filtered-accumulate} as a procedure. 
+
+\subsection{Question B}
+\label{sec:org9387ad0}
+Show how to express the following using \texttt{filtered-accumulate}:
+
+\begin{minted}[breaklines=true,breakanywhere=true,linenos=true]{scheme}
+(define (filtered-accumulate-iter
+           predicate? combiner null-value
+           term a next b)
+  (define (iter a result)
+    (cond ((> a b) result)
+          ((predicate? a)
+           (iter (next a)
+                 (combiner result (term a))))
+          (else (iter (next a)
+                      result))))
+  (iter a null-value))
+\end{minted}
+
+\subsubsection{A}
+\label{sec:orgd75a935}
+the sum of the squares of the prime numbers in the interval \(a\) to \(b\)
+(assuming that you have a \texttt{prime?} predicate already written)
+
+\begin{minted}[breaklines=true,breakanywhere=true,linenos=true]{scheme}
+(load "mattcheck.scm")
+(define (square x)
+  (* x x))
+<<filtered-accumulate-iter>>
+<<expmod-mr2>>
+<<mr-test2>>
+<<mr-prime>>
+(define mr-times 100)
+(define (prime? x)
+  (mr-prime? x mr-times))
+(define (prime-sum a b)
+  (filtered-accumulate-iter prime? + 0
+                            square a 1+ b))
+
+(mattcheck-equal "1 prime correct"
+                 (prime-sum 1008 1010)
+                 (square 1009)) ;; 1009
+(mattcheck-equal "many primes correct"
+                 (prime-sum 1000 2001)
+                 (apply +
+                        (map square
+                             (filter prime? (iota (- 2001 1000)
+                                                  1000)))))
+\end{minted}
+
+
+
+SUCCEED at 1 prime correct
+
+SUCCEED at many primes correct
+
+\subsubsection{B}
+\label{sec:org36ea746}
+the product of all the positive integers less than \(n\) that are relatively
+prime to \(n\) (i.e., all positive integers \(i < n\) such that
+\(\textsc{gcd}(i, n) = 1\).
 \end{document}

@@ -3669,3 +3669,74 @@ write one that generates a recursive process.
          (accumulate-rec combiner null-value
                          term (next a) next b))))
 #+END_SRC
+
+* Question 1.33
+** Question A
+#+INDEX: filter
+You can obtain an even more general version of ~accumulate~ by introducing the
+notion of a filter on the terms to be combined. That is, combine only those
+terms derived from values in the range that satisfy a specified condition. The
+resulting ~filtered-accumulate~ abstraction takes the same arguments as
+accumulate, together with an additional predicate of one argument that specifies
+the filter. Write ~filtered-accumulate~ as a procedure. 
+
+** Question B
+Show how to express the following using ~filtered-accumulate~:
+
+#+NAME: filtered-accumulate-iter
+#+BEGIN_SRC scheme -n :eval no-export :results silent
+(define (filtered-accumulate-iter
+           predicate? combiner null-value
+           term a next b)
+  (define (iter a result)
+    (cond ((> a b) result)
+          ((predicate? a)
+           (iter (next a)
+                 (combiner result (term a))))
+          (else (iter (next a)
+                      result))))
+  (iter a null-value))
+#+END_SRC
+
+*** A
+the sum of the squares of the prime numbers in the interval \(a\) to \(b\)
+(assuming that you have a ~prime?~ predicate already written)
+
+#+BEGIN_SRC scheme -n :eval no-export :results output :results both
+(load "mattcheck.scm")
+(define (square x)
+  (* x x))
+<<filtered-accumulate-iter>>
+<<expmod-mr2>>
+<<mr-test2>>
+<<mr-prime>>
+(define mr-times 100)
+(define (prime? x)
+  (mr-prime? x mr-times))
+(define (prime-sum a b)
+  (filtered-accumulate-iter prime? + 0
+                            square a 1+ b))
+
+(mattcheck-equal "1 prime correct"
+                 (prime-sum 1008 1010)
+                 (square 1009)) ;; 1009
+(mattcheck-equal "many primes correct"
+                 (prime-sum 1000 2001)
+                 (apply +
+                        (map square
+                             (filter prime? (iota (- 2001 1000)
+                                                  1000)))))
+#+END_SRC
+
+#+RESULTS[9d2efd935ed9abfe7480e0fd9117c25f7db9eb02]:
+:results:
+
+SUCCEED at 1 prime correct
+
+SUCCEED at many primes correct
+:end:
+
+*** B
+the product of all the positive integers less than \(n\) that are relatively
+prime to \(n\) (i.e., all positive integers \(i < n\) such that
+\(\textsc{gcd}(i, n) = 1\).
