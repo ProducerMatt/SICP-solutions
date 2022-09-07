@@ -3772,3 +3772,25 @@ relatively prime to \(n\) (i.e., all positive integers \(i < n\) such that
 
 SUCCEED at Ex_1-33B
 :end:
+
+* Exercise 1.34
+** Question
+Suppose we define the procedure
+
+#+BEGIN_SRC scheme
+(define (f g) (g 2))
+#+END_SRC
+
+Then, we have
+
+#+BEGIN_SRC scheme
+(f square)
+; 4
+(f (lambda (z) (* z (+ z 1))))
+; 6
+#+END_SRC
+
+What happens if we (perversely) ask the interpreter to evaluate the combination
+src_scheme{(f f)}? Explain.
+** Answer
+This creates a recursive call. Since there is no conditional to interrupt it, ~f~ calls itself forever.
