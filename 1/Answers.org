@@ -3792,5 +3792,20 @@ Then, we have
 
 What happens if we (perversely) ask the interpreter to evaluate the combination
 src_scheme{(f f)}? Explain.
-** Answer
+** Wrong Answer
 This creates a recursive call. Since there is no conditional to interrupt it, ~f~ calls itself forever.
+** Real Answer
+#+BEGIN_SRC scheme -n :eval no-export :results output
+;; Will be evaluated like this:
+;;   (f f)
+;;   (f 2)
+;;   (2 2)
+(define (f g) (g 2))
+(f f)
+#+END_SRC
+
+#+RESULTS[fa3fee1227bd981f86a7f021bb6f63e9ad869b8e]:
+:results:
+=ice-9/boot-9.scm:1685:16: In procedure raise-exception:
+Wrong type to apply: 2=
+:end:
