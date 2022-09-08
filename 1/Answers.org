@@ -3966,3 +3966,96 @@ Undamped, fixed-point makes 37 guesses.
 :end:
 
 Damped, it makes 21.
+
+* Exercise 1.37
+** Question A
+An infinite continued fraction is an expression of the form
+
+\[ {f} = \cfrac{N_1}{D_1 + \cfrac{N_2}{D_2 + \cfrac{N_3}{D_3 + \dots}}} \]
+
+As an example, one can show that the infinite continued fraction expansion with
+the \(N_i\) and the \(D_i\) all equal to 1 produces \(1 / \varphi\), where
+\(\varphi\) is the golden ratio (described in 1.2.2). One way to approximate an
+infinite continued fraction is to truncate the expansion after a given number of
+terms. Such a truncation---a so-called \(k\)-term finite continued
+fraction}---has the form
+
+\[ \cfrac{N_1}{D_1 + \cfrac{N_2}{\ddots + \cfrac{N_k}{D_k}}} \]
+
+Suppose that ~n~ and ~d~ are procedures of one argument (the term index \(i\))
+that return the \(N_i\) and \(D_i\) of the terms of the continued fraction.
+Define a procedure ~cont-frac~ such that evaluating
+src_scheme{(cont-frac n d k)} computes the value of the \(k\)-term finite continued
+fraction. Check your procedure by approximating \(1 / \varphi\) using
+
+#+BEGIN_SRC scheme
+(cont-frac (lambda (i) 1.0)
+           (lambda (i) 1.0)
+           k)
+#+END_SRC
+
+for successive values of ~k~. How large must you make ~k~ in order to get an
+approximation that is accurate to 4 decimal places?
+** Answer A
+A note: the "golden ratio" this code estimates is exactly =1.0= less than the golden ratio anyone else seems to be talking about.
+#+NAME: cont-frac
+#+BEGIN_SRC scheme -n :eval no-export :results silent
+(define (cont-frac n d k)
+  (define (iter i result)
+    (if (= i 0)
+        result
+        (iter (1- i) (/ (n i) (+ (d 1) result)))))
+
+  (iter (1- k) (/ (n k) (d k))))
+#+END_SRC
+
+#+NAME: cont-frac-data
+#+BEGIN_SRC scheme -n :eval no-export :results value table :exports both
+<<cont-frac>>
+(define (golden-ratio k)
+  (cont-frac (λ(i) 1.0)(λ(i)1.0) k))
+
+(map (λ(x y) (list x y))
+     (iota 16 1)
+      (map (λ(x)(- 0.61803398874989484820
+                   (golden-ratio x)))
+           (iota 16 1)))
+#+END_SRC
+
+#+RESULTS[583ae9adec76e3b3ca3f43029e833749382afd69]: cont-frac-data
+:results:
+|  1 |     -0.3819660112501051 |
+|  2 |      0.1180339887498949 |
+|  3 |    -0.04863267791677173 |
+|  4 |    0.018033988749894814 |
+|  5 |  -0.0069660112501050975 |
+|  6 |   0.0026493733652794837 |
+|  7 |  -0.0010136302977241662 |
+|  8 |  0.00038692992636546464 |
+|  9 | -0.00014782943192326314 |
+| 10 |  5.6460660007306984e-05 |
+| 11 |   -2.15668056606777e-05 |
+| 12 |    8.23767693358679e-06 |
+| 13 | -3.1465286196574738e-06 |
+| 14 |   1.201864649025275e-06 |
+| 15 |  -4.590717870289751e-07 |
+| 16 |  1.7534976970434712e-07 |
+:end:
+
+
+#+begin_src gnuplot :var data=cont-frac-data :file fig/1-36-1.png :exports results :cache no :eval no-export
+reset
+set key autotitle columnheader
+set logscale xy
+set xlabel 'iterations'
+set xtics rotate by -45
+set ylabel 'precision'
+set title 'distance from true golden ratio'
+
+plot data using 2:xticlabels(1) with fillsteps
+#+end_src
+
+#+RESULTS:
+:results:
+[[file:fig/1-36-1.png]]
+:end:
