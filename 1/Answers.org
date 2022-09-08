@@ -3851,3 +3851,118 @@ the ~fixed-point~ procedure.
 :results:
 1.6180327868852458
 :end:
+
+* Question 1.36
+** Question
+Modify ~fixed-point~ so that it prints the sequence of approximations it
+generates, using the ~newline~ and ~display~ primitives shown in Exercise 1.22.
+Then find a solution to \(x^x = 1000\) by finding a fixed point of \(x \mapsto
+\log(1000) / \log(x)\). (Use Scheme's primitive ~log~ procedure, which computes
+natural logarithms.) Compare the number of steps this takes with and without
+average damping. (Note that you cannot start ~fixed-point~ with a guess of 1, as
+this would cause division by \(\log(1) = 0\).)
+
+** Answer
+Using the ~display~ and ~newline~ functions at any great extent is pretty
+exhausting, so I'll use ~format~ instead.
+#+NAME: fixed-point-debug
+#+BEGIN_SRC scheme -n :eval no-export :results silent
+(use-modules (ice-9 format))
+(define tolerance 0.00001)
+
+(define (fixed-point f first-guess)
+  (define (close-enough? v1 v2)
+    (< (abs (- v1 v2)) 
+       tolerance))
+  (define (try guess)
+    (let ((next (f guess)))
+      (format #t "~&~a~%" next)
+      (if (close-enough? guess next)
+          next
+          (try next))))
+  (try first-guess))
+#+END_SRC
+
+#+BEGIN_SRC scheme -n :eval no-export :results output :export code
+<<close-enough>>
+<<fixed-point-debug>>
+(fixed-point (λ(x) (/ (log 1000) (log x))) 1.1)
+#+END_SRC
+
+#+RESULTS[26e30764924462e2d22df8d8ba9a56af22698a31]:
+:results:
+72.47657378429035
+1.6127318474109593
+14.45350138636525
+2.5862669415385087
+7.269672273367045
+3.4822383620848467
+5.536500810236703
+4.036406406288111
+4.95053682041456
+4.318707390180805
+4.721778787145103
+4.450341068884912
+4.626821434106115
+4.509360945293209
+4.586349500915509
+4.535372639594589
+4.568901484845316
+4.546751100777536
+4.561341971741742
+4.551712230641226
+4.558059671677587
+4.55387226495538
+4.556633177654167
+4.554812144696459
+4.556012967736543
+4.555220997683307
+4.555743265552239
+4.555398830243649
+4.555625974816275
+4.555476175432173
+4.555574964557791
+4.555509814636753
+4.555552779647764
+4.555524444961165
+4.555543131130589
+4.555530807938518
+4.555538934848503
+:end:
+
+Undamped, fixed-point makes 37 guesses.
+
+#+BEGIN_SRC scheme -n :eval no-export :results output :export code
+<<close-enough>>
+<<fixed-point-debug>>
+(define (average x y)
+  (/ (+ x y) 2))
+(fixed-point (λ(x) (average (log x) (/ (log 1000) (log x)))) 1.1)
+#+END_SRC
+
+#+RESULTS[c8b656c007db26b56776bc139a6cba1a86bb3755]:
+:results:
+36.28594198204734
+2.7574149265729444
+3.912351744086603
+3.213980298130383
+3.542082820324556
+3.363310959347184
+3.4540216132238184
+3.4061901980695635
+3.4309216866411916
+3.418001560431991
+3.4247152892453725
+3.4212168715053366
+3.42303720142058
+3.4220893146379012
+3.422582706729079
+3.4223258347369994
+3.4224595543381247
+3.4223899401968296
+3.4224261801254277
+3.422407313956363
+3.4224171354313153
+:end:
+
+Damped, it makes 21.
