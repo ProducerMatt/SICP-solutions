@@ -4,7 +4,7 @@
 #+auto_tangle: t
 
 # ORG-BABEL DEFAULTS
-#+PROPERTY: header-args :tangle no :noeval :exports both :cache yes :results output wrap :noweb no-export :comments noweb
+#+PROPERTY: header-args :tangle no :noeval :exports both :cache yes :results output wrap :noweb no-export :comments noweb :colnames no :rownames no
 #+PROPERTY: header-args:scheme :session scheme
 #+PROPERTY: header-args:gnuplot :prelude "reset" :session nil
 
@@ -3839,6 +3839,7 @@ the ~fixed-point~ procedure.
 ** Answer
 #+NAME: fixed-point-txt
 #+BEGIN_SRC scheme -n :eval no-export :results output
+<<close-enough>>
 <<fixed-point-txt>>
 (define golden-ratio
   (fixed-point (λ(x)(+ 1 (/ 1 x)))
@@ -4010,19 +4011,19 @@ A note: the "golden ratio" this code estimates is exactly =1.0= less than the go
 #+END_SRC
 
 #+NAME: cont-frac-data
-#+BEGIN_SRC scheme -n :eval no-export :results value table :exports both
+#+BEGIN_SRC scheme -n :eval no-export :results value table :exports results
 <<cont-frac>>
 (define (golden-ratio k)
   (cont-frac (λ(i) 1.0)(λ(i)1.0) k))
 
 (map (λ(x y) (list x y))
-     (iota 16 1)
+     (iota 10 1)
       (map (λ(x)(- 0.61803398874989484820
                    (golden-ratio x)))
-           (iota 16 1)))
+           (iota 10 1)))
 #+END_SRC
 
-#+RESULTS[583ae9adec76e3b3ca3f43029e833749382afd69]: cont-frac-data
+#+RESULTS[c254d70f15375afe5614dfb4a165f1fa23fa4c6f]: cont-frac-data
 :results:
 |  1 |     -0.3819660112501051 |
 |  2 |      0.1180339887498949 |
@@ -4034,25 +4035,19 @@ A note: the "golden ratio" this code estimates is exactly =1.0= less than the go
 |  8 |  0.00038692992636546464 |
 |  9 | -0.00014782943192326314 |
 | 10 |  5.6460660007306984e-05 |
-| 11 |   -2.15668056606777e-05 |
-| 12 |    8.23767693358679e-06 |
-| 13 | -3.1465286196574738e-06 |
-| 14 |   1.201864649025275e-06 |
-| 15 |  -4.590717870289751e-07 |
-| 16 |  1.7534976970434712e-07 |
 :end:
 
 
 #+begin_src gnuplot :var data=cont-frac-data :file fig/1-36-1.png :exports results :cache no :eval no-export
 reset
-set key autotitle columnheader
-set logscale xy
+#set logscale xy
 set xlabel 'iterations'
 set xtics rotate by -45
-set ylabel 'precision'
+set ylabel 'error
 set title 'distance from true golden ratio'
 
-plot data using 2:xticlabels(1) with fillsteps
+plot data using 2:xticlabels(1) with fillsteps fs solid 0.3 noborder lt 1,\
+     data using 2:xticlabels(1) with steps lt 1 lw 4
 #+end_src
 
 #+RESULTS:
