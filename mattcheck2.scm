@@ -18,20 +18,35 @@
   (format #t "~&returned: ~@y~%" expression))
 (define mattcheck:succeed-verbose #t) ;;t/f
 (define (mattcheck:succeed id expression)
-  (define (blab)
-    (format #t "~&SUCCEED at ~a~%" id))
   (if mattcheck:succeed-verbose
-      (blab)
-      undefined))
-(define (mattcheck id expression)
-  (cond ((not (boolean? expression))
-         (mattcheck:fail id expression "mattcheck: not true or false"))
-        (else
-           (if expression
-               (mattcheck:succeed id "boolean true")
-               (mattcheck:fail id "boolean false" "boolean true")))))
+    (format #t "~&SUCCEED at ~a~%" id)
+    undefined))
 
-(define (mattcheck-equal id expression expected)
-  (if (equal? expression expected)
-               (mattcheck:succeed id expression)
-               (mattcheck:fail id expression expected)))
+;; Takes as many expressions as you like
+(define (mattcheck-bool id . args)
+  (define (iter ll)
+    (if (= 0 (length ll))
+        (mattcheck:succeed id "boolean true")
+        (let ((a (car ll))
+              (d (cdr ll)))
+          (cond ((eq? a #t) (iter d))
+                ((eq? a #f) (mattcheck:fail id
+                                 "boolean false" "boolean true"))
+                (else
+                 (mattcheck:fail id a
+                                 "mattcheck: not true or false"))))))
+  (iter args))
+
+(define (mattcheck id . args)
+  (define (iter ll)
+    (if (= 1 (length ll))
+        (mattcheck:succeed id (car ll))
+        (let ((a (car ll))
+              (d (cdr ll))
+              (ad (cadr ll)))
+          (if (equal? a ad)
+              (iter d)
+              (mattcheck:fail id a ad)))))
+  (if (= 1 (length args))
+      (mattcheck-bool id (car args))
+      (rec args)))
