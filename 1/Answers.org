@@ -4123,3 +4123,33 @@ Exercise 1.37 to approximate \(e\), based on Euler's expansion.
 :results:
 2.7182818284590455
 :end:
+
+* Exercise 1.39
+** Question
+A continued fraction representation of the tangent function was published in
+1770 by the German mathematician J.H. Lambert:
+
+\[ {\tan x} = \cfrac{x}{1 - \cfrac{x^2}{3 - \cfrac{x^2}{5 - \dots}}} \]
+
+where \(x\) is in radians. Define a procedure src_scheme{(tan-cf x k)} that
+computes an approximation to the tangent function based on Lambert's formula.
+~k~ specifies the number of terms to compute, as in Exercise 1.37.
+** Answer
+#+BEGIN_SRC scheme -n :eval no-export :results value :exports both
+<<cont-frac>>
+(define (tan-cf x k)
+  (cont-frac (λ(i) (if (= i 1)
+                       x
+                       (* x x -1.0)))
+             (λ(i) (if (= i 1)
+                       1.0
+                       (- (* i 2.0) 1.0)))
+             k))
+
+(tan-cf 55 101)
+#+END_SRC
+
+#+RESULTS[a9f862c95bda0554e11a254c33a0772723442763]:
+:results:
+-45.1830879105221
+:end:
