@@ -3987,7 +3987,22 @@ Suppose that ~n~ and ~d~ are procedures of one argument (the term index \(i\))
 that return the \(N_i\) and \(D_i\) of the terms of the continued fraction.
 Define a procedure ~cont-frac~ such that evaluating
 src_scheme{(cont-frac n d k)} computes the value of the \(k\)-term finite continued
-fraction. Check your procedure by approximating \(1 / \varphi\) using
+fraction.
+** Answer A
+A note: the "golden ratio" this code estimates is exactly =1.0= less than the golden ratio anyone else seems to be talking about.
+#+NAME: cont-frac
+#+BEGIN_SRC scheme -n :eval no-export :results silent
+(define (cont-frac n d k)
+  (define (iter i result)
+    (if (= i 0)
+        result
+        (iter (1- i) (/ (n i) (+ (d i) result)))))
+
+  (iter (1- k) (/ (n k) (d k))))
+#+END_SRC
+
+** Question B
+Check your procedure by approximating \(1 / \varphi\) using
 
 #+BEGIN_SRC scheme
 (cont-frac (lambda (i) 1.0)
@@ -3997,19 +4012,8 @@ fraction. Check your procedure by approximating \(1 / \varphi\) using
 
 for successive values of ~k~. How large must you make ~k~ in order to get an
 approximation that is accurate to 4 decimal places?
-** Answer A
-A note: the "golden ratio" this code estimates is exactly =1.0= less than the golden ratio anyone else seems to be talking about.
-#+NAME: cont-frac
-#+BEGIN_SRC scheme -n :eval no-export :results silent
-(define (cont-frac n d k)
-  (define (iter i result)
-    (if (= i 0)
-        result
-        (iter (1- i) (/ (n i) (+ (d 1) result)))))
 
-  (iter (1- k) (/ (n k) (d k))))
-#+END_SRC
-
+** Answer B
 #+NAME: cont-frac-data
 #+BEGIN_SRC scheme -n :eval no-export :results value table :exports results
 <<cont-frac>>
@@ -4043,14 +4047,79 @@ reset
 #set logscale xy
 set xlabel 'iterations'
 set xtics rotate by -45
-set ylabel 'error
+set ylabel 'error'
 set title 'distance from true golden ratio'
 
-plot data using 2:xticlabels(1) with fillsteps fs solid 0.3 noborder lt 1,\
-     data using 2:xticlabels(1) with steps lt 1 lw 4
+plot data using 2:xticlabels(1) with fillsteps fs solid 0.3 noborder lt 1 notitle,\
+     data using 2:xticlabels(1) with steps lt 1 lw 4 title '(golden-ratio)'
 #+end_src
 
 #+RESULTS:
 :results:
 [[file:fig/1-36-1.png]]
+:end:
+
+\(k\) must be at least 10 to get precision of 4 decimal places.
+
+** Question B
+
+If your ~cont-frac~ procedure generates a recursive process, write one that
+generates an iterative process. If it generates an iterative process, write one
+that generates a recursive process.
+
+#+NAME: cont-frac-rec
+#+BEGIN_SRC scheme -n :eval no-export :results silent
+(define (cont-frac-rec n d k)
+  (define (rec i)
+    (if (= i k)
+        (/ (n i) (d i))
+        (/ (n i) (+ (d i) (rec (1+ i))))))
+
+  (rec 1))
+#+END_SRC
+#+BEGIN_SRC scheme -n :eval no-export :results output :exports both
+<<cont-frac>>
+<<cont-frac-rec>>
+(define (golden-ratio k)
+  (cont-frac (λ(i) 1.0)(λ(i)1.0) k))
+(define (golden-ratio-rec k)
+  (cont-frac-rec (λ(i) 1.0)(λ(i)1.0) k))
+
+(load "mattcheck.scm")
+(mattcheck-equal "cont-frac iter and recursive equivalence"
+           (golden-ratio-rec 15)
+           (golden-ratio 15))
+#+END_SRC
+
+#+RESULTS[061d67cf4b680c4b50b710fad1cf7538691b71ac]:
+:results:
+SUCCEED at cont-frac iter and recursive equivalence
+:end:
+
+* Exercise 1.38
+** Question
+In 1737, the Swiss mathematician Leonhard Euler published a memoir /De
+Fractionibus Continuis/, which included a continued fraction expansion for \(e -
+2\), where \(e\) is the base of the natural logarithms. In this fraction, the
+\(N_i\) are all 1, and the \(D_i\) are successively 1, 2, 1, 1, 4, 1, 1, 6, 1,
+1, 8, \(\dots\). Write a program that uses your ~cont-frac~ procedure from
+Exercise 1.37 to approximate \(e\), based on Euler's expansion.
+** Answer
+#+BEGIN_SRC scheme -n :eval no-export :results value :exports both
+<<cont-frac>>
+(define (euler k)
+  (+ 2
+     (cont-frac (λ(i) 1.0)
+             (λ(i) (let ((j (1+ i)))
+                     (if (= 0 (modulo j 3))
+                         (* 2 (/ j 3))
+                         1)))
+             k)))
+
+(euler 100)
+#+END_SRC
+
+#+RESULTS[a208d4dc1b978fe45e625fd5adc3de43be87dd9c]:
+:results:
+2.7182818284590455
 :end:
