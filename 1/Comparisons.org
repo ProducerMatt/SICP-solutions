@@ -1,0 +1,70 @@
+#+title: Comparisons Between My Answers and Other's
+
+#+auto_tangle: t
+#+PROPERTY: header-args :tangle no :exports both :cache yes :results output wrap :noweb yes :comments both :colnames no :rownames no
+#+PROPERTY: header-args:scheme :session scheme
+#+PROPERTY: header-args:gnuplot :prelude "reset" :session nil
+
+* ~product~
+** Mine
+:PROPERTIES:
+:header-args: :tangle Comp/piproduct_Mine.scheme
+:end:
+#+NAME: product-iter
+#+BEGIN_SRC scheme -n :eval no-export :exports code :results silent
+(define (product-iter term a next b)
+  (define (iter a result)
+    (if (> a b)
+        result
+        (iter (next a) (* result (term a)))))
+  (iter a 1)) ;; start at 1 so it's not always 0
+#+END_SRC
+
+#+NAME: pi-product
+#+BEGIN_SRC scheme -n :eval no-export :exports both :results output
+(define (pi-product n)
+  (define (div x)
+    (let ((x1 (- x 1))
+          (x2 (+ x 1)))
+      (* (/ x x1) (/ x x2))))
+  (* 2.0 (product-iter div 2 (lambda (z) (+ z 2)) n)))
+#+END_SRC
+
+#+NAME: pi-product-bench
+#+BEGIN_SRC scheme -n :eval no-export :exports both :results output
+(load "../../mattbench.scm")
+
+(display (mattbench2 (λ() (pi-product 10000))
+                    50000))
+#+END_SRC
+
+** Ambi
+:PROPERTIES:
+:header-args: :tangle Comp/piproduct_Ambi.scheme
+:end:
+#+BEGIN_SRC scheme -n :eval no-export :exports both :results output
+(define (next x)
+  (1+ x))
+(define (next-pi-on-4 n)
+  (let ((t (/ (+ n 1.0) (+ n 2.0))))
+    (if (odd? n)
+        t
+        (/ 1.0 t))))
+(define (product-iter term a next b)
+  (define (iter a res)
+    (if (positive? (- a b))
+        res
+        (iter (next a) (* (term a) res))))
+  (iter a 1))
+(define (temp-iter n) (* (product-iter next-pi-on-4 1 next n) 4))
+
+(load "../../mattbench.scm")
+(display (mattbench2 (λ() (temp-iter 10000))
+                    50000))
+#+END_SRC
+
+** Result
+matt@PortableNix ~/SICP-group (main)> guile 1/Comp/piproduct_Mine.scheme
+|      | 3.1415926535897932 |                |
+| Mine | 3.1414355935899083 | 58130035.33636 |
+| Ambi | 3.141749705738003# |    2534241.404 |

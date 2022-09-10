@@ -1,0 +1,18 @@
+(define (next x)
+  (1+ x))
+(define (next-pi-on-4 n)
+  (let ((t (/ (+ n 1.0) (+ n 2.0))))
+    (if (odd? n)
+        t
+        (/ 1.0 t))))
+(define (product-iter term a next b)
+  (define (iter a res)
+    (if (positive? (- a b))
+        res
+        (iter (next a) (* (term a) res))))
+  (iter a 1))
+(define (temp-iter n) (* (product-iter next-pi-on-4 1 next n) 4))
+
+(load "../../mattbench.scm")
+(display (mattbench2 (λ() (temp-iter 10000))
+                    50000))

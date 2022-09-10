@@ -1,0 +1,18 @@
+(define (product-iter term a next b)
+  (define (iter a result)
+    (if (> a b)
+        result
+        (iter (next a) (* result (term a)))))
+  (iter a 1)) ;; start at 1 so it's not always 0
+
+(define (pi-product n)
+  (define (div x)
+    (let ((x1 (- x 1))
+          (x2 (+ x 1)))
+      (* (/ x x1) (/ x x2))))
+  (* 2.0 (product-iter div 2 (lambda (z) (+ z 2)) n)))
+
+(load "../../mattbench.scm")
+
+(display (mattbench2 (λ() (pi-product 10000))
+                    50000))
