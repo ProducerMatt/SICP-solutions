@@ -4257,3 +4257,66 @@ should be a procedure that adds 2. What value is returned by
 :results:
 21
 :end:
+
+* Exercise 1.42
+** Question
+Let \(f\) and \(g\) be two one-argument functions. The composition \(f\) after
+\(g\) is defined to be the function \(x \mapsto f(g(x))\). Define a procedure
+~compose~ that implements composition.
+
+** Answer
+#+NAME: compose
+#+BEGIN_SRC scheme :eval no-export :results silent
+(define (compose f g)
+  (λ(x)
+    (f (g x))))
+#+END_SRC
+
+#+BEGIN_SRC scheme :eval no-export :results value
+<<compose>>
+<<square>>
+(define inc 1+)
+((compose square inc) 6)
+#+END_SRC
+
+#+RESULTS[80a0d7155cb9d63a3166cc9ed13620258b09201d]:
+:results:
+49
+:end:
+
+* Exercise 1.43
+** Question
+If \(f\) is a numerical function
+and \(n\) is a positive integer, then we can form the \(n^{\mathrm{th}}\) repeated
+application of \(f\), which is defined to be the function whose value at \(x\)
+is \(f(f(\dots (f(x))\dots ))\).  For example, if \(f\) is the
+function \(x \mapsto x + 1\), then the \(n^{\mathrm{th}}\) repeated application of \(f\) is
+the function \(x \mapsto x + n\).  If \(f\) is the operation of squaring a
+number, then the \(n^{\mathrm{th}}\) repeated application of \(f\) is the function that
+raises its argument to the \(2^n\)-th power.  Write a procedure that takes as
+inputs a procedure that computes \(f\) and a positive integer \(n\) and returns
+the procedure that computes the \(n^{\mathrm{th}}\) repeated application of \(f\).
+
+** Answer
+#+NAME: repeated
+#+BEGIN_SRC scheme :eval no-export :results silent
+<<compose>>
+(define (repeated f n)
+  (if (= n 1)
+      f
+      (repeated (compose f f)
+                (- n 1))))
+#+END_SRC
+
+#+BEGIN_SRC scheme :eval no-export :results value
+<<square>>
+<<repeated>>
+(if (= ((repeated square 2) 5) 625)
+    "Success"
+    "Fail")
+#+END_SRC
+
+#+RESULTS[272bb6d728bab74579f0a931d49a14a7ad2a5498]:
+:results:
+Success
+:end:
