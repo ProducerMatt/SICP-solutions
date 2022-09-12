@@ -4153,3 +4153,107 @@ computes an approximation to the tangent function based on Lambert's formula.
 :results:
 -45.1830879105221
 :end:
+* Exercise 1.40
+** Text
+#+NAME: average-damp
+#+BEGIN_SRC scheme -n :eval no-export :results silent :exports code
+(define (average-damp f)
+  (lambda (x) (average x (f x))))
+#+END_SRC
+
+#+NAME: dx
+#+BEGIN_SRC scheme -n :eval no-export :results silent :exports code
+(define dx 0.00001)
+#+END_SRC
+
+#+NAME: deriv
+#+BEGIN_SRC scheme -n :eval no-export :results silent :exports code
+(define (deriv g)
+  (lambda (x) (/ (- (g (+ x dx)) (g x)) dx)))
+#+END_SRC
+
+#+NAME: newtons-method
+#+BEGIN_SRC scheme -n :eval no-export :results silent :exports code
+(define (newton-transform g)
+  (lambda (x) (- x (/ (g x) ((deriv g) x)))))
+(define (newtons-method g guess)
+  (fixed-point (newton-transform g) guess))
+#+END_SRC
+#+NAME: newtons-method-txt
+#+BEGIN_SRC scheme -n :eval no-export :results silent :exports code
+<<average>>
+<<average-damp>>
+<<dx>>
+<<deriv>>
+<<newtons-method>>
+#+END_SRC
+** Question
+Define a procedure ~cubic~ that can be used together with the ~newtons-method~
+procedure in expressions of the form:
+
+#+BEGIN_SRC scheme
+(newtons-method (cubic a b c) 1)
+#+END_SRC
+
+to approximate zeros of the cubic \(x^3 + ax^2 + bx + c\).
+** Answer
+#+NAME: cubic
+#+BEGIN_SRC scheme -n :eval no-export :results silent :exports code
+(define (cubic a b c)
+  (lambda (x)
+    (+ (expt x 3)
+       (* a (expt x 2))
+       (* b x)
+       c)))
+#+END_SRC
+
+#+NAME: cubic-zero
+#+BEGIN_SRC scheme -n :eval no-export :results silent :exports code
+(define (cubic-zero a b c)
+  (newtons-method (cubic a b c) 1))
+#+END_SRC
+
+#+BEGIN_SRC scheme -n :eval no-export :results value :exports code
+<<fixed-point-txt>>
+<<newtons-method-txt>>
+<<cubic>>
+<<cubic-zero>>
+
+(cubic-zero 2 3 4)
+#+END_SRC
+
+#+RESULTS[b8fe4f9579a7f55cc0714e136ae1b983a07db228]:
+:results:
+-1.6506291914330982
+:end:
+
+* Exercise 1.41
+** Question
+Define a procedure ~double~ that takes a procedure of one argument as argument
+and returns a procedure that applies the original procedure twice. For example,
+if ~inc~ is a procedure that adds 1 to its argument, then src_scheme{(double inc)}
+should be a procedure that adds 2. What value is returned by
+
+#+NAME: Ex1-41
+#+BEGIN_SRC scheme :eval no-export
+(((double (double double)) inc) 5)
+#+END_SRC
+
+** Answer
+#+NAME: double
+#+BEGIN_SRC scheme :eval no-export :results silent
+(define (double f)
+  (λ (x)
+    (f (f x))))
+#+END_SRC
+
+#+BEGIN_SRC scheme :eval no-export :results value
+(define inc 1+)
+<<double>>
+<<Ex1-41>>
+#+END_SRC
+
+#+RESULTS[d378985b9b2b6be8eb74b8df173275c6bd56ae10]:
+:results:
+21
+:end:
