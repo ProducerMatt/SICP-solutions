@@ -5,7 +5,7 @@
 
 # ORG-BABEL DEFAULTS
 #+PROPERTY: header-args :tangle no :noeval :exports both :cache yes :results output wrap :noweb no-export :comments noweb :colnames no :rownames no
-#+PROPERTY: header-args:scheme :session scheme
+# #+PROPERTY: header-args:scheme :session scheme
 #+PROPERTY: header-args:gnuplot :prelude "reset" :session nil
 
 # For the actual answers their dependencies use a header like this:
@@ -3837,7 +3837,7 @@ Show that the golden ratio \(\varphi\) is a fixed point of the transformation
 \(x \mapsto 1 + 1 / x\), and use this fact to compute \(\varphi\) by means of
 the ~fixed-point~ procedure.
 ** Answer
-#+NAME: fixed-point-txt
+#+NAME: golden-ratio
 #+BEGIN_SRC scheme -n :eval no-export :results output
 <<close-enough>>
 <<fixed-point-txt>>
@@ -4319,4 +4319,142 @@ the procedure that computes the \(n^{\mathrm{th}}\) repeated application of \(f\
 #+RESULTS[272bb6d728bab74579f0a931d49a14a7ad2a5498]:
 :results:
 Success
+:end:
+
+* Exercise 1.44
+** Question
+#+INDEX: smoothing
+The idea of smoothing a function is an important concept in signal processing.
+If \(f\) is a function and \(dx\) is some small number, then the smoothed
+version of \(f\) is the function whose value at a point \(x\) is the average of
+\(f(x - dx)\), \(f(x)\), and \(f(x + dx)\). Write a procedure ~smooth~ that
+takes as input a procedure that computes \(f\) and returns a procedure that
+computes the smoothed \(f\). It is sometimes valuable to repeatedly smooth a
+function (that is, smooth the smoothed function, and so on) to obtain the
+\(n\)-fold smoothed function. Show how to generate the \(n\)-fold smoothed
+function of any given function using ~smooth~ and ~repeated~ from Exercise 1.43.
+** Answer
+#+NAME: smooth
+#+BEGIN_SRC scheme :eval no-export :results silent
+<<average-varargs>>
+(define (smooth f)
+  (λ(x)
+    (average (f (- x dx))
+             (f x)
+             (f (+ x dx)))))
+(define (smooth-n f n)
+  ((repeated smooth n) f))
+#+END_SRC
+
+* Exercise 1.45
+** Question
+We saw in 1.3.3 that attempting to compute square roots by naively finding a
+fixed point of \(y \mapsto x / y\) does not converge, and that this can be fixed by
+average damping. The same method works for finding cube roots as fixed points of
+the average-damped \(y \mapsto x / y^2\). Unfortunately, the process does not work for
+fourth roots---a single average damp is not enough to make a fixed-point search
+for \(y \mapsto x / y^3\) converge. On the other hand, if we average damp twice (i.e.,
+use the average damp of the average damp of \(y \mapsto x / y^3\)) the fixed-point
+search does converge. Do some experiments to determine how many average damps
+are required to compute \(n^{\mathrm{th}}\) roots as a fixed-point search based
+upon repeated average damping of \(y \mapsto x / y^{n-1}\). Use this to implement a
+simple procedure for computing \(n^{\mathrm{th}}\) roots using ~fixed-point~,
+~average-damp~, and the ~repeated~ procedure of Exercise 1.43. Assume that any
+arithmetic operations you need are available as primitives.
+** Answer
+#+NAME: limited-fixed-point
+#+BEGIN_SRC scheme :eval no-export :results silent
+(define (limited-fixed-point f first-guess)
+  (define limit 50)
+  (define tolerance 0.00001)
+  (define (close-enough? v1 v2)
+    (< (abs (- v1 v2)) 
+       tolerance))
+  (define (try guess tries)
+    (if (= tries limit)
+        "LIMIT REACHED"
+        (let ((next (f guess)))
+          (if (close-enough? guess next)
+              next
+              (try next (+ 1 tries))))))
+    (try first-guess 1))
+#+END_SRC
+#+NAME: nth-damp-experiments
+#+BEGIN_SRC scheme :eval no-export :results output :exports results
+<<limited-fixed-point>>
+<<average-varargs>>
+;; Attempting to find sqrt of 4
+(format #t "---Square Root---~%")
+(format #t "Fixed point of y->x/y: ~a~%"
+        (limited-fixed-point
+         (λ(y) (/ 4 y))
+         1.1))
+(format #t "Fixed point of y->x/y(damped): ~a~%"
+        (limited-fixed-point
+         (λ(y) (average y (/ 4 y)))
+         1.1))
+(format #t "---Cube Root---~%")
+(format #t "Fixed point of y->x/y^2(damped): ~a~%"
+        (limited-fixed-point
+         (λ(y) (average y (/ 4 (expt y 2))))
+         1.1))
+(format #t "---4th Root---~%")
+(format #t "Fixed point of y->x/y^3(damped): ~a~%"
+        (limited-fixed-point
+         (λ(y) (average y (/ 4 (expt y 3))))
+         1.1))
+(format #t "Fixed point of y->x/y^3(damped 2x): ~a~%"
+        (limited-fixed-point
+         (λ(y) (average y y (/ 4 (expt y 3))))
+         1.1))
+(format #t "---5th Root---~%")
+(format #t "Fixed point of y->x/y^4(damped 2x): ~a~%"
+        (limited-fixed-point
+         (λ(y) (average y y (/ 4 (expt y 4))))
+         1.1))
+(format #t "---6th Root---~%")
+(format #t "Fixed point of y->x/y^5(damped 2x): ~a~%"
+        (limited-fixed-point
+         (λ(y) (average y y (/ 4 (expt y 5))))
+         1.1))
+(format #t "Fixed point of y->x/y^5(damped 3x): ~a~%"
+        (limited-fixed-point
+         (λ(y) (average y y y (/ 4 (expt y 5))))
+         1.1))
+(format #t "---7th Root---~%")
+(format #t "Fixed point of y->x/y^6(damped 3x): ~a~%"
+        (limited-fixed-point
+         (λ(y) (average y y y (/ 4 (expt y 6))))
+         1.1))
+(format #t "---8th Root---~%")
+(format #t "Fixed point of y->x/y^7(damped 3x): ~a~%"
+        (limited-fixed-point
+         (λ(y) (average y y y (/ 4 (expt y 7))))
+         1.1))
+(format #t "Fixed point of y->x/y^7(damped 4x): ~a~%"
+        (limited-fixed-point
+         (λ(y) (average y y y y (/ 4 (expt y 7))))
+         1.1))
+#+END_SRC
+
+#+RESULTS[008ac3fac76f83e1c453c168cec527c116cb630a]: nth-damp-experiments
+:results:
+---Square Root---
+Fixed point of y->x/y: LIMIT REACHED
+Fixed point of y->x/y(damped): 2.0
+---Cube Root---
+Fixed point of y->x/y^2(damped): 1.5874034972129285
+---4th Root---
+Fixed point of y->x/y^3(damped): LIMIT REACHED
+Fixed point of y->x/y^3(damped 2x): 1.414214590925529
+---5th Root---
+Fixed point of y->x/y^4(damped 2x): 1.3195118218452988
+---6th Root---
+Fixed point of y->x/y^5(damped 2x): LIMIT REACHED
+Fixed point of y->x/y^5(damped 3x): 1.2599232881307922
+---7th Root---
+Fixed point of y->x/y^6(damped 3x): 1.219009628306786
+---8th Root---
+Fixed point of y->x/y^7(damped 3x): LIMIT REACHED
+Fixed point of y->x/y^7(damped 4x): 1.1892046281030577
 :end:
