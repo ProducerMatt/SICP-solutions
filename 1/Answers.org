@@ -4362,11 +4362,32 @@ simple procedure for computing \(n^{\mathrm{th}}\) roots using ~fixed-point~,
 ~average-damp~, and the ~repeated~ procedure of Exercise 1.43. Assume that any
 arithmetic operations you need are available as primitives.
 ** Answer
-#+NAME: limited-fixed-point
+So this is strange. Back in my original workthrough of this book, I'd decided
+that finding an \(n\)th root required \(\lfloor\sqrt{n}\rfloor\) dampings.
+However for some reason I'm not meeting the same conclusion this time. I
+originally thought powers of 16 required four dampings, but this code isn't
+failing until it reaches powers of 32.
+#+NAME: repeated-z
 #+BEGIN_SRC scheme :eval no-export :results silent
+;; Version of "repeated" that can handle being asked to repeat zero times.
+<<compose>>
+<<identity>>
+(define (repeated f n)
+  (define (rec m)
+  (if (= n 1)
+      f
+      (repeated (compose f f)
+                (- n 1))))
+  (if (= n 0)
+      identity
+      (rec n)))
+#+END_SRC
+#+NAME: limited-fixed-point
+#+BEGIN_SRC scheme :eval no-export :results silent :exports code
+;; version of "fixed-point" that will give up after a certain number of guesses.
 (define (limited-fixed-point f first-guess)
-  (define limit 50)
-  (define tolerance 0.00001)
+  (define limit 5000)
+  (define tolerance 0.00000001)
   (define (close-enough? v1 v2)
     (< (abs (- v1 v2)) 
        tolerance))
@@ -4380,81 +4401,168 @@ arithmetic operations you need are available as primitives.
     (try first-guess 1))
 #+END_SRC
 #+NAME: nth-damp-experiments
-#+BEGIN_SRC scheme :eval no-export :results output :exports results
+#+BEGIN_SRC scheme :eval no-export :results output :exports none
 <<limited-fixed-point>>
 <<average-varargs>>
-;; Attempting to find sqrt of 4
-(format #t "---Square Root---~%")
-(format #t "Fixed point of y->x/y: ~a~%"
-        (limited-fixed-point
-         (λ(y) (/ 4 y))
-         1.1))
-(format #t "Fixed point of y->x/y(damped): ~a~%"
-        (limited-fixed-point
-         (λ(y) (average y (/ 4 y)))
-         1.1))
-(format #t "---Cube Root---~%")
-(format #t "Fixed point of y->x/y^2(damped): ~a~%"
-        (limited-fixed-point
-         (λ(y) (average y (/ 4 (expt y 2))))
-         1.1))
-(format #t "---4th Root---~%")
-(format #t "Fixed point of y->x/y^3(damped): ~a~%"
-        (limited-fixed-point
-         (λ(y) (average y (/ 4 (expt y 3))))
-         1.1))
-(format #t "Fixed point of y->x/y^3(damped 2x): ~a~%"
-        (limited-fixed-point
-         (λ(y) (average y y (/ 4 (expt y 3))))
-         1.1))
-(format #t "---5th Root---~%")
-(format #t "Fixed point of y->x/y^4(damped 2x): ~a~%"
-        (limited-fixed-point
-         (λ(y) (average y y (/ 4 (expt y 4))))
-         1.1))
-(format #t "---6th Root---~%")
-(format #t "Fixed point of y->x/y^5(damped 2x): ~a~%"
-        (limited-fixed-point
-         (λ(y) (average y y (/ 4 (expt y 5))))
-         1.1))
-(format #t "Fixed point of y->x/y^5(damped 3x): ~a~%"
-        (limited-fixed-point
-         (λ(y) (average y y y (/ 4 (expt y 5))))
-         1.1))
-(format #t "---7th Root---~%")
-(format #t "Fixed point of y->x/y^6(damped 3x): ~a~%"
-        (limited-fixed-point
-         (λ(y) (average y y y (/ 4 (expt y 6))))
-         1.1))
-(format #t "---8th Root---~%")
-(format #t "Fixed point of y->x/y^7(damped 3x): ~a~%"
-        (limited-fixed-point
-         (λ(y) (average y y y (/ 4 (expt y 7))))
-         1.1))
-(format #t "Fixed point of y->x/y^7(damped 4x): ~a~%"
-        (limited-fixed-point
-         (λ(y) (average y y y y (/ 4 (expt y 7))))
-         1.1))
+<<repeated-z>>
+<<average-damp>>
+(define (try-damp base nth damp)
+  (format #t "Root ~a, Damp ~a: ~a~%" nth damp
+          (limited-fixed-point
+           ((repeated average-damp damp)
+            (lambda (y)
+              (/ base (expt y (- nth 1)))))
+           1.0)))
+(define random-base 4)
+(try-damp random-base 2 1)
+(try-damp random-base 3 1)
+(try-damp random-base 4 1)
+(try-damp random-base 4 2)
+(format #t "...~%")
+(try-damp random-base 8 2)
+(try-damp random-base 8 3)
+(format #t "...~%")
+(try-damp random-base 16 3)
+(format #t "...~%")
+(try-damp random-base 32 3)
+(try-damp random-base 32 4)
 #+END_SRC
 
-#+RESULTS[008ac3fac76f83e1c453c168cec527c116cb630a]: nth-damp-experiments
+#+RESULTS[baa7d010b67b75e2bd3a059b0a1b06b3875af0ba]: nth-damp-experiments
 :results:
----Square Root---
-Fixed point of y->x/y: LIMIT REACHED
-Fixed point of y->x/y(damped): 2.0
----Cube Root---
-Fixed point of y->x/y^2(damped): 1.5874034972129285
----4th Root---
-Fixed point of y->x/y^3(damped): LIMIT REACHED
-Fixed point of y->x/y^3(damped 2x): 1.414214590925529
----5th Root---
-Fixed point of y->x/y^4(damped 2x): 1.3195118218452988
----6th Root---
-Fixed point of y->x/y^5(damped 2x): LIMIT REACHED
-Fixed point of y->x/y^5(damped 3x): 1.2599232881307922
----7th Root---
-Fixed point of y->x/y^6(damped 3x): 1.219009628306786
----8th Root---
-Fixed point of y->x/y^7(damped 3x): LIMIT REACHED
-Fixed point of y->x/y^7(damped 4x): 1.1892046281030577
+Root 2, Damp 1: 2.0
+Root 3, Damp 1: 1.5874010540873353
+Root 4, Damp 1: LIMIT REACHED
+Root 4, Damp 2: 1.414213562373095
+...
+Root 8, Damp 2: LIMIT REACHED
+Root 8, Damp 3: 1.1892071085557818
+...
+Root 16, Damp 3: 1.0905077326652577
+...
+Root 32, Damp 3: LIMIT REACHED
+Root 32, Damp 4: 1.0442737140494485
+:end:
+
+Let's automatically find how many dampings are necessary. We can make a program that finds higher and higher \(n\)th roots, and adds another layer of damping when it hits the error. It returns a list of \(n\)th roots along with how many dampings were needed to find them.
+
+#+NAME: nthtester
+#+BEGIN_SRC scheme :eval no-export :results value table :exports code :hlines no :session scheme
+<<fixed-point-txt>>
+<<limited-fixed-point>>
+<<repeated>>
+<<average-damp>>
+<<average>>
+<<print-table>>
+(define (sqrt x)
+  (fixed-point
+   (average-damp
+    (lambda (y) (/ x y)))
+   1.0))
+(define (nth-tester base n-max)
+  (define (iter ll)
+    (let ((n (+ 2 (length ll))))
+      (define (try damps)
+        (let ((x (limited-fixed-point
+                  ((repeated average-damp damps)
+                   (lambda (y)
+                     (/ base (expt y (- n 1)))))
+                  1.1)))
+          (if (string? x)
+              (try (1+ damps))
+              (list base n x damps))))
+      (if (> n n-max)
+          ll
+          (iter (cons (try 1) ll)))))
+
+  (iter '()))
+(let* ((t (reverse (nth-tester 3 65))))
+  (cons '("root" "result" "damps needed" "floor(sqrt(root))") (map (λ(x)(append x (list (floor (sqrt (car x)))))) (map cdr t))))
+#+END_SRC
+
+#+RESULTS[fe2e0ee339b45b2fc2ddf8ddd7f85242e8cfd348]: nthtester
+:results:
+| root |             result | damps needed | floor(sqrt(root)) |
+|    2 | 1.7320508075688772 |            1 |               1.0 |
+|    3 | 1.4422495728972309 |            1 |               1.0 |
+|    4 | 1.3160740129524924 |            2 |               2.0 |
+|    5 | 1.2457309390978177 |            2 |               2.0 |
+|    6 |    1.2009369582204 |            2 |               2.0 |
+|    7 | 1.1699308089776124 |            2 |               2.0 |
+|    8 | 1.1472026821129655 |            3 |               2.0 |
+|    9 | 1.1298309604123054 |            3 |               3.0 |
+|   10 | 1.1161231685395683 |            3 |               3.0 |
+|   11 | 1.1050314993438861 |            3 |               3.0 |
+|   12 | 1.0958726922025126 |            3 |               3.0 |
+|   13 | 1.0881822443361364 |            3 |               3.0 |
+|   14 | 1.0816334006324368 |            3 |               3.0 |
+|   15 | 1.0759896251411307 |            3 |               3.0 |
+|   16 | 1.0710754830729146 |            3 |               4.0 |
+|   17 |  1.066758117243043 |            3 |               4.0 |
+|   18 | 1.0629350706173066 |            3 |               4.0 |
+|   19 | 1.0595260635832688 |            3 |               4.0 |
+|   20 |  1.056467307522174 |            3 |               4.0 |
+|   21 | 1.0537074708846985 |            3 |               4.0 |
+|   22 |  1.051204784758733 |            3 |               4.0 |
+|   23 | 1.0489249192322252 |            3 |               4.0 |
+|   24 | 1.0468393795110007 |            3 |               4.0 |
+|   25 | 1.0449243484862798 |            3 |               5.0 |
+|   26 | 1.0431597437151425 |            3 |               5.0 |
+|   27 | 1.0415285013758537 |            3 |               5.0 |
+|   28 |  1.040016054068828 |            3 |               5.0 |
+|   29 | 1.0386098933815124 |            3 |               5.0 |
+|   30 | 1.0372992018887395 |            3 |               5.0 |
+|   31 | 1.0360745603591814 |            3 |               5.0 |
+|   32 | 1.0349278294117377 |            4 |               5.0 |
+|   33 | 1.0338516994340794 |            4 |               5.0 |
+|   34 | 1.0328398949566373 |            4 |               5.0 |
+|   35 | 1.0318868074940988 |            4 |               5.0 |
+|   36 | 1.0309874779794508 |            4 |               6.0 |
+|   37 | 1.0301374915678254 |            4 |               6.0 |
+|   38 | 1.0293328804238742 |            4 |               6.0 |
+|   39 | 1.0285701132080831 |            4 |               6.0 |
+|   40 | 1.0278460087576442 |            4 |               6.0 |
+|   41 |  1.027157691880423 |            4 |               6.0 |
+|   42 |  1.026502589210212 |            4 |               6.0 |
+|   43 | 1.0258783464077128 |            4 |               6.0 |
+|   44 | 1.0252828248592394 |            4 |               6.0 |
+|   45 | 1.0247141024331754 |            4 |               6.0 |
+|   46 | 1.0241703948455623 |            4 |               6.0 |
+|   47 | 1.0236501025835851 |            4 |               6.0 |
+|   48 | 1.0231517295808754 |            4 |               6.0 |
+|   49 | 1.0226739268075815 |            4 |               7.0 |
+|   50 | 1.0222154464817517 |            4 |               7.0 |
+|   51 | 1.0217751474551418 |            4 |               7.0 |
+|   52 | 1.0213519544877643 |            4 |               7.0 |
+|   53 | 1.0209448968817703 |            4 |               7.0 |
+|   54 | 1.0205530691216933 |            4 |               7.0 |
+|   55 | 1.0201756322085958 |            4 |               7.0 |
+|   56 | 1.0198118076629914 |            4 |               7.0 |
+|   57 | 1.0194608721653386 |            4 |               7.0 |
+|   58 | 1.0191221527564327 |            4 |               7.0 |
+|   59 | 1.0187950225306854 |            4 |               7.0 |
+|   60 | 1.0184788967642957 |            4 |               7.0 |
+|   61 |  1.018173221527439 |            4 |               7.0 |
+|   62 | 1.0178775017280584 |            4 |               7.0 |
+|   63 | 1.0175912519998893 |            4 |               7.0 |
+|   64 |  1.017314024680506 |            4 |               8.0 |
+|   65 | 1.0170453922678477 |            4 |               8.0 |
+:end:
+
+#+begin_src gnuplot :var data=nthtester :file fig/1-45-1.png :exports results :rownames no :colnames no :hlines no :cache no :eval no-export :session nil
+reset
+set key autotitle columnheader
+#set logscale xy
+set xlabel 'dampings'
+set xtics (2, 4, 7, 8, 16, 24, 32, 36, 49, 64)
+set ylabel 'powers'
+set title 'dampings needed vs estimated'
+
+plot data using 1:3 with linespoints, \
+     data using 1:4 with linespoints
+#+end_src
+
+#+RESULTS:
+:results:
+[[file:fig/1-45-1.png]]
 :end:
