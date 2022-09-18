@@ -5352,23 +5352,22 @@ of ~iterative-improve~.
 
 
 #+BEGIN_SRC scheme -n :eval no-export :results output :exports both
-(load "mattcheck.scm")
+(load "mattcheck2.scm")
 <<fixed-point-txt>>
 <<fixed-point-improve>>
-(mattcheck-equal "fixed-point-improve still working"
+(mattcheck "fixed-point-improve still working"
                  (fixed-point (λ(x)(+ 1 (/ 1 x))) 1.0)
                  (fixed-point-improve (λ(x)(+ 1 (/ 1 x))) 1.0))
 <<sqrt>>
 <<sqrt-improve>>
-(mattcheck-equal "sqrt-improve still working"
+(mattcheck "sqrt-improve still working"
                  (sqrt 5)
                  (sqrt 5))
 #+end_src
 
-#+RESULTS[cc8e697f3f3cb1bd72b524d3ef0570805bf1d0b7]:
-:results:
-#+begin_example
+#+RESULTS[49e2502d17e839bb65d25dd9526ca0e38e76de3a]:
+#+begin_EXAMPLE
 SUCCEED at fixed-point-improve still working
 SUCCEED at sqrt-improve still working
-#+end_example
-:end:
+#+end_EXAMPLE
+

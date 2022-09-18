@@ -49,4 +49,4 @@
               (mattcheck:fail id a ad)))))
   (if (= 1 (length args))
       (mattcheck-bool id (car args))
-      (rec args)))
+      (iter args)))
