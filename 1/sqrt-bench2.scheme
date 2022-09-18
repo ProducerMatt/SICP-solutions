@@ -1,4 +1,4 @@
-;; [[file:Answers.org::*Optimized][Optimized:1]]
+;; [[file:../Answers.org::*Optimized][Optimized:1]]
 (use-modules (ice-9 format))
 (load "../mattbench.scm")
 (define (average x y)

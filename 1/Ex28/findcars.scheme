@@ -1,7 +1,7 @@
-;; [[file:../Answers.org::findcars][findcars]]
+;; [[file:../../Answers.org::findcars][findcars]]
 (use-srfis '(1))
-;; [[[[file:~/SICP-group/1/Answers.org::expmod][expmod]]][expmod]]
-;; [[[[file:~/SICP-group/1/Answers.org::square][square]]][square]]
+;; [[[[file:~/SICP-group/Answers.org::expmod][expmod]]][expmod]]
+;; [[[[file:~/SICP-group/Answers.org::square][square]]][square]]
 (define (square x)
   (* x x))
 ;; square ends here
@@ -16,7 +16,7 @@
           (* base (expmod base (- exp 1) m))
           m))))
 ;; expmod ends here
-;; [[[[file:~/SICP-group/1/Answers.org::fermat-prime?][fermat-prime?]]][fermat-prime?]]
+;; [[[[file:~/SICP-group/Answers.org::fermat-prime?][fermat-prime?]]][fermat-prime?]]
 ;; fermat prime test but checks *every* value from 2 to n-1
 (define (fermat-prime? n)
   (define (iter a)
@@ -27,8 +27,8 @@
             (iter (+ 1 a)))))
   (iter 2))
 ;; fermat-prime? ends here
-;; [[[[file:~/SICP-group/1/Answers.org::find-divisor-faster-real][find-divisor-faster-real]]][find-divisor-faster-real]]
-;; [[[[file:~/SICP-group/1/Answers.org::square][square]]][square]]
+;; [[[[file:~/SICP-group/Answers.org::find-divisor-faster-real][find-divisor-faster-real]]][find-divisor-faster-real]]
+;; [[[[file:~/SICP-group/Answers.org::square][square]]][square]]
 (define (square x)
   (* x x))
 ;; square ends here

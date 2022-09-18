@@ -164,7 +164,7 @@ colnames.
 :end:
 
 #+NAME: print-table-test
-#+BEGIN_SRC scheme -n :eval no-export :tangle no :results table output :exports no :rownames yes :colnames yes
+#+BEGIN_SRC scheme -n :eval no-export  :results table output :exports no :rownames yes :colnames yes
 <<print-table>>
 (let* ((l (iota 3))
       (table (list
@@ -187,7 +187,7 @@ colnames.
 *** ~print-table~ (spaces only)
 TODO: Merge these together.
 #+NAME: print-table-spaced
-#+BEGIN_SRC scheme -n :eval no-export :tangle no :results output :exports code
+#+BEGIN_SRC scheme -n :eval no-export  :results output :exports code
 (use-modules (ice-9 format))
 (define* (print-row ll #:key (mode #f))
   (let ((fmtstr
@@ -217,7 +217,7 @@ TODO: Merge these together.
 #+end_src
 
 #+NAME: print-table-spaced-test
-#+BEGIN_SRC scheme -n :eval no-export :tangle no :results table output :exports no :rownames yes :colnames yes
+#+BEGIN_SRC scheme -n :eval no-export  :results table output :exports no :rownames yes :colnames yes
 <<print-table-spaced>>
 (let* ((l (iota 3))
       (table (list
@@ -370,7 +370,7 @@ is the process of evaluating nested combinations, "percolating" values upward.
 The recursive evaluation of src_scheme{(* (+ 2 (* 4 6)) (+ 3 5 7))} breaks down into four
 parts:
 
-#+begin_src mermaid :file fig/t_1-1-3.png
+#+begin_src mermaid :file 1/fig/t_1-1-3.png
 graph BT;
   A>"390"];
   subgraph four;
@@ -403,7 +403,7 @@ graph BT;
 #+end_src
 
 #+RESULTS[eb290cb6a678715b9d35bfe3238eff9c97156ef7]:
-[[file:fig/t_1-1-3.png]]
+[[file:1/fig/t_1-1-3.png]]
 
 ** 1.1.4: Compound Procedures
 We have identified the following in Lisp:
@@ -606,7 +606,7 @@ the squares of the two larger numbers.
         ((and (>= a b) (> c b)) (sum-square a c))
         (else (sum-square b c))))
 #+END_SRC
-#+BEGIN_SRC scheme -n :eval no-export :tangle no :exports both :results value table
+#+BEGIN_SRC scheme -n :eval no-export  :exports both :results value table
 <<EX1-3>>
 <<try-these>>
  (try-these square-2of3 '(7 5 3)
@@ -641,7 +641,7 @@ is made by using the ~+~ and ~-~ procedures as the results of an if expression,
 and then evaluating according to the results of that expression. This is in
 contrast to a language like Python, which would do something like this:
 
-#+BEGIN_SRC python :noeval :tangle no
+#+BEGIN_SRC python :noeval 
 if b > 0: a + b
 else: a - b
 #+END_SRC
@@ -654,7 +654,7 @@ faced with is using applicative-order evaluation or normal-order evaluation. He
 defines the following two procedures:
 #+end_quote
 
-#+BEGIN_SRC scheme -n :noeval :tangle no
+#+BEGIN_SRC scheme -n :noeval 
 (define (p) (p))
 
 (define (test x y)
@@ -666,7 +666,7 @@ defines the following two procedures:
 Then he evaluates the expression:
 #+end_quote
 
-#+BEGIN_SRC scheme -n :noeval :tangle no
+#+BEGIN_SRC scheme -n :noeval 
 (test 0 (p))
 #+END_SRC
 #+begin_quote
@@ -726,7 +726,7 @@ variables to be shared across procedures, which is called *lexical scoping*.
   (/ (+ x y) 2))
 #+END_SRC
 #+NAME: txt-sqrt
-#+BEGIN_SRC scheme -n :eval no-export :tangle no :results silent
+#+BEGIN_SRC scheme -n :eval no-export  :results silent
 <<average>>
 (define (improve guess x)
   (average guess (/ x guess)))
@@ -753,7 +753,7 @@ cond?” she asks. Alyssa’s friend Eva Lu Ator claims this can indeed be done,
 she defines a new version of ~if~:
 #+end_quote
 
-#+BEGIN_SRC scheme -n :noeval :tangle no
+#+BEGIN_SRC scheme -n :noeval 
 (define (new-if predicate
                 then-clause
                 else-clause)
@@ -764,7 +764,7 @@ she defines a new version of ~if~:
 Eva demonstrates the program for Alyssa:
 #+end_quote
 
-#+BEGIN_SRC scheme -n :noeval :tangle no
+#+BEGIN_SRC scheme -n :noeval 
 (new-if (= 2 3) 0 5)
 ;; => 5
 
@@ -776,7 +776,7 @@ Eva demonstrates the program for Alyssa:
 Delighted, Alyssa uses new-if to rewrite the square-root program:
 #+end_quote
 
-#+BEGIN_SRC scheme -n :noeval :tangle no
+#+BEGIN_SRC scheme -n :noeval 
 (define (sqrt-iter guess x)
   (new-if (good-enough? guess x)
           guess
@@ -818,7 +818,7 @@ My original answer was this, which compares the previous iteration until the new
 and old are within an arbitrary \(dx\).
 
 #+NAME: inferior-good-enough
-#+BEGIN_SRC scheme -n :tangle no
+#+BEGIN_SRC scheme -n 
 <<txt-sqrt>>
 (define (inferior-good-enough? guess lastguess)
   (<=
@@ -835,7 +835,7 @@ and old are within an arbitrary \(dx\).
 #+end_src
 
 This solution can correctly find small and large numbers:
-#+BEGIN_SRC scheme -n :eval no-export :tangle no :exports both :results value
+#+BEGIN_SRC scheme -n :eval no-export  :exports both :results value
 <<inferior-good-enough>>
 (new-sqrt 10000000000000)
 #+END_SRC
@@ -848,7 +848,7 @@ This solution can correctly find small and large numbers:
 :end:
 
 #+NAME: EX1-7-t2
-#+BEGIN_SRC scheme -n :eval no-export :tangle no :exports both :results value table drawer
+#+BEGIN_SRC scheme -n :eval no-export  :exports both :results value table drawer
 <<try-these>>
 <<inferior-good-enough>>
 (try-these new-sqrt '(0.01 0.0001 0.000001 0.00000001 0.0000000001))
@@ -876,7 +876,7 @@ reaches the precision limit of the system:
 
 **** Imroving (sqrt) by avoiding extra (improve) call
 ***** Non-optimized
-#+BEGIN_SRC scheme -n :eval no-export :tangle sqrt-bench.scheme :exports both :results output
+#+BEGIN_SRC scheme -n :eval no-export :tangle 1/sqrt-bench.scheme :exports both :results output
 (use-modules (ice-9 format))
 (load "../mattbench.scm")
 (define (average x y)
@@ -898,7 +898,7 @@ reaches the precision limit of the system:
 #+end_src
 
 ***** Optimized
-#+BEGIN_SRC scheme -n :noeval :tangle sqrt-bench2.scheme :exports both :results output
+#+BEGIN_SRC scheme -n :noeval :tangle 1/sqrt-bench2.scheme :exports both :results output
 (use-modules (ice-9 format))
 (load "../mattbench.scm")
 (define (average x y)
@@ -928,7 +928,7 @@ The current method has decreasing accuracy with smaller numbers. Notice the
 steady divergence from correct answers here (should be decreasing powers of
 0.1):
 #+NAME: EX1-7-t1
-#+BEGIN_SRC scheme -n :eval no-export :tangle no :exports both :results value table
+#+BEGIN_SRC scheme -n :eval no-export  :exports both :results value table
 <<txt-sqrt>>
 <<try-these>>
 (try-these sqrt 0.01 0.0001 0.000001 0.00000001 0.0000000001)
@@ -946,7 +946,7 @@ steady divergence from correct answers here (should be decreasing powers of
 And for larger numbers, an infinite loop will eventually be reached. \(10^{12}\)
 can resolve, but \(10^{13}\) cannot.
 
-#+BEGIN_SRC scheme -n :eval no-export :tangle no :exports both :results value
+#+BEGIN_SRC scheme -n :eval no-export  :exports both :results value
 <<txt-sqrt>>
 (sqrt 1000000000000)
 #+END_SRC
@@ -974,7 +974,7 @@ So, my definition of ~sqrt~:
   (sqrt-iter 1.0 x))
 #+end_src
 #+NAME: EX1-7-t3
-#+BEGIN_SRC scheme -n :eval no-export :tangle no :exports both :results value table
+#+BEGIN_SRC scheme -n :eval no-export  :exports both :results value table
 <<try-these>>
 <<sqrt>>
 (try-these sqrt '(0.01 0.0001 0.000001 0.00000001 0.0000000001))
@@ -1005,7 +1005,7 @@ an abstraction of these square-root and cube-root procedures.)
 *** Diary
 My first attempt works, but needs an arbitrary limit to stop infinite loops:
 #+NAME: EX1-8-A1
-#+BEGIN_SRC scheme -n :eval no-export :tangle no :exports both :results value table
+#+BEGIN_SRC scheme -n :eval no-export  :exports both :results value table
 <<square>>
 <<try-these>>
 (define (cb-good-enough? guess x)
@@ -1063,7 +1063,7 @@ let's do 1.1 instead.
 (define (cbrt x)
   (cbrt-iter 1.1 9999 x))
 #+END_SRC
-#+BEGIN_SRC scheme -n :eval no-export :tangle no :exports both :results value table
+#+BEGIN_SRC scheme -n :eval no-export  :exports both :results value table
 <<cbrt>>
 <<try-these>>
 (try-these cbrt 7 32 56 100 -2)
@@ -1134,7 +1134,7 @@ integers in terms of the procedures inc, which increments its argument by 1, and
 dec, which decrements its argument by 1.
 #+end_quote
 
-#+BEGIN_SRC scheme -n :noeval :tangle no
+#+BEGIN_SRC scheme -n :noeval 
 (define (+ a b)
   (if (= a 0)
       b
@@ -1154,7 +1154,7 @@ in evaluating src_scheme{(+ 4 5)}. Are these processes iterative or recursive?
 The first procedure is recursive, while the second is iterative though
 tail-recursion.
 **** recursive procedure
-#+BEGIN_SRC scheme -n :noeval :tangle no
+#+BEGIN_SRC scheme -n :noeval 
 (+ 4 5)
 (inc (+ 3 5))
 (inc (inc (+ 2 5)))
@@ -1168,7 +1168,7 @@ tail-recursion.
 #+END_SRC
 
 **** iterative procedure
-#+BEGIN_SRC scheme -n :noeval :tangle no
+#+BEGIN_SRC scheme -n :noeval 
 (+ 4 5)
 (+ 3 6)
 (+ 2 7)
@@ -1197,12 +1197,12 @@ function.
 What are the values of the following expressions?
 #+end_quote
 
-#+BEGIN_SRC scheme -n :noeval :tangle no
+#+BEGIN_SRC scheme -n :noeval 
 (A 1 10)
 (A 2 4)
 (A 3 3)
 #+END_SRC
-#+BEGIN_SRC scheme -n :eval no-export :exports results :tangle no :results value table
+#+BEGIN_SRC scheme -n :eval no-export :exports results  :results value table
 <<try-these>>
 <<ackermann>>
 (try-these A '(1 10) '(2 4) '(3 3))
@@ -1233,7 +1233,7 @@ src_scheme{(k n)} computes \(5n^2\).
 *** Answer
 **** ~f~
 
-#+BEGIN_SRC scheme -n :eval no-export :tangle no :exports both :results value table
+#+BEGIN_SRC scheme -n :eval no-export  :exports both :results value table
 <<try-these>>
 <<EX1-10-defs>>
 (try-these f 1 2 3 10 15 20)
@@ -1254,7 +1254,7 @@ f(n)=2n
 \]
 **** ~g~
 
-#+BEGIN_SRC scheme -n :eval no-export :tangle no :exports both :results value table
+#+BEGIN_SRC scheme -n :eval no-export  :exports both :results value table
 <<try-these>>
 <<EX1-10-defs>>
 (try-these g 1 2 3 4 5 6 7 8)
@@ -1278,7 +1278,7 @@ g(n)=2^n
 
 **** ~h~
 
-#+BEGIN_SRC scheme -n :eval no-export :tangle no :exports both :results value table
+#+BEGIN_SRC scheme -n :eval no-export  :exports both :results value table
 <<try-these>>
 <<EX1-10-defs>>
 (try-these h 1 2 3 4)
@@ -1351,7 +1351,7 @@ procedure that computes \(f\) by means of an iterative process.
 *** Answer
 **** Recursive
 #+NAME: EX1-11-fr
-#+BEGIN_SRC scheme -n :eval no-export :tangle no :exports code :results silent
+#+BEGIN_SRC scheme -n :eval no-export  :exports code :results silent
 (define (fr n)
   (if (< n 3)
       n
@@ -1360,7 +1360,7 @@ procedure that computes \(f\) by means of an iterative process.
          (* 3 (fr (- n 3))))))
 #+END_SRC
 
-#+BEGIN_SRC scheme -n :eval no-export :tangle no :exports both :results value table
+#+BEGIN_SRC scheme -n :eval no-export  :exports both :results value table
 <<try-these>>
 <<EX1-11-fr>>
 (try-these fr 1 3 5 10)
@@ -1377,7 +1377,7 @@ procedure that computes \(f\) by means of an iterative process.
 **** Iterative
 ***** Attempt 1
 #+NAME: EX1-11-fi
-#+BEGIN_SRC scheme -n :eval no-export :tangle no :exports code :results silent
+#+BEGIN_SRC scheme -n :eval no-export  :exports code :results silent
 ;; This seems like it could be better
 (define (fi n)
   (define (formula l)
@@ -1397,7 +1397,7 @@ procedure that computes \(f\) by means of an iterative process.
       (iter '(2 1 0) 2)))
 #+END_SRC
 
-#+BEGIN_SRC scheme -n :eval no-export :tangle no :exports both :results value table
+#+BEGIN_SRC scheme -n :eval no-export  :exports both :results value table
 <<try-these>>
 <<EX1-11-fi>>
 (try-these fi 1 3 5 10)
@@ -1415,7 +1415,7 @@ It works but it seems wasteful.
 
 ***** Attempt 2
 #+NAME: EX1-11-fi2
-#+BEGIN_SRC scheme -n :eval no-export :tangle no :exports code :results silent
+#+BEGIN_SRC scheme -n :eval no-export  :exports code :results silent
 (define (fi2 n)
   (define (formula a b c)
       (+ a
@@ -1433,7 +1433,7 @@ It works but it seems wasteful.
       (iter 2 1 0 2)))
 #+END_SRC
 
-#+BEGIN_SRC scheme -n :eval no-export :tangle no :exports both :results value table
+#+BEGIN_SRC scheme -n :eval no-export  :exports both :results value table
 <<try-these>>
 <<EX1-11-fi2>>
 (try-these fi2 1 3 5 10)
@@ -1474,7 +1474,7 @@ infinite spreadsheet.
          (pascal x (- y 1)))))
 #+END_SRC
 
-#+BEGIN_SRC scheme -n :eval no-export :tangle no :exports both :results value table
+#+BEGIN_SRC scheme -n :eval no-export  :exports both :results value table
 <<try-these>>
 <<pascal-rec>>
 (let ((l (iota 8)))
@@ -1550,7 +1550,7 @@ demonstrate it.
      sqrt5))
 #+END_SRC
 #+NAME: 1-13-tab
-#+BEGIN_SRC scheme -n :eval no-export :tangle no :exports both :results value table
+#+BEGIN_SRC scheme -n :eval no-export  :exports both :results value table
 (use-srfis '(1))
 <<fib-iter>>
 <<fib-phi>>
@@ -1581,7 +1581,7 @@ You can see they follow closely. Graphing the differences, it's just
 an exponential curve at very low values, presumably following the
 exponential increase of the Fibonacci sequence itself.
 #+NAME: 1-13-tab2
-#+BEGIN_SRC scheme -n :eval no-export :tangle no :exports none :results value silent
+#+BEGIN_SRC scheme -n :eval no-export  :exports none :results value silent
 (use-srfis '(1))
 <<fib-iter>>
 <<fib-phi>>
@@ -1606,7 +1606,7 @@ plot data using 1:2 with lines title 'Fib(n) minus Fib-phi(n)'
 
 #+RESULTS[8c0a67c9f76a9da9c115187192a6c35899c939cb]:
 :results:
-[[file:fig/1-13.png]]
+[[file:1/fig/1-13.png]]
 :end:
 
 ** 1.2.3: Orders of Growth
@@ -1624,10 +1624,10 @@ For example:
 Some algorithms we've already seen:
 - Linear recursive :: is time and space \(\Theta(n)\)
 - Iterative :: is time \(\Theta(n)\) space \(\Theta(1)\)
-- Tree-recursive :: means in general, time is proportional to the number of nodes, space
-is proportional to the depth of the tree. In the Fibonacci algorithm example,
-\(\Theta(n)\) and time \(\Theta(\Upsilon^{n})\) where \(\Upsilon\) is the golden
-ratio \(\frac{1 + \sqrt{5}}{2}\)
+- Tree-recursive :: means in general, time is proportional to the number of
+  nodes, space is proportional to the depth of the tree. In the Fibonacci
+  algorithm example, \(\Theta(n)\) and time \(\Theta(\Upsilon^{n})\) where
+  \(\Upsilon\) is the golden ratio \(\frac{1 + \sqrt{5}}{2}\)
 
 Orders of growth are very crude descriptions of process behaviors, but they are
 useful in indicating how a process will change with the size of the problem.
@@ -1711,7 +1711,7 @@ I want to generate this graph algorithmically.
 I'm not going to include the full printout of the src_scheme{(count-change 11)}, here's an
 example of what this looks like via ~1~.
 #+NAME: count-change-test
-#+BEGIN_SRC scheme -n :eval no-export :tangle no :exports both :results output code
+#+BEGIN_SRC scheme -n :eval no-export  :exports both :results output code
 <<count-change-graphviz>>
 (count-change 1)
 #+end_src
@@ -1738,12 +1738,12 @@ $data
 
 #+RESULTS[2f9cd2c1031a74ba1f68d4d2a7602c619a798efd]:
 :results:
-[[file:fig/cc-test.png]]
+[[file:1/fig/cc-test.png]]
 :end:
 
 So, the graph of src_scheme{(count-change 11)} is:
 #+NAME: count-change-11
-#+BEGIN_SRC scheme -n :eval no-export :tangle no :exports none :results silent output
+#+BEGIN_SRC scheme -n :eval no-export  :exports none :results silent output
 <<count-change-graphviz>>
 (count-change 11)
 #+end_src
@@ -1754,7 +1754,7 @@ $data
 
 #+RESULTS[914f8aa869c783656d6a64eb7535f44d22158d20]:
 :results:
-[[file:fig/cc-11.png]]
+[[file:1/fig/cc-11.png]]
 :end:
 
 *** Question B
@@ -1800,7 +1800,7 @@ that branch of the tree.
 
 
 #+NAME: cc-calls-check
-#+BEGIN_SRC scheme -n :eval no-export :tangle no :exports none :results value table
+#+BEGIN_SRC scheme -n :eval no-export  :exports none :results value table
 ;; Test to verify that this function is working as expected.
 (use-srfis '(1))
 <<count-change>>
@@ -1826,7 +1826,7 @@ that branch of the tree.
 :end:
 
 #+NAME: cc-calls-100
-#+BEGIN_SRC scheme -n :eval no-export :tangle no :exports code :results silent value table
+#+BEGIN_SRC scheme -n :eval no-export  :exports code :results silent value table
 (use-srfis '(1))
 <<cc-calls>>
 (let* ((vals (drop (iota 101) 1))
@@ -1846,7 +1846,7 @@ plot data using 1:2 with lp title 'Ways to make change for n', \
 
 #+RESULTS[134cbc95d12b4367d5be943722725cd0baca1d87]:
 :results:
-[[file:fig/cc-100.png]]
+[[file:1/fig/cc-100.png]]
 :end:
 
 I believe the space to be \(\Theta(n+d)\) as the function calls count down the
@@ -1946,7 +1946,7 @@ Let's find out!
 #+end_src
 
 #+NAME: 1-15-sine1215
-#+BEGIN_SRC scheme -n :eval no-export :tangle no :exports both :results value
+#+BEGIN_SRC scheme -n :eval no-export  :exports both :results value
 <<1-15-p-measure>>
 (let ((xy (sine 12.15)))
   (list (car xy) (cdr xy)))
@@ -1968,7 +1968,7 @@ evaluated?
 
 *** Answer B
 #+NAME: 1-15-tab1
-#+BEGIN_SRC scheme -n :eval no-export :tangle no :exports both :results silent value table
+#+BEGIN_SRC scheme -n :eval no-export  :exports both :results silent value table
 (use-srfis '(1))
 <<1-15-p-measure>>
 (let* ((vals (iota 300 0.1 0.1))
@@ -1978,7 +1978,7 @@ evaluated?
   (zip vals sines))
 #+end_src
 #+NAME: 1-15-tab1-test
-#+BEGIN_SRC scheme -n :eval no-export :tangle no :exports result :results value table
+#+BEGIN_SRC scheme -n :eval no-export  :exports result :results value table
 (use-srfis '(1))
 <<1-15-p-measure>>
 (let* ((vals (iota 10 0.1 0.1))
@@ -2022,7 +2022,7 @@ plot data using 1:2:(f($1)) with filledcurves title 'function calls', \
 
 #+RESULTS[cda98404343075e48a2b594fa5d2b60803f911d3]: 1-15-smoothfill
 :results:
-[[file:fig/1-15-smoothfill.png]]
+[[file:1/fig/1-15-smoothfill.png]]
 :end:
 #+END_COMMENT
 
@@ -2042,7 +2042,7 @@ plot data using 1:2 with fillsteps title 'function calls', \
 
 #+RESULTS[460dc2cffdff776bf4e3a46cb26ac66180108b4a]:
 :results:
-[[file:fig/1-15-step.png]]
+file:1/fig/1-15-step.png
 :end:
 
 This graph shows that the number of times ~sine~ will be called is logarithmic.
@@ -2074,7 +2074,7 @@ So I argue the space and time is \(\Theta(\log(n))\)
 We can also prove this for the time by benchmarking the function:
 
 #+NAME: 1-15-sine-bench
-#+BEGIN_SRC scheme -n :noeval :tangle "Ex15/sine-bench.scheme" :exports code :results none
+#+BEGIN_SRC scheme -n :noeval :tangle "1/Ex15/sine-bench.scheme" :exports code :results none
 ;; This execution takes too long for org-mode, so I'm doing it
 ;; externally and importing the results
 (use-srfis '(1))
@@ -2109,7 +2109,7 @@ plot 'Ex15/sine-bench.dat' using 1:2 with fillsteps title 'time to execute', \
 
 #+RESULTS[fb7f0aefd66103c1d2a3d67706e4323de589c4f9]:
 :results:
-[[file:fig/1-15-bench.png]]
+[[file:1/fig/1-15-bench.png]]
 :end:
 
 **** 1.2.4 Exponentiation
@@ -2192,7 +2192,7 @@ First I made this program which tries to use a false equivalence:
   (iter b n 1))
 #+end_src
 
-#+BEGIN_SRC scheme -n :eval no-export :tangle no :exports both :results output table :colnames yes
+#+BEGIN_SRC scheme -n :eval no-export  :exports both :results output table :colnames yes
 <<fast-expt-iter-fail1>>
 <<try-these>>
 (fast-expt-iter 2 6)
@@ -2243,7 +2243,7 @@ The solution essentially follows this logic:
   (iter b n 1))
 #+end_src
 
-#+BEGIN_SRC scheme -n :eval no-export :tangle no :exports yes :results value table
+#+BEGIN_SRC scheme -n :eval no-export  :exports yes :results value table
 <<fast-expt-iter>>
 <<try-these>>
 (try-these (λ(x) (fast-expt-iter 3 x)) (cdr (iota 11)))
@@ -2305,7 +2305,7 @@ of steps.
 
 Proof it works:
 
-#+BEGIN_SRC scheme -n :eval no-export :tangle no :exports yes :results value table
+#+BEGIN_SRC scheme -n :eval no-export  :exports yes :results value table
 <<fast-mult-rec>>
 <<try-these>>
 (try-these (λ(x) (fast-mult-rec 3 x)) (cdr (iota 11)))
@@ -2335,7 +2335,7 @@ doubling, and halving and uses a logarithmic number of steps.
 *** Diary
 **** Comparison benchmarks:
 
-#+BEGIN_SRC scheme -n :tangle Ex1-18bench.scheme :exports code :results silent
+#+BEGIN_SRC scheme -n :tangle 1/Ex1-18bench.scheme :exports code :results silent
 (load "../mattbench.scm")
 <<fast-mult-iter>>
 <<fast-mult-rec>>
@@ -2372,7 +2372,7 @@ Some of my /very/ incorrect ideas:
           (else (iter a (- b 1) (+ a c)))))
   (iter a b 0))
 #+end_src
-#+BEGIN_SRC scheme -n :eval no-export :tangle no :exports yes :results value table
+#+BEGIN_SRC scheme -n :eval no-export  :exports yes :results value table
 <<fast-mult-iter>>
 <<try-these>>
 (try-these (λ(x) (fast-mult 3 x)) (cdr (iota 11)))
@@ -2415,7 +2415,7 @@ thus we can compute \( T^n \) using successive squaring, as in the `fast-expt'
 procedure. Put this all together to complete the following procedure, which runs
 in a logarithmic number of steps:
 #+end_quote
-#+BEGIN_SRC scheme -n :noeval :tangle no :exports code :results silent
+#+BEGIN_SRC scheme -n :noeval  :exports code :results silent
 (define (fib n)
   (fib-iter 1 0 0 1 n))
 
@@ -2481,7 +2481,7 @@ the attached list. so src_scheme{(T 0 1)} returns a fib function.
 \]
 
 #+NAME: T-test
-#+BEGIN_SRC scheme -n :eval no-export :tangle no :exports both :results value table
+#+BEGIN_SRC scheme -n :eval no-export  :exports both :results value table
 <<T-func>>
 <<try-these>>
 (try-these (λ (x) (Tr (T 0 1) x)) (cdr (iota 11)))
@@ -2531,7 +2531,7 @@ the attached list. so src_scheme{(T 0 1)} returns a fib function.
 #+END_SRC
 
 #+NAME: fib-iter-test
-#+BEGIN_SRC scheme -n :eval no-export :tangle no :exports results :results output table :colnames yes
+#+BEGIN_SRC scheme -n :eval no-export  :exports results :results output table :colnames yes
 (use-srfis '(1))
 <<fib-iter-T>>
 <<print-table>>
@@ -2739,7 +2739,7 @@ following numbers: 199, 1999, 19999.
 #+end_quote
 
 *** Answer
-#+BEGIN_SRC scheme -n :eval no-export :tangle no :exports both :results value table
+#+BEGIN_SRC scheme -n :eval no-export  :exports both :results value table
 <<find-divisor-txt>>
 (map smallest-divisor '(199 1999 19999))
 #+END_SRC
@@ -2804,7 +2804,7 @@ So this question is a little funky, because modern machines are so fast that the
 single-run times can seriously vary.
 
 #+NAME: search-primes-basic
-#+BEGIN_SRC scheme -n :eval no-export :tangle no :exports both :results output
+#+BEGIN_SRC scheme -n :eval no-export  :exports both :results output
 <<timed-prime-test-txt>>
 (define (search-for-primes minimum goal)
   (define m (if (even? minimum)
@@ -2820,7 +2820,7 @@ single-run times can seriously vary.
             (search-for-primes-iter (+ n 2) lst goal)))))
 #+END_SRC
 
-#+BEGIN_SRC scheme -n :eval no-export :tangle no :exports both :results output code
+#+BEGIN_SRC scheme -n :eval no-export  :exports both :results output code
 <<search-primes-basic>>
 (let ((lt1000-1 (search-for-primes 1000 3)))
   (list "Primes > 1000" lt1000-1))
@@ -2842,7 +2842,7 @@ single-run times can seriously vary.
 
 There's proof it works. And here are the answers to the question:
 
-#+BEGIN_SRC scheme -n :eval no-export :tangle no :exports both :results value table :rownames yes
+#+BEGIN_SRC scheme -n :eval no-export  :exports both :results value table :rownames yes
 <<search-primes-basic>>
 (let ((lt1000-1 (search-for-primes 1000 3))
       (lt10000-1 (search-for-primes 10000 3))
@@ -2910,7 +2910,7 @@ I'm going to get some more precise times. First, I need a prime searching varian
 
 I can benchmark these functions like so:
 #+NAME: smallest-divisor-benchmark
-#+BEGIN_SRC scheme -n :noeval :tangle primebench/smd.scheme :exports both :results output table :colnames yes :rownames :yes
+#+BEGIN_SRC scheme -n :noeval :tangle 1/primebench/smd.scheme :exports both :results output table :colnames yes :rownames :yes
 <<mattbench2>>
 <<prime-smallest-divisor>>
 <<search-for-primes-untimed>>
@@ -2967,7 +2967,7 @@ plot data using 1:2 with linespoints title 'time to find primes', \
 
 #+RESULTS[27d02bff03e8cb41df0bcd04f4c853b65910088d]:
 :results:
-[[file:fig/1-22-1.png]]
+file:1/fig/1-22-1.png
 :end:
 
 The plot for the square root function doesn't quite fit the real one and I'm not
@@ -3017,7 +3017,7 @@ the fact that it is different from 2?
   (= (remainder b a) 0))
 #+END_SRC
 #+NAME: smallest-divisor-benchmark
-#+BEGIN_SRC scheme -n :noeval :tangle primebench/smdf.scheme :exports code
+#+BEGIN_SRC scheme -n :noeval :tangle 1/primebench/smdf.scheme :exports code
 <<mattbench2>>
 <<find-divisor-faster>>
 (define (prime? n)
@@ -3072,7 +3072,7 @@ plot data using 2:xticlabels(1) with linespoints title '(+ 1)', \
 
 #+RESULTS[a092c209836cb659130fe0ad3bff2d3f23674f1b]:
 :results:
-[[file:fig/1-22-2.png]]
+[[file:1/fig/1-22-2.png]]
 :end:
 
 So it's /slower/ than before. Why?
@@ -3112,7 +3112,7 @@ Ok, let's try that again.
   (= (remainder b a) 0))
 #+END_SRC
 #+NAME: smallest-divisor-benchmark-real
-#+BEGIN_SRC scheme -n :noeval :tangle primebench/smdff.scheme :exports code
+#+BEGIN_SRC scheme -n :noeval :tangle 1/primebench/smdff.scheme :exports code
 <<mattbench2>>
 <<find-divisor-faster-real>>
 (define (prime? n)
@@ -3170,7 +3170,7 @@ plot data using 2:xticlabels(1) with linespoints, \
 
 #+RESULTS:
 :results:
-[[file:fig/1-22-3.png]]
+[[file:1/fig/1-22-3.png]]
 :end:
 
 I had a lot of trouble getting this one to compile, I have to restart Emacs in
@@ -3238,7 +3238,7 @@ something more like a 200% speedup. Let's try optimizing it further. Two observa
   (= (remainder b a) 0))
 #+END_SRC
 #+NAME: smallest-divisor-benchmark-real2
-#+BEGIN_SRC scheme -n :noeval :tangle primebench/smdff2.scheme :exports code
+#+BEGIN_SRC scheme -n :noeval :tangle 1/primebench/smdff2.scheme :exports code
 <<mattbench2>>
 <<find-divisor-faster-real2>>
 (define (prime? n)
@@ -3299,7 +3299,7 @@ plot data using 2:xticlabels(1) with linespoints, \
 
 #+RESULTS:
 :results:
-file:fig/1-22-4.png
+file:1/fig/1-22-4.png
 :end:
 
 #+BEGIN_SRC scheme :eval no-export :results value table :var smd=1-22-smd smdf=1-22-smdf smdff=1-22-smdff smdff2=1-22-smdff2 :exports results :rownames no :colnames no
@@ -3365,7 +3365,7 @@ you find?
 
 *** Answer
 #+NAME: fermat-bench
-#+BEGIN_SRC scheme -n :noeval :tangle primebench/fermat.scheme :exports code
+#+BEGIN_SRC scheme -n :noeval :tangle 1/primebench/fermat.scheme :exports code
 <<mattbench2>>
 <<expmod>>
 <<fermat-test>>
@@ -3427,14 +3427,14 @@ plot data using 2:xticlabels(1) with linespoints, \
 
 #+RESULTS:
 :results:
-file:fig/1-24-1.png
+file:1/fig/1-24-1.png
 :end:
 
 It definitely looks to be advancing much slower than the other methods. I'd like
 to see more of the function.
 
 #+NAME: smallest-divisor-benchmark-real3
-#+BEGIN_SRC scheme -n :noeval :tangle primebench/more.scheme :exports code
+#+BEGIN_SRC scheme -n :noeval :tangle 1/primebench/more.scheme :exports code
 <<mattbench2>>
 <<find-divisor-faster-real>>
 (define (prime? n)
@@ -3460,7 +3460,7 @@ to see more of the function.
 #+END_SRC
 
 #+NAME: fermat-bench2
-#+BEGIN_SRC scheme -n :noeval :tangle primebench/more.scheme :exports code
+#+BEGIN_SRC scheme -n :noeval :tangle 1/primebench/more.scheme :exports code
 <<mattbench2>>
 <<expmod>>
 <<fermat-test>>
@@ -3533,7 +3533,7 @@ plot data using 2:xticlabels(1) with linespoints, \
 
 #+RESULTS:
 :results:
-file:fig/1-24-2.png
+file:1/fig/1-24-2.png
 :end:
 
 For the life of me I have no idea what that bump is. Maybe it needs more
@@ -3547,7 +3547,7 @@ Alyssa P. Hacker complains that we went to a lot of extra work in writing
 exponentials, we could have simply written
 #+end_quote
 
-#+BEGIN_SRC scheme -n :tangle no
+#+BEGIN_SRC scheme -n 
 (define (expmod base exp m)
   (remainder (fast-expt base exp) m))
 #+END_SRC
@@ -3702,7 +3702,7 @@ For the sake of verifying this, I want to get a bigger list of primes and
 Carmichael numbers to verify against. I'll save them using Guile's built in
 read/write functions that save Lisp lists to text:
 #+NAME: findsomeprimes
-#+BEGIN_SRC scheme :eval no-export :results output :exports code :tangle Ex28/findsomeprimes.scheme
+#+BEGIN_SRC scheme :eval no-export :results output :exports code :tangle 1/Ex28/findsomeprimes.scheme
 <<find-divisor-faster-real>>
 (define (prime? n)
   (= n (smallest-divisor n)))
@@ -3725,7 +3725,7 @@ read/write functions that save Lisp lists to text:
 #+END_SRC
 
 #+NAME: findcars
-#+BEGIN_SRC scheme :eval no-export :results output silent :exports code :tangle Ex28/findcars.scheme
+#+BEGIN_SRC scheme :eval no-export :results output silent :exports code :tangle 1/Ex28/findcars.scheme
 (use-srfis '(1))
 <<expmod>>
 <<fermat-prime?>>
@@ -3815,7 +3815,7 @@ This will be useful in various future functions:
 #+END_SRC
 
 #+NAME: mr-verification
-#+BEGIN_SRC scheme :eval no-export :results value :exports both :tangle Ex28/mr_check.scheme
+#+BEGIN_SRC scheme :eval no-export :results value :exports both :tangle 1/Ex28/mr_check.scheme
 <<expmod-mr>>
 <<mr-test>>
 <<mr-prime>>
@@ -3857,7 +3857,7 @@ and use that to determine whether the square is valid or not.
           m))))
 #+END_SRC
 #+NAME: mr-verification2
-#+BEGIN_SRC scheme :noeval :exports none :tangle Ex28/mr_check2.scheme
+#+BEGIN_SRC scheme :noeval :exports none :tangle 1/Ex28/mr_check2.scheme
 <<expmod-mr2>>
 <<mr-test>>
 <<mr-prime>>
@@ -3890,7 +3890,7 @@ One more time.
 #+END_SRC
 
 #+NAME: mr-verification2
-#+BEGIN_SRC scheme -n :exports both :results output raw :tangle Ex28/mr_check3.scheme
+#+BEGIN_SRC scheme -n :exports both :results output raw :tangle 1/Ex28/mr_check3.scheme
 <<expmod-mr2>>
 <<mr-test2>>
 <<mr-prime>>
@@ -3989,7 +3989,7 @@ compare the results to those of the ~integral~ procedure shown above.
 #+END_SRC
 
 Let's compare these at equal levels of computational difficulty.
-#+BEGIN_SRC scheme -n :noeval :exports both :results output table :tangle Ex29-bench.scheme
+#+BEGIN_SRC scheme -n :noeval :exports both :results output table :tangle 1/Ex29-bench.scheme
 <<mattbench2>>
 <<print-table>>
 (define (cube x)
@@ -4041,7 +4041,7 @@ filling in the missing expressions in the following definition:
 
 Let's check the stats!
 #+NAME: sum-bench
-#+BEGIN_SRC scheme -n :noeval :exports results :results output :tangle Ex30-bench.scheme
+#+BEGIN_SRC scheme -n :noeval :exports results :results output :tangle 1/Ex30-bench.scheme
 <<print-table>>
 <<mattbench2>>
 <<sum>>
@@ -4163,7 +4163,7 @@ that generates a recursive process.
 #+END_SRC
 
 #+NAME: product-bench
-#+BEGIN_SRC scheme -n :exports both :tangle Ex31-bench.scheme
+#+BEGIN_SRC scheme -n :exports both :tangle 1/Ex31-bench.scheme
 <<mattbench2>>
 <<print-table>>
 <<product-iter>>
@@ -4694,7 +4694,7 @@ approximation that is accurate to 4 decimal places?
 :end:
 
 
-#+begin_src gnuplot :var data=cont-frac-data :file fig/1-36-1.png :exports results :cache no :eval no-export
+#+begin_src gnuplot :var data=cont-frac-data :file 1/fig/1-36-1.png :exports results :cache no :eval no-export
 reset
 #set logscale xy
 set xlabel 'iterations'
@@ -4708,7 +4708,7 @@ plot data using 2:xticlabels(1) with fillsteps fs solid 0.3 noborder lt 1 notitl
 
 #+RESULTS:
 :results:
-[[file:fig/1-36-1.png]]
+[[file:1/fig/1-36-1.png]]
 :end:
 
 \(k\) must be at least 10 to get precision of 4 decimal places.
@@ -5272,7 +5272,7 @@ Let's automatically find how many dampings are necessary. We can make a program 
 |   65 | 1.0170453922678477 |            4 |               8.0 |               6.0 |
 :end:
 
-#+begin_src gnuplot :var data=nthtester :file fig/1-45-1.png :exports results :rownames no :colnames no :hlines no :cache no :eval no-export :session nil
+#+begin_src gnuplot :var data=nthtester :file 1/fig/1-45-1.png :exports results :rownames no :colnames no :hlines no :cache no :eval no-export :session nil
 reset
 set key autotitle columnheader
 #set logscale xy
@@ -5288,7 +5288,7 @@ plot data using 1:3 with linespoints, \
 
 #+RESULTS:
 :results:
-[[file:fig/1-45-1.png]]
+[[file:1/fig/1-45-1.png]]
 :end:
 
 I've spent too much time on this problem already but I have to wonder about

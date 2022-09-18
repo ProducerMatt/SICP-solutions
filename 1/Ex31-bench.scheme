@@ -1,5 +1,5 @@
-;; [[file:Answers.org::product-bench][product-bench]]
-;; [[[[file:~/SICP-group/1/Answers.org::mattbench2][mattbench2]]][mattbench2]]
+;; [[file:../Answers.org::product-bench][product-bench]]
+;; [[[[file:~/SICP-group/Answers.org::mattbench2][mattbench2]]][mattbench2]]
 (define (mattbench2 f n)
   ;; Executes "f" for n times, and returns how long it took.
   ;; f is a lambda that takes no arguments, a.k.a. a "thunk"
@@ -19,7 +19,7 @@
   (list (iter n) ;; result of last call of f
         (/ (how-long) (* n 1.0))));; Divide by iterations so changed n has no effect
 ;; mattbench2 ends here
-;; [[[[file:~/SICP-group/1/Answers.org::print-table][print-table]]][print-table]]
+;; [[[[file:~/SICP-group/Answers.org::print-table][print-table]]][print-table]]
 (use-modules (ice-9 format))
 (define* (print-row ll #:key (mode #f))
   (let ((fmtstr
@@ -47,7 +47,7 @@
           ((<= 1 (length table)) (iter table))
           (else error "Invalid Input??")))
 ;; print-table ends here
-;; [[[[file:~/SICP-group/1/Answers.org::product-iter][product-iter]]][product-iter]]
+;; [[[[file:~/SICP-group/Answers.org::product-iter][product-iter]]][product-iter]]
 (define (product-iter term a next b)
   (define (iter a result)
     (if (> a b)
@@ -61,7 +61,7 @@
           (x2 (+ x 1)))
       (* (/ x x1) (/ x x2))))
   (* 2.0 (product-iter div 2 (lambda (z) (+ z 2)) n)))
-;; [[[[file:~/SICP-group/1/Answers.org::product-rec][product-rec]]][product-rec]]
+;; [[[[file:~/SICP-group/Answers.org::product-rec][product-rec]]][product-rec]]
 (define (product-rec term a next b)
   (if (> a b)
       1

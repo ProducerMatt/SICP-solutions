@@ -1,6 +1,6 @@
-;; [[file:../Answers.org::findsomeprimes][findsomeprimes]]
-;; [[[[file:~/SICP-group/1/Answers.org::find-divisor-faster-real][find-divisor-faster-real]]][find-divisor-faster-real]]
-;; [[[[file:~/SICP-group/1/Answers.org::square][square]]][square]]
+;; [[file:../../Answers.org::findsomeprimes][findsomeprimes]]
+;; [[[[file:~/SICP-group/Answers.org::find-divisor-faster-real][find-divisor-faster-real]]][find-divisor-faster-real]]
+;; [[[[file:~/SICP-group/Answers.org::square][square]]][square]]
 (define (square x)
   (* x x))
 ;; square ends here

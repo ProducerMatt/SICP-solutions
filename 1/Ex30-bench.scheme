@@ -1,5 +1,5 @@
-;; [[file:Answers.org::sum-bench][sum-bench]]
-;; [[[[file:~/SICP-group/1/Answers.org::print-table][print-table]]][print-table]]
+;; [[file:../Answers.org::sum-bench][sum-bench]]
+;; [[[[file:~/SICP-group/Answers.org::print-table][print-table]]][print-table]]
 (use-modules (ice-9 format))
 (define* (print-row ll #:key (mode #f))
   (let ((fmtstr
@@ -27,7 +27,7 @@
           ((<= 1 (length table)) (iter table))
           (else error "Invalid Input??")))
 ;; print-table ends here
-;; [[[[file:~/SICP-group/1/Answers.org::mattbench2][mattbench2]]][mattbench2]]
+;; [[[[file:~/SICP-group/Answers.org::mattbench2][mattbench2]]][mattbench2]]
 (define (mattbench2 f n)
   ;; Executes "f" for n times, and returns how long it took.
   ;; f is a lambda that takes no arguments, a.k.a. a "thunk"
@@ -47,14 +47,14 @@
   (list (iter n) ;; result of last call of f
         (/ (how-long) (* n 1.0))));; Divide by iterations so changed n has no effect
 ;; mattbench2 ends here
-;; [[[[file:~/SICP-group/1/Answers.org::sum][sum]]][sum]]
+;; [[[[file:~/SICP-group/Answers.org::sum][sum]]][sum]]
 (define (sum term a next b)
   (if (> a b)
       0
       (+ (term a)
          (sum term (next a) next b))))
 ;; sum ends here
-;; [[[[file:~/SICP-group/1/Answers.org::sum-iter][sum-iter]]][sum-iter]]
+;; [[[[file:~/SICP-group/Answers.org::sum-iter][sum-iter]]][sum-iter]]
 (define (sum-iter term a next b)
   (define (iter a result)
     (if (> a b)
