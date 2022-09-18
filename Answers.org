@@ -5371,3 +5371,123 @@ SUCCEED at fixed-point-improve still working
 SUCCEED at sqrt-improve still working
 #+end_EXAMPLE
 
+* Chapter 2: Building Abstractions with Data
+The basic representations of data we've used so far aren't enough to deal with
+complex, real-world phenomena. We need to combine these representations to form
+*compound data*.
+
+The technique of isolating how data objects are /represented/ from how they are
+/used/ is called *data abstraction*.
+
+** 2.1.1: Example: Arithmetic Operations for Rational Numbers
+Lisp gives the procedures ~cons~, ~car~, and ~cdr~ to create *pairs*. This is an
+easy system for representing rational numbers.
+
+Note that the system proposed for representing and working with rational numbers
+has *abstraction barriers* isolating different parts of the system. The parts
+that use rational numbers don't know how the constructors and selectors for
+rational numbers work, and the constructors and selectors use the underlying
+Lisp interpreter's pair functions without caring how they work.
+
+Note that these abstraction layers allow the developer to change the underlying
+architecture without modifying the programs that depend on it.
+
+** Exercise 2.1
+*** Question
+#+begin_quote
+Define a better version of ~make-rat~ that handles both positive and negative
+arguments. ~make-rat~ should normalize the sign so that if the rational number
+is positive, both the numerator and denominator are positive, and if the
+rational number is negative, only the numerator is negative.
+#+end_quote
+
+*** Answer
+
+** Exercise 2.2
+*** Question
+Consider the problem of representing line segments in a plane. Each segment is
+represented as a pair of points: a starting point and an ending point. Define a
+constructor ~make-segment~ and selectors ~start-segment~ and ~end-segment~ that
+define the representation of segments in terms of points. Furthermore, a point
+can be represented as a pair of numbers: the \(x\) coordinate and the \(y\)
+coordinate. Accordingly, specify a constructor ~make-point~ and selectors
+~x-point~ and ~y-point~ that define this representation. Finally, using your
+selectors and constructors, define a procedure ~midpoint-segment~ that takes a
+line segment as argument and returns its midpoint (the point whose coordinates
+are the average of the coordinates of the endpoints). To try your procedures,
+you'll need a way to print points:
+
+#+NAME: print-point
+#+BEGIN_SRC scheme -n :eval no-export :output silent
+(define (print-point p)
+  (newline)
+  (display "(")
+  (display (x-point p))
+  (display ",")
+  (display (y-point p))
+  (display ")"))
+#+END_SRC
+*** Answer
+** 2.1.3: What Is Meant by Data?
+We can consider data as being a collection of selectors and constructors,
+together with specific conditions that these procedures must fulfill in order to
+be a valid representation. For example, in the case of our rational number
+implementation, for rational number \(x\) made with numerator \(n\) and
+denominator \(d\), dividing the result of src_scheme{(numer x)} over the result
+of src_scheme{(denom x)} should be equivalent to dividing \(n\) over \(d\).
+
+** 2.2: Hierarchical Data and the Closure Property
+~cons~ pairs can be used to construct more complex data-types.
+
+file:2/cons-cells.jpeg
+
+The ability to combine things using an operation, then combine those results
+using the same operation, can be called the *closure property*. ~cons~ can
+create pairs whose elements are pairs, which satisfies the closure property.
+This property enables you to create hierarchical structures. We've already
+regularly used the closure property in creating procedures composed of other
+procedures.
+
+#+begin_quote
+  *Definitions of "closure"*
+
+  The use of the word "closure" here comes from abstract algebra, where a set of
+  elements is said to be closed under an operation if applying the operation to
+  elements in the set produces an element that is again an element of the set.
+  The Lisp community also (unfortunately) uses the word "closure" to describe a
+  totally unrelated concept: A closure is an implementation technique for
+  representing procedures with free variables. We do not use the word "closure"
+  in this second sense in this book.
+#+end_quote
+
+** 2.2.3: Sequences as Conventional Interfaces
+Abstractions are an important part of making code clearer and more easy to
+understand. One beneficial manner of abstraction is making available
+conventional interfaces for working with compound data, such as ~filter~ and
+~map~.
+
+This allows for easily making "signal-flow" conceptions of processes:
+
+#+begin_src mermaid :file 2/fig/t_2-2-3.png
+graph TD;
+    A(enumerate: tree leaves)-->B(filter: odd?);
+    B-->C(map: square);
+    C-->D(accumulate: +, 0);
+#+end_src
+
+#+RESULTS:
+[[file:2/fig/t_2-2-3.png]]
+
+** 2.2.4: Example: A Picture Language
+Authors describe a possible implementation of a "picture language" that tiles,
+patterns, and warps images according to a specification. This language consists
+of:
+
+- a *painter* which makes an image within a specified parallelogram shaped
+  frame. This is the most primitive element.
+- *Operations* which make new painters from other painters. For example:
+  - /beside/ takes two painters, producing a new painter that puts one in the
+    left half and one in the right half.
+  - /flip-horiz/ takes one painter and produces another to draw its image
+    right-to-left reversed. These are defined as Scheme procedures and therefore
+    have all the properties of Scheme procedures.
