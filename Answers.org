@@ -273,7 +273,8 @@ can be called /procedural epistemology/.
   averaging \(G\) and \(x/G\), keep improving until the guess is good enough.
 
 **** Techniques for controlling complexity
-- Black-box abstraction :: Encapsulating an operation so the details of it are irrelevant.
+- Black-box abstraction :: Encapsulating an operation so the details of it are
+  irrelevant.
 
   The fixed point of a function \(f()\) is a value \(y\) such that \(f(y) = y\).
   Method for finding a fixed point: start with a guess for \(y\) and keep applying
@@ -288,7 +289,8 @@ can be called /procedural epistemology/.
 
   Black-box abstraction
   1. Start with primitive objects of procedures and data.
-  2. Combination: combine procedures with /composition/, combine data with /construction/ of compound data.
+  2. Combination: combine procedures with /composition/, combine data with
+     /construction/ of compound data.
   3. Abstraction: defining procedures and abstracting data. Capture common
      patterns by making high-order procedures composed of other procedures. Use
      data as procedures.
@@ -297,15 +299,16 @@ can be called /procedural epistemology/.
 
   - How do you make operations generalized?
   - How do you make large-scale structure and modularity?
-    - Object-oriented programming :: thinking of your structure as a society of discrete but interacting parts.
-    - Operations on aggregates :: thinking of your structure as operating on a stream, comparable to signal processing. /(Needs clarification.)/
+    - Object-oriented programming :: thinking of your structure as a society of
+      discrete but interacting parts.
+    - Operations on aggregates :: thinking of your structure as operating on a
+      stream, comparable to signal processing. /(Needs clarification.)/
 
 - Metalinguistic abstractions :: Making new languages. This changes the way you
   interact with the system by letting you emphasize some parts and deemphasize
   other parts.
 
-* Chapter 1
-** 1: Building Abstractions with Procedures
+* Chapter 1: Building Abstractions with Procedures
 *Computational processes* are abstract 'beings' that inhabit computers. Their
 evolution is directed by a pattern of rules called a *program*, and processes
 manipulate other abstract things called *data*.
@@ -1035,8 +1038,8 @@ My first attempt works, but needs an arbitrary limit to stop infinite loops:
 | 100 | 4.641588833612779 |
 :end:
 
-However, this will hang on an infinite loop when trying to run src_scheme{(cbrt 100)}.
-I speculate it's a floating point precision issue with the "improve"
+However, this will hang on an infinite loop when trying to run src_scheme{(cbrt
+100)}. I speculate it's a floating point precision issue with the "improve"
 algorithm. So to avoid it I'll just keep track of the last guess and stop
 improving when there's no more change occurring. Also while researching I
 discovered that (again due to floating point) src_scheme{(cbrt -2)} loops
@@ -1315,9 +1318,15 @@ Consider a recursive procedure for computing Fibonacci numbers:
                  (fib (- n 2))))))
 #+end_src
 
-The resulting process splits into two with every iteration, creating a tree of computations, many of which are duplicates of previous computations. This kind of pattern is called *tree-recursion*. However, this one is quite inefficient. The time and space required grows exponentially with the number of iterations requested.
+The resulting process splits into two with every iteration, creating a tree of
+computations, many of which are duplicates of previous computations. This kind
+of pattern is called *tree-recursion*. However, this one is quite inefficient.
+The time and space required grows exponentially with the number of iterations
+requested.
 
-Instead, it makes much more sense to start from ~Fib(1) ~ 1~ and ~Fib(0) ~ 0~ and iterate upwards to the desired value. This only requires a linear number of steps relative to the input.
+Instead, it makes much more sense to start from ~Fib(1) ~ 1~ and ~Fib(0) ~ 0~
+and iterate upwards to the desired value. This only requires a linear number of
+steps relative to the input.
 
 #+begin_src scheme
 (define (fib n)
@@ -1326,7 +1335,10 @@ Instead, it makes much more sense to start from ~Fib(1) ~ 1~ and ~Fib(0) ~ 0~ an
   (if (= count 0) b (fib-iter (+ a b) a (- count 1))))
 #+end_src
 
-However, notice that the inefficient tree-recursive version is a fairly straightforward translation of the Fibonacci sequence's definition, while the iterative version required redefining the process as an iteration with three variables.
+However, notice that the inefficient tree-recursive version is a fairly
+straightforward translation of the Fibonacci sequence's definition, while the
+iterative version required redefining the process as an iteration with three
+variables.
 
 *** Example: Counting change
 I should come back and try to make the "better algorithm" suggested.
@@ -1708,8 +1720,8 @@ I want to generate this graph algorithmically.
         ((= kinds-of-coins 5) 50)))
 #+end_src
 
-I'm not going to include the full printout of the src_scheme{(count-change 11)}, here's an
-example of what this looks like via ~1~.
+I'm not going to include the full printout of the src_scheme{(count-change 11)},
+here's an example of what this looks like via ~1~.
 #+NAME: count-change-test
 #+BEGIN_SRC scheme -n :eval no-export  :exports both :results output code
 <<count-change-graphviz>>
@@ -1928,7 +1940,8 @@ angle is considered “sufficiently small” if its magnitude is not greater tha
 #+end_src
 
 #+begin_quote
-How many times is the procedure ~p~ applied when src_scheme{(sine 12.15)} is evaluated?
+How many times is the procedure ~p~ applied when src_scheme{(sine 12.15)} is
+evaluated?
 #+end_quote
 
 *** Answer A
@@ -2559,20 +2572,23 @@ the attached list. so src_scheme{(T 0 1)} returns a fib function.
 :end:
 
 ** 1.2.5: Greatest Common Divisor
-A greatest common divisor (or GCD) for two integers is the largest integer that divides both of them. A GCD can be quickly found by transforming the problem like so:
-\[a \% b = r\]
+A greatest common divisor (or GCD) for two integers is the largest integer that
+divides both of them. A GCD can be quickly found by transforming the problem
+like so: \[a \% b = r\]
 
 \[\text{GCD}(a, b) = \text{GCD}(b, r)\]
 
-This eventually produces a pair where the second number is 0. Then, the GCD is the other number in the pair. This is Euclid's Algorithm.
+This eventually produces a pair where the second number is 0. Then, the GCD is
+the other number in the pair. This is Euclid's Algorithm.
 
-\[\begin{aligned}\text{GCD}(206,40) &= \text{GCD}(40,6)\\
-            &= \text{GCD}(6,4)\\
-            &= \text{GCD}(4,2)\\
-            &~ \text{GCD}(2,0) ~ 2\end{aligned}\]
+\[\begin{aligned}\text{GCD}(206,40) &= \text{GCD}(40,6)\\ &=
+            \text{GCD}(6,4)\\ &= \text{GCD}(4,2)\\ &~ \text{GCD}(2,0) ~
+            2\end{aligned}\]
 
 #+begin_quote
-  *Lamé's Theorem:* If Euclid's Algorithm requires \(k\) steps to compute the GCD of some pair, then the smaller number in the pair must be greater than or equal to the \(k^{th}\)Fibonacci number.
+  *Lamé's Theorem:* If Euclid's Algorithm requires \(k\) steps to compute the
+   GCD of some pair, then the smaller number in the pair must be greater than or
+   equal to the \(k^{th}\)Fibonacci number.
 #+end_quote
 
 ** Exercise 1.20
@@ -2702,14 +2718,28 @@ it's called 5 times.
 ** 1.2.6: Example: Testing for Primality
 Two algorithms for testing primality of numbers.
 
-1. \(\Theta(\sqrt{n})\): Start with \(x = 2\), check for divisibility with \(n\), if not then increment \(x\) by 1 and check again. If \(x^2 > n\) and you haven't found a divisor, \(n\) is prime.
-2. \(\Theta(\log n)\): Given a number \(n\), pick a random number \(a < n\) and compute the remainder of \(a^n\) modulo \(n\). If the result is not equal to \(a\), then \(n\) is certainly not prime. If it is \(a\), then chances are good that \(n\) is prime. Now pick another random number \(a\) and test it with the same method. If it also satisfies the equation, then we can be even more confident that \(n\) is prime. By trying more and more values of \(a\), we can increase our confidence in the result. This algorithm is known as the Fermat test.
+1. \(\Theta(\sqrt{n})\): Start with \(x = 2\), check for divisibility with
+   \(n\), if not then increment \(x\) by 1 and check again. If \(x^2 > n\) and
+   you haven't found a divisor, \(n\) is prime.
+2. \(\Theta(\log n)\): Given a number \(n\), pick a random number \(a < n\) and
+   compute the remainder of \(a^n\) modulo \(n\). If the result is not equal to
+   \(a\), then \(n\) is certainly not prime. If it is \(a\), then chances are
+   good that \(n\) is prime. Now pick another random number \(a\) and test it
+   with the same method. If it also satisfies the equation, then we can be even
+   more confident that \(n\) is prime. By trying more and more values of \(a\),
+   we can increase our confidence in the result. This algorithm is known as the
+   Fermat test.
 
 #+begin_quote
-  *Fermat's Little Theorem:* If \(n\) is a prime number and \(a\) is any positive integer less than \(n\), then \(a\) raised to the \(n^{th}\) power is congruent to \(a\) modulo \(n\). [Two numbers are /congruent modulo/ \(n\) if they both have the same remainder when divided by \(n\).]
+  *Fermat's Little Theorem:* If \(n\) is a prime number and \(a\) is any
+   positive integer less than \(n\), then \(a\) raised to the \(n^{th}\) power
+   is congruent to \(a\) modulo \(n\). [Two numbers are /congruent modulo/ \(n\)
+   if they both have the same remainder when divided by \(n\).]
 #+end_quote
 
-The Fermat test is a probabilistic algorithm, meaning its answer is likely to be correct rather than guaranteed to be correct. Repeating the test increases the likelihood of a correct answer.
+The Fermat test is a probabilistic algorithm, meaning its answer is likely to be
+correct rather than guaranteed to be correct. Repeating the test increases the
+likelihood of a correct answer.
 
 ** Exercise 1.21
 *** Text
@@ -2891,7 +2921,9 @@ the root of the project folder.
         (/ (how-long) (* n 1.0))));; Divide by iterations so changed n has no effect
 #+end_src
 
-I'm going to get some more precise times. First, I need a prime searching variant that doesn't bother benchmarking. This will call ~prime?~, which will be bound later since we'll be trying different methods.
+I'm going to get some more precise times. First, I need a prime searching
+variant that doesn't bother benchmarking. This will call ~prime?~, which will be
+bound later since we'll be trying different methods.
 #+NAME: search-for-primes-untimed
 #+BEGIN_SRC scheme -n :eval no-export :exports code :results silent
 (define (search-for-primes minimum goal)
@@ -2984,13 +3016,14 @@ is no point in checking to see if it is divisible by any larger even numbers.
 This suggests that the values used for test-divisor should not be 2, 3, 4, 5, 6,
 …, but rather 2, 3, 5, 7, 9, …. To implement this change, define a procedure
 ~next~ that returns 3 if its input is equal to 2 and otherwise returns its input
-plus 2. Modify the smallest-divisor procedure to use src_scheme{(next test-divisor)} instead
-of src_scheme{(+ test-divisor 1)}. With ~timed-prime-test~ incorporating this modified version
-of ~smallest-divisor~, run the test for each of the 12 primes found in Exercise
-1.22. Since this modification halves the number of test steps, you should expect
-it to run about twice as fast. Is this expectation confirmed? If not, what is
-the observed ratio of the speeds of the two algorithms, and how do you explain
-the fact that it is different from 2?
+plus 2. Modify the smallest-divisor procedure to use src_scheme{(next
+test-divisor)} instead of src_scheme{(+ test-divisor 1)}. With
+~timed-prime-test~ incorporating this modified version of ~smallest-divisor~,
+run the test for each of the 12 primes found in Exercise 1.22. Since this
+modification halves the number of test steps, you should expect it to run about
+twice as fast. Is this expectation confirmed? If not, what is the observed ratio
+of the speeds of the two algorithms, and how do you explain the fact that it is
+different from 2?
 #+end_quote
 *** A Comedy of Error (just the one)
 #+NAME: find-divisor-faster
@@ -4641,7 +4674,8 @@ src_scheme{(cont-frac n d k)} computes the value of the \(k\)-term finite contin
 fraction.
 #+end_quote
 *** Answer A
-A note: the "golden ratio" this code estimates is exactly =1.0= less than the golden ratio anyone else seems to be talking about.
+A note: the "golden ratio" this code estimates is exactly =1.0= less than the
+golden ratio anyone else seems to be talking about.
 #+NAME: cont-frac
 #+BEGIN_SRC scheme -n :eval no-export :results silent
 (define (cont-frac n d k)
@@ -5061,7 +5095,8 @@ arithmetic operations you need are available as primitives.
 #+end_quote
 *** Answer
 So this is strange. Back in my original workthrough of this book, I'd decided
-that finding an \(n\)th root required \(\lfloor\sqrt{n}\rfloor\) dampings. With a solution like this:
+that finding an \(n\)th root required \(\lfloor\sqrt{n}\rfloor\) dampings. With
+a solution like this:
 #+BEGIN_SRC scheme :eval no-export :results silent
 <<fixed-point-txt>>
 <<repeated>>
@@ -5162,7 +5197,10 @@ Root 32, Damp 4: 1.0442737140494485
 #+end_example
 :end:
 
-Let's automatically find how many dampings are necessary. We can make a program that finds higher and higher \(n\)th roots, and adds another layer of damping when it hits the error. It returns a list of \(n\)th roots along with how many dampings were needed to find them.
+Let's automatically find how many dampings are necessary. We can make a program
+that finds higher and higher \(n\)th roots, and adds another layer of damping
+when it hits the error. It returns a list of \(n\)th roots along with how many
+dampings were needed to find them.
 
 #+NAME: nthtester
 #+BEGIN_SRC scheme :eval no-export :results value table :exports code :hlines no :session scheme
