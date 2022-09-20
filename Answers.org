@@ -5514,6 +5514,36 @@ rational number is negative, only the numerator is negative.
 #+end_quote
 
 *** Answer
+#+NAME: make-rat
+#+BEGIN_SRC scheme -n :eval no-export :results silent
+<<abs>>
+(define (make-rat n d)
+  (let ((nn (< n 0))
+        (dn (< d 0)))
+    (cond ((not (or nn dn))
+           (cons n d))
+          ((and nn dn)
+           (cons (- n) (- d)))
+          (else
+           (cons (- (abs n)) (abs d))))))
+(define (numer x) (car x))
+(define (denom x) (cdr x))
+#+end_src
+#+BEGIN_SRC scheme -n :eval no-export :results output :exports both
+<<make-rat>>
+<<print-rat-txt>>
+<<rat-ops-txt>>
+(print-rat (make-rat -1 -2))
+(print-rat (make-rat -1 2))
+(print-rat (make-rat 1 -2))
+#+end_src
+
+#+RESULTS[d06ed3fdea2e0af82dcf9a69b0684cd6c8f94736]:
+#+begin_EXAMPLE
+1/2
+-1/2
+-1/2
+#+end_EXAMPLE
 
 ** Exercise 2.2
 *** Question
