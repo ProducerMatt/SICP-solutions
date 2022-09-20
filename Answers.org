@@ -3537,24 +3537,19 @@ to see more of the function.
  (testit search-for-primes))
 #+END_SRC
 
-#+NAME: smd-vs-fermat
-| 3802.45146 | 13397.91871 | 32948.31241 | 73237.64777 | 299326.76182 | 678512.75719 | 2064911.33345 | 7065717.58395 | 20198370.27007 | 60956807.83034 |
-| 237945.8945 | 319761.90842 | 391573.47557 | 448501.96232 | 614009.08547 | 661205.34772 | 700058.30723 | 2852221.29076 | 3717690.96246 | 3995948.05596 |
-
-
 #+NAME: 1-24-massage2
-#+BEGIN_SRC scheme :eval no-export :results value :var table=smd-vs-fermat :exports results :rownames no :colnames no
-<<print-table-spaced>>
+#+BEGIN_SRC scheme :eval no-export :results value table :exports none :rownames no :colnames no :session scheme
+
+(let ((table '((3802.45146 13397.91871 32948.31241 73237.64777 299326.76182 678512.75719 2064911.33345 7065717.58395 20198370.27007 60956807.83034) (237945.8945 319761.90842 391573.47557 448501.96232 614009.08547 661205.34772 700058.30723 2852221.29076 3717690.96246 3995948.05596))))
 (use-srfis '(1))
-(zip '("min" "---" 1000 10000 100000 1000000 10000000 100000000 1000000000 10000000000 100000000000 1000000000000)
-     (append '("integrated" "---") (car table))
-     (append '("fermat (100 guesses)" "---") (cadr table)))
+(zip '("min" 1000 10000 100000 1000000 10000000 100000000 1000000000 10000000000 100000000000 1000000000000)
+     (append '("integrated") (car table))
+     (append '("fermat (100 guesses)") (cadr table))))
 #+END_SRC
 
-#+RESULTS[7524e2c0a297987b6bf024a6164e93e6b71ca7f2]: 1-24-massage2
-:results:
+#+RESULTS[1cd094d12aae7b8d5baef1f5e2c9261f806cffc4]: 1-24-massage2
+#+begin_EXAMPLE
 |           min |     integrated | fermat (100 guesses) |
-|           --- |            --- |                  --- |
 |          1000 |     3802.45146 |          237945.8945 |
 |         10000 |    13397.91871 |         319761.90842 |
 |        100000 |    32948.31241 |         391573.47557 |
@@ -3565,7 +3560,7 @@ to see more of the function.
 |   10000000000 |  7065717.58395 |        2852221.29076 |
 |  100000000000 | 20198370.27007 |        3717690.96246 |
 | 1000000000000 | 60956807.83034 |        3995948.05596 |
-:end:
+#+end_EXAMPLE
 
 #+begin_src gnuplot :var data=1-24-massage2 :file 1/fig/1-24-2.png :exports results :rownames no :colnames no :hlines no :cache no :eval no-export
 reset
