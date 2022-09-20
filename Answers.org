@@ -44,7 +44,8 @@
 #+LATEX_HEADER: \usepackage{etoolbox}
 #+LATEX_HEADER: \BeforeBeginEnvironment{minted}{\begin{mdframed}[style=theoremstyle]}
 #+LATEX_HEADER: \AfterEndEnvironment{minted}{\end{mdframed}}
-
+# TODO: keep minted inline code from being automatically wrapped
+#+LATEX_HEADER: \setmintedinline{breakbytoken=false,breakbytokenanywhere=false,breaklines=false,breakaftergroup=false}
 # listfiles causes latex to make a list of all files used during processing
 #+LATEX_HEADER: \listfiles
 
