@@ -5442,6 +5442,69 @@ Note that these abstraction layers allow the developer to change the underlying
 architecture without modifying the programs that depend on it.
 
 ** Exercise 2.1
+*** Text
+#+NAME: rat-ops-txt
+#+BEGIN_SRC scheme -n :eval no-export :results silent
+(define (add-rat x y)
+  (make-rat (+ (* (numer x) (denom y))
+               (* (numer y) (denom x)))
+            (* (denom x) (denom y))))
+
+(define (sub-rat x y)
+  (make-rat (- (* (numer x) (denom y))
+               (* (numer y) (denom x)))
+            (* (denom x) (denom y))))
+
+(define (mul-rat x y)
+  (make-rat (* (numer x) (numer y))
+            (* (denom x) (denom y))))
+
+(define (div-rat x y)
+  (make-rat (* (numer x) (denom y))
+            (* (denom x) (numer y))))
+
+(define (equal-rat? x y)
+  (= (* (numer x) (denom y))
+     (* (numer y) (denom x))))
+#+end_src
+
+#+NAME: make-rat-txt
+#+BEGIN_SRC scheme -n :eval no-export :results silent
+(define (make-rat n d) (cons n d))
+(define (numer x) (car x))
+(define (denom x) (cdr x))
+#+end_src
+
+#+NAME: print-rat-txt
+#+BEGIN_SRC scheme -n :eval no-export :results silent
+(define (print-rat x)
+  (newline)
+  (display (numer x))
+  (display "/")
+  (display (denom x)))
+#+end_src
+
+#+NAME: test-rats
+#+BEGIN_SRC scheme -n :eval no-export :results silent
+(define one-half (make-rat 1 2))
+(define one-third (make-rat 1 3))
+(print-rat one-half)
+(print-rat
+ (mul-rat one-half one-third))
+#+end_src
+#+BEGIN_SRC scheme -n :eval no-export :results output :exports results
+<<make-rat-txt>>
+<<print-rat-txt>>
+<<rat-ops-txt>>
+<<test-rats>>
+#+end_src
+
+#+RESULTS[5284680400d64a3dbc6e21d0d8290e327844ee81]:
+#+begin_EXAMPLE
+1/2
+1/6
+#+end_EXAMPLE
+
 *** Question
 #+begin_quote
 Define a better version of ~make-rat~ that handles both positive and negative
