@@ -5518,6 +5518,19 @@ rational number is negative, only the numerator is negative.
 #+BEGIN_SRC scheme -n :eval no-export :results silent
 <<abs>>
 (define (make-rat n d)
+  (cond ((not (or (< n 0)
+              (< d 0)))
+         (cons n d))
+        ((and (< n 0)
+              (< d 0))
+         (cons (- n) (- d)))
+        (else
+         (cons (- (abs n)) (abs d)))))
+(define (numer x) (car x))
+(define (denom x) (cdr x))
+
+;; Bonus: an attempt to optimize
+(define (make-rat-opt n d)
   (let ((nn (< n 0))
         (dn (< d 0)))
     (cond ((not (or nn dn))
@@ -5526,25 +5539,66 @@ rational number is negative, only the numerator is negative.
            (cons (- n) (- d)))
           (else
            (cons (- (abs n)) (abs d))))))
-(define (numer x) (car x))
-(define (denom x) (cdr x))
 #+end_src
 #+BEGIN_SRC scheme -n :eval no-export :results output :exports both
 <<make-rat>>
 <<print-rat-txt>>
 <<rat-ops-txt>>
-(print-rat (make-rat -1 -2))
-(print-rat (make-rat -1 2))
-(print-rat (make-rat 1 -2))
+(load "mattcheck2.scm")
+(load "mattbench.scm")
+(mattcheck "make-rat double negative"
+           (cons 1 2)
+           (make-rat -1 -2))
+(mattcheck "make-rat numerator negative"
+           (cons -1 2)
+           (make-rat -1 2))
+(mattcheck "make-rat denominator negative"
+           (cons -1 2)
+           (make-rat 1 -2))
+(mattcheck "make-rat-opt double negative"
+           (cons 1 2)
+           (make-rat-opt -1 -2))
+(mattcheck "make-rat-opt numerator negative"
+           (cons -1 2)
+           (make-rat-opt -1 2))
+(mattcheck "make-rat-opt denominator negative"
+           (cons -1 2)
+           (make-rat-opt 1 -2))
 #+end_src
 
-#+RESULTS[d06ed3fdea2e0af82dcf9a69b0684cd6c8f94736]:
+#+RESULTS[6a599c6ffbdd54a018b8f6fcc59203abdefb8621]:
 #+begin_EXAMPLE
-1/2
--1/2
--1/2
+SUCCEED at make-rat double negative
+SUCCEED at make-rat numerator negative
+SUCCEED at make-rat denominator negative
+SUCCEED at make-rat-opt double negative
+SUCCEED at make-rat-opt numerator negative
+SUCCEED at make-rat-opt denominator negative
 #+end_EXAMPLE
 
+#+BEGIN_SRC scheme -n :noeval :results output :exports results :tangle 2/Ex1-bench.scm
+(use-modules (ice-9 format))
+<<make-rat>>
+<<print-rat-txt>>
+<<rat-ops-txt>>
+(load "../mattbench.scm")
+
+(let ((tryit (λ(f)
+  (f 1 2)
+  (f -1 2)
+  (f 1 -2)
+  (f -1 -2))))
+
+(format #t "~&unoptimized make-rat: ~a~%"(mattbench2 (λ()(tryit make-rat)) 500000000))
+(format #t "~&optimized make-rat: ~a~%"(mattbench2 (λ()(tryit make-rat-opt)) 500000000)))
+#+end_src
+
+My "optimized" version shows no benefit at all:
+#+RESULTS:
+#+BEGIN_EXAMPLE
+unoptimized make-rat: ((1 . 2) 231.74267794)
+optimized make-rat: ((1 . 2) 233.99087033)
+#+END_EXAMPLE
 ** Exercise 2.2
 *** Question
 Consider the problem of representing line segments in a plane. Each segment is
@@ -5570,6 +5624,35 @@ you'll need a way to print points:
   (display ")"))
 #+END_SRC
 *** Answer
+#+NAME: make-point
+#+BEGIN_SRC scheme -n :eval no-export :results silent
+(define (make-point x y)
+  (cons x y))
+(define (x-point p)
+  (car p))
+(define (y-point p)
+  (cdr p))
+(define (make-segment start end)
+  (cons start end))
+(define (start-segment seg)
+  (car seg))
+(define (end-segment seg)
+  (cdr seg))
+(define (midpoint-segment seg)
+  (make-point (average (x-point (start-segment seg))
+                       (x-point (end-segment seg)))
+              (average (y-point (start-segment seg))
+                       (y-point (end-segment seg)))))
+(define (midpoint-segment-opt seg)
+  (let ((ax (x-point (start-segment seg)))
+        (bx (x-point (end-segment seg)))
+        (ay (y-point (start-segment seg)))
+        (by (y-point (end-segment seg))))
+  (make-point (average ax
+                       bx)
+              (average ay
+                       by))))
+#+end_src
 ** 2.1.3: What Is Meant by Data?
 We can consider data as being a collection of selectors and constructors,
 together with specific conditions that these procedures must fulfill in order to
