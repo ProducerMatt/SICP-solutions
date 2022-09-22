@@ -5791,17 +5791,15 @@ from \(\mathrm{C}\), and as far from \(\mathrm{C}\) as \(\mathrm{A}\) is from
                 (sub-points a b))))
 
 (define (rect-height R)
-  (let ((diffP (sub-points (rect-b R)
-                           (rect-c R))))
-    (+ (abs (x-point diffP))
-       (abs (y-point diffP)))))
+  (length-segment
+   (make-segment (rect-b R)
+                  (rect-c R))))
 (define (rect-width R)
-  (let ((diffP (sub-points (rect-b R)
-                           (rect-a R))))
-    (- (+ (abs (x-point diffP))
-          (abs (y-point diffP))))))
+  (length-segment
+   (make-segment (rect-b R)
+                  (rect-a R))))
 
-(define (length-segment seg) ; valid but not necessary
+(define (length-segment seg)
   (let ((diffP (sub-points (start-segment seg)
                            (end-segment seg))))
     (+ (abs (x-point diffP))
@@ -5813,46 +5811,55 @@ from \(\mathrm{C}\), and as far from \(\mathrm{C}\) as \(\mathrm{A}\) is from
 (load "mattcheck2.scm")
 
 <<rect-4pt>>
+<<rect-area-peri>>
 
 (let* ((a (make-point 13 14))
        (b (make-point 14 14))
        (c (make-point 14 13))
        (d (make-point 13 13))
-       (R (make-rect a b c))
-       (Rr (make-rect c d a))
+       (ABC (make-rect a b c))
+       (CDA (make-rect c d a))
        (w (make-point -2.0 -2.0))
        (x (make-point -0.5 -0.5))
        (y (make-point -1.5 0.5))
        (z (make-point -3.0 -1.0))
-       (RR (make-rect w x y)))
+       (WXY (make-rect w x y)))
   (mattcheck "make-rect"
-             R
+             ABC
              (cons (cons a b) c))
   (mattcheck "rect-d and rect-d-alt (ABCD)"
-             (rect-d R)
-             (rect-d-alt R)
+             (rect-d ABC)
+             (rect-d-alt ABC)
              d)
   (mattcheck "rect-d and rect-d-alt (CDAB)"
-             (rect-d Rr)
-             (rect-d-alt Rr)
+             (rect-d CDA)
+             (rect-d-alt CDA)
              b)
   (mattcheck "rect-d and rect-d-alt (WXYZ)"
-             (rect-d RR)
-             (rect-d-alt RR)
+             (rect-d WXY)
+             (rect-d-alt WXY)
              z)
   (mattcheck "rect-d and rect-d-alt (XYZW)"
              (rect-d (make-rect x y z))
-             w))
+             w)
+  (mattcheck "rect-area ABCD"
+             (rect-area ABC)
+             (rect-area CDA)
+             1)
+  (mattcheck "rect-area WXYZ"
+             (rect-area WXY)
+             6.0))
 #+end_src
 
-#+RESULTS[389e901c5db2cf7eb53c0107c36f14ac071f40d8]: rect-test
+#+RESULTS[095af1318c9f2fe4b9a6120ed6f626425f8e92b5]: rect-test
 #+begin_EXAMPLE
-<unknown-location>: warning: possibly unbound variable `mattcheck'
 SUCCEED at make-rect
 SUCCEED at rect-d and rect-d-alt (ABCD)
 SUCCEED at rect-d and rect-d-alt (CDAB)
 SUCCEED at rect-d and rect-d-alt (WXYZ)
 SUCCEED at rect-d and rect-d-alt (XYZW)
+SUCCEED at rect-area ABCD
+SUCCEED at rect-area WXYZ
 #+end_EXAMPLE
 
 ** 2.1.3: What Is Meant by Data?
