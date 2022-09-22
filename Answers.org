@@ -5790,20 +5790,21 @@ from \(\mathrm{C}\), and as far from \(\mathrm{C}\) as \(\mathrm{A}\) is from
     (add-points c
                 (sub-points a b))))
 
-(define (rect-height R)
-  (length-segment
-   (make-segment (rect-b R)
-                  (rect-c R))))
-(define (rect-width R)
-  (length-segment
-   (make-segment (rect-b R)
-                  (rect-a R))))
-
-(define (length-segment seg)
-  (let ((diffP (sub-points (start-segment seg)
-                           (end-segment seg))))
+(define (length-points a b)
+  (let ((diffP (sub-points a b)))
     (+ (abs (x-point diffP))
        (abs (y-point diffP)))))
+
+(define (rect-height R)
+  (length-points (rect-b R)
+                 (rect-c R)))
+(define (rect-width R)
+  (length-points (rect-b R)
+                 (rect-a R)))
+
+(define (length-segment seg)
+  (length-points (start-segment seg)
+                 (end-segment seg)))
 #+end_src
 
 #+NAME: rect-test
