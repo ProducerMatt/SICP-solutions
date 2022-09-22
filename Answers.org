@@ -5545,7 +5545,6 @@ rational number is negative, only the numerator is negative.
 <<print-rat-txt>>
 <<rat-ops-txt>>
 (load "mattcheck2.scm")
-(load "mattbench.scm")
 (mattcheck "make-rat double negative"
            (cons 1 2)
            (make-rat -1 -2))
@@ -5584,13 +5583,13 @@ SUCCEED at make-rat-opt denominator negative
 (load "../mattbench.scm")
 
 (let ((tryit (λ(f)
-  (f 1 2)
-  (f -1 2)
-  (f 1 -2)
-  (f -1 -2))))
+               (f 1 2)
+               (f -1 2)
+               (f 1 -2)
+               (f -1 -2))))
 
-(format #t "~&unoptimized make-rat: ~a~%"(mattbench2 (λ()(tryit make-rat)) 500000000))
-(format #t "~&optimized make-rat: ~a~%"(mattbench2 (λ()(tryit make-rat-opt)) 500000000)))
+  (format #t "~&unoptimized make-rat: ~a~%"(mattbench2 (λ()(tryit make-rat)) 500000000))
+  (format #t "~&optimized make-rat: ~a~%"(mattbench2 (λ()(tryit make-rat-opt)) 500000000)))
 #+end_src
 
 My "optimized" version shows no benefit at all:
@@ -5626,6 +5625,7 @@ you'll need a way to print points:
 *** Answer
 #+NAME: make-point
 #+BEGIN_SRC scheme -n :eval no-export :results silent
+<<average>>
 (define (make-point x y)
   (cons x y))
 (define (x-point p)
@@ -5653,6 +5653,208 @@ you'll need a way to print points:
               (average ay
                        by))))
 #+end_src
+#+NAME: midpoint-segment-test
+#+BEGIN_SRC scheme -n :eval no-export :results output :exports both
+<<make-point>>
+(load "mattcheck2.scm")
+(mattcheck "make-point"
+           (list 1 2)
+           (let ((p (make-point 1 2)))
+             (list (x-point p)
+                   (y-point p))))
+(let* ((p1 (make-point 1 2))
+      (p2 (make-point -1 -2))
+      (s (make-segment p1 p2)))
+  (mattcheck "make-segment"
+             (list p1 p2)
+             (list (start-segment s)
+                   (end-segment s)))
+  (mattcheck "midpoint-segment"
+              (make-point 0 0)
+              (midpoint-segment s))
+  (mattcheck "midpoint-segment-opt"
+              (make-point 0 0)
+              (midpoint-segment-opt s)))
+#+end_src
+
+#+RESULTS[141746ba8a525e713c10e21026fc2a808eda58b8]: midpoint-segment-test
+#+begin_EXAMPLE
+SUCCEED at make-point
+SUCCEED at make-segment
+SUCCEED at midpoint-segment
+SUCCEED at midpoint-segment-opt
+#+end_EXAMPLE
+
+#+BEGIN_SRC scheme -n :noeval :results output :exports results :tangle 2/Ex2-bench.scm
+(use-modules (ice-9 format))
+<<make-point>>
+(load "../mattbench.scm")
+
+(let* ((p1 (make-point 1.0 2.0))
+       (p2 (make-point -1.0 -2.0))
+       (s (make-segment p1 p2))
+       (tryit (λ(f)
+               (f s))))
+
+  (format #t "~&unoptimized midpoint-segment: ~a~%" (mattbench2 (λ()(tryit midpoint-segment)) 50000000))
+  (format #t "~&optimized midpoint-segment: ~a~%" (mattbench2 (λ()(tryit midpoint-segment-opt)) 50000000)))
+#+end_src
+
+And once again my bikeshedding is revealed:
+#+RESULTS:
+#+BEGIN_EXAMPLE
+unoptimized make-rat: ((0.0 . 0.0) 326.94653558)
+optimized make-rat: ((0.0 . 0.0) 331.83410742)
+#+END_EXAMPLE
+
+** Exercise 2.3
+*** Question
+Implement a representation for rectangles in a plane. (Hint: You may want to
+make use of Exercise 2.2.) In terms of your constructors and selectors, create
+procedures that compute the perimeter and the area of a given rectangle. Now
+implement a different representation for rectangles. Can you design your system
+with suitable abstraction barriers, so that the same perimeter and area
+procedures will work using either representation?
+*** Answer
+I don't really like the "wishful thinking" process the book advocates but since
+this question specifically regards abstraction, I'll start by writing the two
+requested procedures first.
+
+#+NAME: rect-area-peri
+#+BEGIN_SRC scheme -n :eval no-export :results silent
+(define (rect-area R)
+  (* (rect-height R)
+     (rect-width R)))
+
+(define (rect-peri R)
+  (* 2
+     (+ (rect-height R)
+        (rect-width R))))
+#+end_src
+
+So my "wishlist" is just for src_scheme{(rect-area R)} and src_scheme{(rect-width R)}.
+
+So, my first implementation of a rectangle will be of a list of 3 points
+\(\mathrm{ABC}\), with the fourth point \(\mathrm{D}\) being constructed from
+the others. I haven't done geometry lessons in a while but logically I can
+deduce that \(\mathrm{D}\) is as far from \(\mathrm{A}\) as \(\mathrm{B}\) is
+from \(\mathrm{C}\), and as far from \(\mathrm{C}\) as \(\mathrm{A}\) is from
+\(\mathrm{B}\). by experimentation I've figured out that \(\mathrm{A} +
+(\mathrm{C}-\mathrm{B}\).
+
+#+NAME: rect-4pt
+#+BEGIN_SRC scheme -n :eval no-export :results silent
+;;   AB = width
+;;(0,1) (1,1)
+;; A-----B
+;; |     | BC = height
+;; D-----C
+;;(0,0) (1,0)
+;; could be rotated any direction
+<<make-point>>
+(define (make-rect a b c)
+  (cons (cons a b) c))
+(define (rect-a R)
+  (caar R))
+(define (rect-b R)
+  (cdar R))
+(define (rect-c R)
+  (cdr R))
+;(define (rect-d R)
+;  (make-point (x-point (rect-a R))
+;              (y-point (rect-c R))))
+;; Wait, this won't work if the rectangle is angled.
+
+(define (sub-points a b)
+  (make-point (- (x-point a)
+                 (x-point b))
+              (- (y-point a)
+                 (y-point b))))
+
+(define (add-points a b)
+  (make-point (+ (x-point a)
+                 (x-point b))
+              (+ (y-point a)
+                 (y-point b))))
+
+(define (rect-d R)
+  (let ((a (rect-a R))
+        (b (rect-b R))
+        (c (rect-c R)))
+    (add-points a
+                (sub-points c b))))
+(define (rect-d-alt R) ; should be mathematically identical.
+  (let ((a (rect-a R))
+        (b (rect-b R))
+        (c (rect-c R)))
+    (add-points c
+                (sub-points a b))))
+
+(define (rect-height R)
+  (let ((diffP (sub-points (rect-b R)
+                           (rect-c R))))
+    (+ (abs (x-point diffP))
+       (abs (y-point diffP)))))
+(define (rect-width R)
+  (let ((diffP (sub-points (rect-b R)
+                           (rect-a R))))
+    (- (+ (abs (x-point diffP))
+          (abs (y-point diffP))))))
+
+(define (length-segment seg) ; valid but not necessary
+  (let ((diffP (sub-points (start-segment seg)
+                           (end-segment seg))))
+    (+ (abs (x-point diffP))
+       (abs (y-point diffP)))))
+#+end_src
+
+#+NAME: rect-test
+#+BEGIN_SRC scheme -n :eval no-export :results output :exports both
+(load "mattcheck2.scm")
+
+<<rect-4pt>>
+
+(let* ((a (make-point 13 14))
+       (b (make-point 14 14))
+       (c (make-point 14 13))
+       (d (make-point 13 13))
+       (R (make-rect a b c))
+       (Rr (make-rect c d a))
+       (w (make-point -2.0 -2.0))
+       (x (make-point -0.5 -0.5))
+       (y (make-point -1.5 0.5))
+       (z (make-point -3.0 -1.0))
+       (RR (make-rect w x y)))
+  (mattcheck "make-rect"
+             R
+             (cons (cons a b) c))
+  (mattcheck "rect-d and rect-d-alt (ABCD)"
+             (rect-d R)
+             (rect-d-alt R)
+             d)
+  (mattcheck "rect-d and rect-d-alt (CDAB)"
+             (rect-d Rr)
+             (rect-d-alt Rr)
+             b)
+  (mattcheck "rect-d and rect-d-alt (WXYZ)"
+             (rect-d RR)
+             (rect-d-alt RR)
+             z)
+  (mattcheck "rect-d and rect-d-alt (XYZW)"
+             (rect-d (make-rect x y z))
+             w))
+#+end_src
+
+#+RESULTS[389e901c5db2cf7eb53c0107c36f14ac071f40d8]: rect-test
+#+begin_EXAMPLE
+<unknown-location>: warning: possibly unbound variable `mattcheck'
+SUCCEED at make-rect
+SUCCEED at rect-d and rect-d-alt (ABCD)
+SUCCEED at rect-d and rect-d-alt (CDAB)
+SUCCEED at rect-d and rect-d-alt (WXYZ)
+SUCCEED at rect-d and rect-d-alt (XYZW)
+#+end_EXAMPLE
+
 ** 2.1.3: What Is Meant by Data?
 We can consider data as being a collection of selectors and constructors,
 together with specific conditions that these procedures must fulfill in order to
