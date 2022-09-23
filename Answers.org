@@ -5844,24 +5844,40 @@ from \(\mathrm{C}\), and as far from \(\mathrm{C}\) as \(\mathrm{A}\) is from
   (mattcheck "rect-d and rect-d-alt (XYZW)"
              (rect-d (make-rect x y z))
              w)
+  (mattcheck "rect-height"
+             (rect-height WXY)
+             2.0)
+  (mattcheck "rect-width"
+             (rect-width WXY)
+             3.0)
   (mattcheck "rect-area ABCD"
              (rect-area ABC)
              (rect-area CDA)
              1)
   (mattcheck "rect-area WXYZ"
              (rect-area WXY)
-             6.0))
+             6.0)
+  (mattcheck "rect-peri ABCD"
+             (rect-peri ABC)
+             4)
+  (mattcheck "rect-peri WXYZ"
+             (rect-peri WXY)
+             10.0))
 #+end_src
 
-#+RESULTS[095af1318c9f2fe4b9a6120ed6f626425f8e92b5]: rect-test
+#+RESULTS[dc2d808810c818ba412d3fc6b5d9e25f3beb70e2]: rect-test
 #+begin_EXAMPLE
 SUCCEED at make-rect
 SUCCEED at rect-d and rect-d-alt (ABCD)
 SUCCEED at rect-d and rect-d-alt (CDAB)
 SUCCEED at rect-d and rect-d-alt (WXYZ)
 SUCCEED at rect-d and rect-d-alt (XYZW)
+SUCCEED at rect-height
+SUCCEED at rect-width
 SUCCEED at rect-area ABCD
 SUCCEED at rect-area WXYZ
+SUCCEED at rect-peri ABCD
+SUCCEED at rect-peri WXYZ
 #+end_EXAMPLE
 
 *** Answer 2
@@ -5898,24 +5914,100 @@ added during conversion from Polar to Cartesian coordinates. In relation to my
 (define pi (* 4 (atan 1.0)))
 (define (radian deg)
   (* deg (/ pi 180.0)))
-;; rect-c: (cos(Theta),sin(Theta)) * width
+(define (vector-to-xy distance angle)
+      ;; rect-c: (cos(Theta),sin(Theta)) * width
+      (make-point (* (cos (radian angle))
+                     distance)
+                  (* (sin (radian angle))
+                     distance)))
+      ;; could also be rotated by 90 degrees just by using
+      ;;   (-sin(Theta),cos(Theta)) * height
 (define (rect-c R)
   (add-points
    (rect-origin R)
-   (make-point (* (cos (radian (rect-angle R)))
-                  (rect-width R))
-               (* (sin (radian (rect-angle R)))
-                  (rect-width R)))))
-;; rect-a can be rotated by 90 degrees just by using
-;;   (-sin(Theta),cos(Theta)) * height
+   (vector-to-xy (rect-width R) (rect-angle R))))
 (define (rect-a R)
   (add-points
    (rect-origin R)
-   (make-point (* (- (sin (radian (rect-angle R))))
-                  (rect-height R))
-               (* (cos (radian (rect-angle R)))
-                  (rect-height R)))))
+   (vector-to-xy (rect-height R)
+                 (+ 90 (rect-angle R)))))
+(define (rect-b R)
+  (add-points
+   (rect-origin R)
+   (add-points
+    (vector-to-xy (rect-width R) (rect-angle R))
+    (vector-to-xy (rect-height R)
+                  (+ 90 (rect-angle R))))))
 #+end_src
+
+#+NAME: rect-test2
+#+BEGIN_SRC scheme -n :eval no-export :results output :exports both
+(load "mattcheck2.scm")
+
+<<rect-ohwa>>
+<<rect-area-peri>>
+
+(let* ((a (make-point 13.0 14.0))
+       (b (make-point 14.0 14.0))
+       (c (make-point 14.0 13.0))
+       (d (make-point 13.0 13.0))
+       (ABC (make-rect d 1 1 0))
+       (CDA (make-rect b 1 1 180))
+       (w (make-point -2.0 -2.0))
+       (x (make-point -0.5 -0.5))
+       (y (make-point -1.5 0.5))
+       (z (make-point -3.0 -1.0))
+       (WXY (make-rect z 2.0 3.0 45)))
+  (mattcheck "make-rect"
+             ABC
+             (cons (cons d 1) (cons 1 0)))
+  (mattcheck "rect-b (ABCD)"
+             (rect-b ABC)
+             b)
+  (mattcheck "rect-b (CDAB)"
+             (rect-b CDA)
+             d)
+  (mattcheck "rect-b (WXYZ)"
+             (rect-b WXY)
+             x)
+  (mattcheck "rect-height"
+             (rect-height WXY)
+             2.0)
+  (mattcheck "rect-width"
+             (rect-width WXY)
+             3.0)
+  (mattcheck "rect-area ABCD"
+             (rect-area ABC)
+             (rect-area CDA)
+             1)
+  (mattcheck "rect-area WXYZ"
+             (rect-area WXY)
+             6.0)
+  (mattcheck "rect-peri ABCD"
+             (rect-peri ABC)
+             4)
+  (mattcheck "rect-peri WXYZ"
+             (rect-peri WXY)
+             10.0))
+#+end_src
+
+#+RESULTS[0e3753e557f87aea2e9ac64a162eb94d3eddb2c1]: rect-test2
+#+begin_EXAMPLE
+<unknown-location>: warning: possibly unbound variable `mattcheck'
+SUCCEED at make-rect
+SUCCEED at rect-b (ABCD)
+SUCCEED at rect-b (CDAB)
+FAIL at rect-b (WXYZ)
+expected: (-0.5 . -0.5)
+returned: (-2.292893218813452 . 2.5355339059327378)
+SUCCEED at rect-height
+SUCCEED at rect-width
+SUCCEED at rect-area ABCD
+SUCCEED at rect-area WXYZ
+SUCCEED at rect-peri ABCD
+SUCCEED at rect-peri WXYZ
+#+end_EXAMPLE
+
 ** 2.1.3: What Is Meant by Data?
 We can consider data as being a collection of selectors and constructors,
 together with specific conditions that these procedures must fulfill in order to
