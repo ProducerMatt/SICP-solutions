@@ -5715,7 +5715,7 @@ procedures that compute the perimeter and the area of a given rectangle. Now
 implement a different representation for rectangles. Can you design your system
 with suitable abstraction barriers, so that the same perimeter and area
 procedures will work using either representation?
-*** Answer
+*** Answer 1
 I don't really like the "wishful thinking" process the book advocates but since
 this question specifically regards abstraction, I'll start by writing the two
 requested procedures first.
@@ -5739,8 +5739,9 @@ So, my first implementation of a rectangle will be of a list of 3 points
 the others. I haven't done geometry lessons in a while but logically I can
 deduce that \(\mathrm{D}\) is as far from \(\mathrm{A}\) as \(\mathrm{B}\) is
 from \(\mathrm{C}\), and as far from \(\mathrm{C}\) as \(\mathrm{A}\) is from
-\(\mathrm{B}\). by experimentation I've figured out that \(\mathrm{A} +
-(\mathrm{C}-\mathrm{B}\).
+\(\mathrm{B}\). by experimentation I've figured out that
+\(\mathrm{D}=\mathrm{A} + (\mathrm{C}-\mathrm{B})=\mathrm{C} +
+(\mathrm{A}-\mathrm{B})\).
 
 #+NAME: rect-4pt
 #+BEGIN_SRC scheme -n :eval no-export :results silent
@@ -5863,6 +5864,58 @@ SUCCEED at rect-area ABCD
 SUCCEED at rect-area WXYZ
 #+end_EXAMPLE
 
+*** Answer 2
+My second implementation will be of a rectangle as an origin, height, width, and
+angle. Basically, height and width are two vectors originating from origin, with
+width going straight right and height offset \(90\deg\) from width. Angle is
+added during conversion from Polar to Cartesian coordinates. In relation to my
+1st implementation, point D is where the origin is.
+#+NAME: rect-ohwa
+#+BEGIN_SRC scheme -n :eval no-export :results silent :session scheme
+<<make-point>>
+;; origin is a (make-point), hwa are floats
+(define (make-rect origin height width angle)
+  (cons (cons origin height)
+        (cons width angle)))
+
+(define (rect-origin R)
+  (caar R))
+(define rect-d rect-origin)
+(define (rect-height R)
+  (cdar R))
+(define (rect-width R)
+  (cadr R))
+(define (rect-angle R)
+  (cddr R))
+
+;; I underestimated how much math this would take.
+(define (add-points a b)
+  (make-point (+ (x-point a)
+                 (x-point b))
+              (+ (y-point a)
+                 (y-point b))))
+
+(define pi (* 4 (atan 1.0)))
+(define (radian deg)
+  (* deg (/ pi 180.0)))
+;; rect-c: (cos(Theta),sin(Theta)) * width
+(define (rect-c R)
+  (add-points
+   (rect-origin R)
+   (make-point (* (cos (radian (rect-angle R)))
+                  (rect-width R))
+               (* (sin (radian (rect-angle R)))
+                  (rect-width R)))))
+;; rect-a can be rotated by 90 degrees just by using
+;;   (-sin(Theta),cos(Theta)) * height
+(define (rect-a R)
+  (add-points
+   (rect-origin R)
+   (make-point (* (- (sin (radian (rect-angle R))))
+                  (rect-height R))
+               (* (cos (radian (rect-angle R)))
+                  (rect-height R)))))
+#+end_src
 ** 2.1.3: What Is Meant by Data?
 We can consider data as being a collection of selectors and constructors,
 together with specific conditions that these procedures must fulfill in order to
