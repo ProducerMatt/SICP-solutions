@@ -5752,6 +5752,7 @@ from \(\mathrm{C}\), and as far from \(\mathrm{C}\) as \(\mathrm{A}\) is from
 ;; D-----C
 ;;(0,0) (1,0)
 ;; could be rotated any direction
+<<square>>
 <<make-point>>
 (define (make-rect a b c)
   (cons (cons a b) c))
@@ -5791,21 +5792,29 @@ from \(\mathrm{C}\), and as far from \(\mathrm{C}\) as \(\mathrm{A}\) is from
     (add-points c
                 (sub-points a b))))
 
+;; this is incorrect
+;(define (length-points a b)
+;  (let ((diffP (sub-points a b)))
+;    (+ (abs (x-point diffP))
+;       (abs (y-point diffP)))))
 (define (length-points a b)
-  (let ((diffP (sub-points a b)))
-    (+ (abs (x-point diffP))
-       (abs (y-point diffP)))))
+  (let ((ax (x-point a))
+        (ay (y-point a))
+        (bx (x-point b))
+        (by (y-point b)))
+    (sqrt (+ (square (- ax bx))
+          (square (- ay by))))))
 
 (define (rect-height R)
-  (length-points (rect-b R)
-                 (rect-c R)))
+  (abs (length-points (rect-b R)
+                 (rect-c R))))
 (define (rect-width R)
-  (length-points (rect-b R)
-                 (rect-a R)))
+  (abs (length-points (rect-b R)
+                 (rect-a R))))
 
 (define (length-segment seg)
-  (length-points (start-segment seg)
-                 (end-segment seg)))
+  (abs (length-points (start-segment seg)
+                 (end-segment seg))))
 #+end_src
 
 #+NAME: rect-test
@@ -5844,36 +5853,44 @@ from \(\mathrm{C}\), and as far from \(\mathrm{C}\) as \(\mathrm{A}\) is from
   (mattcheck "rect-d and rect-d-alt (XYZW)"
              (rect-d (make-rect x y z))
              w)
-  (mattcheck "rect-height"
+  (mattcheck "rect-height ABC"
+             (rect-height ABC)
+             1)
+  (mattcheck "rect-width ABC"
+             (rect-width ABC)
+             1)
+  (mattcheck "rect-height WXY"
              (rect-height WXY)
-             2.0)
-  (mattcheck "rect-width"
+             1.4142135623730951)
+  (mattcheck "rect-width WXY"
              (rect-width WXY)
-             3.0)
+             2.1213203435596424)
   (mattcheck "rect-area ABCD"
              (rect-area ABC)
              (rect-area CDA)
              1)
   (mattcheck "rect-area WXYZ"
              (rect-area WXY)
-             6.0)
+             3.0)
   (mattcheck "rect-peri ABCD"
              (rect-peri ABC)
              4)
   (mattcheck "rect-peri WXYZ"
              (rect-peri WXY)
-             10.0))
+             7.0710678118654755))
 #+end_src
 
-#+RESULTS[dc2d808810c818ba412d3fc6b5d9e25f3beb70e2]: rect-test
+#+RESULTS[1230dad0b67bba1d7069d74c6482009dd4cd5d37]: rect-test
 #+begin_EXAMPLE
 SUCCEED at make-rect
 SUCCEED at rect-d and rect-d-alt (ABCD)
 SUCCEED at rect-d and rect-d-alt (CDAB)
 SUCCEED at rect-d and rect-d-alt (WXYZ)
 SUCCEED at rect-d and rect-d-alt (XYZW)
-SUCCEED at rect-height
-SUCCEED at rect-width
+SUCCEED at rect-height ABC
+SUCCEED at rect-width ABC
+SUCCEED at rect-height WXY
+SUCCEED at rect-width WXY
 SUCCEED at rect-area ABCD
 SUCCEED at rect-area WXYZ
 SUCCEED at rect-peri ABCD
@@ -5954,10 +5971,12 @@ added during conversion from Polar to Cartesian coordinates. In relation to my
        (ABC (make-rect d 1 1 0))
        (CDA (make-rect b 1 1 180))
        (w (make-point -2.0 -2.0))
-       (x (make-point -0.5 -0.5))
+       (x (make-point -2.5 1.5))
        (y (make-point -1.5 0.5))
        (z (make-point -3.0 -1.0))
-       (WXY (make-rect z 2.0 3.0 45)))
+       (wxy-height 1.4142135623730951)
+       (wxy-width 2.1213203435596424)
+       (WXY (make-rect z wxy-height wxy-width 45)))
   (mattcheck "make-rect"
              ABC
              (cons (cons d 1) (cons 1 0)))
@@ -5972,34 +5991,31 @@ added during conversion from Polar to Cartesian coordinates. In relation to my
              x)
   (mattcheck "rect-height"
              (rect-height WXY)
-             2.0)
+             wxy-height)
   (mattcheck "rect-width"
              (rect-width WXY)
-             3.0)
+             wxy-width)
   (mattcheck "rect-area ABCD"
              (rect-area ABC)
              (rect-area CDA)
              1)
   (mattcheck "rect-area WXYZ"
              (rect-area WXY)
-             6.0)
+             3.0)
   (mattcheck "rect-peri ABCD"
              (rect-peri ABC)
              4)
   (mattcheck "rect-peri WXYZ"
              (rect-peri WXY)
-             10.0))
+             7.0710678118654755))
 #+end_src
 
-#+RESULTS[0e3753e557f87aea2e9ac64a162eb94d3eddb2c1]: rect-test2
+#+RESULTS[68186716ddc449e54bf88d08c60cbf7256e70641]: rect-test2
 #+begin_EXAMPLE
-<unknown-location>: warning: possibly unbound variable `mattcheck'
 SUCCEED at make-rect
 SUCCEED at rect-b (ABCD)
 SUCCEED at rect-b (CDAB)
-FAIL at rect-b (WXYZ)
-expected: (-0.5 . -0.5)
-returned: (-2.292893218813452 . 2.5355339059327378)
+SUCCEED at rect-b (WXYZ)
 SUCCEED at rect-height
 SUCCEED at rect-width
 SUCCEED at rect-area ABCD
