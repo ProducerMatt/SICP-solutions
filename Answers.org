@@ -1765,9 +1765,8 @@ $data
 #+end_src
 
 #+RESULTS[2f9cd2c1031a74ba1f68d4d2a7602c619a798efd]:
-:results:
+#+ATTR_LATEX: :width 0.6\linewidth
 [[file:1/fig/cc-test.png]]
-:end:
 
 So, the graph of src_scheme{(count-change 11)} is:
 #+NAME: count-change-11
@@ -6191,7 +6190,8 @@ Here are our scrambled numbers.
 | 32/9 | 32/3 | 32 |  96 | 288 |  864 | 2592 |
 | 64/9 | 64/3 | 64 | 192 | 576 | 1728 | 5184 |
 
-The numbers from our target column onwards are integers, with the target column being linearly exponentiated by 2.
+The numbers from our target column onwards are integers, with the target column
+being linearly exponentiated by 2 because the original numbers were linear.
 
 #+NAME: 2-5-table3
 #+BEGIN_SRC scheme -n :eval no-export :results value table :exports both :var data=2-5-table2
@@ -6297,6 +6297,7 @@ graph TD;
 #+end_src
 
 #+RESULTS:
+#+ATTR_LATEX: :width 0.3\linewidth
 [[file:2/fig/t_2-2-3.png]]
 
 ** 2.2.4: Example: A Picture Language
