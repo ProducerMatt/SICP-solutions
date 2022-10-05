@@ -86,6 +86,10 @@
 pandoc --from org --to latex 1.org -o 1.tex -s; xelatex 1.tex
 #+END_SRC
 
+*** Reduce image size
+#+BEGIN_SRC org
+#+ATTR_LATEX: :width 0.6\linewidth
+#+END_SRC
 ** Helpers for org-mode tables
 *** ~try-these~
 Takes function ~f~ and list ~testvals~ and applies ~f~ to each item ~i~. For
@@ -6094,10 +6098,12 @@ Now for implementation.
 
 ** Exercise 2.5
 *** Question
+#+begin_quote
 Show that we can represent pairs of nonnegative integers using only numbers and
 arithmetic operations if we represent the pair \(a\) and \(b\) as the integer
 that is the product \(2^a 3^b\). Give the corresponding definitions of the
 procedures ~cons~, ~car~, and ~cdr~.
+#+end_quote
 *** Answer
 This one really blew my mind inside-out when I first did it. Basically, because
 the two numbers are coprime, you can factor out the unwanted number and be left
@@ -6256,6 +6262,82 @@ We can use this sign of a correct result in the proposed ~car~ and ~cdr~ procedu
 | cons'd |   108 |  3888 |  1152 |
 | car    |   2.0 |   4.0 |   7.0 |
 | cdr    |   3.0 |   5.0 |   2.0 |
+
+** Exercise 2.6
+*** Question
+#+begin_quote
+In case representing pairs as procedures wasn't mind-boggling enough, consider
+that, in a language that can manipulate procedures, we can get by without
+numbers (at least insofar as nonnegative integers are concerned) by implementing
+0 and the operation of adding 1 as
+#+end_quote
+
+#+NAME: lc-zero-add1
+#+BEGIN_SRC scheme -n :eval no-export
+(define zero (λ (f) (λ (x) x)))
+(define (add-1 n)
+  (λ (f) (λ (x) (f ((n f) x)))))
+#+END_SRC
+
+#+begin_quote
+This representation is known as /Church numerals/, after its inventor, Alonzo
+Church, the logician who invented the λ-calculus.
+
+Define src_scheme{one} and src_scheme{two} directly (not in terms of
+src_scheme{zero} and src_scheme{add-1}). (Hint: Use substitution to evaluate
+src_scheme{(add-1 zero)}). Give a direct definition of the addition procedure
+src_scheme{+} (not in terms of repeated application of src_scheme{add-1}).
+#+end_quote
+
+*** Answer
+First, let's check out src_scheme{(add-1 zero)}.
+#+BEGIN_SRC scheme -n
+(define zero (λ (f) (λ (x) x)))
+(define (add-1 n)
+  (λ (f) (λ (x)
+           (f ((n f) x)))))
+
+(add-1 zero)
+((λ (f) (λ (x)
+          (f ((zero f) x)))))
+((λ (f) (λ (x)
+          (f ((λ (x) x) x)))))
+((λ (f) (λ (x)
+          (f x))))
+#+END_SRC
+
+So from this I believe the correct definition of one and two are:
+#+BEGIN_SRC scheme -n :eval no-export :exports both
+(load "mattcheck2.scm")
+(define one
+  (λ (f) (λ (x)
+           (f x))))
+(define two
+  (λ (f) (λ (x)
+            (f (f x)))))
+
+(mattcheck "1 = 1+0"
+           1
+           ((one 1+) 0))
+(mattcheck "2 = 1+1+0"
+           2
+           ((two 1+) 0))
+
+(define (add a b)
+  (λ (f) (λ (x)
+           ((a f) ((b f) x)))))
+
+(mattcheck "3 = 1+2 = (1+0) + (1+1+0)"
+           3
+           (((add one two) 1+) 0))
+#+END_SRC
+
+#+RESULTS[12c88e9dd92087809182a4956164401f3dd5dd37]:
+#+begin_EXAMPLE
+SUCCEED at 1 = 1+0
+SUCCEED at 2 = 1+1+0
+SUCCEED at 3 = 1+2 = (1+0) + (1+1+0)
+#+end_EXAMPLE
 
 ** 2.2: Hierarchical Data and the Closure Property
 ~cons~ pairs can be used to construct more complex data-types.
