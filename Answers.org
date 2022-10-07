@@ -6362,15 +6362,19 @@ SUCCEED at 3 = 1+2 = (1+0) + (1+1+0)
                   (/ 1.0 (lower-bound y)))))
 #+END_SRC
 *** Question
+#+begin_quote
 Alyssa's program is incomplete because she has not specified the implementation
 of the interval abstraction. Here is a definition of the interval constructor:
+#+end_quote
 
 #+BEGIN_SRC scheme -n :eval no-export :results silent
 (define (make-interval a b) (cons a b))
 #+END_SRC
 
+#+begin_quote
 Define selectors ~upper-bound~ and ~lower-bound~ to complete the
 implementation.
+#+end_quote
 
 *** Answer
 #+NAME: make-interval
@@ -6386,20 +6390,37 @@ implementation.
 
 ** Exercise 2.8
 *** Question
+#+begin_quote
 Using reasoning analogous to Alyssa's, describe how the difference of two
 intervals may be computed. Define a corresponding subtraction procedure, called
 ~sub-interval~.
+#+end_quote
 *** Answer
 I would argue that with one interval subtracted from the other, the lowest
 possible value is the lower of the first subtracted from the /upper/ of the
-second, and the highest is the upper of the first subtracted from the lower of the
-second.
+second, and the highest is the upper of the first subtracted from the lower of
+the second.
 #+NAME: sub-interval
 #+BEGIN_SRC scheme -n :eval no-export :results silent
 (define (sub-interval x y)
   (make-interval (- (lower-bound x) (upper-bound y))
                  (- (upper-bound x) (lower-bound y))))
 #+END_SRC
+** Exercise 2.9
+*** Question
+#+begin_quote
+The /width/ of an interval is half of the difference between its upper and lower
+bounds. The width is a measure of the uncertainty of the number specified by the
+interval. For some arithmetic operations the width of the result of combining
+two intervals is a function only of the widths of the argument intervals,
+whereas for others the width of the combination is not a function of the widths
+of the argument intervals. Show that the width of the sum (or difference) of two
+intervals is a function only of the widths of the intervals being added (or
+subtracted). Give examples to show that this is not true for multiplication or
+division.
+#+end_quote
+*** Answer
+
 ** 2.2: Hierarchical Data and the Closure Property
 ~cons~ pairs can be used to construct more complex data-types.
 
