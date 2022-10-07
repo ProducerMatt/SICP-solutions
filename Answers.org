@@ -80,17 +80,22 @@
 ^ Dynamically evaluated when you press "enter" on the ~BEGIN_SRC~ block!
 
 *** Also consider:
+
 - ~:results output~ for what the code prints
 - ~:exports code~ or ~:exports results~ to just get one or the other
 
 \(a + (\pi \times b)\) <~ inline Latex btw :)
 
 *** Reduce image size
+
 #+BEGIN_SRC org
 #+ATTR_LATEX: :width 0.6\linewidth
 #+END_SRC
+
 ** Helpers for org-mode tables
+
 *** ~try-these~
+
 Takes function ~f~ and list ~testvals~ and applies ~f~ to each item ~i~. For
 each ~i~ returns a list with ~i~ and the result. Useful dor making tables with a
 column for input and a column for output.
@@ -109,7 +114,9 @@ column for input and a column for output.
                             #nil)))
          l)))
 #+end_src
+
 *** ~transpose-list~
+
 "Rotate" a list, for example from src_scheme{'(1 2 3)} to
 src_scheme{'('(1) '(2) '(3))}
 #+NAME: transpose-list
@@ -117,7 +124,9 @@ src_scheme{'('(1) '(2) '(3))}
 (define (transpose-list l)
   (map list l))
 #+end_src
+
 *** ~print-as-rows~
+
 For manually printing items in rows to stdout. Can be helpful for gnuplot.
 #+NAME: print-as-rows
 #+BEGIN_SRC scheme -n :eval no-export :results silent
@@ -144,7 +153,9 @@ For manually printing items in rows to stdout. Can be helpful for gnuplot.
         '()
         (apply print-as-rows d))))
 #+end_src
+
 *** ~print-table~
+
 Print ~args~ as a table separated by pipes. Optionally print spacer for
 colnames.
 #+NAME: print-table
@@ -203,6 +214,7 @@ colnames.
 :end:
 
 *** ~print-table~ (spaces only)
+
 TODO: Merge these together.
 #+NAME: print-table-spaced
 #+BEGIN_SRC scheme -n :eval no-export  :results output :exports code
@@ -256,7 +268,9 @@ TODO: Merge these together.
 
 
 * Introduction Notes
+
 ** Text Foreword
+
 This book centers on three areas: the human mind, collections of computer
 programs, and the computer.
 
@@ -269,6 +283,7 @@ grows. Because of this, it's important to make fundamentals that can be relied
 upon to support larger structures.
 
 ** Preface, 1e
+
 "Computer Science" isn't really about computers or science, in the same way that
 geometry isn't really about measuring the earth ('geometry' translates to
 'measurement of earth').
@@ -291,6 +306,7 @@ can be called /procedural epistemology/.
   averaging \(G\) and \(x/G\), keep improving until the guess is good enough.
 
 **** Techniques for controlling complexity
+
 - Black-box abstraction :: Encapsulating an operation so the details of it are
   irrelevant.
 
@@ -327,6 +343,7 @@ can be called /procedural epistemology/.
   other parts.
 
 * Chapter 1: Building Abstractions with Procedures
+
 *Computational processes* are abstract 'beings' that inhabit computers. Their
 evolution is directed by a pattern of rules called a *program*, and processes
 manipulate other abstract things called *data*.
@@ -343,6 +360,7 @@ the distinction between data and processes. Lisp enables these techniques by
 allowing processes to be represented and manipulated as data.
 
 ** 1.1: The Elements of Programming
+
 A programming language isn't just a way to instruct a computer -- it's also a
 framework for the programmer to organize their ideas. Thus it's important to
 consider the means the language provides for combining ideas. Every powerful
@@ -374,6 +392,7 @@ take the following code:
 ~x~ is the formal parameter and ~5~ is the argument.
 
 ** 1.1.1: Expressions
+
 The general form of Lisp is evaluating *combinations*, denoted by parenthesis,
 in the form src_scheme{(operator operands)}, where /operator/ is a procedure and
 /operands/ are the 0 or more arguments to the operator.
@@ -385,6 +404,7 @@ provides several advantages.
 2. It's straightforward to nest combinations in other combinations.
 
 ** 1.1.3: Evaluating Combinations
+
 The evaluator can evaluate nested expressions recursively. *Tree accumulation*
 is the process of evaluating nested combinations, "percolating" values upward.
 
@@ -427,6 +447,7 @@ graph BT;
 [[file:1/fig/t_1-1-3.png]]
 
 ** 1.1.4: Compound Procedures
+
 We have identified the following in Lisp:
 - primitive data are numbers, primitive procedures are arithmetic operations
 - Operations can be combined by nesting combinations
@@ -447,6 +468,7 @@ Note how these compound procedures are used in the same way as primitive
 procedures.
 
 ** 1.1.5: The Substitution Model for Procedure Application
+
 To understand how the interpreter works, imagine it substituting the procedure
 calls with the bodies of the procedure and its arguments.
 
@@ -510,6 +532,7 @@ Chapter 3 and 4.
 they're needed by a procedure, which is called lazy evaluation.)
 
 ** 1.1.6: Conditional Expressions and Predicates
+
 An important aspect of programming is testing and branching depending on the
 results of the test. ~cond~ tests *predicates*, and upon encountering one,
 returns a *consequent*.
@@ -556,14 +579,18 @@ previously. For example, when evaluating an ~if~ expression, you evaluate the
 predicate and, depending on the result, either evaluate the *consequent* or the
 *alternative*. If you were evaluating in a standard manner, the consequent and
 alternative would both be evaluated, rendering the ~if~ expression ineffective.
+
 ** Exercise 1.1
+
 *** Question
 #+begin_quote
 Below is a sequence of expressions. What is the result printed by the
 interpreter in response to each expression? Assume that the sequence is to be
 evaluated in the order in which it is presented.
 #+end_quote
+
 *** Answer
+
 #+BEGIN_SRC scheme -n :results none
 10 ;; 10
 (+ 5 3 4) ;; 12
@@ -588,7 +615,9 @@ evaluated in the order in which it is presented.
 #+END_SRC
 
 ** Exercise 1.2
+
 *** Question
+
 #+begin_quote
 Translate the following expression into prefix form:
 \[
@@ -596,7 +625,9 @@ Translate the following expression into prefix form:
             {3(6 - 2)(2 - 7)}
 \]
 #+end_quote
+
 *** Answer
+
 #+NAME: EX1-2
 #+BEGIN_SRC scheme -n :eval no-export :exports both :results value
 (/ (+ 5 2 (- 2 3 (+ 6 (/ 4 5))))
@@ -611,12 +642,16 @@ Translate the following expression into prefix form:
 :end:
 
 ** Exercise 1.3
+
 *** Question
+
 #+begin_quote
 Define a procedure that takes three numbers as arguments and returns the sum of
 the squares of the two larger numbers.
 #+end_quote
+
 *** Answer
+
 #+NAME: EX1-3
 #+BEGIN_SRC scheme -n :eval no-export :exports both :results value table
 <<square>>
@@ -643,7 +678,9 @@ the squares of the two larger numbers.
 :end:
 
 ** Exercise 1.4
+
 *** Question
+
 #+begin_quote
 Observe that our model of evaluation allows for combinations whose operators are
 compound expressions. Use this observation to describe the behavior of the
@@ -655,7 +692,9 @@ following procedure:
 (define (a-plus-abs-b a b)
   ((if (> b 0) + -) a b))
 #+END_SRC
+
 *** Answer
+
 This code accepts the variables ~a~ and ~b~, and if ~b~ is positive, it adds ~a~
 and ~b~. However, if ~b~ is zero or negative, it subtracts them. This decision
 is made by using the ~+~ and ~-~ procedures as the results of an if expression,
@@ -668,7 +707,9 @@ else: a - b
 #+END_SRC
 
 ** Exercise 1.5
+
 *** Question
+
 #+begin_quote
 Ben Bitdiddle has invented a test to determine whether the interpreter he is
 faced with is using applicative-order evaluation or normal-order evaluation. He
@@ -701,6 +742,7 @@ determines whether to evaluate the consequent or the alternative expression.)
 #+end_quote
 
 *** Answer
+
 In either type of language, src_scheme{(define (p) (p))} is an infinite
 loop. However, a normal-order language will encounter the special form, return
 ~0~, and never evaluate src_scheme{(p)}. An applicative-order language evaluates the
@@ -708,6 +750,7 @@ arguments to src_scheme{(test 0 (p))}, thus triggering the infinite
 loop.
 
 ** 1.1.7: Example: Square Roots by Newton’s Method
+
 Functions in the formal mathematical sense are *declarative knowledge*, while
 procedures like in computer science are *imperative knowledge*.
 
@@ -716,6 +759,7 @@ sufficient for writing any purely numerical program, despite not having
 introduced any looping constructs like ~FOR~ loops.
 
 ** 1.1.8: Procedures as Black-Box Abstractions
+
 Notice how the ~sqrt~ procedure is divided into other procedures, which mirror
 the division of the square root problem into sub problems.
 
@@ -733,7 +777,9 @@ Suppressing these details are particularly helpful:
   inside other procedures, you hide them from the global namespace. This nesting
   is called *block structure*. Nesting these definitions also allows relevant
   variables to be shared across procedures, which is called *lexical scoping*.
+
 ** Exercise 1.6
+
 *** Text code
 #+NAME: abs
 #+BEGIN_SRC scheme -n :eval no-export :results silent
@@ -768,6 +814,7 @@ Suppressing these details are particularly helpful:
 #+END_SRC
 
 *** Question
+
 #+begin_quote
 Alyssa P. Hacker doesn’t see why ~if~ needs to be provided as a
 special form. “Why can’t I just define it as an ordinary procedure in terms of
@@ -810,19 +857,24 @@ What happens when Alyssa attempts to use this to compute square roots? Explain.
 #+end_quote
 
 *** Answer
+
 Using Alyssa's ~new-if~ leads to an infinite loop because the recursive call to
 ~sqrt-iter~ is evaluated before the actual call to ~new-if~. This is because
 ~if~ and ~cond~ are special forms that change the way evaluation is handled;
 whichever branch is chosen leaves the other branches unevaluated.
 
 ** Exercise 1.7
+
 *** Text
+
 #+NAME: mean-square
 #+BEGIN_SRC scheme -n :eval no-export :results silent
 (define (mean-square x y)
   (average (square x) (square y)))
 #+END_SRC
+
 *** Question
+
 #+begin_quote
 The ~good-enough?~ test used in computing square roots will not be very effective
 for finding the square roots of very small numbers. Also, in real computers,
@@ -834,8 +886,11 @@ iteration to the next and to stop when the change is a very small fraction of
 the guess. Design a square-root procedure that uses this kind of end test. Does
 this work better for small and large numbers?
 #+end_quote
+
 *** Diary
+
 **** Solving
+
 My original answer was this, which compares the previous iteration until the new
 and old are within an arbitrary \(dx\).
 
@@ -897,7 +952,9 @@ reaches the precision limit of the system:
 #+END_SRC
 
 **** Imroving (sqrt) by avoiding extra (improve) call
+
 ***** Non-optimized
+
 #+BEGIN_SRC scheme -n :eval no-export :tangle 1/sqrt-bench.scheme :exports both :results output
 (use-modules (ice-9 format))
 (load "../mattbench.scm")
@@ -920,6 +977,7 @@ reaches the precision limit of the system:
 #+end_src
 
 ***** Optimized
+
 #+BEGIN_SRC scheme -n :noeval :tangle 1/sqrt-bench2.scheme :exports both :results output
 (use-modules (ice-9 format))
 (load "../mattbench.scm")
@@ -940,12 +998,14 @@ reaches the precision limit of the system:
 (display (mattbench (λ() (sqrt 69420)) 400000000))
 (newline)
 #+end_src
+
 ***** Benchmark results
 
 | Unoptimized | 4731.30 |
 | Optimized   | 2518.44 |
 
 *** Answer
+
 The current method has decreasing accuracy with smaller numbers. Notice the
 steady divergence from correct answers here (should be decreasing powers of
 0.1):
@@ -1012,7 +1072,9 @@ So, my definition of ~sqrt~:
 :end:
 
 ** Exercise 1.8
+
 *** Question
+
 #+begin_quote
 Newton’s method for cube roots is based on the fact that if y is an
 approximation to the cube root of x, then a better approximation is given by the
@@ -1024,7 +1086,9 @@ Use this formula to implement a cube-root procedure analogous to the square-root
 procedure. (In 1.3.4 we will see how to implement Newton’s method in general as
 an abstraction of these square-root and cube-root procedures.)
 #+end_quote
+
 *** Diary
+
 My first attempt works, but needs an arbitrary limit to stop infinite loops:
 #+NAME: EX1-8-A1
 #+BEGIN_SRC scheme -n :eval no-export  :exports both :results value table
@@ -1064,7 +1128,9 @@ improving when there's no more change occurring. Also while researching I
 discovered that (again due to floating point) src_scheme{(cbrt -2)} loops
 forever unless you initialize your guess with a slightly different value, so
 let's do 1.1 instead.
+
 *** Answer
+
 #+NAME: cbrt
 #+BEGIN_SRC scheme -n :eval no-export :exports code :results silent
 <<square>>
@@ -1101,10 +1167,12 @@ let's do 1.1 instead.
 :end:
 
 ** 1.2: Procedures and the Processes They Generate
+
 Procedures define the *local evolution* of processes. We would like to be able
 to make statements about the *global* behavior of a process.
 
 ** 1.2.1: Linear Recursion and Iteration
+
 Consider these two procedures for obtaining factorials:
 
 #+begin_src scheme
@@ -1148,7 +1216,9 @@ when the process is essentially iterative. These languages instead use looping
 constructs such as ~do~, ~repeat~, ~for~, etc. Implementations that execute
 iterative processes in constant space, even if the procedure is recursive, are
 *tail-recursive*.
+
 ** Exercise 1.9
+
 *** Question
 #+begin_quote
 Each of the following two procedures defines a method for adding two positive
@@ -1172,10 +1242,14 @@ dec, which decrements its argument by 1.
 Using the substitution model, illustrate the process generated by each procedure
 in evaluating src_scheme{(+ 4 5)}. Are these processes iterative or recursive?
 #+end_quote
+
 *** Answer
+
 The first procedure is recursive, while the second is iterative though
 tail-recursion.
+
 **** recursive procedure
+
 #+BEGIN_SRC scheme -n :noeval 
 (+ 4 5)
 (inc (+ 3 5))
@@ -1190,6 +1264,7 @@ tail-recursion.
 #+END_SRC
 
 **** iterative procedure
+
 #+BEGIN_SRC scheme -n :noeval 
 (+ 4 5)
 (+ 3 6)
@@ -1200,7 +1275,9 @@ tail-recursion.
 #+END_SRC
 
 ** Exercise 1.10
+
 *** Question
+
 #+begin_quote
 The following procedure computes a mathematical function called Ackermann’s
 function.
@@ -1253,6 +1330,7 @@ src_scheme{(k n)} computes \(5n^2\).
 #+end_quote
 
 *** Answer
+
 **** ~f~
 
 #+BEGIN_SRC scheme -n :eval no-export  :exports both :results value table
@@ -1274,6 +1352,7 @@ src_scheme{(k n)} computes \(5n^2\).
 \[
 f(n)=2n
 \]
+
 **** ~g~
 
 #+BEGIN_SRC scheme -n :eval no-export  :exports both :results value table
@@ -1327,6 +1406,7 @@ h(n)={}^{n}2
 \]
 
 ** 1.2.2: Tree Recursion
+
 Consider a recursive procedure for computing Fibonacci numbers:
 
 #+begin_src scheme
@@ -1360,10 +1440,13 @@ iterative version required redefining the process as an iteration with three
 variables.
 
 *** Example: Counting change
+
 I should come back and try to make the "better algorithm" suggested.
 
 ** Exercise 1.11
+
 *** Question
+
 #+begin_quote
 A function \(f\) is defined by the rule that:
 \[
@@ -1379,7 +1462,9 @@ f(n)=f(n-1)+2f(n-2)+3f(n-3) \text{ if } n \geq 3
 Write a procedure that computes \(f\) by means of a recursive process. Write a
 procedure that computes \(f\) by means of an iterative process.
 #+end_quote
+
 *** Answer
+
 **** Recursive
 #+NAME: EX1-11-fr
 #+BEGIN_SRC scheme -n :eval no-export  :exports code :results silent
@@ -1406,7 +1491,9 @@ procedure that computes \(f\) by means of an iterative process.
 :end:
 
 **** Iterative
+
 ***** Attempt 1
+
 #+NAME: EX1-11-fi
 #+BEGIN_SRC scheme -n :eval no-export  :exports code :results silent
 ;; This seems like it could be better
@@ -1445,6 +1532,7 @@ procedure that computes \(f\) by means of an iterative process.
 It works but it seems wasteful.
 
 ***** Attempt 2
+
 #+NAME: EX1-11-fi2
 #+BEGIN_SRC scheme -n :eval no-export  :exports code :results silent
 (define (fi2 n)
@@ -1481,7 +1569,9 @@ It works but it seems wasteful.
 I like that better.
 
 ** Exercise 1.12
+
 *** Question
+
 #+begin_quote
 The following pattern of numbers is called Pascal’s triangle.
 
@@ -1491,7 +1581,9 @@ The numbers at the edge of the triangle are all 1, and each number inside the
 triangle is the sum of the two numbers above it. Write a procedure that
 computes elements of Pascal’s triangle by means of a recursive process.
 #+end_quote
+
 *** Answer
+
 I guess I'll rotate the triangle 45 degrees to make it the top-left corner of an
 infinite spreadsheet.
 
@@ -1535,7 +1627,9 @@ infinite spreadsheet.
 The test code was much harder to write than the actual solution.
 
 ** Exercise 1.13
+
 *** Question
+
 #+begin_quote
 Prove that \(\text{Fib}(n)\) is the closest integer to
 \(\frac{ϕ^n}{\sqrt{5}}\) where Phi is \(\frac{1 + \sqrt{5}}{2}\). Hint: let
@@ -1548,10 +1642,12 @@ Fibonacci numbers to prove that
 #+end_quote
 
 *** Answer
+
 I don't know how to write a proof yet, but I can make functions to
 demonstrate it.
 
 **** Fibonacci number generator
+
 #+NAME: fib-iter
 #+BEGIN_SRC scheme -n :eval no-export :exports code :results silent
 (define (fib-iter n)
@@ -1565,7 +1661,9 @@ demonstrate it.
       1
       (iter 2 1 1)))
 #+END_SRC
+
 **** Various algorithms relating to the question
+
 #+NAME: fib-phi
 #+BEGIN_SRC scheme -n :eval no-export :exports code :results silent
 <<sqrt>>
@@ -1641,6 +1739,7 @@ plot data using 1:2 with lines title 'Fib(n) minus Fib-phi(n)'
 :end:
 
 ** 1.2.3: Orders of Growth
+
 An *order of growth* gives you a gross measure of the resources required by a
 process as its inputs grow larger.
 
@@ -1664,6 +1763,7 @@ Orders of growth are very crude descriptions of process behaviors, but they are
 useful in indicating how a process will change with the size of the problem.
 
 ** Exercise 1.14
+
 Below is the default version of the count-change function. I'll be aggressively
 modifying it in order to get a graph out of it.
 #+NAME: count-change
@@ -1689,12 +1789,16 @@ modifying it in order to get a graph out of it.
         ((= kinds-of-coins 4) 25)
         ((= kinds-of-coins 5) 50)))
 #+end_src
+
 *** Question A
+
 #+begin_quote
 Draw the tree illustrating the process generated by the count-change procedure
 of 1.2.2 in making change for 11 cents.
 #+end_quote
+
 *** Answer
+
 I want to generate this graph algorithmically.
 #+NAME: count-change-graphviz
 #+BEGIN_SRC scheme -n :eval no-export :exports code :results silent
@@ -1788,12 +1892,14 @@ $data
 :end:
 
 *** Question B
+
 #+begin_quote
 What are the orders of growth of the space and number of steps used by this
 process as the amount to be changed increases?
 #+end_quote
 
 *** Answer B
+
 Let's look at this via the number of function calls needed for value ~n~. Instead
 of returning an integer, I'll return a pair where ~car~ is the number of ways to
 count change, and ~cdr~ is the number of function calls that have occurred down
@@ -1937,7 +2043,9 @@ don't think I really grasped the nature of math as a tool of empowerment until
 now.
 
 ** Exercise 1.15
+
 *** Question A
+
 #+begin_quote
 The sine of an angle (specified in radians) can be computed by making use of the
 approximation \(\sin x ≈ x\) if \(x\) is sufficiently small, and the
@@ -1991,6 +2099,7 @@ Let's find out!
 ~p~ is evaluated 5 times.
 
 *** Question B
+
 #+begin_quote
 What is the order of growth in space and number of steps (as a function of ~a~)
 used by the process generated by the sine procedure when src_scheme{(sine a)} is
@@ -1998,6 +2107,7 @@ evaluated?
 #+end_quote
 
 *** Answer B
+
 #+NAME: 1-15-tab1
 #+BEGIN_SRC scheme -n :eval no-export  :exports both :results silent value table
 (use-srfis '(1))
@@ -2144,6 +2254,7 @@ plot 'Ex15/sine-bench.dat' using 1:2 with fillsteps title 'time to execute', \
 :end:
 
 **** 1.2.4 Exponentiation
+
 Considering a few ways to compute the exponential of a given number.
 
 #+begin_src scheme
@@ -2166,7 +2277,9 @@ b^4 &= b^2\cdot b^2\\
 b^8 &= b^4 \cdot b^4\end{aligned}\]
 
 ** Exercise 1.16
+
 *** Text
+
 #+NAME: txt-expt
 #+BEGIN_SRC scheme -n :eval no-export :exports code :results silent
 (define (expt-rec b n)
@@ -2190,7 +2303,9 @@ b^8 &= b^4 \cdot b^4\end{aligned}\]
         (else 
          (* b (fast-expt b (- n 1))))))
 #+end_src
+
 *** Question
+
 #+begin_quote
 Design a procedure that evolves an iterative exponentiation process that uses
 successive squaring and uses a logarithmic number of steps, as does fast-expt.
@@ -2203,7 +2318,9 @@ In general, the technique of defining an /invariant quantity/ that remains
 unchanged from state to state is a powerful way to think about the design of
 iterative algorithms.)
 #+end_quote
+
 *** Diary
+
 First I made this program which tries to use a false equivalence:
 \[ab^2 = (a + 1)b^{n - 1}\]
 #+NAME: fast-expt-iter-fail1
@@ -2242,6 +2359,7 @@ Here's what the internal state looks like during \(2^6\) (correct answer is 64):
 :end:
 
 *** Answer
+
 There are two key transforms to a faster algorithm. The first was already shown
 in the text:
 
@@ -2295,7 +2413,9 @@ The solution essentially follows this logic:
 :end:
 
 ** Exercise 1.17
+
 *** Question
+
 #+begin_quote
 The exponentiation algorithms in this section are based on performing
 exponentiation by means of repeated multiplication. In a similar way, one can
@@ -2320,6 +2440,7 @@ of steps.
 #+end_quote
 
 *** Answer
+
 #+NAME: fast-mult-rec
 #+BEGIN_SRC scheme -n :eval no-export :exports code :results silent
 (define (double x)
@@ -2357,13 +2478,17 @@ Proof it works:
 :end:
 
 ** Exercise 1.18
+
 *** Question
+
 #+begin_quote
 Using the results of [[*Exercise 1.16][Exercise 1.16]] and [[*Exercise 1.17][Exercise 1.17]], devise a procedure that
 generates an iterative process for multiplying two integers in terms of adding,
 doubling, and halving and uses a logarithmic number of steps.
 #+end_quote
+
 *** Diary
+
 **** Comparison benchmarks:
 
 #+BEGIN_SRC scheme -n :tangle 1/Ex1-18bench.scheme :exports code :results silent
@@ -2382,13 +2507,16 @@ doubling, and halving and uses a logarithmic number of steps.
 |          196.89 |           166.35 |
 
 So the iterative version takes 0.84 times less to do \(32 \times 32\).
+
 **** Hall of shame
 
 Some of my /very/ incorrect ideas:
 \[ab = (a+1)(b-1)\]
 \[ab = \big(a+\Big(\frac{a}{2}\Big)(b-1)\big)\]
 \[ab+c = \big(a(b-1)+(b+c)\big)\]
+
 *** Answer
+
 #+NAME: fast-mult-iter
 #+BEGIN_SRC scheme -n :eval no-export :exports code :results silent
 (define (double x)
@@ -2425,7 +2553,9 @@ Some of my /very/ incorrect ideas:
 :end:
 
 ** Exercise 1.19
+
 *** Question
+
 #+begin_quote
 There is a clever algorithm for computing the Fibonacci numbers in a logarithmic
 number of steps. Recall the transformation of the state variables a and b in the
@@ -2467,6 +2597,7 @@ in a logarithmic number of steps:
 #+END_SRC
 
 *** Diary
+
 More succinctly put:
 
 \[
@@ -2534,6 +2665,7 @@ the attached list. so src_scheme{(T 0 1)} returns a fib function.
 :end:
 
 *** Answer
+
 #+NAME: fib-iter-T
 #+BEGIN_SRC scheme -n :eval no-export :exports code :results silent
 (define (fib-rec n)
@@ -2591,6 +2723,7 @@ the attached list. so src_scheme{(T 0 1)} returns a fib function.
 :end:
 
 ** 1.2.5: Greatest Common Divisor
+
 A greatest common divisor (or GCD) for two integers is the largest integer that
 divides both of them. A GCD can be quickly found by transforming the problem
 like so: \[a \% b = r\]
@@ -2611,7 +2744,9 @@ the other number in the pair. This is Euclid's Algorithm.
 #+end_quote
 
 ** Exercise 1.20
+
 *** Text
+
 #+NAME: gcd
 #+BEGIN_SRC scheme -n :eval no-export :exports code :results silent
 (define (gcd a b)
@@ -2619,7 +2754,9 @@ the other number in the pair. This is Euclid's Algorithm.
       a
       (gcd b (remainder a b))))
 #+END_SRC
+
 *** Question
+
 #+begin_quote
 The process that a procedure generates is of course dependent on the rules used
 by the interpreter. As an example, consider the iterative ~gcd~ procedure given
@@ -2633,11 +2770,13 @@ applicative-order evaluation?
 #+end_quote
 
 *** Answer
+
 I struggled to understand this, but the key here is that normal-order evaluation
 causes the unevaluated expressions to be duplicated, meaning they get evaluated
 multiple times.
 
 **** Applicative order
+
 #+begin_src scheme
 call (gcd 206 40)
 (if)
@@ -2735,6 +2874,7 @@ So, in normal-order eval, remainder is called 18 times, while in applicative ord
 it's called 5 times.
 
 ** 1.2.6: Example: Testing for Primality
+
 Two algorithms for testing primality of numbers.
 
 1. \(\Theta(\sqrt{n})\): Start with \(x = 2\), check for divisibility with
@@ -2761,7 +2901,9 @@ correct rather than guaranteed to be correct. Repeating the test increases the
 likelihood of a correct answer.
 
 ** Exercise 1.21
+
 *** Text
+
 #+NAME: find-divisor-txt
 #+BEGIN_SRC scheme -n :eval no-export :exports code :results silent
 <<square>>
@@ -2782,12 +2924,14 @@ likelihood of a correct answer.
 #+END_SRC
 
 *** Question
+
 #+begin_quote
 Use the smallest-divisor procedure to find the smallest divisor of each of the
 following numbers: 199, 1999, 19999.
 #+end_quote
 
 *** Answer
+
 #+BEGIN_SRC scheme -n :eval no-export  :exports both :results value table
 <<find-divisor-txt>>
 (map smallest-divisor '(199 1999 19999))
@@ -2799,7 +2943,9 @@ following numbers: 199, 1999, 19999.
 :end:
 
 ** Exercise 1.22
+
 *** Question
+
 #+begin_quote
 Most Lisp implementations include a primitive called runtime that returns an
 integer that specifies the amount of time the system has been running (measured,
@@ -2848,7 +2994,9 @@ required for the computation?
 #+end_quote
 
 *** Answer
+
 **** Part 1
+
 So this question is a little funky, because modern machines are so fast that the
 single-run times can seriously vary.
 
@@ -2914,6 +3062,7 @@ There's proof it works. And here are the answers to the question:
 :end:
 
 **** Part 2
+
 Repeatedly re-running, it I see it occasionally jump to twice the time. I'm not
 happy with this, so I'm going to refactor to use the ~mattbench2~ utility from
 the root of the project folder.
@@ -3027,7 +3176,9 @@ algorithm is slower than this other one," but when asked to find or prove the
 \(\Theta\) notation I'm pretty clueless;
 
 ** Exercise 1.23
+
 *** Question
+
 #+begin_quote
 The ~smallest-divisor~ procedure shown at the start of this section does lots of
 needless testing: After it checks to see if the number is divisible by 2 there
@@ -3044,7 +3195,9 @@ twice as fast. Is this expectation confirmed? If not, what is the observed ratio
 of the speeds of the two algorithms, and how do you explain the fact that it is
 different from 2?
 #+end_quote
+
 *** A Comedy of Error (just the one)
+
 #+NAME: find-divisor-faster
 #+BEGIN_SRC scheme -n :eval no-export :exports code :results silent
 <<square>>
@@ -3138,6 +3291,7 @@ Oh, that's why.
 #+END_SRC
 
 *** Answer
+
 Ok, let's try that again.
 
 #+NAME: find-divisor-faster-real
@@ -3375,7 +3529,9 @@ file:1/fig/1-22-4.png
 :end:
 
 ** Exercise 1.24
+
 *** Text
+
 #+NAME: expmod
 #+BEGIN_SRC scheme :eval no-export :results output silent :exports code
 <<square>>
@@ -3405,7 +3561,9 @@ file:1/fig/1-22-4.png
          (fast-prime? n (- times 1)))
         (else #f)))
 #+END_SRC
+
 *** Question
+
 #+begin_quote
 Modify the ~timed-prime-test~ procedure of Exercise 1.22 to use ~fast-prime?~ (the
 Fermat method), and test each of the 12 primes you found in that exercise. Since
@@ -3416,6 +3574,7 @@ you find?
 #+end_quote
 
 *** Answer
+
 #+NAME: fermat-bench
 #+BEGIN_SRC scheme -n :noeval :tangle 1/primebench/fermat.scheme :exports code
 <<mattbench2>>
@@ -3587,7 +3746,9 @@ For the life of me I have no idea what that bump is. Maybe it needs more
 aggressive bignum processing there?
 
 ** Exercise 1.25
+
 *** Question
+
 #+begin_quote
 Alyssa P. Hacker complains that we went to a lot of extra work in writing
 ~expmod~. After all, she says, since we already know how to compute
@@ -3605,6 +3766,7 @@ Explain.
 #+end_quote
 
 *** Answer
+
 In Alyssa's version of ~expmod~, the result of the ~fast-expt~ operation is
 /extremely/ large. For example, in the process of checking for divisors of
 1,001, the number 455 will be tried. src_scheme{(expt 455 1001)} produces an
@@ -3654,7 +3816,9 @@ You can see that the numbers remain quite manageable throughout this process. So
 taking these extra steps actually leads to an algorithm that performs better.
 
 ** Exercise 1.26
+
 *** Question
+
 #+begin_quote
 Louis Reasoner is having great difficulty doing Exercise 1.24. His ~fast-prime?~
 test seems to run more slowly than his ~prime?~ test. Louis calls his friend Eva
@@ -3685,13 +3849,16 @@ process into a \(\Theta(n)\) process.” Explain.
 #+end_quote
 
 *** Answer
+
 Making the same function call twice isn't the same as using a variable twice --
 Louis' version doubles the work, having two processes solving the exact same
 problem. Since the number of processes used increases exponentially, this turns
 \(\log n\) into \(n\).
 
 ** Exercise 1.27
+
 *** Question
+
 #+begin_quote
 Demonstrate that the Carmichael numbers listed in Footnote 1.47 really do fool
 the Fermat test. That is, write a procedure that takes an integer \(n\) and
@@ -3700,7 +3867,9 @@ and try your procedure on the given Carmichael numbers.
 #+end_quote
 #+NAME: carmichael
 | 561 | 1105 | 1729 | 2465 | 2821 | 6601 |
+
 *** Answer
+
 #+NAME: car-test
 #+begin_src scheme -n :results silent :exports code :eval no-export
 <<expmod>>
@@ -3722,7 +3891,9 @@ and try your procedure on the given Carmichael numbers.
 #+END_SRC
 
 ** Exercise 1.28
+
 *** Question
+
 #+begin_quote
 One variant of the Fermat test that cannot be fooled is called the Miller-Rabin
 test (Miller 1976; Rabin 1980). This starts from an alternate form of Fermat’s
@@ -3744,7 +3915,9 @@ to implement the Miller-Rabin test with a procedure analogous to fermat-test.
 Check your procedure by testing various known primes and non-primes. Hint: One
 convenient way to make ~expmod~ signal is to have it return 0.
 #+end_quote
+
 *** Analysis
+
 For the sake of verifying this, I want to get a bigger list of primes and
 Carmichael numbers to verify against. I'll save them using Guile's built in
 read/write functions that save Lisp lists to text:
@@ -3827,6 +4000,7 @@ This will be useful in various future functions:
 :end:
 
 *** Answer
+
 #+NAME: expmod-mr
 #+BEGIN_SRC scheme -n :eval no-export :results output silent :exports code
 <<square>>
@@ -3954,8 +4128,11 @@ mr false-positives Carmichaels: #f
 #+END_SRC
 
 ** 1.3: Formulating Abstractions with Higher-Order Procedures
+
 Procedures that manipulate procedures are called /higher-order procedures/.
+
 ** 1.3.1: Procedures as Arguments
+
 Let's say we have several different types of series that we want to sum.
 Functions for each of these tasks will look very similar, so we're better off
 defining a general function that expresses the /idea/ of summation, that can
@@ -3979,7 +4156,9 @@ Which is equivalent to:
 We can pass integers to ~a~ and ~b~ and functions to ~term~ and ~next~. Note
 that in order to simply sum integers, we'd need to define and pass an identity
 function to ~term~.
+
 ** Exercise 1.29
+
 *** Text
 #+NAME: sum
 #+BEGIN_SRC scheme -n :eval no-export :results output silent :exports code
@@ -3997,7 +4176,9 @@ function to ~term~.
   (* (sum f (+ a (/ dx 2.0)) add-dx b)
      dx))
 #+END_SRC
+
 *** Question
+
 #+begin_quote
 Simpson's Rule is a more accurate method of numerical integration than the
 method illustrated above. Using Simpson's Rule, the integral of a function \(f\)
@@ -4014,7 +4195,9 @@ value of the integral, computed using Simpson's Rule. Use your procedure to
 integrate ~cube~ between 0 and 1 (with \(n = 100\) and \(n = 1000\)), and
 compare the results to those of the ~integral~ procedure shown above.
 #+end_quote
+
 *** Answer
+
 #+NAME: int-simp
 #+BEGIN_SRC scheme -n :eval no-export :results output silent :exports code
 (define (int-simp f a b n)
@@ -4068,7 +4251,9 @@ Let's compare these at equal levels of computational difficulty.
 So, more accurate for roughly the same effort or less.
 
 ** Exercise 1.30
+
 *** Question
+
 #+begin_quote
 The ~sum~ procedure above generates a linear recursion. The procedure can be
 rewritten so that the sum is performed iteratively. Show how to do this by
@@ -4076,6 +4261,7 @@ filling in the missing expressions in the following definition:
 #+end_quote
 
 *** Answer
+
 #+NAME: sum-iter
 #+BEGIN_SRC scheme -n :eval no-export :exports code :results silent
 (define (sum-iter term a next b)
@@ -4111,14 +4297,18 @@ Let's check the stats!
 | 30051.080005 | 19568.685587 |
 
 ** Exercise 1.31
+
 *** Question A.1
+
 #+begin_quote
 The ~sum~ procedure is only the simplest of a vast number of similar
 abstractions that can be captured as higher-order procedures. Write an analogous
 procedure called ~product~ that returns the product of the values of a function
 at points over a given range.
 #+end_quote
+
 *** Answer A.1
+
 #+NAME: product-iter
 #+BEGIN_SRC scheme -n :eval no-export :exports code :results silent
 (define (product-iter term a next b)
@@ -4128,11 +4318,15 @@ at points over a given range.
         (iter (next a) (* result (term a)))))
   (iter a 1)) ;; start at 1 so it's not always 0
 #+END_SRC
+
 *** Question A.2
+
 #+begin_quote
 Show how to define ~factorial~ in terms of ~product~.
 #+end_quote
+
 *** Answer A.2
+
 I was briefly stumped because ~product~ only counts upward. Then I realized
 that's just how it's presented and it can go either direction, since addition
 and multiplication are commutative. I look forward to building up a more
@@ -4159,6 +4353,7 @@ intuitive sense of numbers.
 :end:
 
 *** Question A.3
+
 #+begin_quote
 Also use ~product~ to compute approximations to \(\pi\) using the formula
 
@@ -4169,6 +4364,7 @@ Also use ~product~ to compute approximations to \(\pi\) using the formula
 #+end_quote
 
 *** Answer A.3
+
 Once this equation is encoded, you just need to multiply it by two to get \(\pi\).
 
 Fun fact: the formula is slightly wrong, it should start the series with \({1 \over 2}\).
@@ -4193,6 +4389,7 @@ Fun fact: the formula is slightly wrong, it should start the series with \({1 \o
 :end:
 
 *** Question B
+
 #+begin_quote
 If your product procedure generates a recursive process, write one that
 generates an iterative process. If it generates an iterative process, write one
@@ -4200,6 +4397,7 @@ that generates a recursive process.
 #+end_quote
 
 *** Answer B
+
 #+NAME: product-rec
 #+BEGIN_SRC scheme -n :eval no-export :exports code :results silent
 (define (product-rec term a next b)
@@ -4242,7 +4440,9 @@ that generates a recursive process.
 | 1267118.0538 | 3067085.5323 |
 
 ** Exercise 1.32
+
 *** Question A
+
 #+begin_quote
 Show that ~sum~ and ~product~ are both special cases of a still more general
 notion called ~accumulate~ that combines a collection of terms, using some
@@ -4263,6 +4463,7 @@ be defined as simple calls to ~accumulate~.
 #+end_quote
 
 *** Answer A
+
 When I first did this question, I struggled a lot before realizing ~accumulate~
 was much closer to the exact definitions of sum/product than I thought.
 #+NAME: accumulate-iter
@@ -4305,6 +4506,7 @@ was much closer to the exact definitions of sum/product than I thought.
 :end:
 
 *** Question B
+
 #+begin_quote
 If your ~accumulate~ procedure generates a recursive process, write one
 that generates an iterative process.  If it generates an iterative process,
@@ -4312,6 +4514,7 @@ write one that generates a recursive process.
 #+end_quote
 
 *** Answer B
+
 #+NAME: accumulate-rec
 #+BEGIN_SRC scheme -n :eval no-export :exports code :results silent
 (define (accumulate-rec combiner null-value term a next b)
@@ -4323,7 +4526,9 @@ write one that generates a recursive process.
 #+END_SRC
 
 ** Exercise 1.33
+
 *** Question A
+
 #+INDEX: filter
 #+begin_quote
 You can obtain an even more general version of ~accumulate~ by introducing the
@@ -4335,6 +4540,7 @@ the filter. Write ~filtered-accumulate~ as a procedure.
 #+end_quote
 
 *** Answer A
+
 #+NAME: filtered-accumulate-iter
 #+BEGIN_SRC scheme -n :eval no-export :results silent
 (define (filtered-accumulate-iter
@@ -4351,9 +4557,11 @@ the filter. Write ~filtered-accumulate~ as a procedure.
 #+END_SRC
 
 *** Question B
+
 Show how to express the following using ~filtered-accumulate~:
 
 **** A
+
 Find the sum of the squares of the prime numbers in the interval \(a\) to \(b\)
 (assuming that you have a ~prime?~ predicate already written)
 
@@ -4392,6 +4600,7 @@ SUCCEED at many primes correct
 :end:
 
 **** B
+
 #+begin_quote
 Find the product of all the positive integers less than \(n\) that are
 relatively prime to \(n\) (i.e., all positive integers \(i < n\) such that
@@ -4432,13 +4641,16 @@ SUCCEED at Ex_1-33B
 :end:
 
 ** 1.3.2: Constructing Procedures Using lambda
+
 A procedure that's only used once is more conveniently expressed as the special
 form ~lambda~.
 
 Variables that are only briefly used in a limited scope can be specified with
 the special form ~let~. Variables in ~let~ blocks override external variables.
 The authors recommend using ~define~ for procedures and ~let~ for variables.
+
 ** Exercise 1.34
+
 *** Question
 #+begin_quote
 Suppose we define the procedure
@@ -4463,7 +4675,9 @@ Then, we have
 What happens if we (perversely) ask the interpreter to evaluate the combination
 src_scheme{(f f)}? Explain.
 #+end_quote
+
 *** Answer
+
 It ends up trying to execute ~2~ as a function.
 #+BEGIN_SRC scheme -n :eval no-export :results output
 ;; Will be evaluated like this:
@@ -4481,7 +4695,9 @@ ice-9/boot-9.scm:1685:16: In procedure raise-exception:
 Wrong type to apply: 2
 #+end_example
 :end:
+
 ** 1.3.3 Procedures as General Methods
+
 The *half-interval method*: if \(f(a)<0<f(b)\), then \(f\) must have at least
 one 0 between \(a\) and \(b\). To find 0, let \(x\) be the average of \(a\) and
 \(b\), if \(f(x) < 0\) then 0 must be between \(x\) and \(b\), if \(f(x)>0\)
@@ -4500,7 +4716,9 @@ example, \(x \mapsto x+x\) is equivalent to src_scheme{(lambda (x) (+ x x))}. In
 English, "the function whose value at \(y\) is \(x/y\)". /Though it seems like
 \(\mapsto\) doesn't necessarily describe a function, but the value of a function
 at a certain point? Or maybe that would just be \(~\), ie \(f(x)~etc\)/
+
 ** Exercise 1.35
+
 *** Text
 #+NAME: close-enough-txt
 #+BEGIN_SRC scheme -n :eval no-export :results silent
@@ -4523,13 +4741,17 @@ at a certain point? Or maybe that would just be \(~\), ie \(f(x)~etc\)/
           (try next))))
   (try first-guess))
 #+END_SRC
+
 *** Question
+
 #+begin_quote
 Show that the golden ratio \(\varphi\) is a fixed point of the transformation
 \(x \mapsto 1 + 1 / x\), and use this fact to compute \(\varphi\) by means of
 the ~fixed-point~ procedure.
 #+end_quote
+
 *** Answer
+
 #+NAME: golden-ratio
 #+BEGIN_SRC scheme -n :eval no-export :results output
 <<close-enough>>
@@ -4549,7 +4771,9 @@ the ~fixed-point~ procedure.
 :end:
 
 ** Exercise 1.36
+
 *** Question
+
 #+begin_quote
 Modify ~fixed-point~ so that it prints the sequence of approximations it
 generates, using the ~newline~ and ~display~ primitives shown in Exercise 1.22.
@@ -4561,6 +4785,7 @@ this would cause division by \(\log(1) = 0\).)
 #+end_quote
 
 *** Answer
+
 Using the ~display~ and ~newline~ functions at any great extent is pretty
 exhausting, so I'll use ~format~ instead.
 #+NAME: fixed-point-debug
@@ -4666,7 +4891,9 @@ Undamped, fixed-point makes 37 guesses.
 Damped, it makes 21.
 
 ** Exercise 1.37
+
 *** Question A
+
 #+begin_quote
 An infinite continued fraction is an expression of the form
 
@@ -4687,7 +4914,9 @@ Define a procedure ~cont-frac~ such that evaluating
 src_scheme{(cont-frac n d k)} computes the value of the \(k\)-term finite continued
 fraction.
 #+end_quote
+
 *** Answer A
+
 A note: the "golden ratio" this code estimates is exactly =1.0= less than the
 golden ratio anyone else seems to be talking about.
 #+NAME: cont-frac
@@ -4702,6 +4931,7 @@ golden ratio anyone else seems to be talking about.
 #+END_SRC
 
 *** Question B
+
 Check your procedure by approximating \(1 / \varphi\) using
 
 #+BEGIN_SRC scheme
@@ -4714,6 +4944,7 @@ for successive values of ~k~. How large must you make ~k~ in order to get an
 approximation that is accurate to 4 decimal places?
 
 *** Answer B
+
 #+NAME: cont-frac-data
 #+BEGIN_SRC scheme -n :eval no-export :results value table :exports results
 <<cont-frac>>
@@ -4770,6 +5001,7 @@ that generates a recursive process.
 #+end_quote
 
 *** Answer C
+
 #+NAME: cont-frac-rec
 #+BEGIN_SRC scheme -n :eval no-export :results silent
 (define (cont-frac-rec n d k)
@@ -4802,7 +5034,9 @@ SUCCEED at cont-frac iter and recursive equivalence
 :end:
 
 ** Exercise 1.38
+
 *** Question
+
 #+begin_quote
 In 1737, the Swiss mathematician Leonhard Euler published a memoir /De
 Fractionibus Continuis/, which included a continued fraction expansion for \(e -
@@ -4811,7 +5045,9 @@ Fractionibus Continuis/, which included a continued fraction expansion for \(e -
 1, 8, \(\dots\). Write a program that uses your ~cont-frac~ procedure from
 Exercise 1.37 to approximate \(e\), based on Euler's expansion.
 #+end_quote
+
 *** Answer
+
 #+BEGIN_SRC scheme -n :eval no-export :results value :exports both
 <<cont-frac>>
 (define (euler k)
@@ -4834,7 +5070,9 @@ Exercise 1.37 to approximate \(e\), based on Euler's expansion.
 :end:
 
 ** Exercise 1.39
+
 *** Question
+
 #+begin_quote
 A continued fraction representation of the tangent function was published in
 1770 by the German mathematician J.H. Lambert:
@@ -4845,7 +5083,9 @@ where \(x\) is in radians. Define a procedure src_scheme{(tan-cf x k)} that
 computes an approximation to the tangent function based on Lambert's formula.
 ~k~ specifies the number of terms to compute, as in Exercise 1.37.
 #+end_quote
+
 *** Answer
+
 #+BEGIN_SRC scheme -n :eval no-export :results value :exports both
 <<cont-frac>>
 (define (tan-cf x k)
@@ -4866,7 +5106,9 @@ computes an approximation to the tangent function based on Lambert's formula.
 -45.1830879105221
 #+end_example
 :end:
+
 ** 1.3.4 Procedures as Returned Values
+
 Procedures can return other procedures, which opens up new ways to express
 processes.
 
@@ -4877,7 +5119,9 @@ where \[f(x)=x-\frac{g(x)}{Dg(x)}\]
 Where \(x \mapsto g(x)\) is a differentiable function and \(Dg(x)\) is the
 derivative of \(g\) evaluated at \(x\).
 #+end_quote
+
 ** Exercise 1.40
+
 *** Text
 #+NAME: average-damp
 #+BEGIN_SRC scheme -n :eval no-export :results silent :exports code
@@ -4911,7 +5155,9 @@ derivative of \(g\) evaluated at \(x\).
 <<deriv>>
 <<newtons-method>>
 #+END_SRC
+
 *** Question
+
 #+begin_quote
 Define a procedure ~cubic~ that can be used together with the ~newtons-method~
 procedure in expressions of the form:
@@ -4924,7 +5170,9 @@ procedure in expressions of the form:
 #+begin_quote
 to approximate zeros of the cubic \(x^3 + ax^2 + bx + c\).
 #+end_quote
+
 *** Answer
+
 #+NAME: cubic
 #+BEGIN_SRC scheme -n :eval no-export :results silent :exports code
 (define (cubic a b c)
@@ -4958,7 +5206,9 @@ to approximate zeros of the cubic \(x^3 + ax^2 + bx + c\).
 :end:
 
 ** Exercise 1.41
+
 *** Question
+
 #+begin_quote
 Define a procedure ~double~ that takes a procedure of one argument as argument
 and returns a procedure that applies the original procedure twice. For example,
@@ -4972,6 +5222,7 @@ should be a procedure that adds 2. What value is returned by
 #+END_SRC
 
 *** Answer
+
 #+NAME: double
 #+BEGIN_SRC scheme :eval no-export :results silent
 (define (double f)
@@ -4993,7 +5244,9 @@ should be a procedure that adds 2. What value is returned by
 :end:
 
 ** Exercise 1.42
+
 *** Question
+
 #+begin_quote
 Let \(f\) and \(g\) be two one-argument functions. The composition \(f\) after
 \(g\) is defined to be the function \(x \mapsto f(g(x))\). Define a procedure
@@ -5001,6 +5254,7 @@ Let \(f\) and \(g\) be two one-argument functions. The composition \(f\) after
 #+end_quote
 
 *** Answer
+
 #+NAME: compose
 #+BEGIN_SRC scheme :eval no-export :results silent
 (define (compose f g)
@@ -5023,7 +5277,9 @@ Let \(f\) and \(g\) be two one-argument functions. The composition \(f\) after
 :end:
 
 ** Exercise 1.43
+
 *** Question
+
 #+begin_quote
 If \(f\) is a numerical function
 and \(n\) is a positive integer, then we can form the \(n^{\mathrm{th}}\) repeated
@@ -5038,6 +5294,7 @@ the procedure that computes the \(n^{\mathrm{th}}\) repeated application of \(f\
 #+end_quote
 
 *** Answer
+
 #+NAME: repeated
 #+BEGIN_SRC scheme :eval no-export :results silent
 <<compose>>
@@ -5064,7 +5321,9 @@ Success
 :end:
 
 ** Exercise 1.44
+
 *** Question
+
 #+INDEX: smoothing
 #+begin_quote
 The idea of smoothing a function is an important concept in signal processing.
@@ -5077,7 +5336,9 @@ function (that is, smooth the smoothed function, and so on) to obtain the
 \(n\)-fold smoothed function. Show how to generate the \(n\)-fold smoothed
 function of any given function using ~smooth~ and ~repeated~ from Exercise 1.43.
 #+end_quote
+
 *** Answer
+
 #+NAME: smooth
 #+BEGIN_SRC scheme :eval no-export :results silent
 <<average-varargs>>
@@ -5091,7 +5352,9 @@ function of any given function using ~smooth~ and ~repeated~ from Exercise 1.43.
 #+END_SRC
 
 ** Exercise 1.45
+
 *** Question
+
 #+begin_quote
 We saw in 1.3.3 that attempting to compute square roots by naively finding a
 fixed point of \(y \mapsto x / y\) does not converge, and that this can be fixed by
@@ -5107,7 +5370,9 @@ simple procedure for computing \(n^{\mathrm{th}}\) roots using ~fixed-point~,
 ~average-damp~, and the ~repeated~ procedure of Exercise 1.43. Assume that any
 arithmetic operations you need are available as primitives.
 #+end_quote
+
 *** Answer
+
 So this is strange. Back in my original workthrough of this book, I'd decided
 that finding an \(n\)th root required \(\lfloor\sqrt{n}\rfloor\) dampings. With
 a solution like this:
@@ -5350,7 +5615,9 @@ procedure. I have to wonder whether a ~fixed-point~ version that replaces the
 checks for a loop.
 
 ** Exercise 1.46
+
 *** Question
+
 #+begin_quote
 Several of the numerical methods described in this chapter are instances of an
 extremely general computational strategy known as /iterative improvement/.
@@ -5364,7 +5631,9 @@ guess as argument and keeps improving the guess until it is good enough. Rewrite
 the ~sqrt~ procedure of 1.1.7 and the ~fixed-point~ procedure of 1.3.3 in terms
 of ~iterative-improve~.
 #+end_quote
+
 *** Answer
+
 #+NAME: iterative-improve
 #+BEGIN_SRC scheme -n :eval no-export :results silent
 (define (iterative-improve good-enough? improve)
@@ -5424,6 +5693,7 @@ SUCCEED at sqrt-improve still working
 #+end_EXAMPLE
 
 * Chapter 2: Building Abstractions with Data
+
 The basic representations of data we've used so far aren't enough to deal with
 complex, real-world phenomena. We need to combine these representations to form
 *compound data*.
@@ -5432,6 +5702,7 @@ The technique of isolating how data objects are /represented/ from how they are
 /used/ is called *data abstraction*.
 
 ** 2.1.1: Example: Arithmetic Operations for Rational Numbers
+
 Lisp gives the procedures ~cons~, ~car~, and ~cdr~ to create *pairs*. This is an
 easy system for representing rational numbers.
 
@@ -5445,7 +5716,9 @@ Note that these abstraction layers allow the developer to change the underlying
 architecture without modifying the programs that depend on it.
 
 ** Exercise 2.1
+
 *** Text
+
 #+NAME: rat-ops-txt
 #+BEGIN_SRC scheme -n :eval no-export :results silent
 (define (add-rat x y)
@@ -5509,6 +5782,7 @@ architecture without modifying the programs that depend on it.
 #+end_EXAMPLE
 
 *** Question
+
 #+begin_quote
 Define a better version of ~make-rat~ that handles both positive and negative
 arguments. ~make-rat~ should normalize the sign so that if the rational number
@@ -5517,6 +5791,7 @@ rational number is negative, only the numerator is negative.
 #+end_quote
 
 *** Answer
+
 #+NAME: make-rat
 #+BEGIN_SRC scheme -n :eval no-export :results silent
 <<abs>>
@@ -5601,8 +5876,11 @@ My "optimized" version shows no benefit at all:
 unoptimized make-rat: ((1 . 2) 231.74267794)
 optimized make-rat: ((1 . 2) 233.99087033)
 #+END_EXAMPLE
+
 ** Exercise 2.2
+
 *** Question
+
 Consider the problem of representing line segments in a plane. Each segment is
 represented as a pair of points: a starting point and an ending point. Define a
 constructor ~make-segment~ and selectors ~start-segment~ and ~end-segment~ that
@@ -5625,7 +5903,9 @@ you'll need a way to print points:
   (display (y-point p))
   (display ")"))
 #+END_SRC
+
 *** Answer
+
 #+NAME: make-point
 #+BEGIN_SRC scheme -n :eval no-export :results silent
 <<average>>
@@ -5711,14 +5991,18 @@ optimized make-rat: ((0.0 . 0.0) 331.83410742)
 #+END_EXAMPLE
 
 ** Exercise 2.3
+
 *** Question
+
 Implement a representation for rectangles in a plane. (Hint: You may want to
 make use of Exercise 2.2.) In terms of your constructors and selectors, create
 procedures that compute the perimeter and the area of a given rectangle. Now
 implement a different representation for rectangles. Can you design your system
 with suitable abstraction barriers, so that the same perimeter and area
 procedures will work using either representation?
+
 *** Answer 1
+
 I don't really like the "wishful thinking" process the book advocates but since
 this question specifically regards abstraction, I'll start by writing the two
 requested procedures first.
@@ -5901,6 +6185,7 @@ SUCCEED at rect-peri WXYZ
 #+end_EXAMPLE
 
 *** Answer 2
+
 My second implementation will be of a rectangle as an origin, height, width, and
 angle. Basically, height and width are two vectors originating from origin, with
 width going straight right and height offset \(90\deg\) from width. Angle is
@@ -6028,6 +6313,7 @@ SUCCEED at rect-peri WXYZ
 #+end_EXAMPLE
 
 ** 2.1.3: What Is Meant by Data?
+
 We can consider data as being a collection of selectors and constructors,
 together with specific conditions that these procedures must fulfill in order to
 be a valid representation. For example, in the case of our rational number
@@ -6036,7 +6322,9 @@ denominator \(d\), dividing the result of src_scheme{(numer x)} over the result
 of src_scheme{(denom x)} should be equivalent to dividing \(n\) over \(d\).
 
 ** Exercise 2.4
+
 *** Question
+
 Here is an alternative procedural representation of pairs. For this
 representation, verify that src_scheme{(car (cons x y))} yields ~x~ for any
 objects ~x~ and ~y~.
@@ -6053,6 +6341,7 @@ What is the corresponding definition of ~cdr~? (Hint: To verify that this works,
 make use of the substitution model of 1.1.5.)
 
 *** Answer
+
 First, let's explain with the substitution model.
 #+BEGIN_SRC scheme -n :eval no-export :results silent
 (cons 0 1)
@@ -6097,14 +6386,18 @@ Now for implementation.
 #+end_EXAMPLE
 
 ** Exercise 2.5
+
 *** Question
+
 #+begin_quote
 Show that we can represent pairs of nonnegative integers using only numbers and
 arithmetic operations if we represent the pair \(a\) and \(b\) as the integer
 that is the product \(2^a 3^b\). Give the corresponding definitions of the
 procedures ~cons~, ~car~, and ~cdr~.
 #+end_quote
+
 *** Answer
+
 This one really blew my mind inside-out when I first did it. Basically, because
 the two numbers are coprime, you can factor out the unwanted number and be left
 with the desired one.
@@ -6264,7 +6557,9 @@ We can use this sign of a correct result in the proposed ~car~ and ~cdr~ procedu
 | cdr    |   3.0 |   5.0 |   2.0 |
 
 ** Exercise 2.6
+
 *** Question
+
 #+begin_quote
 In case representing pairs as procedures wasn't mind-boggling enough, consider
 that, in a language that can manipulate procedures, we can get by without
@@ -6290,6 +6585,7 @@ src_scheme{+} (not in terms of repeated application of src_scheme{add-1}).
 #+end_quote
 
 *** Answer
+
 First, let's check out src_scheme{(add-1 zero)}.
 #+BEGIN_SRC scheme -n
 (define zero (λ (f) (λ (x) x)))
@@ -6340,7 +6636,9 @@ SUCCEED at 3 = 1+2 = (1+0) + (1+1+0)
 #+end_EXAMPLE
 
 ** Exercise 2.7
+
 *** Text
+
 #+NAME: interval-txt
 #+BEGIN_SRC scheme -n :eval no-export :results silent
 (define (add-interval x y)
@@ -6359,7 +6657,9 @@ SUCCEED at 3 = 1+2 = (1+0) + (1+1+0)
    (make-interval (/ 1.0 (upper-bound y))
                   (/ 1.0 (lower-bound y)))))
 #+END_SRC
+
 *** Question
+
 #+begin_quote
 Alyssa's program is incomplete because she has not specified the implementation
 of the interval abstraction. Here is a definition of the interval constructor:
@@ -6375,6 +6675,7 @@ implementation.
 #+end_quote
 
 *** Answer
+
 #+NAME: make-interval
 #+BEGIN_SRC scheme -n :eval no-export :results silent
 <<interval-txt>>
@@ -6387,13 +6688,17 @@ implementation.
 #+END_SRC
 
 ** Exercise 2.8
+
 *** Question
+
 #+begin_quote
 Using reasoning analogous to Alyssa's, describe how the difference of two
 intervals may be computed. Define a corresponding subtraction procedure, called
 ~sub-interval~.
 #+end_quote
+
 *** Answer
+
 I would argue that with one interval subtracted from the other, the lowest
 possible value is the lower of the first subtracted from the /upper/ of the
 second, and the highest is the upper of the first subtracted from the lower of
@@ -6404,7 +6709,9 @@ the second.
   (make-interval (- (lower-bound x) (upper-bound y))
                  (- (upper-bound x) (lower-bound y))))
 #+END_SRC
+
 ** Exercise 2.9
+
 *** Question
 #+begin_quote
 The /width/ of an interval is half of the difference between its upper and lower
@@ -6417,9 +6724,11 @@ intervals is a function only of the widths of the intervals being added (or
 subtracted). Give examples to show that this is not true for multiplication or
 division.
 #+end_quote
+
 *** Answer
 
 ** 2.2: Hierarchical Data and the Closure Property
+
 ~cons~ pairs can be used to construct more complex data-types.
 
 file:2/cons-cells.jpeg
@@ -6444,6 +6753,7 @@ procedures.
 #+end_quote
 
 ** 2.2.3: Sequences as Conventional Interfaces
+
 Abstractions are an important part of making code clearer and more easy to
 understand. One beneficial manner of abstraction is making available
 conventional interfaces for working with compound data, such as ~filter~ and
@@ -6463,6 +6773,7 @@ graph TD;
 [[file:2/fig/t_2-2-3.png]]
 
 ** 2.2.4: Example: A Picture Language
+
 Authors describe a possible implementation of a "picture language" that tiles,
 patterns, and warps images according to a specification. This language consists
 of:
