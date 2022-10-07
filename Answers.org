@@ -1,7 +1,13 @@
+# Enable TOC, etc
 #+OPTIONS: toc:t stat:t prop:t num:20
+
+# Don't export "noexport" sections
 #+EXCLUDE_TAGS: noexport
 
+# Start folded
 #+STARTUP: overview
+
+# Tangle when saving
 #+auto_tangle: t
 
 # ORG-BABEL DEFAULTS
@@ -10,19 +16,13 @@
 #+PROPERTY: header-args:gnuplot :prelude "reset" :session nil
 #+PROPERTY: header-args:mermaid :exports results
 
-# For the actual answers their dependencies use a header like this:
-# #+BEGIN_SRC scheme -n :eval no-export :tangle yes :exports both
+# For the actual answers use a header like this:
+# #+BEGIN_SRC scheme -n :eval no-export :exports both
 # For their dependencies:
-# #+BEGIN_SRC scheme :eval no-export :tangle yes :results silent
-
-#+PANDOC_OPTIONS: standalone:t
-# FIXME: this doesn't appear to do anything. Be sure to run pandoc with -s
+# #+BEGIN_SRC scheme -n :eval no-export :results silent
 
 #+latex_class: article
-# NOTE: "draft" MARKS OVERFLOWING LINES WITH AN UGLY BLACK SQUARE. CHANGE TO "FINAL" WHEN FINISHED
 #+latex_class_options: [final,fleqn,titlepage]
-#+description:
-#+keywords:
 #+latex_engraved_theme:
 
 #+LATEX_CMD: xelatex -shell-escape -interaction nonstopmode
@@ -32,8 +32,13 @@
 #+LATEX_HEADER: \usepackage[T1]{fontenc}
 #+LATEX_HEADER: \setmonofont[Mapping=tex-text,Ligatures=TeX,Scale=MatchLowercase]{FiraMono-Regular}
 
+# SOURCE CODE HIGHLIGHTING
 #+LATEX_HEADER: \usepackage[cache=true]{minted}
 #+LATEX_HEADER: \usemintedstyle{colorful}
+# FIXME: keep minted inline code from being automatically wrapped
+#+LATEX_HEADER: \setmintedinline{breakbytoken=false,breakbytokenanywhere=false,breaklines=false,breakaftergroup=false}
+
+# SOURCE CODE FRAMES
 #+LATEX_HEADER: \usepackage{mdframed}
 #+LATEX_HEADER: \definecolor{my-bg}{rgb}{0.99,0.99,0.99}
 #+LATEX_HEADER: \definecolor{gray}{rgb}{0.60,0.60,0.60}
@@ -46,13 +51,10 @@
 #+LATEX_HEADER: \usepackage{etoolbox}
 #+LATEX_HEADER: \BeforeBeginEnvironment{minted}{\begin{mdframed}[style=theoremstyle]}
 #+LATEX_HEADER: \AfterEndEnvironment{minted}{\end{mdframed}}
-# TODO: keep minted inline code from being automatically wrapped
-#+LATEX_HEADER: \setmintedinline{breakbytoken=false,breakbytokenanywhere=false,breaklines=false,breakaftergroup=false}
-# listfiles causes latex to make a list of all files used during processing
-#+LATEX_HEADER: \listfiles
 
-# #+LATEX_HEADER: \setminted{bgcolor=grey}
-# #+LATEX_HEADER: \setmonofont[Ligatures=TeX]{inconsolata} % needs lualatex
+# listfiles leaves a list of all files used during processing in the log
+# in-Emacs renders log to a buffer, not a file
+#+LATEX_HEADER: \listfiles
 
 #+title: A Journey Through SICP
 #+subtitle: Notes, exercises and analyses of Abelson and Sussman
@@ -82,11 +84,6 @@
 - ~:exports code~ or ~:exports results~ to just get one or the other
 
 \(a + (\pi \times b)\) <~ inline Latex btw :)
-
-*** Current command for conversion
-#+BEGIN_SRC sh :noeval
-pandoc --from org --to latex 1.org -o 1.tex -s; xelatex 1.tex
-#+END_SRC
 
 *** Reduce image size
 #+BEGIN_SRC org
