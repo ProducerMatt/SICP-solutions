@@ -11,7 +11,7 @@
 #+auto_tangle: t
 
 # ORG-BABEL DEFAULTS
-#+PROPERTY: header-args :tangle no :noeval :exports both :cache yes :results output wrap :noweb no-export :comments noweb :colnames no :rownames no
+#+PROPERTY: header-args :tangle no :noeval :exports both :cache yes :results output wrap :noweb no-export :comments noweb :colnames no :rownames no :float multicolumn
 #+PROPERTY: header-args:scheme :wrap EXAMPLE
 #+PROPERTY: header-args:gnuplot :prelude "reset" :session nil
 #+PROPERTY: header-args:mermaid :exports results
@@ -22,7 +22,7 @@
 # #+BEGIN_SRC scheme -n :eval no-export :results silent
 
 #+latex_class: article
-#+latex_class_options: [final,fleqn,titlepage]
+#+latex_class_options: [final,fleqn,titlepage,twoside,twocolumn]
 #+latex_engraved_theme:
 
 #+LATEX_CMD: xelatex -shell-escape -interaction nonstopmode
@@ -35,6 +35,7 @@
 # SOURCE CODE HIGHLIGHTING
 #+LATEX_HEADER: \usepackage[cache=true]{minted}
 #+LATEX_HEADER: \usemintedstyle{colorful}
+#+LATEX_HEADER: \setminted{fontsize=\small}
 # FIXME: keep minted inline code from being automatically wrapped
 #+LATEX_HEADER: \setmintedinline{breakbytoken=false,breakbytokenanywhere=false,breaklines=false,breakaftergroup=false}
 
@@ -6788,3 +6789,4 @@ of:
     have all the properties of Scheme procedures.
     
     
+
