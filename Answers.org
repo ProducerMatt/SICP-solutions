@@ -25,7 +25,6 @@
 #+latex_class_options: [final,fleqn,titlepage,twoside,twocolumn]
 #+latex_engraved_theme:
 
-#+LATEX_CMD: xelatex -shell-escape -interaction nonstopmode
 #+LATEX_COMPILER: xelatex
 #+LATEX_HEADER: \usepackage{fontspec}
 #+LATEX_HEADER: \usepackage{lmodern}
