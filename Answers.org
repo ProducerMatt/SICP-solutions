@@ -6679,7 +6679,13 @@ implementation.
 #+NAME: make-interval
 #+BEGIN_SRC scheme -n :eval no-export :results silent
 <<interval-txt>>
-(define (make-interval a b) (cons a b))
+
+;; Makes more sense to me to test
+;; order in the constructor than selector
+(define (make-interval a b)
+  (if (> a b)
+      (cons a b)
+      (cons b a)))
 
 (define (upper-bound i)
   (car i))
@@ -6726,6 +6732,136 @@ division.
 #+end_quote
 
 *** Answer
+
+My first interpretation of the question was that it asked whether width
+operations are /distributive/. For example, multiplication is distributive:
+
+\[
+  a(b+c) = (a \mult b)+(a \mult c)
+\]
+
+For this I wrote the following tests:
+
+#+NAME: interval-width
+#+BEGIN_SRC scheme -n :eval no-export :results output
+(load "mattcheck2.scm")
+<<make-interval>>
+<<sub-interval>>
+
+(define (halve x)
+  (/ x 2))
+
+(define (width-interval I)
+  (halve (- (upper-bound I)
+            (lower-bound I))))
+
+(let* ((ia (make-interval 10.1 9.9))
+       (ib (make-interval 5.2 4.8))
+       (Aab (add-interval ia ib))
+       (Sab (sub-interval ia ib))
+       (Mab (mul-interval ia ib))
+       (Dab (div-interval ia ib)))
+  (mattcheck-float "ia width = roughly .1"
+                   0.1
+                   (width-interval ia))
+  (mattcheck-float "ib width = roughly .2"
+                   0.2
+                   (width-interval ib))
+  (mattcheck-float "width addition is distributive"
+                   (width-interval Aab)
+                   (+ (width-interval ia)
+                      (width-interval ib)))
+  (mattcheck-float "width subtraction is distributive"
+                   (width-interval Sab)
+                   (- (width-interval ia)
+                      (width-interval ib)))
+  (mattcheck-float "width multiplication is distributive"
+                   (width-interval Mab)
+                   (* (width-interval ia)
+                      (width-interval ib)))
+  (mattcheck-float "width division is distributive"
+                   (width-interval Dab)
+                   (/ (width-interval ia)
+                      (width-interval ib))))
+#+END_SRC
+
+#+RESULTS[fd604189d7982cfc00149ec25da8bbcd60053aa1]: interval-width
+#+begin_EXAMPLE
+<unknown-location>: warning: possibly unbound variable `mattcheck-float'
+SUCCEED at ia width = roughly .1
+SUCCEED at ib width = roughly .2
+SUCCEED at width addition is distributive
+FAIL at width subtraction is distributive
+expected: -0.10000000000000053
+returned: 0.2999999999999998
+FAIL at width multiplication is distributive
+expected: 0.01999999999999995
+returned: 2.5
+FAIL at width division is distributive
+expected: 0.4999999999999978
+returned: 0.10016025641025639
+#+end_EXAMPLE
+
+However upon rereading the question I see that it could be rephrased as "in what operations can you calculate the resulting interval's width with only the widths of the argument intervals?"
+
+So, let's try that again.
+
+#+NAME: interval-operations
+#+BEGIN_SRC scheme -n :eval no-export :results output
+(load "mattcheck2.scm")
+<<make-interval>>
+<<sub-interval>>
+
+(define (halve x)
+  (/ x 2))
+
+(define (width-interval I)
+  (halve (- (upper-bound I)
+            (lower-bound I))))
+
+(let* ((ia (make-interval 10.1 9.9))
+       (ib (make-interval 5.2 4.8))
+       (Aab (add-interval ia ib))
+       (Sab (sub-interval ia ib))
+       (Mab (mul-interval ia ib))
+       (Dab (div-interval ia ib)))
+  (mattcheck-float "ia width = roughly .1"
+                   0.1
+                   (width-interval ia))
+  (mattcheck-float "ib width = roughly .2"
+                   0.2
+                   (width-interval ib))
+  (mattcheck-float "width(ia+ib) = width(ia) + width(ib)"
+                   (width-interval Aab)
+                   (+ (width-interval ia)
+                      (width-interval ib)))
+  (mattcheck-float "width(ia-ib) = width(ia) + width(ib)"
+                   (width-interval Sab)
+                   (+ (width-interval ia)
+                      (width-interval ib)))
+  (mattcheck-float "width multiplication isn't compatible"
+                   (width-interval Mab)
+                   (+ (width-interval ia)
+                      (width-interval ib)))
+  (mattcheck-float "width division isn't compatible"
+                   (width-interval Dab)
+                   (+ (width-interval ia)
+                      (width-interval ib))))
+#+END_SRC
+
+#+RESULTS[8f7384c3cc5d240a8160e310578da0b1646358d7]: interval-operations
+#+begin_EXAMPLE
+SUCCEED at ia width = roughly .1
+SUCCEED at ib width = roughly .2
+SUCCEED at width(ia+ib) = width(ia) + width(ib)
+SUCCEED at width(ia-ib) = width(ia) + width(ib)
+FAIL at width multiplication isn't compatible
+expected: 0.2999999999999998
+returned: 2.5
+FAIL at width division isn't compatible
+expected: 0.2999999999999998
+returned: 0.10016025641025639
+#+end_EXAMPLE
 
 ** 2.2: Hierarchical Data and the Closure Property
 
