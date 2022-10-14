@@ -6802,7 +6802,19 @@ expected: 0.4999999999999978
 returned: 0.10016025641025639
 #+end_EXAMPLE
 
-However upon rereading the question I see that it could be rephrased as "in what operations can you calculate the resulting interval's width with only the widths of the argument intervals?"
+However upon rereading the question I see that it could be rephrased as "in what
+operations can you calculate the resulting interval's width with only the widths
+of the argument intervals?"
+
+Basically, for argument interval \(x\) and \(y\) and result interval \(z\):
+
+#+begin_quote
+=IF= \(z = x + y\) \\
+=THEN= \(z_{width} = x_{width} + y_{width}\) \\
+=IF= \(z = x - y\) \\
+=THEN= \(z_{width} = x_{width} + y_{width}\) \\
+Multiplied or divided widths cannot be determined from widths alone.
+#+end_quote
 
 So, let's try that again.
 
@@ -6822,9 +6834,7 @@ So, let's try that again.
 (let* ((ia (make-interval 10.1 9.9))
        (ib (make-interval 5.2 4.8))
        (Aab (add-interval ia ib))
-       (Sab (sub-interval ia ib))
-       (Mab (mul-interval ia ib))
-       (Dab (div-interval ia ib)))
+       (Sab (sub-interval ia ib)))
   (mattcheck-float "ia width = roughly .1"
                    0.1
                    (width-interval ia))
@@ -6838,30 +6848,30 @@ So, let's try that again.
   (mattcheck-float "width(ia-ib) = width(ia) + width(ib)"
                    (width-interval Sab)
                    (+ (width-interval ia)
-                      (width-interval ib)))
-  (mattcheck-float "width multiplication isn't compatible"
-                   (width-interval Mab)
-                   (+ (width-interval ia)
-                      (width-interval ib)))
-  (mattcheck-float "width division isn't compatible"
-                   (width-interval Dab)
-                   (+ (width-interval ia)
                       (width-interval ib))))
 #+END_SRC
 
-#+RESULTS[8f7384c3cc5d240a8160e310578da0b1646358d7]: interval-operations
+#+RESULTS[4b92c98c1711878ce321a2a589bb65308d703ad6]: interval-operations
 #+begin_EXAMPLE
 SUCCEED at ia width = roughly .1
 SUCCEED at ib width = roughly .2
 SUCCEED at width(ia+ib) = width(ia) + width(ib)
 SUCCEED at width(ia-ib) = width(ia) + width(ib)
-FAIL at width multiplication isn't compatible
-expected: 0.2999999999999998
-returned: 2.5
-FAIL at width division isn't compatible
-expected: 0.2999999999999998
-returned: 0.10016025641025639
 #+end_EXAMPLE
+
+** Exercise 2.10
+
+*** Question
+
+#+begin_quote
+Ben Bitdiddle, an expert systems programmer, looks over Alyssa's shoulder and
+comments that it is not clear what it means to divide by an interval that spans
+zero. Modify Alyssa's code to check for this condition and to signal an error if
+it occurs.
+#+end_quote
+
+*** Answer
+
 
 ** 2.2: Hierarchical Data and the Closure Property
 
