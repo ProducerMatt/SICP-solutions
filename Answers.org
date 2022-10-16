@@ -6872,6 +6872,285 @@ it occurs.
 
 *** Answer
 
+#+BEGIN_SRC scheme -n
+(define (interval-spans-zero? I)
+  (and (> upper-bound 0)
+       (< lower-bound 0)))
+(define (div-interval x y)
+  (if (interval-spans-zero? y)
+      "DIV-INTERVAL ERROR: denominator spans zero"
+      (mul-interval
+       x
+       (make-interval (/ 1.0 (upper-bound y))
+                      (/ 1.0 (lower-bound y))))))
+#+END_SRC
+
+** Exercise 2.11
+
+*** Question
+
+#+begin_quote
+In passing, Ben also cryptically comments: ``By testing the signs of the
+endpoints of the intervals, it is possible to break src_scheme{mul-interval}
+into nine cases, only one of which requires more than two multiplications.''
+Rewrite this procedure using Ben's suggestion.
+#+end_quote
+
+*** Answer
+
+This problem doesn't appear to have a beautiful, elegant answer.
+
+Let's examine the nine cases.
+
+#+NAME: checking-multiples
+#+BEGIN_SRC scheme -n :eval no-export :results value table
+(use-modules (ice-9 format))
+(use-srfis '(1))
+(load "mattcheck2.scm")
+<<make-interval>>
+<<sub-interval>>
+
+(define (matt-examine-mult f)
+  (let* ((pp (make-interval 3 2))
+         (pn (make-interval 3 -5))
+         (pn2 (make-interval 1 -0.5))
+         (nn (make-interval -5 -7))
+         (listofpairs (list
+                       (list pp pp)
+                       (list pp pn)
+                       (list pp nn)
+                       (list pn pp)
+                       (list pn pn)
+                       (list pn pn2) ;;<- edge case to catch incomplete
+                       (list pn nn)  ;;   multiplication functions
+                       (list nn pp)
+                       (list nn pn)
+                       (list nn nn)))
+         (givesign (λ(x)
+                     (if (negative? x)
+                         "-"
+                         "+")))
+         (print-sign (λ(I)
+                       (format #f "~a ~a"
+                               (givesign (upper-bound I))
+                               (givesign (lower-bound I)))))
+         (print-int (λ(I)
+                      (format #f "~a/~a"
+                              (upper-bound I)
+                              (lower-bound I))))
+         (print-ints (λ(I J)
+                       (format #f "~a times ~a"
+                               (print-int I)
+                               (print-int J))))
+         (results (map (λ(p)
+                         (apply f p))
+                       listofpairs)))
+    (list
+     (map (λ(p)
+            (apply print-ints p))
+          listofpairs)
+     (map print-int results)
+     (map (λ(I)
+            (print-sign I))
+          results)
+     (map (λ(p)
+            (format #f "~a // ~a"
+                    (print-sign (car p))
+                    (print-sign (cadr p))))
+          listofpairs))))
+(cons
+ (list "problem" "result" "signs" "problem signs")
+ (apply zip 
+        (matt-examine-mult mul-interval)))
+#+END_SRC
+
+#+RESULTS[eb1646265584f59fe337c3987aebbcc0a224664e]: checking-multiples
+| problem           | result   | signs | problem signs |
+|-------------------+----------+-------+---------------|
+| 3/2 times 3/2     | 9/4      | + +   | + + // + +    |
+| 3/2 times 3/-5    | 9/-15    | + -   | + + // + -    |
+| 3/2 times -5/-7   | -10/-21  | - -   | + + // - -    |
+| 3/-5 times 3/2    | 9/-15    | + -   | + - // + +    |
+| 3/-5 times 3/-5   | 25/-15   | + -   | + - // + -    |
+| 3/-5 times 1/-0.5 | 3.0/-5.0 | + -   | + - // + -    |
+| 3/-5 times -5/-7  | 35/-21   | + -   | + - // - -    |
+| -5/-7 times 3/2   | -10/-21  | - -   | - - // + +    |
+| -5/-7 times 3/-5  | 35/-21   | + -   | - - // + -    |
+| -5/-7 times -5/-7 | 49/25    | + +   | - - // - -    |
+|                   |          |       |               |
+|                   |          |       |               |
+
+#+NAME: mul-interval-opt
+#+BEGIN_SRC scheme -n :eval no-export :results silent
+(define (mul-interval-opt x y)
+  (let ((xu (upper-bound x))
+        (xl (lower-bound x))
+        (yu (upper-bound y))
+        (yl (lower-bound y)))
+    (define p? positive?)
+    (define n? negative?)
+    (define (check-signs? a b x y) ;; pass functions
+      (and (a xu)
+           (b xl)
+           (x yu)
+           (y yl)))
+    (define (same-signs?)
+      (or (check-signs? p? p? p? p?)
+          (check-signs? n? n? n? n?)))
+    (define (alt-signs?)
+      (or (check-signs? p? p? n? n?)
+          (check-signs? n? n? p? p?)))
+    (cond ((same-signs?)
+           (make-interval (* xu yu)
+                          (* xl yl)))
+          ((alt-signs?)
+           (make-interval (* xl yu)
+                          (* xu yl)))
+          ((check-signs? p? p? p? n?)
+           (make-interval (* xu yu)
+                          (* xu yl)))
+          ((check-signs? p? n? p? p?)
+           (make-interval (* xu yu)
+                          (* xl yu)))
+          ((check-signs? p? n? p? n?)
+           (let ((p1 (* xu yu))
+                 (p2 (* xu yl))
+                 (p3 (* xl yu))
+                 (p4 (* xl yl)))
+             (make-interval (max p1 p2 p3 p4)
+                            (min p1 p2 p3 p4))))
+          ((check-signs? p? n? n? n?)
+           (make-interval (* xl yl)
+                          (* xu yl)))
+          ((check-signs? n? n? p? n?)
+           (make-interval (* xl yl)
+                          (* xl yu))))))
+#+END_SRC
+
+#+NAME: checking-optimized
+#+BEGIN_SRC scheme -n :eval no-export :results output
+(use-modules (ice-9 format))
+(use-srfis '(1))
+(load "mattcheck2.scm")
+<<make-interval>>
+<<sub-interval>>
+<<mul-interval-opt>>
+
+(define (matt-mult-consistency f1 f2)
+  (let* ((pp (make-interval 3 2))
+         (pn (make-interval 3 -5))
+         (pn2 (make-interval 1 -0.5))
+         (nn (make-interval -5 -7))
+         (listofpairs (list
+                       (list "pp*nn" pp pp)
+                       (list "pp*pn" pp pn)
+                       (list "pp*nn" pp nn)
+                       (list "pn*pp" pn pp)
+                       (list "pn*pn" pn pn)
+                       (list "pn*pn2" pn pn2) ;;<- edge case to catch incomplete
+                       (list "pn*nn" pn nn)  ;;   multiplication functions
+                       (list "nn*pp" nn pp)
+                       (list "nn*pn" nn pn)
+                       (list "nn*nn" nn nn))))
+    (map (λ(l)
+           (mattcheck (car l)
+                      (apply f1 (cdr l))
+                      (apply f2 (cdr l))))
+         listofpairs)))
+
+(matt-mult-consistency mul-interval mul-interval-opt)
+#+END_SRC
+
+#+RESULTS[b10bdc030d52d0922553653de7d1c79c8080a0af]: checking-optimized
+#+begin_EXAMPLE
+SUCCEED at pp*nn
+SUCCEED at pp*pn
+SUCCEED at pp*nn
+SUCCEED at pn*pp
+SUCCEED at pn*pn
+SUCCEED at pn*pn2
+SUCCEED at pn*nn
+SUCCEED at nn*pp
+SUCCEED at nn*pn
+SUCCEED at nn*nn
+#+end_EXAMPLE
+
+#+NAME: mult-benchmark
+#+BEGIN_SRC scheme -n :noeval :results output :exports results :tangle 2/Ex11-bench.scm
+(define iters 10000000)
+(load "../mattbench.scm")
+<<make-interval>>
+<<sub-interval>>
+<<mul-interval-opt>>
+(let* ((pp (make-interval 3 2))
+       (pn (make-interval 3 -5))
+       (pn2 (make-interval 1 -0.5))
+       (nn (make-interval -5 -7))
+       (listofpairs (list
+                     (list pp pp)
+                     (list pp pn)
+                     (list pp nn)
+                     (list pn pp)
+                     (list pn pn)
+                     (list pn pn2) ;;<- edge case to catch incomplete
+                     (list pn nn)  ;;   multiplication functions
+                     (list nn pp)
+                     (list nn pn)
+                     (list nn nn))))
+  (format #t "Unoptimized mul-interval: ~a"
+          (cdr (mattbench2 (λ()
+                             (map (λ(l)
+                                    (apply mul-interval l))
+                                  listofpairs))
+                           iters)))
+  (format #t "Unoptimized mul-interval: ~a"
+          (cdr (mattbench2 (λ()
+                             (map (λ(l)
+                                    (apply mul-interval-opt l))
+                                  listofpairs))
+                           iters)))
+  )
+#+END_SRC
+
+#+RESULTS: mul-benchmark
+#+BEGIN_DXAMPLE
+Unoptimized mul-interval: (5231.8421225)
+Optimized mul-interval: (2526.5896437)
+#+END_EXAMPLE
+
+So as expected, about twice as fast!
+
+** Exercise 2.12
+
+*** Question
+
+After debugging her program, Alyssa shows it to a potential user, who complains
+that her program solves the wrong problem.  He wants a program that can deal
+with numbers represented as a center value and an additive tolerance; for
+example, he wants to work with intervals such as \(3.5 \pm 0.15\) rather than
+[3.35, 3.65].  Alyssa returns to her desk and fixes this problem by supplying
+an alternate constructor and alternate selectors:
+
+#+NAME: interval-center-width
+#+BEGIN_SRC scheme -n
+(define (make-center-width c w)
+  (make-interval (- c w) (+ c w)))
+(define (center i)
+  (/ (+ (lower-bound i) (upper-bound i)) 2))
+(define (width i)
+  (/ (- (upper-bound i) (lower-bound i)) 2))
+#+END_SRC
+
+Unfortunately, most of Alyssa's users are engineers.  Real engineering
+situations usually involve measurements with only a small uncertainty, measured
+as the ratio of the width of the interval to the midpoint of the interval.
+Engineers usually specify percentage tolerances on the parameters of devices,
+as in the resistor specifications given earlier.
+
+Define a constructor src_scheme{make-center-percent} that takes a center and a
+percentage tolerance and produces the desired interval. You must also define a
+selector src_scheme{percent} that produces the percentage tolerance for a given
+interval. The src_scheme{center} selector is the same as the one shown above.
 
 ** 2.2: Hierarchical Data and the Closure Property
 
