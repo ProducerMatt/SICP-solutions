@@ -7152,6 +7152,73 @@ percentage tolerance and produces the desired interval. You must also define a
 selector src_scheme{percent} that produces the percentage tolerance for a given
 interval. The src_scheme{center} selector is the same as the one shown above.
 
+*** Answer
+
+#+NAME: reciprocal
+#+BEGIN_SRC scheme -n :eval no-export :results silent
+(define (reciprocal x)
+  (/ 1 x))
+#+END_SRC
+#+NAME: interval-percent
+#+BEGIN_SRC scheme -n :eval no-export :results silent
+<<reciprocal>>
+<<make-interval>>
+<<sub-interval>>
+<<interval-center-width>>
+
+(define (make-center-percent c pt)
+  (let ((pp (* c
+               (* pt 0.01))))
+    (make-interval (- c pp) (+ c pp))))
+(define (percent I)
+  (* 100
+     (/ (width I)
+        (center I))))
+#+END_SRC
+
+#+NAME: checking-interval-percent
+#+BEGIN_SRC scheme -n :eval no-export :results output
+<<interval-percent>>
+(load "mattcheck2.scm")
+  (define (roughly-eq? a b)
+    ;; error size varies with magnitude of fp
+    ;; so dx must vary too.
+    (define dx (* a 0.000001))
+    (and (> a (- b dx))
+         (< a (+ b dx))))
+(define (interval-roughly-eq? I J)
+  (and (roughly-eq? (upper-bound I) (upper-bound J))
+       (roughly-eq? (lower-bound I) (lower-bound J))))
+
+(let* ((i1 (make-interval 105.0 95.0))
+      (i2 (make-center-width 100.0 5))
+      (i3 (make-center-percent 100.0 5))
+      (i1a (upper-bound i1)))
+  (mattcheck "make-center-width"
+             i1
+             i2)
+  (mattcheck "make-center-percent"
+             i1
+             i3)
+  (mattcheck "percent"
+             (percent i1)
+             (percent i3)
+             5.0)
+  (mattcheck+ "make-center-percent is consistent"
+              (list i1 i3)
+              #:eql? interval-roughly-eq?))
+#+END_SRC
+
+#+RESULTS[805f7bbb69cfddbd7c91eedb1bd952a41877fe7f]: checking-interval-percent
+#+begin_EXAMPLE
+<unknown-location>: warning: possibly unbound variable `mattcheck'
+<unknown-location>: warning: possibly unbound variable `mattcheck+'
+SUCCEED at make-center-width
+SUCCEED at make-center-percent
+SUCCEED at percent
+SUCCEED at make-center-percent is consistent
+#+end_EXAMPLE
+
 ** Exercise 2.13
 
 *** Question
