@@ -8,10 +8,12 @@
 ;; Made this to dodge weird compiler/emacs behavior that breaks SRFI-78
 ;; (see check.scm) and friends.
 
+(use-modules (ice-9 format)
+             (ice-9 optargs))
+
 (define undefined ;; Only way to return nothing in GNU Guile
     (if #t #f))   ;; TODO: consult with spiritual advisor
 
-(use-modules (ice-9 format))
 (define (mattcheck:fail id expression expected)
   (format #t "~&FAIL at ~a~%" id) ; "~@y" is printing limited to a single line
   (format #t "~&expected: ~@y~%" expected)
@@ -38,15 +40,31 @@
   (iter args))
 
 (define (mattcheck id . args)
-  (define (iter ll)
+  (mattcheck+ id args))
+
+(define (mattcheck-float id . args)
+  ;; Equality for questionable floating point
+  (define (roughly-eq? a b)
+    ;; error size varies with magnitude of fp
+    ;; so dx must vary too.
+    (define dx (* a 0.000001))
+    (and (> a (- b dx))
+         (< a (+ b dx))))
+
+  (mattcheck+ id args #:eql? roughly-eq?))
+
+(define* (mattcheck+ id l #:key (eql? equal?)
+                                (success mattcheck:succeed)
+                                (failure mattcheck:fail))
+   (define (iter ll)
     (if (= 1 (length ll))
-        (mattcheck:succeed id (car ll))
+        (success id (car ll))
         (let ((a (car ll))
               (d (cdr ll))
               (ad (cadr ll)))
-          (if (equal? a ad)
+          (if (eql? a ad)
               (iter d)
-              (mattcheck:fail id a ad)))))
-  (if (= 1 (length args))
-      (mattcheck-bool id (car args))
-      (iter args)))
+              (failure id a ad)))))
+  (if (= 1 (length l))
+      (mattcheck-bool id (car l))
+      (iter l)))
