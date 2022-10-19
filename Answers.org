@@ -7125,11 +7125,11 @@ So as expected, about twice as fast!
 *** Question
 
 After debugging her program, Alyssa shows it to a potential user, who complains
-that her program solves the wrong problem.  He wants a program that can deal
-with numbers represented as a center value and an additive tolerance; for
-example, he wants to work with intervals such as \(3.5 \pm 0.15\) rather than
-[3.35, 3.65].  Alyssa returns to her desk and fixes this problem by supplying
-an alternate constructor and alternate selectors:
+that her program solves the wrong problem. He wants a program that can deal with
+numbers represented as a center value and an additive tolerance; for example, he
+wants to work with intervals such as \(3.5 \pm 0.15\) rather than [3.35, 3.65].
+Alyssa returns to her desk and fixes this problem by supplying an alternate
+constructor and alternate selectors:
 
 #+NAME: interval-center-width
 #+BEGIN_SRC scheme -n
@@ -7141,11 +7141,11 @@ an alternate constructor and alternate selectors:
   (/ (- (upper-bound i) (lower-bound i)) 2))
 #+END_SRC
 
-Unfortunately, most of Alyssa's users are engineers.  Real engineering
-situations usually involve measurements with only a small uncertainty, measured
-as the ratio of the width of the interval to the midpoint of the interval.
-Engineers usually specify percentage tolerances on the parameters of devices,
-as in the resistor specifications given earlier.
+Unfortunately, most of Alyssa's users are engineers. Real engineering situations
+usually involve measurements with only a small uncertainty, measured as the
+ratio of the width of the interval to the midpoint of the interval. Engineers
+usually specify percentage tolerances on the parameters of devices, as in the
+resistor specifications given earlier.
 
 Define a constructor src_scheme{make-center-percent} that takes a center and a
 percentage tolerance and produces the desired interval. You must also define a
@@ -7171,7 +7171,7 @@ interval. The src_scheme{center} selector is the same as the one shown above.
                (* pt 0.01))))
     (make-interval (- c pp) (+ c pp))))
 (define (percent I)
-  (* 100
+  (* 100.0
      (/ (width I)
         (center I))))
 #+END_SRC
@@ -7211,8 +7211,6 @@ interval. The src_scheme{center} selector is the same as the one shown above.
 
 #+RESULTS[805f7bbb69cfddbd7c91eedb1bd952a41877fe7f]: checking-interval-percent
 #+begin_EXAMPLE
-<unknown-location>: warning: possibly unbound variable `mattcheck'
-<unknown-location>: warning: possibly unbound variable `mattcheck+'
 SUCCEED at make-center-width
 SUCCEED at make-center-percent
 SUCCEED at percent
@@ -7229,6 +7227,75 @@ formula for the approximate percentage tolerance of the product of two intervals
 in terms of the tolerances of the factors. You may simplify the problem by
 assuming that all numbers are positive.
 #+end_quote
+
+*** Answer
+
+I should've written this function a while ago.
+#+NAME: echo
+#+BEGIN_SRC scheme -n :eval no-export :results silent
+(use-modules (ice-9 format))
+(define (stringit . args)
+  (string-append
+   (format #f "~&")
+   (apply string-append
+    (map (λ(x)
+          (format #f "~a " x))
+        args))
+   (format #f "~%")))
+(define (echo . args)
+  (format #t "~a" (apply stringit args)))
+#+END_SRC
+
+Now, let's examine how interval percents relate to each other.
+
+#+NAME: checking-interval-relations
+#+BEGIN_SRC scheme -n :eval no-export :results output
+<<echo>>
+<<interval-percent>>
+<<mul-interval-opt>>
+
+(let* ((i1 (make-center-width 100 5))
+       (i2 (make-center-width 200 5))
+       (M12 (mul-interval-opt i1 i2)))
+  (echo "intervals 1 and 2:" i1 i2)
+  (echo "width of 1 and 2:" (width i1) (width i2))
+  (echo "percent of 1 and 2:" (percent i1) (percent i2))
+  (echo "i1*i2 = " M12)
+  (echo "width M12:" (width M12))
+  (echo "percent M12:" (percent M12)))
+#+END_SRC
+
+#+RESULTS[c7bf5a5d43464607ef3302188104e67ec1235c24]: checking-interval-relations
+#+begin_EXAMPLE
+intervals 1 and 2: (105 . 95) (205 . 195) 
+width of 1 and 2: 5 5 
+percent of 1 and 2: 5.0 2.5 
+i1*i2 =  (21525 . 18525) 
+width M12 1500 
+percent M12 7.490636704119851 
+#+end_EXAMPLE
+
+Perhaps percent\((A\times B) =\)percent\((A)+\)percent\((B)\)?
+
+#+NAME: checking-interval-relations2
+#+BEGIN_SRC scheme -n :eval no-export :results output
+<<echo>>
+<<interval-percent>>
+<<mul-interval-opt>>
+
+(let* ((i1 (make-center-percent 40 0.1))
+       (i2 (make-center-percent 200 0.4))
+       (M12 (mul-interval-opt i1 i2)))
+  (echo "percent of 1 and 2:" (percent i1) (percent i2))
+  (echo "percent M12:" (percent M12)))
+#+END_SRC
+
+#+RESULTS[8fccf6198fb4c9f4fba0c52e6e5ec4f3bb2dd284]: checking-interval-relations2
+#+begin_EXAMPLE
+percent of 1 and 2: 0.09999999999999788 0.40000000000000563 
+percent M12: 0.499998000008 
+#+end_EXAMPLE
+
 ** Exercise 2.14
 
 *** Question
@@ -7253,13 +7320,12 @@ He has written the following two programs, each of which computes the
 parallel-resistors formula differently:
 #+end_quote
 
-#+BEGIN_SRC scheme
+#+NAME: par-resistors
+#+BEGIN_SRC scheme -n :eval no-export
 (define (par1 r1 r2)
   (div-interval (mul-interval r1 r2)
                 (add-interval r1 r2)))
-#+END_SRC
 
-#+BEGIN_SRC scheme
 (define (par2 r1 r2)
   (let ((one (make-interval 1 1)))
     (div-interval
@@ -7278,6 +7344,70 @@ insight by using intervals whose width is a small percentage of the center
 value. Examine the results of the computation in center-percent form (see
 Exercise 2.12).
 #+end_quote
+
+*** Answer
+
+#+NAME: resistor-testing
+#+BEGIN_SRC scheme -n :eval no-export :results output
+<<echo>>
+<<interval-percent>>
+<<mul-interval-opt>>
+<<par-resistors>>
+
+(let* ((A (make-center-percent 10 1))
+       (B (make-center-percent 10 0.01))
+       (p1 (par1 A B))
+       (p2 (par2 A B)))
+  (echo "A,B:" A B)
+  (echo "par1(A,B):" p1)
+  (echo "par2(A,B):" p2)
+  (echo "percent(par1):" (percent p1))
+  (echo "percent(par2):" (percent p2))
+  (echo "center(par1):" (center p1))
+  (echo "center(par2):" (center p2)))
+
+(echo "So these two have inconsistent effects on the width.")
+(echo "Also the center drifts more with par1.")
+(newline)
+(echo "It should also be noted that floating-point errors accumulate.")
+(echo "Take a look at the error on these (correct answer is 1)")
+
+(let* ((A (make-center-percent 10 1))
+       (p1 (div-interval
+            (div-interval
+             (mul-interval A A)
+             A)
+            A))
+       (p2 (div-interval
+            (div-interval
+             (div-interval
+              (mul-interval
+               (mul-interval A A)
+               A)
+              A)
+             A)
+            A)))
+  (echo "p1:" (center p1))
+  (echo "p2:" (center p2)))
+#+END_SRC
+
+#+RESULTS[328809af4974fa00f964a66bcef767df4e52c98e]: resistor-testing
+#+begin_EXAMPLE
+A,B: (10.1 . 9.9) (10.001 . 9.999) 
+par1(A,B): (5.076139504497713 . 4.924635590269141) 
+par2(A,B): (5.025128103079449 . 4.974626865671642) 
+percent(par1): 1.5149217214958663 
+percent(par2): 0.5050247487625606 
+center(par1): 5.000387547383427 
+center(par2): 4.999877484375546 
+So these two have inconsistent effects on the width. 
+Also the center drifts more with par1. 
+
+It should also be noted that floating-point errors accumulate. 
+Take a look at the error on these (correct answer is 1) 
+p1: 1.0008001600240033 
+p2: 1.0018006601460259 
+#+end_EXAMPLE
 
 ** Exercise 2.15
 
