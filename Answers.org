@@ -7,6 +7,8 @@
 # Start folded
 #+STARTUP: overview
 
+#+TAGS: math optional
+
 # Tangle when saving
 #+auto_tangle: t
 
@@ -732,13 +734,13 @@ Then he evaluates the expression:
 (test 0 (p))
 #+END_SRC
 #+begin_quote
-
 What behavior will Ben observe with an interpreter that uses applicative-order
-evaluation? What behavior will he observe with an interpreter that uses
-normal-order evaluation? Explain your answer. (Assume that the evaluation rule
-for the special form if is the same whether the interpreter is using normal or
-applicative order: The predicate expression is evaluated first, and the result
-determines whether to evaluate the consequent or the alternative expression.)
+evaluation?  What behavior will he observe with an interpreter that uses
+normal-order evaluation?  Explain your answer.  (Assume that the evaluation
+rule for the special form src_scheme{if} is the same whether the interpreter is
+using normal or applicative order: The predicate expression is evaluated first,
+and the result determines whether to evaluate the consequent or the alternative
+expression.)
 #+end_quote
 
 *** Answer
@@ -876,15 +878,16 @@ whichever branch is chosen leaves the other branches unevaluated.
 *** Question
 
 #+begin_quote
-The ~good-enough?~ test used in computing square roots will not be very effective
-for finding the square roots of very small numbers. Also, in real computers,
-arithmetic operations are almost always performed with limited precision. This
-makes our test inadequate for very large numbers. Explain these statements, with
-examples showing how the test fails for small and large numbers. An alternative
-strategy for implementing ~good-enough?~ is to watch how guess changes from one
-iteration to the next and to stop when the change is a very small fraction of
-the guess. Design a square-root procedure that uses this kind of end test. Does
-this work better for small and large numbers?
+The src_scheme{good-enough?} test used in computing square roots will not be
+very effective for finding the square roots of very small numbers. Also, in real
+computers, arithmetic operations are almost always performed with limited
+precision. This makes our test inadequate for very large numbers. Explain these
+statements, with examples showing how the test fails for small and large
+numbers. An alternative strategy for implementing src_scheme{good-enough?} is to
+watch how src_scheme{guess} changes from one iteration to the next and to stop
+when the change is a very small fraction of the guess. Design a square-root
+procedure that uses this kind of end test. Does this work better for small and
+large numbers?
 #+end_quote
 
 *** Diary
@@ -1076,15 +1079,18 @@ So, my definition of ~sqrt~:
 *** Question
 
 #+begin_quote
-Newton's method for cube roots is based on the fact that if y is an
-approximation to the cube root of x, then a better approximation is given by the
-value:
-\begin{equation}
+Newton's method for cube roots is based on the fact that if \(y\) is an
+approximation to the cube root of \(x\), then a better approximation is given by
+the value
+
+\[
 \frac{\frac{x}{y^2} + 2y}{3}
-\end{equation}
-Use this formula to implement a cube-root procedure analogous to the square-root
-procedure. (In 1.3.4 we will see how to implement Newton's method in general as
-an abstraction of these square-root and cube-root procedures.)
+\]
+
+Use this formula to implement a cube-root procedure analogous to the
+src_scheme{square-root} procedure. (In 1.3.4 we will see how to implement
+Newton's method in general as an abstraction of these square-root and cube-root
+procedures.)
 #+end_quote
 
 *** Diary
@@ -1222,8 +1228,8 @@ iterative processes in constant space, even if the procedure is recursive, are
 *** Question
 #+begin_quote
 Each of the following two procedures defines a method for adding two positive
-integers in terms of the procedures inc, which increments its argument by 1, and
-dec, which decrements its argument by 1.
+integers in terms of the procedures src_scheme{inc}, which increments its
+argument by 1, and src_scheme{dec}, which decrements its argument by 1.
 #+end_quote
 
 #+BEGIN_SRC scheme -n :noeval 
@@ -1574,9 +1580,18 @@ I like that better.
 
 #+begin_quote
 The following pattern of numbers is called Pascal's triangle.
+#+end_quote
 
-/Pretend there's a Pascal's triangle here./
+#+BEGIN_EXAMPLE
+        1
+      1   1
+    1   2   1
+  1   3   3   1
+1   4   6   4   1
+      . . .
+#+END_EXAMPLE
 
+#+begin_quote
 The numbers at the edge of the triangle are all 1, and each number inside the
 triangle is the sum of the two numbers above it. Write a procedure that
 computes elements of Pascal's triangle by means of a recursive process.
@@ -1584,7 +1599,7 @@ computes elements of Pascal's triangle by means of a recursive process.
 
 *** Answer
 
-I guess I'll rotate the triangle 45 degrees to make it the top-left corner of an
+I guess I'll rotate the triangle 45 degrees to make it the corner of an
 infinite spreadsheet.
 
 #+NAME: pascal-rec
@@ -1626,7 +1641,7 @@ infinite spreadsheet.
 
 The test code was much harder to write than the actual solution.
 
-** Exercise 1.13 :DONE:
+** Exercise 1.13 :optional:DONE:
 
 *** Question
 
@@ -1764,8 +1779,9 @@ useful in indicating how a process will change with the size of the problem.
 
 ** Exercise 1.14 :DONE:
 
-Below is the default version of the count-change function. I'll be aggressively
-modifying it in order to get a graph out of it.
+*** Text
+Below is the default version of the src_scheme{count-change} function. I'll be
+aggressively modifying it in order to get a graph out of it.
 #+NAME: count-change
 #+BEGIN_SRC scheme -n :eval no-export :exports code :results silent
 (define (count-change amount)
@@ -1793,8 +1809,8 @@ modifying it in order to get a graph out of it.
 *** Question A
 
 #+begin_quote
-Draw the tree illustrating the process generated by the count-change procedure
-of 1.2.2 in making change for 11 cents.
+Draw the tree illustrating the process generated by the src_scheme{count-change}
+procedure of 1.2.2 in making change for 11 cents.
 #+end_quote
 
 *** Answer
@@ -2759,13 +2775,14 @@ the other number in the pair. This is Euclid's Algorithm.
 
 #+begin_quote
 The process that a procedure generates is of course dependent on the rules used
-by the interpreter. As an example, consider the iterative ~gcd~ procedure given
-above. Suppose we were to interpret this procedure using normal-order
-evaluation, as discussed in 1.1.5. (The normal-order-evaluation rule for ~if~ is
-described in Exercise 1.5.) Using the substitution method (for normal order),
-illustrate the process generated in evaluating src_scheme{(gcd 206 40)} and indicate the
-remainder operations that are actually performed. How many remainder operations
-are actually performed in the normal-order evaluation of src_scheme{(gcd 206 40)}? In the
+by the interpreter. As an example, consider the iterative src_scheme{gcd}
+procedure given above. Suppose we were to interpret this procedure using
+normal-order evaluation, as discussed in 1.1.5. (The normal-order-evaluation
+rule for src_scheme{if} is described in Exercise 1.5.) Using the substitution
+method (for normal order), illustrate the process generated in evaluating
+src_scheme{(gcd 206 40)} and indicate the src_scheme{remainder} operations that
+are actually performed. How many src_scheme{remainder} operations are actually
+performed in the normal-order evaluation of src_scheme{(gcd 206 40)}? In the
 applicative-order evaluation?
 #+end_quote
 
@@ -2947,12 +2964,13 @@ following numbers: 199, 1999, 19999.
 *** Question
 
 #+begin_quote
-Most Lisp implementations include a primitive called runtime that returns an
-integer that specifies the amount of time the system has been running (measured,
-for example, in microseconds). The following timed-prime-test procedure, when
-called with an integer n, prints n and checks to see if n is prime. If n is
-prime, the procedure prints three asterisks followed by the amount of time used
-in performing the test.
+Most Lisp implementations include a primitive called src_scheme{runtime} that
+returns an integer that specifies the amount of time the system has been running
+(measured, for example, in microseconds). The following
+src_scheme{timed-prime-test} procedure, when called with an integer \(n\),
+prints \(n\) and checks to see if \(n\) is prime. If \(n\) is prime, the
+procedure prints three asterisks followed by the amount of time used in
+performing the test.
 #+end_quote
 #+NAME: prime-smallest-divisor
 #+BEGIN_SRC scheme -n :eval no-export :exports code :results output
@@ -2980,17 +2998,17 @@ in performing the test.
 #+END_SRC
 
 #+begin_quote
-Using this procedure, write a procedure search-for-primes that checks the
-primality of consecutive odd integers in a specified range. Use your procedure
-to find the three smallest primes larger than 1000; larger than 10,000; larger
-than 100,000; larger than 1,000,000. Note the time needed to test each prime.
-Since the testing algorithm has order of growth of \(\Theta(\sqrt{n})\), you
-should expect that testing for primes around 10,000 should take about
-\(\sqrt{10}\) times as long as testing for primes around 1000. Do your timing
-data bear this out? How well do the data for 100,000 and 1,000,000 support the
-\(\Theta(\sqrt{n})\) prediction? Is your result compatible with the notion that
-programs on your machine run in time proportional to the number of steps
-required for the computation?
+Using this procedure, write a procedure src_scheme{search-for-primes} that
+checks the primality of consecutive odd integers in a specified range. Use your
+procedure to find the three smallest primes larger than 1000; larger than
+10,000; larger than 100,000; larger than 1,000,000. Note the time needed to test
+each prime. Since the testing algorithm has order of growth of
+\(\Theta(\sqrt{n\))}, you should expect that testing for primes around 10,000
+should take about \(\sqrt{10\)} times as long as testing for primes around 1000.
+Do your timing data bear this out? How well do the data for 100,000 and
+1,000,000 support the \(\Theta(\sqrt{n\))} prediction? Is your result compatible
+with the notion that programs on your machine run in time proportional to the
+number of steps required for the computation?
 #+end_quote
 
 *** Answer
@@ -6385,7 +6403,7 @@ Now for implementation.
 | (6 . 0) | (6 . 1) | (6 . 2) | (6 . 3) | (6 . 4) | (6 . 5) | (6 . 6) |
 #+end_EXAMPLE
 
-** Exercise 2.5 :DONE:
+** Exercise 2.5 :optional:DONE:
 
 *** Question
 
@@ -6556,7 +6574,7 @@ We can use this sign of a correct result in the proposed ~car~ and ~cdr~ procedu
 | car    |   2.0 |   4.0 |   7.0 |
 | cdr    |   3.0 |   5.0 |   2.0 |
 
-** Exercise 2.6 :DONE:
+** Exercise 2.6 :optional:DONE:
 
 *** Question
 
@@ -6977,8 +6995,6 @@ Let's examine the nine cases.
 | -5/-7 times 3/2   | -10/-21  | - -   | - - // + +    |
 | -5/-7 times 3/-5  | 35/-21   | + -   | - - // + -    |
 | -5/-7 times -5/-7 | 49/25    | + +   | - - // - -    |
-|                   |          |       |               |
-|                   |          |       |               |
 
 #+NAME: mul-interval-opt
 #+BEGIN_SRC scheme -n :eval no-export :results silent
@@ -7217,7 +7233,7 @@ SUCCEED at percent
 SUCCEED at make-center-percent is consistent
 #+end_EXAMPLE
 
-** Exercise 2.13 :DONE:
+** Exercise 2.13 :optional:DONE:
 
 *** Question
 
@@ -7455,7 +7471,7 @@ A-A = 0 != (0.1999999999999993 . -0.1999999999999993)
 A/A = 1 != (1.02020202020202 . 0.9801980198019803) 
 #+end_EXAMPLE
 
-** Exercise 2.16 :TODO:
+** Exercise 2.16 :optional:TODO:
 
 *** Question
 
