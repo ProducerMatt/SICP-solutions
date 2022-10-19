@@ -7482,6 +7482,17 @@ shortcoming, or is this task impossible? (Warning: This problem is very
 difficult.)
 #+end_quote
 
+*** Answer
+
+It is /indeed/ very difficult, because from what I'm seeing online, no interval
+system without these issues exists. To avoid these issues, interval mathematics
+would need to satisfy the conditions for a *field* -- and failing that, needs to
+only use each variable once, which becomes impossible as soon as you encounter
+an expression as simple as \(x^2\).
+
+GitHub user "=diiq=" has an incredible analysis of this, which can be found here:
+[[https://gist.github.com/diiq/1f39df0e54b2137bb07e7e04b11cb075]]
+
 ** 2.2: Hierarchical Data and the Closure Property
 
 ~cons~ pairs can be used to construct more complex data-types.
