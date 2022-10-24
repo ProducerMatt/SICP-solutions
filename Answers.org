@@ -7744,6 +7744,82 @@ even-odd parity as the first argument.  For example,
 ; (2 4 6)
 #+END_SRC
 
+*** Answer
+
+#+NAME: same-parity
+#+BEGIN_SRC scheme -n :eval no-export :result silent
+(define (same-parity . rest)
+  (define same?
+    (if (even? (car rest))
+        even?
+        odd?))
+  (define (iter l results)
+    (if (null? l)
+         results
+        (let ((a (car l)))
+          (iter (cdr l)
+                (if (same? a)
+                    (cons a results)
+                    results)))))
+  (iter (reverse rest) '()))
+
+;; Attempting to remove the reversing
+(define (same-parity2 . args)
+  (define first (car args))
+  (define same?
+    (if (even? first)
+        even?
+        odd?))
+  (define (iter l results)
+    (if (null? l)
+        results
+        (let ((a (car l))
+              (d (cdr l)))
+          (if (same? a)
+              (iter d (append results
+                              (cons a #nil)))
+              (iter d results)))))
+  (iter (cdr args) (cons first #nil)))
+#+END_SRC
+
+#+BEGIN_SRC scheme -n :eval no-export :results value
+<<same-parity>>
+(list
+ (same-parity 1 2 3 4 5 6 7)
+ (same-parity2 2 3 4 5 6 7))
+#+END_SRC
+
+#+RESULTS[fc9b426af98cdf036973b2b682d4e8fae21e8e41]:
+#+begin_EXAMPLE
+| 1 | 3 | 5 | 7 |
+| 2 | 4 | 6 |   |
+#+end_EXAMPLE
+
+#+NAME: same-parity-benchmark
+#+BEGIN_SRC scheme -n :noeval :results output :exports results :tangle 2/Ex20-bench.scm
+(define iters 500000)
+(load "../mattbench.scm")
+<<same-parity>>
+(let ((l (cddr (iota 100))))
+  (format #t "same-parity: ~a~%"
+          (cdr (mattbench2 (λ()
+                             (apply same-parity l))
+                           iters)))
+  (format #t "same-parity2: ~a~%"
+          (cdr (mattbench2 (λ()
+                             (apply same-parity2 l))
+                           iters))))
+#+END_SRC
+
+#+RESULTS: same-parity-benchmark
+#+BEGIN_EXAMPLE
+same-parity: (10003.483436)
+same-parity2: (56007.042334)
+#+END_EXAMPLE
+
+Once again, my attempts to optimize are a complete failure. I'm guessing that
+the act of traversing the whole list in the call to ~append~ is the problem.
+
 ** 2.2.3: Sequences as Conventional Interfaces
 
 Abstractions are an important part of making code clearer and more easy to
