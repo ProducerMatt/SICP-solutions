@@ -582,7 +582,7 @@ predicate and, depending on the result, either evaluate the *consequent* or the
 *alternative*. If you were evaluating in a standard manner, the consequent and
 alternative would both be evaluated, rendering the ~if~ expression ineffective.
 
-** DONE Exercise 1.1
+** Exercise 1.1
 
 *** Question
 #+begin_quote
@@ -616,7 +616,7 @@ evaluated in the order in which it is presented.
    (+ a 1)) ;; 16
 #+END_SRC
 
-** DONE Exercise 1.2
+** Exercise 1.2
 
 *** Question
 
@@ -643,7 +643,7 @@ Translate the following expression into prefix form:
 #+end_example
 :end:
 
-** DONE Exercise 1.3
+** Exercise 1.3
 
 *** Question
 
@@ -679,7 +679,7 @@ the squares of the two larger numbers.
 | (3 5 7) | 74 |
 :end:
 
-** DONE Exercise 1.4
+** Exercise 1.4
 
 *** Question
 
@@ -708,7 +708,7 @@ if b > 0: a + b
 else: a - b
 #+END_SRC
 
-** DONE Exercise 1.5
+** Exercise 1.5
 
 *** Question
 
@@ -780,7 +780,7 @@ Suppressing these details are particularly helpful:
   is called *block structure*. Nesting these definitions also allows relevant
   variables to be shared across procedures, which is called *lexical scoping*.
 
-** DONE Exercise 1.6
+** Exercise 1.6
 
 *** Text code
 #+NAME: abs
@@ -865,7 +865,7 @@ Using Alyssa's ~new-if~ leads to an infinite loop because the recursive call to
 ~if~ and ~cond~ are special forms that change the way evaluation is handled;
 whichever branch is chosen leaves the other branches unevaluated.
 
-** DONE Exercise 1.7
+** Exercise 1.7
 
 *** Text
 
@@ -1074,7 +1074,7 @@ So, my definition of ~sqrt~:
 |  1e-10 | 9.999999999999999e-06 |
 :end:
 
-** DONE Exercise 1.8
+** Exercise 1.8
 
 *** Question
 
@@ -1223,7 +1223,7 @@ constructs such as ~do~, ~repeat~, ~for~, etc. Implementations that execute
 iterative processes in constant space, even if the procedure is recursive, are
 *tail-recursive*.
 
-** DONE Exercise 1.9
+** Exercise 1.9
 
 *** Question
 #+begin_quote
@@ -1280,7 +1280,7 @@ tail-recursion.
 9
 #+END_SRC
 
-** DONE Exercise 1.10
+** Exercise 1.10
 
 *** Question
 
@@ -1449,7 +1449,7 @@ variables.
 
 I should come back and try to make the "better algorithm" suggested.
 
-** DONE Exercise 1.11
+** Exercise 1.11
 
 *** Question
 
@@ -1574,7 +1574,7 @@ It works but it seems wasteful.
 
 I like that better.
 
-** DONE Exercise 1.12
+** Exercise 1.12
 
 *** Question
 
@@ -1641,7 +1641,7 @@ infinite spreadsheet.
 
 The test code was much harder to write than the actual solution.
 
-** DONE Exercise 1.13 :optional:
+** Exercise 1.13 :optional:
 
 *** Question
 
@@ -1777,7 +1777,7 @@ Some algorithms we've already seen:
 Orders of growth are very crude descriptions of process behaviors, but they are
 useful in indicating how a process will change with the size of the problem.
 
-** DONE Exercise 1.14
+** Exercise 1.14
 
 *** Text
 Below is the default version of the src_scheme{count-change} function. I'll be
@@ -2058,7 +2058,7 @@ like this since college. It's inspired me to restart my remedial math courses, I
 don't think I really grasped the nature of math as a tool of empowerment until
 now.
 
-** DONE Exercise 1.15
+** Exercise 1.15
 
 *** Question A
 
@@ -2292,7 +2292,7 @@ But note it could be approached faster with squaring:
 b^4 &= b^2\cdot b^2\\
 b^8 &= b^4 \cdot b^4\end{aligned}\]
 
-** DONE Exercise 1.16
+** Exercise 1.16
 
 *** Text
 
@@ -2428,7 +2428,7 @@ The solution essentially follows this logic:
 | 10 | 59049 |
 :end:
 
-** DONE Exercise 1.17
+** Exercise 1.17
 
 *** Question
 
@@ -2493,7 +2493,7 @@ Proof it works:
 | 10 | 30 |
 :end:
 
-** DONE Exercise 1.18
+** Exercise 1.18
 
 *** Question
 
@@ -2568,7 +2568,7 @@ Some of my /very/ incorrect ideas:
 | 10 | 30 |
 :end:
 
-** DONE Exercise 1.19
+** Exercise 1.19
 
 *** Question
 
@@ -2759,7 +2759,7 @@ the other number in the pair. This is Euclid's Algorithm.
    equal to the \(k^{th}\)Fibonacci number.
 #+end_quote
 
-** DONE Exercise 1.20
+** Exercise 1.20
 
 *** Text
 
@@ -2917,7 +2917,7 @@ The Fermat test is a probabilistic algorithm, meaning its answer is likely to be
 correct rather than guaranteed to be correct. Repeating the test increases the
 likelihood of a correct answer.
 
-** DONE Exercise 1.21
+** Exercise 1.21
 
 *** Text
 
@@ -2959,7 +2959,7 @@ following numbers: 199, 1999, 19999.
 | 199 | 1999 | 7 |
 :end:
 
-** DONE Exercise 1.22
+** Exercise 1.22
 
 *** Question
 
@@ -3193,7 +3193,7 @@ sure where the fault lies. I don't struggle to understand things like "this
 algorithm is slower than this other one," but when asked to find or prove the
 \(\Theta\) notation I'm pretty clueless;
 
-** DONE Exercise 1.23
+** Exercise 1.23
 
 *** Question
 
@@ -3546,7 +3546,7 @@ file:1/fig/1-22-4.png
 | % speedup for optimized     | 186.59% |
 :end:
 
-** DONE Exercise 1.24
+** Exercise 1.24
 
 *** Text
 
@@ -3763,7 +3763,7 @@ file:1/fig/1-24-2.png
 For the life of me I have no idea what that bump is. Maybe it needs more
 aggressive bignum processing there?
 
-** DONE Exercise 1.25
+** Exercise 1.25
 
 *** Question
 
@@ -3833,7 +3833,7 @@ As an example, let's trace (some of) the execution of src_scheme{(expmod 455 100
 You can see that the numbers remain quite manageable throughout this process. So
 taking these extra steps actually leads to an algorithm that performs better.
 
-** DONE Exercise 1.26
+** Exercise 1.26
 
 *** Question
 
@@ -3873,7 +3873,7 @@ Louis' version doubles the work, having two processes solving the exact same
 problem. Since the number of processes used increases exponentially, this turns
 \(\log n\) into \(n\).
 
-** DONE Exercise 1.27
+** Exercise 1.27
 
 *** Question
 
@@ -3908,7 +3908,7 @@ and try your procedure on the given Carmichael numbers.
                      ;      Carmichael number)
 #+END_SRC
 
-** DONE Exercise 1.28
+** Exercise 1.28
 
 *** Question
 
@@ -4175,7 +4175,7 @@ We can pass integers to ~a~ and ~b~ and functions to ~term~ and ~next~. Note
 that in order to simply sum integers, we'd need to define and pass an identity
 function to ~term~.
 
-** DONE Exercise 1.29
+** Exercise 1.29
 
 *** Text
 #+NAME: sum
@@ -4268,7 +4268,7 @@ Let's compare these at equal levels of computational difficulty.
 
 So, more accurate for roughly the same effort or less.
 
-** DONE Exercise 1.30
+** Exercise 1.30
 
 *** Question
 
@@ -4314,7 +4314,7 @@ Let's check the stats!
 |--------------+--------------|
 | 30051.080005 | 19568.685587 |
 
-** DONE Exercise 1.31
+** Exercise 1.31
 
 *** Question A.1
 
@@ -4457,7 +4457,7 @@ that generates a recursive process.
 |--------------+--------------|
 | 1267118.0538 | 3067085.5323 |
 
-** DONE Exercise 1.32
+** Exercise 1.32
 
 *** Question A
 
@@ -4543,7 +4543,7 @@ write one that generates a recursive process.
                          term (next a) next b))))
 #+END_SRC
 
-** DONE Exercise 1.33
+** Exercise 1.33
 
 *** Question A
 
@@ -4667,7 +4667,7 @@ Variables that are only briefly used in a limited scope can be specified with
 the special form ~let~. Variables in ~let~ blocks override external variables.
 The authors recommend using ~define~ for procedures and ~let~ for variables.
 
-** DONE Exercise 1.34
+** Exercise 1.34
 
 *** Question
 #+begin_quote
@@ -4735,7 +4735,7 @@ English, "the function whose value at \(y\) is \(x/y\)". /Though it seems like
 \(\mapsto\) doesn't necessarily describe a function, but the value of a function
 at a certain point? Or maybe that would just be \(~\), ie \(f(x)~etc\)/
 
-** DONE Exercise 1.35
+** Exercise 1.35
 
 *** Text
 #+NAME: close-enough-txt
@@ -4788,7 +4788,7 @@ the ~fixed-point~ procedure.
 #+end_example
 :end:
 
-** DONE Exercise 1.36
+** Exercise 1.36
 
 *** Question
 
@@ -4908,7 +4908,7 @@ Undamped, fixed-point makes 37 guesses.
 
 Damped, it makes 21.
 
-** DONE Exercise 1.37
+** Exercise 1.37
 
 *** Question A
 
@@ -5051,7 +5051,7 @@ SUCCEED at cont-frac iter and recursive equivalence
 #+end_example
 :end:
 
-** DONE Exercise 1.38
+** Exercise 1.38
 
 *** Question
 
@@ -5087,7 +5087,7 @@ Exercise 1.37 to approximate \(e\), based on Euler's expansion.
 #+end_example
 :end:
 
-** DONE Exercise 1.39
+** Exercise 1.39
 
 *** Question
 
@@ -5138,7 +5138,7 @@ Where \(x \mapsto g(x)\) is a differentiable function and \(Dg(x)\) is the
 derivative of \(g\) evaluated at \(x\).
 #+end_quote
 
-** DONE Exercise 1.40
+** Exercise 1.40
 
 *** Text
 #+NAME: average-damp
@@ -5223,7 +5223,7 @@ to approximate zeros of the cubic \(x^3 + ax^2 + bx + c\).
 #+end_example
 :end:
 
-** DONE Exercise 1.41
+** Exercise 1.41
 
 *** Question
 
@@ -5261,7 +5261,7 @@ should be a procedure that adds 2. What value is returned by
 #+end_example
 :end:
 
-** DONE Exercise 1.42
+**  Exercise 1.42
 
 *** Question
 
@@ -5294,7 +5294,7 @@ Let \(f\) and \(g\) be two one-argument functions. The composition \(f\) after
 #+end_example
 :end:
 
-** DONE Exercise 1.43
+**  Exercise 1.43
 
 *** Question
 
@@ -5338,7 +5338,7 @@ Success
 #+end_example
 :end:
 
-** DONE Exercise 1.44
+**  Exercise 1.44
 
 *** Question
 
@@ -5369,7 +5369,7 @@ function of any given function using ~smooth~ and ~repeated~ from Exercise 1.43.
   ((repeated smooth n) f))
 #+END_SRC
 
-** DONE Exercise 1.45
+**  Exercise 1.45
 
 *** Question
 
@@ -5632,7 +5632,7 @@ procedure. I have to wonder whether a ~fixed-point~ version that replaces the
 ~tolerance~ decision making, and instead retains the last three guesses and
 checks for a loop.
 
-** DONE Exercise 1.46
+**  Exercise 1.46
 
 *** Question
 
@@ -5733,7 +5733,7 @@ Lisp interpreter's pair functions without caring how they work.
 Note that these abstraction layers allow the developer to change the underlying
 architecture without modifying the programs that depend on it.
 
-** DONE Exercise 2.1
+**  Exercise 2.1
 
 *** Text
 
@@ -5895,7 +5895,7 @@ unoptimized make-rat: ((1 . 2) 231.74267794)
 optimized make-rat: ((1 . 2) 233.99087033)
 #+END_EXAMPLE
 
-** DONE Exercise 2.2
+**  Exercise 2.2
 
 *** Question
 
@@ -6008,7 +6008,7 @@ unoptimized make-rat: ((0.0 . 0.0) 326.94653558)
 optimized make-rat: ((0.0 . 0.0) 331.83410742)
 #+END_EXAMPLE
 
-** DONE Exercise 2.3
+**  Exercise 2.3
 
 *** Question
 
@@ -6339,7 +6339,7 @@ implementation, for rational number \(x\) made with numerator \(n\) and
 denominator \(d\), dividing the result of src_scheme{(numer x)} over the result
 of src_scheme{(denom x)} should be equivalent to dividing \(n\) over \(d\).
 
-** DONE Exercise 2.4
+**  Exercise 2.4
 
 *** Question
 
@@ -6403,7 +6403,7 @@ Now for implementation.
 | (6 . 0) | (6 . 1) | (6 . 2) | (6 . 3) | (6 . 4) | (6 . 5) | (6 . 6) |
 #+end_EXAMPLE
 
-** DONE Exercise 2.5 :optional:
+**  Exercise 2.5 :optional:
 
 *** Question
 
@@ -6574,7 +6574,7 @@ We can use this sign of a correct result in the proposed ~car~ and ~cdr~ procedu
 | car    |   2.0 |   4.0 |   7.0 |
 | cdr    |   3.0 |   5.0 |   2.0 |
 
-** DONE Exercise 2.6 :optional:
+**  Exercise 2.6 :optional:
 
 *** Question
 
@@ -6653,7 +6653,7 @@ SUCCEED at 2 = 1+1+0
 SUCCEED at 3 = 1+2 = (1+0) + (1+1+0)
 #+end_EXAMPLE
 
-** DONE Exercise 2.7
+**  Exercise 2.7
 
 *** Text
 
@@ -6711,7 +6711,7 @@ implementation.
   (cdr i))
 #+END_SRC
 
-** DONE Exercise 2.8
+**  Exercise 2.8
 
 *** Question
 
@@ -6734,7 +6734,7 @@ the second.
                  (- (upper-bound x) (lower-bound y))))
 #+END_SRC
 
-** DONE Exercise 2.9
+**  Exercise 2.9
 
 *** Question
 #+begin_quote
@@ -6877,7 +6877,7 @@ SUCCEED at width(ia+ib) = width(ia) + width(ib)
 SUCCEED at width(ia-ib) = width(ia) + width(ib)
 #+end_EXAMPLE
 
-** DONE Exercise 2.10
+**  Exercise 2.10
 
 *** Question
 
@@ -6903,7 +6903,7 @@ it occurs.
                       (/ 1.0 (lower-bound y))))))
 #+END_SRC
 
-** DONE Exercise 2.11
+**  Exercise 2.11
 
 *** Question
 
@@ -7136,7 +7136,7 @@ Optimized mul-interval: (2526.5896437)
 
 So as expected, about twice as fast!
 
-** DONE Exercise 2.12
+**  Exercise 2.12
 
 *** Question
 
@@ -7233,7 +7233,7 @@ SUCCEED at percent
 SUCCEED at make-center-percent is consistent
 #+end_EXAMPLE
 
-** DONE Exercise 2.13 :optional:
+**  Exercise 2.13 :optional:
 
 *** Question
 
@@ -7312,7 +7312,7 @@ percent of 1 and 2: 0.09999999999999788 0.40000000000000563
 percent M12: 0.499998000008 
 #+end_EXAMPLE
 
-** DONE Exercise 2.14
+**  Exercise 2.14
 
 *** Question
 
@@ -7423,7 +7423,7 @@ p1: 1.0008001600240033
 p2: 1.0018006601460259 
 #+end_EXAMPLE
 
-** DONE Exercise 2.15
+**  Exercise 2.15
 
 *** Question
 
@@ -7471,7 +7471,7 @@ A-A = 0 != (0.1999999999999993 . -0.1999999999999993)
 A/A = 1 != (1.02020202020202 . 0.9801980198019803) 
 #+end_EXAMPLE
 
-** DONE Exercise 2.16 :optional:
+**  Exercise 2.16 :optional:
 
 *** Question
 
@@ -7517,6 +7517,101 @@ procedures.
   representing procedures with free variables. We do not use the word "closure"
   in this second sense in this book.
 #+end_quote
+
+** 2.2.1: Representing Sequences
+
+- *sequence* :: An ordered collection of data objects.
+- *list* :: A sequence of ~cons~ pairs.
+
+#+BEGIN_SRC scheme
+(cons 1
+      (cons 2
+            (cons 3
+                  (cons 4 nil))))
+(list 1 2 3 4)
+;; both evaluate to '(1 2 3 4)
+#+END_SRC
+
+
+An aside: many parts of this book have covered ways to solve problems by
+splitting problems into simple recursive solutions. I may be getting ahead of
+myself, but I wanted to note how the ~cons~ pair system goes hand-in-hand with
+this. For example, when going over a list ~l~ with function ~f~:
+#+BEGIN_SRC scheme :eval no-export :results value
+(define (map f l)
+  (if (null? l)
+      #nil
+      (cons (f (car l))
+            (map f (cdr l)))))
+
+(map (λ(x)(* x 2))
+     (list 1 2 3 4))
+#+END_SRC
+
+#+RESULTS[e2464f1ca2c69060ca4476041917eb97b5c43c5e]:
+#+begin_EXAMPLE
+| 2 | 4 | 6 | 8 |
+#+end_EXAMPLE
+
+** Exercise 2.17
+
+*** Question
+
+Define a procedure
+src_scheme{last-pair} that returns the list that contains only the last element of a
+given (nonempty) list:
+
+#+BEGIN_SRC scheme
+(last-pair (list 23 72 149 34))
+;; (34)
+#+END_SRC
+
+*** Answer
+
+#+NAME: last-pair
+#+BEGIN_SRC scheme :eval no-export :results silent
+(define (last-pair l)
+  (let ((a (car l))
+        (d (cdr l)))
+    (if (= 1 (length d))
+        d
+        (last-pair d))))
+#+END_SRC
+#+BEGIN_SRC scheme :eval no-export :results value
+<<last-pair>>
+(last-pair (list 23 72 149 34))
+#+END_SRC
+
+#+RESULTS[92b3f391da7b9ca2894a07d71692d4de07c5377f]:
+#+begin_EXAMPLE
+| 34 |
+#+end_EXAMPLE
+
+** Exercise 2.18
+
+*** Question
+
+#+NAME: reverse
+#+BEGIN_SRC scheme :eval no-export :results silent
+(define (reverse l)
+  (define len (length l))
+  (define (iter i result)
+    (if (< (1- len) i)
+        result
+        (iter (+ i 1)
+              (cons (list-ref l i)
+                    result))))
+  (iter 0 '()))
+#+END_SRC
+#+BEGIN_SRC scheme :eval no-export :results value
+<<reverse>>
+(reverse (list 23 72 149 34))
+#+END_SRC
+
+#+RESULTS[c2b867c136d1561f95ea2814ed53cf08104e76b3]:
+#+begin_EXAMPLE
+| 34 | 149 | 72 | 23 |
+#+end_EXAMPLE
 
 ** 2.2.3: Sequences as Conventional Interfaces
 
