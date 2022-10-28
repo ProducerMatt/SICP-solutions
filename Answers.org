@@ -7820,6 +7820,132 @@ same-parity2: (56007.042334)
 Once again, my attempts to optimize are a complete failure. I'm guessing that
 the act of traversing the whole list in the call to ~append~ is the problem.
 
+** Exercise 2.21
+
+*** Question
+
+The procedure src_scheme{square-list} takes a list of numbers as argument and
+returns a list of the squares of those numbers.
+
+#+BEGIN_SRC scheme
+(square-list (list 1 2 3 4))
+;; (1 4 9 16)
+#+END_SRC
+
+Here are two different definitions of src_scheme{square-list}. Complete both of
+them by filling in the missing expressions:
+
+#+BEGIN_SRC scheme -n
+(define (square-list items)
+  (if (null? items)
+      nil
+      (cons <??> <??>)))
+(define (square-list items)
+  (map <??> <??>))
+#+END_SRC
+
+*** Answer
+
+#+NAME: square-list
+#+BEGIN_SRC scheme -n :eval no-export :results silent
+<<square>>
+(define (square-list-manual items)
+  (if (null? items)
+      #nil
+      (cons (square (car items))
+            (square-list-manual (cdr items)))))
+(define (square-list items)
+  (map square items))
+#+END_SRC
+#+BEGIN_SRC scheme -n :eval no-export :exports both :results value table
+<<square-list>>
+(let ((l (list 2 3 4 5 6)))
+  (list l
+        (square-list-manual l)
+        (square-list l)))
+#+END_SRC
+
+#+RESULTS[25d4496062bb94eb4e767a7e36578714e9c3b629]:
+#+begin_EXAMPLE
+| 2 | 3 |  4 |  5 |  6 |
+| 4 | 9 | 16 | 25 | 36 |
+| 4 | 9 | 16 | 25 | 36 |
+#+end_EXAMPLE
+
+** Exercise 2.22
+
+*** Questions
+
+Louis Reasoner tries to rewrite the first src_scheme{square-list} procedure of
+Exercise 2.21 so that it evolves an iterative process:
+
+#+BEGIN_SRC scheme -n
+(define (square-list items)
+  (define (iter things answer)
+    (if (null? things)
+        answer
+        (iter (cdr things)
+              (cons (square (car things))
+                    answer))))
+  (iter items nil))
+#+END_SRC
+
+Unfortunately, defining src_scheme{square-list} this way produces the answer
+list in the reverse order of the one desired. Why?
+
+Louis then tries to fix his bug by interchanging the arguments to
+src_scheme{cons}:
+
+#+BEGIN_SRC scheme -n
+(define (square-list items)
+  (define (iter things answer)
+    (if (null? things)
+        answer
+        (iter (cdr things)
+              (cons answer
+                    (square (car things))))))
+  (iter items nil))
+#+END_SRC
+
+This doesn't work either.  Explain.
+
+*** Answer
+
+I'm positive I've made this exact mistake before, though this is likely not
+recorded.
+
+The first form of src_scheme{square-list} produces a correct list in reverse order:
+
+#+BEGIN_SRC scheme
+(square-list (iota 6))
+(25 16 9 4 1 0)
+#+END_SRC
+
+This is because he is prepending to the list every iteration.
+
+While the second produces a broken list, which is literally backwards:
+#+BEGIN_SRC scheme -n
+(square-list (iota 6))
+((((((#nil . 0) . 1) . 4) . 9) . 16) . 25)
+;; Equivalent to:
+(cons (cons (cons (cons (cons (cons #nil
+                                    0)
+                              1)
+                        4)
+                  9)
+            16)
+      25)
+#+END_SRC
+
+Since Lisp was designed with the ~cons pair~ structure of list-building, it
+needed to define a "correct" direction for the pairs to go. Since the Western
+world thinks left-to-right, they made it so that the left (first) cell is for
+content, and the right is for the pointer to the next pair. However, this means
+that you can't append to a list without first traveling its length and changing
+the src_scheme{nil} marking the end to a pointer to your new pair. Since that is
+a lot of list traveling, it makes more sense to src_scheme{cons} your list
+together in reverse and then calling src_scheme{reverse} at the end of the list.
+
 ** 2.2.3: Sequences as Conventional Interfaces
 
 Abstractions are an important part of making code clearer and more easy to
