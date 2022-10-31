@@ -7995,6 +7995,108 @@ src_scheme{for-each}.
 all your base are belong to us 
 #+end_EXAMPLE
 
+** Exercise 2.24
+
+*** Question
+
+Suppose we evaluate the expression src_scheme{(list 1 (list 2 (list 3 4)))}.
+Give the result printed by the interpreter, the corresponding box-and-pointer
+structure, and the interpretation of this as a tree (as in Figure 2.6).
+
+*** Answer
+
+This is sort of a trick question -- on first reading, I read it like a series of ~cons~ statements. Looking again, though, I can see that the correct formulation is as follows:
+#+NAME: count-leaves
+#+BEGIN_SRC scheme -n :eval no-export :results silent
+(define (count-leaves x)
+  (cond ((null? x) 0)
+        ((not (pair? x)) 1)
+        (else (+ (count-leaves (car x))
+                 (count-leaves (cdr x)))))
+(define (count-leaves-boxes x)
+  (cond ((null? x) 0)
+        ((not (pair? x)) 1)
+        (else (+ (count-leaves (car x))
+                 (count-leaves (cdr x)))))
+#+END_SRC
+#+BEGIN_SRC scheme -n :eval no-export :results output
+<<echo>>
+(let ((l1 (list 1 (list 2 (list 3 4))))
+      (l2 (cons 1
+                (cons
+                 (cons 2
+                       (cons
+                        (cons 3
+                              (cons 4
+                                    #nil))
+                        #nil))
+                 #nil))))
+  (echo "textbook version:" l1)
+  (echo "cons'd version:" l2))
+#+END_SRC
+
+#+RESULTS[7db9abab1fe2f100e098940e4505323400de476f]:
+#+begin_EXAMPLE
+textbook version: (1 (2 (3 4))) 
+cons'd version: (1 (2 (3 4))) 
+#+end_EXAMPLE
+
+#+BEGIN_SRC dot :file 2/fig/24-dotandbox.png :exports results :eval no-export
+digraph {
+    #splines = curved;
+    compound = true;
+              
+    subgraph sg0 {
+        cluster = true;
+        color = lightgrey;
+        shape = rounded;
+        style = filled;
+        label = "'(1 (2 (3 4)))";
+        cellA [shape=record,label="<f0> |<f1> "];
+        cellA:f0:s -> "1" [shape=ellipse];
+        cellAa [shape=record,label="<f0> |<f1>X"];
+        cellA:f1:e -> cellAa:f0:w;
+        cellAa:f0:s -> cellB:f0:n;
+        subgraph sg1 {
+            cluster = true;
+            color = white;
+            shape = rounded;
+            style = filled;
+            label = "'(2 (3 4))";
+            cellB [shape=record,label="<f0> |<f1> "];
+            cellB:f0:s -> "2" [shape=ellipse];
+            cellBb [shape=record,label="<f0> |<f1>X"];
+            cellB:f1:e -> cellBb:f0:w;
+            cellBb:f0:s -> cellC:f0:n;
+            subgraph sg2 {
+                cluster = true;
+                color = lightgrey;
+                shape = rounded;
+                style = filled;
+                label = "'(3 4)";
+                cellC [shape=record,label="<f0> |<f1> "];
+                cellC:f0:s -> "3" [shape=ellipse];
+                cellC:f1:e -> cellD:f0:w;
+                subgraph sg3 {
+                    cluster = true;
+                    color = white;
+                    shape = rounded;
+                    style = filled;
+                    label = "'(4)";
+                    cellD [shape=record,label="<f0> |<f1>X"];
+                    cellD:f0:s -> "4" [shape=ellipse];
+                };
+            };
+        };
+    };
+}
+#+end_src
+
+#+RESULTS[3031d69e38d24b7511f40836541ea678e73cdbdc]:
+:results:
+[[file:2/fig/24-dotandbox.png]]
+:end:
+
 ** 2.2.3: Sequences as Conventional Interfaces
 
 Abstractions are an important part of making code clearer and more easy to
