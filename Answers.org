@@ -7592,8 +7592,10 @@ given (nonempty) list:
 ** Exercise 2.18
 
 *** Question
+#+begin_quote
 Define a procedure src_scheme{reverse} that takes a list as argument and returns
 a list of the same elements in reverse order:
+#+end_quote
 
 #+BEGIN_SRC scheme
 (reverse (list 1 4 9 16 25))
@@ -7626,6 +7628,7 @@ a list of the same elements in reverse order:
 
 *** Question
 
+#+begin_quote
 Consider the change-counting program of 1.2.2. It would be nice to be able to
 easily change the currency used by the program, so that we could compute the
 number of ways to change a British pound, for example. As the program is
@@ -7638,22 +7641,27 @@ change.
 We want to rewrite the procedure src_scheme{cc} so that its second argument is a
 list of the values of the coins to use rather than an integer specifying which
 coins to use. We could then have lists that defined each kind of currency:
+#+end_quote
 
 #+BEGIN_SRC scheme
 (define us-coins (list 50 25 10 5 1))
 (define uk-coins (list 100 50 20 10 5 2 1 0.5))
 #+END_SRC
 
+#+begin_quote
 We could then call src_scheme{cc} as follows:
+#+end_quote
 
 #+BEGIN_SRC scheme
 (cc 100 us-coins)
 ; 292
 #+END_SRC
 
+#+begin_quote
 To do this will require changing the program src_scheme{cc} somewhat. It will
 still have the same form, but it will access its second argument differently, as
 follows:
+#+end_quote
 
 #+NAME: cc-lists
 #+BEGIN_SRC scheme -n :results silent :eval no-export
@@ -7670,11 +7678,13 @@ follows:
                 coin-values)))))
 #+END_SRC
 
+#+begin_quote
 Define the procedures src_scheme{first-denomination},
 src_scheme{except-first-denomination}, and src_scheme{no-more?} in terms of
 primitive operations on list structures. Does the order of the list
 src_scheme{coin-values} affect the answer produced by src_scheme{cc}? Why or why
 not?
+#+end_quote
 
 *** Answer
 
@@ -7733,9 +7743,11 @@ increasing values: (823460.64376)
 
 *** Question
 
+#+begin_quote
 Use =[dotted-pair]= notation to write a procedure src_scheme{same-parity} that takes one or
 more integers and returns a list of all the arguments that have the same
 even-odd parity as the first argument.  For example,
+#+end_quote
 
 #+BEGIN_SRC scheme
 (same-parity 1 2 3 4 5 6 7)
@@ -7824,16 +7836,20 @@ the act of traversing the whole list in the call to ~append~ is the problem.
 
 *** Question
 
+#+begin_quote
 The procedure src_scheme{square-list} takes a list of numbers as argument and
 returns a list of the squares of those numbers.
+#+end_quote
 
 #+BEGIN_SRC scheme
 (square-list (list 1 2 3 4))
 ;; (1 4 9 16)
 #+END_SRC
 
+#+begin_quote
 Here are two different definitions of src_scheme{square-list}. Complete both of
 them by filling in the missing expressions:
+#+end_quote
 
 #+BEGIN_SRC scheme -n
 (define (square-list items)
@@ -7876,8 +7892,10 @@ them by filling in the missing expressions:
 
 *** Questions
 
+#+begin_quote
 Louis Reasoner tries to rewrite the first src_scheme{square-list} procedure of
 Exercise 2.21 so that it evolves an iterative process:
+#+end_quote
 
 #+BEGIN_SRC scheme -n
 (define (square-list items)
@@ -7890,11 +7908,13 @@ Exercise 2.21 so that it evolves an iterative process:
   (iter items nil))
 #+END_SRC
 
+#+begin_quote
 Unfortunately, defining src_scheme{square-list} this way produces the answer
 list in the reverse order of the one desired. Why?
 
 Louis then tries to fix his bug by interchanging the arguments to
 src_scheme{cons}:
+#+end_quote
 
 #+BEGIN_SRC scheme -n
 (define (square-list items)
@@ -7907,7 +7927,9 @@ src_scheme{cons}:
   (iter items nil))
 #+END_SRC
 
+#+begin_quote
 This doesn't work either.  Explain.
+#+end_quote
 
 *** Answer
 
@@ -7951,12 +7973,14 @@ the procedure.
 
 *** Question
 
+#+begin_quote
 The procedure src_scheme{for-each} is similar to src_scheme{map}. It takes as
 arguments a procedure and a list of elements. However, rather than forming a
 list of the results, src_scheme{for-each} just applies the procedure to each of
 the elements in turn, from left to right. The values returned by applying the
 procedure to the elements are not used at all---src_scheme{for-each} is used
 with procedures that perform an action, such as printing. For example,
+#+end_quote
 
 #+BEGIN_SRC scheme -n
 (for-each (lambda (x)
@@ -7968,9 +7992,11 @@ with procedures that perform an action, such as printing. For example,
 ;; 88
 #+END_SRC
 
+#+begin_quote
 The value returned by the call to src_scheme{for-each} (not illustrated above)
 can be something arbitrary, such as true. Give an implementation of
 src_scheme{for-each}.
+#+end_quote
 
 *** Answer
 
@@ -7999,9 +8025,11 @@ all your base are belong to us
 
 *** Question
 
+#+begin_quote
 Suppose we evaluate the expression src_scheme{(list 1 (list 2 (list 3 4)))}.
 Give the result printed by the interpreter, the corresponding box-and-pointer
 structure, and the interpretation of this as a tree (as in Figure 2.6).
+#+end_quote
 
 *** Answer
 
@@ -8160,8 +8188,10 @@ digraph {
 
 *** Question
 
+#+begin_quote
 Give combinations of src_scheme{car}s and src_scheme{cdr}s that will pick 7 from
 each of the following lists:
+#+end_quote
 
 #+BEGIN_SRC scheme
 (1 3 (5 7) 9)
@@ -8183,6 +8213,57 @@ each of the following lists:
 #+begin_EXAMPLE
 7 7 7 
 #+end_EXAMPLE
+
+** Exercise 2.26
+
+*** Question
+
+#+begin_quote
+Suppose we define src_scheme{x} and src_scheme{y} to be two lists:
+#+end_quote
+
+#+BEGIN_SRC scheme
+(define x (list 1 2 3))
+(define y (list 4 5 6))
+#+END_SRC
+
+#+begin_quote
+What result is printed by the interpreter in response to evaluating each of the
+following expressions:
+#+end_quote
+
+#+BEGIN_SRC scheme
+(append x y)
+(cons x y)
+(list x y)
+#+END_SRC
+
+*** Answer
+
+#+BEGIN_SRC scheme -n :eval no-export :results output
+<<echo>>
+(let* ((x (list 1 2 3))
+      (y (list 4 5 6))
+      (e1 (append x y))
+      (e2 (cons x y))
+      (e3 (list x y)))
+  (echo "(append x y):" e1)
+  (echo "(cons x y):" e2)
+  (echo "(list x y):" e3))
+#+END_SRC
+
+#+RESULTS[81ffb47c04cdae841253c59cf9d416ab5c4d6b10]:
+#+begin_EXAMPLE
+(append x y): (1 2 3 4 5 6) 
+(cons x y): ((1 2 3) 4 5 6) 
+(list x y): ((1 2 3) (4 5 6)) 
+#+end_EXAMPLE
+
+** Exercise 2.27
+
+*** Question
+
+
 
 ** 2.2.3: Sequences as Conventional Interfaces
 
