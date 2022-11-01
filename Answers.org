@@ -8041,60 +8041,124 @@ textbook version: (1 (2 (3 4)))
 cons'd version: (1 (2 (3 4))) 
 #+end_EXAMPLE
 
+Dot and box version:
 #+BEGIN_SRC dot :file 2/fig/24-dotandbox.png :exports results :eval no-export
+/* Why doesn't "arrowtail=dot" work? It is a mystery. */
 digraph {
-    #splines = curved;
+    newrank = true;
     compound = true;
-              
+
+    node [shape=ellipse,margin=0];
     subgraph sg0 {
         cluster = true;
         color = lightgrey;
         shape = rounded;
         style = filled;
         label = "'(1 (2 (3 4)))";
-        cellA [shape=record,label="<f0> |<f1> "];
-        cellA:f0:s -> "1" [shape=ellipse];
-        cellAa [shape=record,label="<f0> |<f1>X"];
-        cellA:f1:e -> cellAa:f0:w;
-        cellAa:f0:s -> cellB:f0:n;
+        cellA [shape=none,label=<
+              <table border="0" cellborder="1" cellspacing="0">
+                     <tr>
+                        <td port="car">&nbsp;*&nbsp;</td>
+                        <td port="cdr">&nbsp;</td>
+                    </tr>
+                </table> >];
+        cellA:car:s -> "1":n [shape=ellipse];
+        cellAa [shape=none,label=<
+               <table border="0" cellborder="1" cellspacing="0">
+                <tr>
+                 <td port="car">&nbsp;*&nbsp;</td>
+                 <td port="cdr">X</td>
+                </tr>
+               </table>>];
+                
+        cellA:cdr:c -> cellAa:car:w [tailclip=false,dir=both,arrowtail=dot,dir=both,tailclip=false];
+        cellAa:car:s -> cellB:car:n;
         subgraph sg1 {
             cluster = true;
             color = white;
             shape = rounded;
             style = filled;
             label = "'(2 (3 4))";
-            cellB [shape=record,label="<f0> |<f1> "];
-            cellB:f0:s -> "2" [shape=ellipse];
-            cellBb [shape=record,label="<f0> |<f1>X"];
-            cellB:f1:e -> cellBb:f0:w;
-            cellBb:f0:s -> cellC:f0:n;
+            cellB [shape=none,label=<
+                <table border="0" cellborder="1" cellspacing="0">
+                        <tr>
+                            <td port="car">&nbsp;*&nbsp;</td>
+                            <td port="cdr">&nbsp;</td>
+                        </tr>
+                    </table> >];
+            cellB:car:s -> "2":n [shape=ellipse];
+            cellBb [shape=none,label=<
+                <table border="0" cellborder="1" cellspacing="0">
+                    <tr>
+                    <td port="car">&nbsp;*&nbsp;</td>
+                    <td port="cdr">X</td>
+                    </tr>
+                </table>>];
+
+            cellB:cdr:c -> cellBb:car:w [tailclip=false,dir=both,arrowtail=dot,dir=both,tailclip=false];
+            cellBb:car:s -> cellC:car:n;
             subgraph sg2 {
                 cluster = true;
                 color = lightgrey;
                 shape = rounded;
                 style = filled;
                 label = "'(3 4)";
-                cellC [shape=record,label="<f0> |<f1> "];
-                cellC:f0:s -> "3" [shape=ellipse];
-                cellC:f1:e -> cellD:f0:w;
+                cellC [shape=none,label=<
+                    <table border="0" cellborder="1" cellspacing="0">
+                            <tr>
+                                <td port="car">&nbsp;*&nbsp;</td>
+                                <td port="cdr">&nbsp;</td>
+                            </tr>
+                        </table> >];
+                cellC:car:s -> "3":n [shape=ellipse];
+                cellC:cdr:c -> cellD:car:w [tailclip=false,dir=both,arrowtail=dot,dir=both,tailclip=false];
                 subgraph sg3 {
                     cluster = true;
                     color = white;
                     shape = rounded;
                     style = filled;
                     label = "'(4)";
-                    cellD [shape=record,label="<f0> |<f1>X"];
-                    cellD:f0:s -> "4" [shape=ellipse];
+                    cellD [shape=none,label=<
+                        <table border="0" cellborder="1" cellspacing="0">
+                            <tr>
+                            <td port="car">&nbsp;*&nbsp;</td>
+                            <td port="cdr">X</td>
+                            </tr>
+                        </table>>];
+
+                    cellD:car:s -> "4":n;
                 };
             };
         };
     };
+    { rank = same; cellA; cellAa; };
+    { rank = same; "1"; cellB; cellBb; };
+    { rank = same; "2"; cellC; cellD; };
+    { rank = same; "3"; "4"; };
 }
 #+end_src
 
-#+RESULTS[3031d69e38d24b7511f40836541ea678e73cdbdc]:
+#+RESULTS[5e93cb48cc6fceab2c633d425f66162262af2005]:
 :results:
 [[file:2/fig/24-dotandbox.png]]
+:end:
+
+Tree version:
+#+BEGIN_SRC dot :file 2/fig/24-tree.png :exports results :eval no-export
+digraph {
+    node [shape=none,margin=0];
+    "(1 (2 (3 4)))":s -> "1";
+    "(1 (2 (3 4)))":s -> "(2 (3 4))";
+    "(2 (3 4))":s -> "2";
+    "(2 (3 4))":s -> "(3 4)";
+    "(3 4)":s -> "3";
+    "(3 4)":s -> "4";
+}
+#+END_SRC
+
+#+RESULTS[a845b46b004192cb2595d312eb6c40aa94c94931]:
+:results:
+[[file:2/fig/24-tree.png]]
 :end:
 
 ** 2.2.3: Sequences as Conventional Interfaces
