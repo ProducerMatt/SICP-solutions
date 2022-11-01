@@ -8012,14 +8012,9 @@ This is sort of a trick question -- on first reading, I read it like a series of
   (cond ((null? x) 0)
         ((not (pair? x)) 1)
         (else (+ (count-leaves (car x))
-                 (count-leaves (cdr x)))))
-(define (count-leaves-boxes x)
-  (cond ((null? x) 0)
-        ((not (pair? x)) 1)
-        (else (+ (count-leaves (car x))
-                 (count-leaves (cdr x)))))
+                 (count-leaves (cdr x))))))
 #+END_SRC
-#+BEGIN_SRC scheme -n :eval no-export :results output
+#+BEGIN_SRC scheme -n :eval no-export :results output :exports both
 <<echo>>
 (let ((l1 (list 1 (list 2 (list 3 4))))
       (l2 (cons 1
@@ -8160,6 +8155,34 @@ digraph {
 :results:
 [[file:2/fig/24-tree.png]]
 :end:
+
+** Exercise 2.25
+
+*** Question
+
+Give combinations of src_scheme{car}s and src_scheme{cdr}s that will pick 7 from
+each of the following lists:
+
+#+BEGIN_SRC scheme
+(1 3 (5 7) 9)
+((7))
+(1 (2 (3 (4 (5 (6 7))))))
+#+END_SRC
+
+#+BEGIN_SRC scheme -n :eval no-export :results output
+<<echo>>
+(let ((l1 (list 1 3 (list 5 7) 9))
+      (l2 (list (list 7)))
+      (l3 (list 1 (list 2 (list 3 (list 4 (list 5 (list 6 7))))))))
+  (echo (car (cdaddr l1))
+        (caar l2)
+        (cadadr (cadadr (cadadr l3)))))
+#+END_SRC
+
+#+RESULTS[5dd3e45a2df968170f6a2b00efe33964161ed387]:
+#+begin_EXAMPLE
+7 7 7 
+#+end_EXAMPLE
 
 ** 2.2.3: Sequences as Conventional Interfaces
 
