@@ -8305,6 +8305,46 @@ x
 ((4 3) (2 1))
 #+end_src
 
+** Exercise 2.28
+
+*** Question
+
+Write a procedure src_scheme{fringe} that takes as argument a tree (represented
+as a list) and returns a list whose elements are all the leaves of the tree
+arranged in left-to-right order. For example,
+
+#+BEGIN_SRC scheme
+(define x (list (list 1 2) (list 3 4)))
+(fringe x)
+;; (1 2 3 4)
+(fringe (list x x))
+;; (1 2 3 4 1 2 3 4)
+#+END_SRC
+
+*** Answer
+
+#+NAME: fringe
+#+BEGIN_SRC scheme :eval no-export :results silent
+(define (fringe l)
+  (if (null? l)
+      #nil
+      (let ((a (car l))
+            (d (cdr l)))
+        (append (if (pair? a)
+                    (fringe a)
+                    (list a))
+                (fringe d)))))
+#+END_SRC
+#+BEGIN_SRC scheme :eval no-export :results value code :wrap src
+<<fringe>>
+(fringe (list (list 1 (list 2 3)) (list 4 5)))
+#+END_SRC
+
+#+RESULTS[6080592c2d871b7b64340ee9af439d3da32beb90]:
+#+begin_src
+(1 2 3 4 5)
+#+end_src
+
 ** 2.2.3: Sequences as Conventional Interfaces
 
 Abstractions are an important part of making code clearer and more easy to
@@ -8338,7 +8378,4 @@ of:
     left half and one in the right half.
   - /flip-horiz/ takes one painter and produces another to draw its image
     right-to-left reversed. These are defined as Scheme procedures and therefore
-    have all the properties of Scheme procedures.
-    
-    
-
+    have all the properties of Scheme procedures.   
