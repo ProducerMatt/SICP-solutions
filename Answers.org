@@ -8345,6 +8345,227 @@ arranged in left-to-right order. For example,
 (1 2 3 4 5)
 #+end_src
 
+** Exercise 2.29: Binary Mobiles
+
+*** Text Definitions
+
+#+NAME: mobile-constructors-list
+#+BEGIN_SRC scheme :eval no-export :results silent
+(define (make-mobile left right)
+  (list left right))
+
+(define (make-branch length structure)
+  (list length structure))
+#+END_SRC
+
+*** Question A
+
+#+begin_quote
+Write the corresponding selectors src_scheme{left-branch} and
+src_scheme{right-branch}, which return the branches of a mobile, and
+src_scheme{branch-length} and src_scheme{branch-structure}, which return the
+components of a branch.
+#+end_quote
+
+*** Answer A
+
+#+NAME: mobile-selectors-list
+#+BEGIN_SRC scheme :eval no-export :results silent
+<<mobile-constructors-list>>
+(define (left-branch mobile)
+  (car mobile))
+(define (right-branch mobile)
+  (cadr mobile))
+(define (branch-length branch)
+  (car branch))
+(define (branch-structure branch)
+  (cadr branch))
+#+END_SRC
+
+*** Question B
+
+#+begin_quote
+Using your selectors, define a procedure src_scheme{total-weight} that returns
+the total weight of a mobile.
+#+end_quote
+
+*** Answer B
+
+#+NAME: mobile-total-weight
+#+BEGIN_SRC scheme :eval no-export :results silent
+(define (total-weight mobile)
+  (let ((leftS (branch-structure (left-branch mobile)))
+        (rightS (branch-structure (right-branch mobile))))
+    (+ (if (number? leftS)
+           leftS
+           (total-weight leftS))
+       (if (number? rightS)
+           rightS
+           (total-weight rightS)))))
+#+END_SRC
+
+
+#+BEGIN_SRC scheme :eval no-export :results value
+<<mobile-selectors-list>>
+<<mobile-total-weight>>
+
+(let ((M1 (make-mobile
+           (make-branch 5 5)
+           (make-branch 1
+                        (make-mobile (make-branch 2 2)
+                                     (make-branch 2 3)))))
+      (M2 (make-mobile
+           (make-branch 2
+                        (make-mobile
+                         (make-branch 2 2)
+                         (make-branch 2 2)))
+           (make-branch 2
+                        (make-mobile
+                         (make-branch 2 2)
+                         (make-branch 2 2))))))
+  (list (total-weight M1)
+        (total-weight M2)))
+#+END_SRC
+
+#+RESULTS[889a3f8b4d827393dd7f03f5bb525c215ef6df8f]:
+#+begin_EXAMPLE
+| 10 | 8 |
+#+end_EXAMPLE
+
+*** Question C
+
+A mobile is said to be *balanced* if the torque applied by its top-left branch is
+equal to that applied by its top-right branch (that is, if the length of the
+left rod multiplied by the weight hanging from that rod is equal to the
+corresponding product for the right side) and if each of the submobiles hanging
+off its branches is balanced. Design a predicate that tests whether a binary
+mobile is balanced.
+
+*** Answer C
+
+First let's do this the "dumb" way with no optimization. This involves crawling
+the trees multiple times.
+
+#+NAME: mobile-balanced-dumb
+#+BEGIN_SRC scheme :eval no-export :results silent
+(define (total-torque branch)
+  (let ((len (branch-length branch))
+        (struct (branch-structure branch)))
+    (* len
+       (if (number? struct)
+           struct
+           (let ((lbs (branch-structure (left-branch struct)))
+                 (rbs (branch-structure (right-branch struct))))
+             (+ (total-weight lbs)
+                (total-weight rbs)))))))
+(define (balanced? mobile)
+  (let* ((l (left-branch mobile))
+         (ls (branch-structure l))
+         (r (right-branch mobile))
+         (rs (branch-structure r))
+         (l-balanced (if (number? ls)
+                         #t
+                         (balanced? ls)))
+         (r-balanced (if (number? rs)
+                         #t ;; Fixed: accidentally used ls again.
+                         (balanced? rs))))
+    (if (and l-balanced r-balanced)
+        (= (total-torque l)
+           (total-torque r))
+        #f)))
+#+END_SRC
+
+I'll also need a modified src_scheme{total-weight} that can notice when its
+argument is a non-mobile and just return the value.
+
+#+NAME: mobile-total-weight-2
+#+BEGIN_SRC scheme :eval no-export :results silent
+(define (total-weight mobile)
+  (if (number? mobile)
+      mobile ;; this is a weight, just return it
+      (let ((leftS (branch-structure (left-branch mobile)))
+            (rightS (branch-structure (right-branch mobile))))
+        (+ (if (number? leftS)
+               leftS
+               (total-weight leftS))
+           (if (number? rightS)
+               rightS
+               (total-weight rightS))))))
+#+END_SRC
+
+#+BEGIN_SRC scheme :eval no-export :results output
+<<echo>>
+<<mobile-selectors-list>>
+<<mobile-total-weight-2>>
+<<mobile-balanced-dumb>>
+(define M1 ;; all segments unbalanced
+  (make-mobile
+   (make-branch 5 5) ;; torque 25 = 5*5
+   (make-branch 1 ;; torque 5 = (2 + 3) * 1
+                (make-mobile (make-branch 2 2)
+                             (make-branch 2 3)))))
+(define M2 ;; all segments balanced as they are duplicates
+  (make-mobile
+   (make-branch 2 ;; torque 8 = 2*(2+2)
+                (make-mobile
+                 (make-branch 2 2)
+                 (make-branch 2 2)))
+   (make-branch 2
+                (make-mobile
+                 (make-branch 2 2)
+                 (make-branch 2 2)))))
+(define M3 ;; equal torque, but one segment is unbalanced.
+  (make-mobile
+   (make-branch 2 ;; torque 12 = 2*(4+2)
+                (make-mobile
+                 (make-branch 2 4) ;; torque 8 = 2*4
+                 (make-branch 4 2))) ;torque 8 = 4*2
+   (make-branch 3 ;; torque 12 = 3*(1+3)
+                (make-mobile
+                 (make-branch 1 1) ;; torque 1
+                 (make-branch 1 3))))) ;; torque 3
+(define M4 ;; equal torque
+  (make-mobile
+   (make-branch 2 ;; torque 12 = 2*(4+2)
+                (make-mobile
+                 (make-branch 2 4) ;; torque 8 = 2*4
+                 (make-branch 4 2))) ;torque 8 = 4*2
+   (make-branch 3 ;; torque 12 = 3*(1+3)
+                (make-mobile
+                 (make-branch 3 1) ;; torque 3
+                 (make-branch 1 3))))) ;; torque 3
+(define (isbalanced? Name Status)
+  (define Success "is balanced!")
+  (define Failure "is not balanced!")
+  (if (eq? Status #t)
+      (echo Name Success)
+      (echo Name Failure)))
+(isbalanced? "M1" (balanced? M1))
+(isbalanced? "M2" (balanced? M2))
+(isbalanced? "M3" (balanced? M3))
+(isbalanced? "M4" (balanced? M4))
+#+END_SRC
+
+#+RESULTS[cf1d0abc0504cb1669179519ab32e781d69b8b21]:
+#+begin_EXAMPLE
+M1 is not balanced! 
+M2 is balanced! 
+M3 is not balanced! 
+M4 is balanced! 
+#+end_EXAMPLE
+
+This one took quite some fiddling. First I struggled to figure out exactly how I
+should juggle of torque, weight, and balance. For example, a mobile is balanced
+if the torques of its branches are equal, and if every submobile is also
+balanced, with torque being defined as length\(\times\)weight. Note that it's
+the /weight/, not its submobile's /torque/.
+
+Now let's try an "optimized" version.
+
+#+NAME: mobile-balanced-smart
+#+BEGIN_SRC scheme :eval no-export :results silent
+
+#+END_SRC
 ** 2.2.3: Sequences as Conventional Interfaces
 
 Abstractions are an important part of making code clearer and more easy to
