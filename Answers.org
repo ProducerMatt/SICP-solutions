@@ -9436,6 +9436,92 @@ SUCCEED at reverse-fr
 SUCCEED at reverse-fl
 #+end_EXAMPLE
 
+** Exercise 2.40: ~unique-pairs~
+
+*** Text Definitions
+#+NAME: enumerate-interval
+#+BEGIN_SRC scheme -n :eval no-export :results silent
+(define (enumerate-interval low high)
+  (if (> low high)
+      '()
+      (cons low 
+            (enumerate-interval 
+             (+ low 1) 
+             high))))
+#+END_SRC
+
+#+NAME: flatmap
+#+BEGIN_SRC scheme -n :eval no-export :results silent
+<<fold-compat>>
+(define (flatmap proc seq)
+  (accumulate append '() (map proc seq)))
+#+END_SRC
+#+NAME: prime-sum-txt
+#+BEGIN_SRC scheme -n :eval no-export :results silent
+<<flatmap>>
+<<enumerate-interval>>
+<<prime-smallest-divisor>>
+(define (prime-sum? pair)
+  (prime? (+ (car pair) (cadr pair))))
+(define (make-pair-sum pair)
+  (list (car pair) (cadr pair) (+ (car pair) (cadr pair))))
+(define (prime-sum-pairs n)
+  (map make-pair-sum
+       (filter prime-sum? (flatmap
+                           (lambda (i)
+                             (map (lambda (j) (list i j))
+                                  (enumerate-interval 1 (- i 1))))
+                           (enumerate-interval 1 n)))))
+#+END_SRC
+
+*** Question
+
+Define a procedure src_scheme{unique-pairs} that, given an integer \(n\),
+generates the sequence of pairs \((i, j)\) with \(1 \le j < i \le n\). Use
+src_scheme{unique-pairs} to simplify the definition of
+src_scheme{prime-sum-pairs} given above.
+
+*** Answer
+
+#+NAME: unique-pairs
+#+BEGIN_SRC scheme -n :eval no-export :results silent
+<<fold-compat>>
+<<enumerate-interval>>
+<<flatmap>>
+(define (unique-pairs n)
+  (flatmap
+   (lambda (i)
+     (map (lambda (j) (list i j))
+          (enumerate-interval 1 (- i 1))))
+   (enumerate-interval 1 n)))
+#+END_SRC
+#+BEGIN_SRC scheme -n :eval no-export :results output
+(load "mattcheck2.scm")
+<<unique-pairs>>
+(let ((target 5)
+      (answer (list (list 2 1)(list 3 1)(list 3 2)(list 4 1)
+                    (list 4 2)(list 4 3)(list 5 1)(list 5 2)
+                    (list 5 3)(list 5 4))))
+  (mattcheck "unique-pairs"
+             (unique-pairs target)
+             answer))
+<<echo>>
+<<prime-sum-txt>>
+(define (prime-sum-pairs-mine n)
+  (map make-pair-sum
+       (filter prime-sum?
+               (unique-pairs n))))
+(echo (prime-sum-pairs-mine 5))
+#+END_SRC
+
+#+RESULTS[cac1797aae3d899aee3fd09b27b1dfe785243d67]:
+#+begin_EXAMPLE
+SUCCEED at unique-pairs
+((2 1 3) (3 2 5) (4 1 5) (4 3 7) (5 2 7)) 
+#+end_EXAMPLE
+
+
+
 ** 2.2.4: Example: A Picture Language
 
 Authors describe a possible implementation of a "picture language" that tiles,
