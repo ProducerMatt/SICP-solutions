@@ -9282,9 +9282,9 @@ But much harder to comprehend Lisp code like this:
 
 I must have a mental block in the way I think about map operations.
 
-** Exercise 2.38
+** Exercise 2.38: fold-right
 
-*** Question
+*** Question A
 
 #+begin_quote
 The src_scheme{accumulate} procedure
@@ -9294,6 +9294,7 @@ is also a src_scheme{fold-left}, which is similar to src_scheme{fold-right}, exc
 it combines elements working in the opposite direction:
 #+end_quote
 
+#+NAME: fold-left
 #+BEGIN_SRC scheme
 (define (fold-left op initial sequence)
   (define (iter result rest)
@@ -9315,9 +9316,125 @@ What are the values of
 (fold-left list nil (list 1 2 3))
 #+END_SRC
 
-*** Answers
+*** Answer A
 
+#+BEGIN_SRC scheme -n :eval no-export :results output
+<<accumulate>>
+(define fold-right accumulate)
+<<fold-left>>
+<<echo>>
+(echo "(fold-right / 1 (list 1 2 3)):" (fold-right / 1 (list 1 2 3)))
+(echo "(fold-left / 1 (list 1 2 3)):" (fold-left / 1 (list 1 2 3)))
+(echo "(fold-right list nil (list 1 2 3))" (fold-right list '() (list 1 2 3)))
+(echo "(fold-left list nil (list 1 2 3))" (fold-left list '() (list 1 2 3)))
+#+END_SRC
 
+#+RESULTS[edb1fd1da51fab72944ecd7d48d6c7fb5fcecf0c]:
+#+begin_EXAMPLE
+(fold-right / 1 (list 1 2 3)): 3/2 
+(fold-left / 1 (list 1 2 3)): 1/6 
+(fold-right list nil (list 1 2 3)) (1 (2 (3 ()))) 
+(fold-left list nil (list 1 2 3)) (((() 1) 2) 3) 
+#+end_EXAMPLE
+
+*** Question B
+
+Give a property that src_scheme{op} should satisfy to guarantee that
+src_scheme{fold-right} and src_scheme{fold-left} will produce the same values
+for any sequence.
+
+*** Answer B
+
+They would need to be commutative, like addition and multiplication.
+
+#+BEGIN_SRC scheme -n :eval no-export :results output
+(load "mattcheck2.scm")
+<<accumulate>>
+(define fold-right accumulate)
+<<fold-left>>
+<<echo>>
+
+(let* ((l (list 1 2 3 4 5))
+      (lr (reverse l)))
+  (mattcheck "commutative addition"
+             (fold-right + 0 l)
+             (fold-right + 0 lr)
+             (fold-left + 0 l)
+             (fold-left + 0 lr))
+  (mattcheck "commutative multiplication"
+             (fold-right * 1 l)
+             (fold-right * 1 lr)
+             (fold-left * 1 l)
+             (fold-left * 1 lr)))
+#+END_SRC
+
+#+RESULTS[5ad69833502a5f98440ab8c1428a37f721d936d8]:
+#+begin_EXAMPLE
+SUCCEED at commutative addition
+SUCCEED at commutative multiplication
+#+end_EXAMPLE
+
+** Exercise 2.39: reverse via fold
+
+*** Question
+
+#+begin_quote
+Complete the following
+definitions of src_scheme{reverse} (Exercise 2.18) in terms of
+src_scheme{fold-right} and src_scheme{fold-left} from Exercise 2.38:
+#+end_quote
+
+#+BEGIN_SRC scheme
+(define (reverse sequence)
+  (fold-right (lambda (x y) <??>) nil sequence))
+(define (reverse sequence)
+  (fold-left (lambda (x y) <??>) nil sequence))
+#+END_SRC
+
+*** Answer
+
+First, I'd like to start using the SRFI folds instead. This is my little "compatibility module".
+
+#+NAME: fold-compat
+#+BEGIN_SRC scheme -n :eval no-export :results silent
+;; SICP compat
+(use-srfis '(1))
+(define accumulate fold-right)
+(define fold-left fold)
+#+END_SRC
+
+Now to the problem.
+
+#+NAME: reverse-fold
+#+BEGIN_SRC scheme -n :eval no-export :results silent
+<<fold-compat>>
+(define (reverse-fr sequence)
+  (fold-right (lambda (x y)
+                (append  y (list x)))
+              '() sequence))
+(define (reverse-fl sequence)
+  (fold-left (lambda (x y)
+               (append (list x) y))
+             '() sequence))
+#+END_SRC
+#+BEGIN_SRC scheme -n :eval no-export :results output
+(load "mattcheck2.scm")
+<<reverse-fold>>
+(let ((l (iota 5))
+      (lr (reverse (iota 5))))
+  (mattcheck "reverse-fr"
+             (reverse-fr l)
+             lr)
+  (mattcheck "reverse-fl"
+             (reverse-fl l)
+             lr))
+#+END_SRC
+
+#+RESULTS[9c46803977b5337a2f802d5a3b2974e694a6f184]:
+#+begin_EXAMPLE
+SUCCEED at reverse-fr
+SUCCEED at reverse-fl
+#+end_EXAMPLE
 
 ** 2.2.4: Example: A Picture Language
 
