@@ -8021,6 +8021,17 @@ all your base are belong to us
 
 ** Exercise 2.24
 
+*** Text Definitions
+
+#+NAME: count-leaves
+#+BEGIN_SRC scheme -n :eval no-export :results silent
+(define (count-leaves x)
+  (cond ((null? x) 0)
+        ((not (pair? x)) 1)
+        (else (+ (count-leaves (car x))
+                 (count-leaves (cdr x))))))
+#+END_SRC
+
 *** Question
 
 #+begin_quote
@@ -8032,14 +8043,6 @@ structure, and the interpretation of this as a tree (as in Figure 2.6).
 *** Answer
 
 This is sort of a trick question -- on first reading, I read it like a series of ~cons~ statements. Looking again, though, I can see that the correct formulation is as follows:
-#+NAME: count-leaves
-#+BEGIN_SRC scheme -n :eval no-export :results silent
-(define (count-leaves x)
-  (cond ((null? x) 0)
-        ((not (pair? x)) 1)
-        (else (+ (count-leaves (car x))
-                 (count-leaves (cdr x))))))
-#+END_SRC
 #+BEGIN_SRC scheme -n :eval no-export :results output :exports both
 <<echo>>
 (let ((l1 (list 1 (list 2 (list 3 4))))
@@ -9005,6 +9008,8 @@ SUCCEED at length
 
 ** Exercise 2.34
 
+*** Question
+
 #+begin_quote
 Evaluating a polynomial in \(x\) at a given value of \(x\) can be formulated as
 an accumulation. We evaluate the polynomial
@@ -9072,6 +9077,247 @@ This one was very satisfying. It essentially "delays" the exponentiation, carryi
 Into this operation, left to right:
 
 \[ 0+1*2+0*2+0*2+3*2+1 \]
+
+
+** Exercise 2.35
+
+*** Question
+
+Redefine src_scheme{count-leaves} from
+2.2.2 as an accumulation:
+
+*** Answer
+
+#+NAME: count-leaves-acc
+#+BEGIN_SRC scheme -n :eval no-export :results silent
+(define (count-leaves-acc t)
+  (accumulate (λ(i total)
+                (+ i total))
+              0 (map (λ(x)
+                       (if (pair? x)
+                           (count-leaves-acc x)
+                           1))
+                     t)))
+#+END_SRC
+#+BEGIN_SRC scheme -n :eval no-export :results output
+(load "mattcheck2.scm")
+<<accumulate>>
+<<count-leaves>>
+<<count-leaves-acc>>
+(let ((l (list (list (list 1 2 3) 4) (list 5 (list 6 7) 8))))
+  (mattcheck "count-leaves-acc"
+              (count-leaves l)
+              (count-leaves-acc l)))
+#+END_SRC
+
+#+RESULTS[c6429013d876e42bed1937bc4eb5b64e0621fa50]:
+#+begin_EXAMPLE
+SUCCEED at count-leaves-acc
+#+end_EXAMPLE
+
+** Exercise 2.36: Accumulate across multiple lists
+
+*** Question
+
+The procedure src_scheme{accumulate-n} is similar to src_scheme{accumulate}
+except that it takes as its third argument a sequence of sequences, which are
+all assumed to have the same number of elements. It applies the designated
+accumulation procedure to combine all the first elements of the sequences, all
+the second elements of the sequences, and so on, and returns a sequence of the
+results. For instance, if src_scheme{s} is a sequence containing four sequences,
+src_scheme{((1 2 3) (4 5 6) (7 8 9) (10 11 12))}, then the value of
+src_scheme{(accumulate-n + 0 s)} should be the sequence src_scheme{(22 26 30)}.
+Fill in the missing expressions in the following definition of
+src_scheme{accumulate-n}:
+
+#+BEGIN_SRC scheme
+(define (accumulate-n op init seqs)
+  (if (null? (car seqs))
+      nil
+      (cons (accumulate op init <??>)
+            (accumulate-n op init <??>))))
+#+END_SRC
+
+*** Answers
+
+#+NAME: accumulate-n
+#+BEGIN_SRC scheme -n :eval no-export :results silent
+(define (accumulate-n op init seqs)
+  (if (null? (car seqs))
+      '()
+      (cons (accumulate op init
+                        (map car seqs))
+            (accumulate-n op init
+                          (map cdr seqs)))))
+#+END_SRC
+#+BEGIN_SRC scheme -n :eval no-export :results output
+(load "mattcheck2.scm")
+<<accumulate>>
+<<accumulate-n>>
+(let ((s (list (list 1 2 3) (list 4 5 6) (list 7 8 9) (list 10 11 12))))
+  (mattcheck "accumulate-n"
+             (accumulate-n + 0 s)
+             (list 22 26 30)))
+#+END_SRC
+
+#+RESULTS[63440285ad7749602e346c425c99c13c896ec758]:
+#+begin_EXAMPLE
+SUCCEED at accumulate-n
+#+end_EXAMPLE
+
+** Exercise 2.37: Enter the matrices
+
+*** Question
+
+/See full quote in book./
+
+Suppose we represent vectors as lists, and matrices as lists of vectors. For example:
+
+\[
+\left(
+\begin{array}{cccc}
+  1 & 2 & 3 & 4 \\
+  4 & 5 & 6 & 6 \\
+  6 & 7 & 8 & 9
+\end{array}
+\right)
+
+\texttt{((1 2 3 4) (4 5 6 6) (6 7 8 9))}
+\]
+
+Define these operations:
+#+BEGIN_SRC scheme -n
+(define (dot-product v w)
+  (accumulate + 0 (map * v w)))
+(define (matrix-*-vector m v)
+  (map <??> m))
+(define (transpose mat)
+  (accumulate-n <??> <??> mat))
+(define (matrix-*-matrix m n)
+  (let ((cols (transpose n)))
+    (map <??> m)))
+    #+END_SRC
+*** Answer
+
+#+NAME: matrix-ops
+#+BEGIN_SRC scheme -n :eval no-export :results silent
+(define (dot-product v w)
+  (accumulate + 0 (map * v w)))
+(define (matrix-*-vector m v)
+  (map (λ(row)
+         (dot-product v row))
+       m))
+(define (transpose mat)
+  (accumulate-n cons '() mat))
+(define (matrix-*-matrix m n)
+  (let ((cols (transpose n)))
+    (map (λ(row)
+           (map (λ(col)
+                  (dot-product row col))
+                cols))
+           m)))
+#+END_SRC
+#+BEGIN_SRC scheme -n :eval no-export :results output
+(load "mattcheck2.scm")
+<<echo>>
+<<accumulate>>
+<<accumulate-n>>
+<<matrix-ops>>
+(let* ((v1 (list 1 2 3 4))
+      (v2 (list 5 6 7 8))
+      (m1 (list v1 v2))
+      (m1t (list (list 1 5)
+                (list 2 6)
+                (list 3 7)
+                (list 4 8)))
+      (m1-*-m1t (list (list 30 70)
+                      (list 70 174))))
+  (mattcheck "transpose"
+             (transpose m1)
+             m1t)
+  (mattcheck "dot-product"
+             (dot-product v1 v2)
+             70)
+  (mattcheck "matrix-*-vector"
+             (matrix-*-vector m1 v1)
+             (list 30 70))
+  (mattcheck "matrix-*-matrix"
+             (matrix-*-matrix m1 m1t)
+             m1-*-m1t))
+#+END_SRC
+
+#+RESULTS[52c63f277ca222100ce639c3912830bfde495f09]:
+#+begin_EXAMPLE
+SUCCEED at transpose
+SUCCEED at dot-product
+SUCCEED at matrix-*-vector
+SUCCEED at matrix-*-matrix
+#+end_EXAMPLE
+
+I struggled a lot with what order things should be processed and applied in.
+Some of that came from never having done matrix multiplication before now. I
+would probably still not understand it if I hadn't found [[https://youtu.be/MfN1lqArwAg][Herb Gross' lecture
+regarding matrix operations]].
+
+The other issue is nested map operations. I find it easy to read Python-ish
+code like this:
+
+#+begin_src python
+# Pseudocode
+for row in m1:
+    for column in m2t:
+        for a,b in row,column:
+            answer[i:j] += a*b
+#+end_src
+
+But much harder to comprehend Lisp code like this:
+
+#+begin_src scheme
+(map (λ(row)
+       (map (λ(col)
+              (dot-product row col))
+            m1t))
+     m1)
+#+end_src
+
+I must have a mental block in the way I think about map operations.
+
+** Exercise 2.38
+
+*** Question
+
+#+begin_quote
+The src_scheme{accumulate} procedure
+is also known as src_scheme{fold-right}, because it combines the first element of
+the sequence with the result of combining all the elements to the right.  There
+is also a src_scheme{fold-left}, which is similar to src_scheme{fold-right}, except that
+it combines elements working in the opposite direction:
+#+end_quote
+
+#+BEGIN_SRC scheme
+(define (fold-left op initial sequence)
+  (define (iter result rest)
+    (if (null? rest)
+        result
+        (iter (op result (car rest))
+              (cdr rest))))
+  (iter initial sequence))
+#+END_SRC
+
+#+begin_quote
+What are the values of
+#+end_quote
+
+#+BEGIN_SRC scheme
+(fold-right / 1 (list 1 2 3))
+(fold-left / 1 (list 1 2 3))
+(fold-right list nil (list 1 2 3))
+(fold-left list nil (list 1 2 3))
+#+END_SRC
+
+*** Answers
+
+
 
 ** 2.2.4: Example: A Picture Language
 
