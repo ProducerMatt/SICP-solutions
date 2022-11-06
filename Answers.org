@@ -9511,16 +9511,78 @@ src_scheme{prime-sum-pairs} given above.
   (map make-pair-sum
        (filter prime-sum?
                (unique-pairs n))))
-(echo (prime-sum-pairs-mine 5))
+(let ((answer (list (list 2 1 3) (list 3 2 5)
+                    (list 4 1 5) (list 4 3 7)
+                    (list 5 2 7)) ))
+  (mattcheck "prime-sum-pairs with unique-pairs"
+             (prime-sum-pairs-mine 5)
+             answer))
 #+END_SRC
 
-#+RESULTS[cac1797aae3d899aee3fd09b27b1dfe785243d67]:
+#+RESULTS[988b22bf9eb3b02ea8f747d85a86683cd6fb86a2]:
 #+begin_EXAMPLE
 SUCCEED at unique-pairs
-((2 1 3) (3 2 5) (4 1 5) (4 3 7) (5 2 7)) 
+SUCCEED at prime-sum-pairs with unique-pairs
 #+end_EXAMPLE
 
+** Exercise 2.41
 
+*** Question
+
+Write a procedure to find all ordered triples of distinct positive integers
+\(i\), \(j\), and \(k\) less than or equal to a given integer \(n\) that sum to
+a given integer \(s\).
+
+*** Answer
+
+#+NAME: unique-triplets
+#+BEGIN_SRC scheme -n :eval no-export :results silent
+<<fold-compat>>
+<<enumerate-interval>>
+<<flatmap>>
+(define (unique-triplets n)
+  (flatmap (λ(i)
+             (flatmap (λ(j)
+                        (map (λ(k) (list i j k))
+                             (enumerate-interval 1 (- j 1))))
+                      (enumerate-interval 1 (- i 1))))
+           (enumerate-interval 1 n)))
+#+END_SRC
+
+#+NAME: triplets-sum
+#+BEGIN_SRC scheme -n :eval no-export :results silent
+(define (triplets-sum n s)
+  (filter (λ(triplet)
+            (= s (fold + 0 triplet)))
+          (unique-triplets n)))
+#+END_SRC
+
+#+BEGIN_SRC scheme -n :eval no-export :results output
+(load "mattcheck2.scm")
+<<unique-triplets>>
+<<triplets-sum>>
+(let ((answer-a
+       (list (list 3 2 1) (list 4 2 1)
+             (list 4 3 1) (list 4 3 2)
+             (list 5 2 1) (list 5 3 1)
+             (list 5 3 2) (list 5 4 1)
+             (list 5 4 2) (list 5 4 3)))
+      (answer-b
+       (list (list 5 3 2) (list 5 4 1)
+             (list 6 3 1) (list 7 2 1))))
+  (mattcheck "unique-triplets"
+             (unique-triplets 5)
+             answer-a)
+  (mattcheck "triplets-sum"
+             (triplets-sum 7 10)
+             answer-b))
+#+END_SRC
+
+#+RESULTS[9df032ed4872a86df8c5b51fbdf014c1aaf32a66]:
+#+begin_EXAMPLE
+SUCCEED at unique-triplets
+SUCCEED at triplets-sum
+#+end_EXAMPLE
 
 ** 2.2.4: Example: A Picture Language
 
