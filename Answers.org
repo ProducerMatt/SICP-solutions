@@ -9584,6 +9584,92 @@ SUCCEED at unique-triplets
 SUCCEED at triplets-sum
 #+end_EXAMPLE
 
+** Exercise 2.42
+
+*** Question
+
+#+begin_quote
+The ``eight-queens puzzle'' asks how to place eight queens on a chessboard so
+that no queen is in check from any other.
+#+end_quote
+
+#+NAME: queens-txt
+#+begin_src scheme -n :eval no-export :results silent
+<<flatmap>>
+<<enumerate-interval>>
+(define (queens board-size)
+  (define (queen-cols k)
+    (if (= k 0)
+        (list empty-board)
+        (filter
+         (lambda (positions) (safe? k positions))
+         (flatmap
+          (lambda (rest-of-queens)
+            (map (lambda (new-row)
+                   (adjoin-position
+                    new-row k rest-of-queens))
+                 (enumerate-interval 1 board-size)))
+          (queen-cols (- k 1))))))
+  (queen-cols board-size))
+#+end_src
+
+Complete the program by writing the following:
+- representation for sets of board positions, including:
+  - src_scheme{adjoin-position}, which adjoins a new row-column position to a
+    set of positions
+  - src_scheme{empty-board}, which represents an empty set of positions.
+- src_scheme{safe?}, which determines for a set of positions, whether the queen
+  in the \(k^{\mathrm{th\)}} column is safe with respect to the others. (Note
+  that we need only check whether the new queen is safe---the other queens are
+  already guaranteed safe with respect to each other.)
+
+*** Answer
+
+#+NAME: queens-mine
+#+begin_src scheme -n :eval no-export :results silent
+(define empty-board '())
+(define (adjoin-position new-row column rest-of-queens)
+  (cons (list new-row column) rest-of-queens))
+(define (newer-position board)
+  (car board))
+(define (older-positions board)
+  (cdr board))
+(define (get-row position)
+  (car position))
+(define (get-column position)
+  (cadr position))
+(define (safe? k board)
+  (define (same-row? a b)
+    (= (get-row a) (get-row b)))
+  (define (diagonal? a b)
+    (let ((row-diff (abs (- (get-row a) (get-row b))))
+          (col-diff (abs (- (get-column a) (get-column b)))))
+      (= row-diff col-diff)))
+  (let* ((new (newer-position board))
+         (compare (older-positions board)))
+    (and-map (λ(pos)
+               (not (or (same-row? new pos)
+                   (diagonal? new pos))))
+             compare)))
+#+END_SRC
+#+BEGIN_SRC scheme -n :eval no-export :results output
+<<queens-txt>>
+<<queens-mine>>
+(load "mattcheck2.scm")
+(let ((q4 '(((3 4) (1 3) (4 2) (2 1))
+            ((2 4) (4 3) (1 2) (3 1))))
+       (q11l 2680))
+  (mattcheck "queens"
+             (list (queens 4)
+                   (length (queens 11)))
+             (list q4 q11l)))
+#+END_SRC
+
+#+RESULTS[2dd4171d68897629f5da1e8105a84caae4816775]:
+#+begin_EXAMPLE
+SUCCEED at queens
+#+end_EXAMPLE
+
 ** 2.2.4: Example: A Picture Language
 
 Authors describe a possible implementation of a "picture language" that tiles,
