@@ -1,0 +1,88 @@
+;; [[file:../Answers.org::queens-benched][queens-benched]]
+;; [[[[file:~/SICP-group/Answers.org::queens-txt][queens-txt]]][queens-txt]]
+;; [[[[file:~/SICP-group/Answers.org::flatmap][flatmap]]][flatmap]]
+;; [[[[file:~/SICP-group/Answers.org::fold-compat][fold-compat]]][fold-compat]]
+;; SICP compat
+(use-srfis '(1))
+(define accumulate fold-right)
+(define fold-left fold)
+;; fold-compat ends here
+(define (flatmap proc seq)
+  (accumulate append '() (map proc seq)))
+;; flatmap ends here
+;; [[[[file:~/SICP-group/Answers.org::enumerate-interval][enumerate-interval]]][enumerate-interval]]
+(define (enumerate-interval low high)
+  (if (> low high)
+      '()
+      (cons low 
+            (enumerate-interval 
+             (+ low 1) 
+             high))))
+;; enumerate-interval ends here
+(define (queens board-size)
+  (define (queen-cols k)
+    (if (= k 0)
+        (list empty-board)
+        (filter
+         (lambda (positions) (safe? k positions))
+         (flatmap
+          (lambda (rest-of-queens)
+            (map (lambda (new-row)
+                   (adjoin-position
+                    new-row k rest-of-queens))
+                 (enumerate-interval 1 board-size)))
+          (queen-cols (- k 1))))))
+  (queen-cols board-size))
+;; queens-txt ends here
+;; [[[[file:~/SICP-group/Answers.org::queens-mine][queens-mine]]][queens-mine]]
+(define empty-board '())
+(define (adjoin-position new-row column rest-of-queens)
+  (cons (list new-row column) rest-of-queens))
+(define (newer-position board)
+  (car board))
+(define (older-positions board)
+  (cdr board))
+(define (get-row position)
+  (car position))
+(define (get-column position)
+  (cadr position))
+(define (safe? k board)
+  (define (same-row? a b)
+    (= (get-row a) (get-row b)))
+  (define (diagonal? a b)
+    (let ((row-diff (abs (- (get-row a) (get-row b))))
+          (col-diff (abs (- (get-column a) (get-column b)))))
+      (= row-diff col-diff)))
+  (let* ((new (newer-position board))
+         (compare (older-positions board)))
+    (and-map (λ(pos)
+               (not (or (same-row? new pos)
+                   (diagonal? new pos))))
+             compare)))
+;; queens-mine ends here
+(load "../mattbench.scm")
+
+(define (queens-louis board-size)
+  (define (queen-cols k)
+    (if (= k 0)
+        (list empty-board)
+        (filter
+         (lambda (positions) (safe? k positions))
+         (flatmap
+          (lambda (new-row)
+            (map (lambda (rest-of-queens)
+                   (adjoin-position new-row k rest-of-queens))
+                 (queen-cols (- k 1))))
+          (enumerate-interval 1 board-size)))))
+  (queen-cols board-size))
+
+(define (test size)
+  (format #t "~&normal queens x~a: ~a" size
+          (mattbench (λ()(queens size)) 10000))
+  (format #t "~&swapped queens x~a: ~a" size
+          (mattbench (λ()(queens-louis size)) 1000)))
+
+(map (λ(n)
+       (test n))
+     (enumerate-interval 5 8))
+;; queens-benched ends here

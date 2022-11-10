@@ -1,0 +1,51 @@
+;; [[file:../../Answers.org::mr-verification2][mr-verification2]]
+;; [[[[file:~/SICP-group/Answers.org::expmod-mr2][expmod-mr2]]][expmod-mr2]]
+;; [[[[file:~/SICP-group/Answers.org::square][square]]][square]]
+(define (square x)
+  (* x x))
+;; square ends here
+(define (expmod base exp m)
+  (cond ((= exp 0) 1)
+        ((even? exp)
+         (remainder
+          (square (square-root-of-1 (expmod base (/ exp 2) m) m))
+          m))
+        (else
+         (remainder
+          (* base (expmod base (- exp 1) m))
+          m))))
+
+(define (square-root-of-1 n m)
+  (if (and (and (not (= n 1))
+                (not (= n (- m 1))))
+           (= (modulo (square n) m) 1))
+      0
+      n))
+
+(define (mr-test n)
+  (define (try-it a)
+    (= (expmod a (- n 1) n) 1))
+  (try-it (+ 1 (random (- n 1)))))
+
+(define (mr-prime? n times)
+  (cond ((= times 0) #t)
+        ((mr-test n)
+         (mr-prime? n (- times 1)))
+        (else #f)))
+;; mr-prime ends here
+(define mr-times 100)
+;; [[[[file:~/SICP-group/Answers.org::get-lists-of-primes][get-lists-of-primes]]][get-lists-of-primes]]
+(define list-of-primes (call-with-input-file "Data/primes-1k_to_1mil.txt" read))
+(define list-of-carmichaels (call-with-input-file "Data/carmichael.txt" read))
+;; get-lists-of-primes ends here
+(format #t "~%mr-prime? 6601: ~a" (mr-prime? 6601 mr-times))
+(format #t "~%mr-test? 6601: ~a~%" (mr-test 6601))
+(format #t "~%mr-test? 6601: ~a~%" (mr-test 6601))
+(format #t "~%mr-test? 6601: ~a~%" (mr-test 6601))
+(format #t "~%mr-test? 6601: ~a~%" (mr-test 6601))
+(format #t "~%mr-test? 6601: ~a~%" (mr-test 6601))
+(format #t "~%mr-test? 6601: ~a~%" (mr-test 6601))
+(format #t "   vagabond's mr detects primes: ~a~%mr false-positives Carmichaels: ~a~%"
+        (and-map (λ(x)(mr-prime? x mr-times)) list-of-primes)
+      (and-map (λ(x)(mr-prime? x mr-times)) list-of-carmichaels))
+;; mr-verification2 ends here

@@ -9670,6 +9670,80 @@ Complete the program by writing the following:
 SUCCEED at queens
 #+end_EXAMPLE
 
+** TODO Exercise 2.43
+
+*** Question
+
+Louis Reasoner is having a terrible time doing Exercise 2.42. His
+src_scheme{queens} procedure seems to work, but it runs extremely slowly. (Louis
+never does manage to wait long enough for it to solve even the \(6\times6\)
+case.) When Louis asks Eva Lu Ator for help, she points out that he has
+interchanged the order of the nested mappings in the src_scheme{flatmap},
+writing it as
+
+#+BEGIN_SRC scheme
+(flatmap
+ (lambda (new-row)
+   (map (lambda (rest-of-queens)
+          (adjoin-position new-row k rest-of-queens))
+        (queen-cols (- k 1))))
+ (enumerate-interval 1 board-size))
+#+END_SRC
+
+Explain why this interchange makes the program run slowly. Estimate how long it
+will take Louis's program to solve the eight-queens puzzle, assuming that the
+program in Exercise 2.42 solves the puzzle in time \(T\).
+
+*** Answer
+
+The biggest contributor to the slowdown is likely the location of the
+src_scheme{queen-cols} recursive call. This call being inside of the loop means
+it is being called \(k\) more times, all returning the same answer. Let's check
+with benchmarks. But my math reasoning skills
+
+#+NAME: queens-benched
+#+begin_src scheme -n :eval no-export :results silent :tangle 2/Ex43.scheme
+<<queens-txt>>
+<<queens-mine>>
+(load "../mattbench.scm")
+
+(define (queens-louis board-size)
+  (define (queen-cols k)
+    (if (= k 0)
+        (list empty-board)
+        (filter
+         (lambda (positions) (safe? k positions))
+         (flatmap
+          (lambda (new-row)
+            (map (lambda (rest-of-queens)
+                   (adjoin-position new-row k rest-of-queens))
+                 (queen-cols (- k 1))))
+          (enumerate-interval 1 board-size)))))
+  (queen-cols board-size))
+
+(define (test size)
+  (format #t "~&normal queens x~a: ~a" size
+          (mattbench (λ()(queens size)) 10000))
+  (format #t "~&swapped queens x~a: ~a" size
+          (mattbench (λ()(queens-louis size)) 1000)))
+
+(map (λ(n)
+       (test n))
+     (enumerate-interval 5 8))
+#+END_SRC
+
+#+RESULTS[d2fc9e1933fd0086e5c7eda60b5d215be3f45878]: queens-benched
+#+begin_EXAMPLE
+normal queens x5: 135424.6151
+swapped queens x5: 5487381.643
+normal queens x6: 538798.604
+swapped queens x6: 85704466.218
+normal queens x7: 2210394.5659
+swapped queens x7: 1255288880.717
+normal queens x8: 8067290.5992
+swapped queens x8: 25384464494.259
+#+end_EXAMPLE
+
 ** 2.2.4: Example: A Picture Language
 
 Authors describe a possible implementation of a "picture language" that tiles,
@@ -9684,3 +9758,122 @@ of:
   - /flip-horiz/ takes one painter and produces another to draw its image
     right-to-left reversed. These are defined as Scheme procedures and therefore
     have all the properties of Scheme procedures.   
+
+I'm going to have to get a little messy in order to make the picture language a
+reality. First I need a support library called [[https://git.elephly.net/gitweb.cgi?p=software/guile-picture-language.git;a=blob;f=pict.scm;h=54f0ce09f4ac33c3ecc3340f038d4c9da5f4a443;hb=HEAD][guile-picture-language]]. I
+installed Guix on my system and ran src_bash{guix shell guile-picture-language
+guile}. Now the src_scheme{pict} module is availale to me.
+
+#+BEGIN_SRC scheme -n :eval no-export :results value
+(use-modules (pict))
+(pict->file (triangle 50 70)
+           "2/pict/test.svg")
+#+END_SRC
+
+#+RESULTS[82505b44829f47d4c32c3a57ede30655376e2a61]:
+[[file:2/pict/test.svg]]
+
+So that works.
+
+How about this?
+
+#+BEGIN_SRC scheme -n :eval no-export :results value
+(use-modules (pict))
+(let* ((p (pict-from-file "2/pict/Potato.png"))
+       (pr (rotate p 180)))
+(pict->file
+ (scale (ht-append (vl-append pr p) pr p (vc-append pr p))
+        0.5)
+ "2/pict/Rotato.svg")) ;; must be SVG
+#+END_SRC
+
+#+RESULTS[cec397842ea51d3c519277b4aadef5d922398749]:
+file:2/pict/Rotato.svg
+#+end_EXAMPLE
+
+#+BEGIN_SRC scheme -n :eval no-export :results value
+(use-modules (pict))
+(define Potato (pict-from-file "2/pict/Potato.png"))
+(define (beside a b)
+  (hc-append a b))
+(define (below a b)
+  (vc-append a b))
+#+END_SRC
+
+And I just realized there's no flip/mirror function. What about Racket?
+
+#+BEGIN_SRC racket -n :eval no-export :results value
+#lang sicp
+(#%require sicp-pict)
+(save-pict (paint einstein)
+           "2/pict/rackettest.png" 'png)
+#+END_SRC
+
+#+RESULTS[7db696b32c39924f349f1eba032e8281dff15ff6]:
+:results:
+:end:
+
+Sadly, this won't integrate with org-mode how I need. I'll keep developing with an external program.
+
+** Exercise 2.44
+
+*** Text Definitions
+
+#+BEGIN_SRC scheme -n :eval no-export :results silent
+(define (right-split painter n)
+  (if (= n 0)
+      painter
+      (let ((smaller (right-split painter 
+                                  (- n 1))))
+        (beside painter 
+                (below smaller smaller)))))
+#+END_SRC
+
+*** Question
+
+Define the procedure src_scheme{up-split} used by src_scheme{corner-split}. It
+is similar to src_scheme{right-split}, except that it switches the roles of
+src_scheme{below} and src_scheme{beside}.
+
+*** Answer
+
+#+BEGIN_SRC scheme -n :eval no-export :results silent
+(define (up-split painter n)
+  (if (= n 0)
+      painter
+      (let ((smaller (up-split painter 
+                               (- n 1))))
+        (below painter 
+               (beside smaller smaller)))))
+#+END_SRC
+
+** Exercise 2.45
+
+*** Question
+
+src_scheme{right-split} and src_scheme{up-split} can be expressed as instances
+of a general splitting operation. Define a procedure src_scheme{split} with the
+property that evaluating
+
+#+NAME: splits-generalized
+#+BEGIN_SRC scheme -n :eval no-export :results silent
+(define right-split (split beside below))
+(define up-split (split below beside))
+#+END_SRC
+
+produces procedures src_scheme{right-split} and src_scheme{up-split} with the
+same behaviors as the ones already defined.
+
+*** Answer
+
+#+BEGIN_SRC scheme -n :eval no-export :results silent
+(define (split f1 f2)
+  (define (rec painter n)
+    (if (= n 0)
+        painter
+        (let ((smaller (rec painter 
+                            (- n 1))))
+          (f1 painter 
+              (f2 smaller smaller)))))
+  rec)
+#+END_SRC
