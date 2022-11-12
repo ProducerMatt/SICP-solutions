@@ -2,44 +2,60 @@
 (use-modules (pict))
 ;; [[[[file:~/SICP-group/Answers.org::make-frame][make-frame]]][make-frame]]
 (define (make-frame origin edge1 edge2)
-  "TODO")
+  (cons origin (cons edge1 edge2)))
 (define (origin-frame F)
-  "TODO")
+  (car F))
 (define (edge1-frame F)
-  "TODO")
+  (cadr F))
 (define (edge2-frame F)
-  "TODO")
+  (cddr F))
+;; make-frame ends here
+;; [[[[file:~/SICP-group/Answers.org::make-vect][make-vect]]][make-vect]]
 (define (make-vect x y)
-  "TODO")
+  (cons x y)) ;; make-point
 (define (xcor-vect v)
-  "TODO")
+  (car v)) ;; x-point
 (define (ycor-vect v)
-  "TODO")
+  (cdr v)) ;; y-point
 (define (add-vect v w)
-  "TODO")
+  (make-vect (+ (xcor-vect v)
+                (xcor-vect w))
+             (+ (ycor-vect v)
+                (ycor-vect w))))
 (define (sub-vect v w)
-  "TODO")
+  (make-vect (- (xcor-vect v)
+                (xcor-vect w))
+             (- (ycor-vect v)
+                (ycor-vect w))))
 (define (scale-vect v s)
-  "TODO")
+  (make-vect (* s (xcor-vect v))
+             (* s (ycor-vect v))))
+;; make-vect ends here
+;; [[[[file:~/SICP-group/Answers.org::make-segment][make-segment]]][make-segment]]
 (define (make-segment start end)
-  "TODO")
+  (cons start end))
 (define (start-segment seg)
-  "TODO")
+  (car seg))
 (define (end-segment seg)
-  "TODO")
-
+  (cdr seg))
+;; make-segment ends here
 (define (frame-coord-map frame)
+  ;; Returns a function for adjusting a frame by a vector
   (lambda (v)
     (add-vect
      (origin-frame frame)
      (make-vect (* (xcor-vect v) (edge1-frame frame))
                 (* (ycor-vect v) (edge2-frame frame))))))
 (define (draw-line start end)
+  ;; take two vectors, returns a line SVG object for pict
   (line (xcor-vect start)
         (ycor-vect start)
         (xcor-vect end)
         (ycor-vect end)))
 (define (segments->painter segment-list)
+  ;; takes a list of segments, returns a "painter" lambda, which applies a frame
+  ;; to those segments and then maps over the result with draw-line to make a
+  ;; list of SVG line objects which pict can combine.
   (lambda (frame)
     (map
      (lambda (segment)
@@ -49,15 +65,41 @@
         ((frame-coord-map frame)
          (end-segment segment))))
      segment-list)))
+    ;; NOTE: in the text, draw-line is a function which triggers an action in
+    ;; some graphics driver, and returns nothing. Because of this, (map) was
+    ;; originally (for-each). Thus the final result would have been thrown away.
+
 ;; [[[[file:~/SICP-group/Answers.org::painters][painters]]][painters]]
 (define outline
-  "TODO")
+  (segments->painter (list
+   (make-segment (make-vect 0 0)
+                 (make-vect 0 1))
+   (make-segment (make-vect 0 1)
+                 (make-vect 1 1))
+   (make-segment (make-vect 1 1)
+                 (make-vect 1 0))
+   (make-segment (make-vect 1 0)
+                 (make-vect 0 0)))))
 (define frame-X
-  "TODO")
+  (segments->painter (list
+   (make-segment (make-vect 0 0)
+                 (make-vect 1 1))
+   (make-segment (make-vect 0 1)
+                 (make-vect 1 0)))))
 (define diamond
-  "TODO")
+  (segments->painter (list
+   (make-segment (make-vect 0.5 0)
+                 (make-vect 1 0.5))
+   (make-segment (make-vect 1 0.5)
+                 (make-vect 0.5 1))
+   (make-segment (make-vect 0.5 1)
+                 (make-vect 0 0.5))
+   (make-segment (make-vect 0 0.5)
+                 (make-vect 0.5 0)))))
 ;; painters ends here
+
 (define (paint-lines painter)
+  ;; use pict to compile an SVG with the elements described by painter
   (let ((Frame (make-frame (make-vect 0 0)
                            100
                            100)))

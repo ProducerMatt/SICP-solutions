@@ -9921,7 +9921,6 @@ src_scheme{right-split} and src_scheme{up-split} can be expressed as instances
 of a general splitting operation. Define a procedure src_scheme{split} with the
 property that evaluating
 
-#+NAME: splits-generalized
 #+BEGIN_SRC scheme -n :eval no-export :results silent
 (define right-split (split beside below))
 (define up-split (split below beside))
@@ -9932,6 +9931,7 @@ same behaviors as the ones already defined.
 
 *** Answer
 
+#+NAME: splits-generalized
 #+BEGIN_SRC scheme -n :eval no-export :results silent
 (define (split f1 f2)
   (define (rec painter n)
@@ -9942,6 +9942,8 @@ same behaviors as the ones already defined.
           (f1 painter 
               (f2 smaller smaller)))))
   rec)
+(define right-split (split beside below))
+(define up-split (split below beside))
 #+END_SRC
 
 ** Exercise 2.46: Defining vectors
@@ -10139,23 +10141,29 @@ But I'm starting to think in larger chunks and need the feedback less.
 Ok, how can I verify this? I guess I could rewrite src_scheme{segments->painter}
 for src_scheme{pict}. Since this isn't a drawing system with imperative
 procedures, I should make it return a list of lines to be superimposed.
-#+BEGIN_SRC scheme -n :eval no-export :results output
+#+NAME: linepainter-pict
+#+BEGIN_SRC scheme -n :eval no-export :results silent :tangle 2/pict/linepainter.scheme
 (use-modules (pict))
 <<make-frame>>
 <<make-vect>>
 <<make-segment>>
 (define (frame-coord-map frame)
+  ;; Returns a function for adjusting a frame by a vector
   (lambda (v)
     (add-vect
      (origin-frame frame)
      (make-vect (* (xcor-vect v) (edge1-frame frame))
                 (* (ycor-vect v) (edge2-frame frame))))))
 (define (draw-line start end)
+  ;; take two vectors, returns a line SVG object for pict
   (line (xcor-vect start)
         (ycor-vect start)
         (xcor-vect end)
         (ycor-vect end)))
 (define (segments->painter segment-list)
+  ;; takes a list of segments, returns a "painter" lambda, which applies a frame
+  ;; to those segments and then maps over the result with draw-line to make a
+  ;; list of SVG line objects which pict can combine.
   (lambda (frame)
     (map
      (lambda (segment)
@@ -10165,15 +10173,26 @@ procedures, I should make it return a list of lines to be superimposed.
         ((frame-coord-map frame)
          (end-segment segment))))
      segment-list)))
+    ;; NOTE: in the text, draw-line is a function which triggers an action in
+    ;; some graphics driver, and returns nothing. Because of this, (map) was
+    ;; originally (for-each). Thus the final result would have been thrown away.
+
 <<painters>>
+
 (define (paint-lines painter)
+  ;; use pict to compile an SVG with the elements described by painter
   (let ((Frame (make-frame (make-vect 0 0)
                            100
                            100)))
     (apply lt-superimpose
            (painter Frame))))
-(pict->file (paint-lines diamond); #:maxw 100 #:maxh 100)
+#+END_SRC
+#+BEGIN_SRC scheme -n :eval no-export :results output
+<<linepainter-pict>>
+(pict->file (paint-lines diamond)
             "2/pict/testline.svg")
+; #:maxw 100 #:maxh 100) <- FIXME: This procedure should take these arguments
+; but I can't get it to work.
 #+END_SRC
 
 #+RESULTS[f42146238944e6c2b77f4029be96c902a0e4cb46]:

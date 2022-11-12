@@ -1,20 +1,6 @@
 (use-modules (pict))
-;; NOTE: you may end up having annoying little bugs that occur when you mix
-;; integers and floats. So one option for this problem is making your
-;; constructors force a type. You can force integers to floating point with
-;; this:
-(define (float x)
-  (if (inexact? x)
-      x
-      (exact->inexact x)))
-;; And you can force floats to rational numbers with this:
-(define (rat x)
-  (define dx 1/100000)
-  (if (exact? x)
-      x
-      (rationalize
-       (inexact->exact x)
-       dx)))
+
+;; Procedures that are required for use are left as "TODO"
 
 (define (make-frame origin edge1 edge2)
   "TODO")
@@ -53,15 +39,15 @@
      (make-vect (* (xcor-vect v) (edge1-frame frame))
                 (* (ycor-vect v) (edge2-frame frame))))))
 (define (draw-line start end)
-  ;; take two vectors, return a line SVG object for pict
+  ;; take two vectors, returns a line SVG object for pict
   (line (xcor-vect start)
         (ycor-vect start)
         (xcor-vect end)
         (ycor-vect end)))
 (define (segments->painter segment-list)
-  ;; take list of segments, returns a "painter" lambda which takes a frame and
-  ;; applies it to a list of segments, then maps over those segments with
-  ;; draw-line to make a list of SVG line objects for pict to work with.
+  ;; takes a list of segments, returns a "painter" lambda, which applies a frame
+  ;; to those segments and then maps over the result with draw-line to make a
+  ;; list of SVG line objects which pict can combine.
   (lambda (frame)
     (map
      (lambda (segment)
@@ -84,9 +70,32 @@
     (apply lt-superimpose
            (painter Frame))))
 
+;; then save to disk like this:
+(pict->file (paint-lines diamond)
+            "2/pict/testline.svg")
+
 (define outline
   "TODO")
 (define frame-X
   "TODO")
 (define diamond
   "TODO")
+(define wave
+  "TODO")
+
+;; NOTE: A related Guile tip for this section. Have you encountered little bugs
+;; from procedures mixing integers and floats? One solution for this problem is
+;; making your constructors force a type when they're created. You can force
+;; integers to floating point with this:
+(define (float x)
+  (if (inexact? x)
+      x
+      (exact->inexact x)))
+;; And you can force floats to rational numbers with this:
+(define (rat x)
+  (define dx 1/100000)
+  (if (exact? x)
+      x
+      (rationalize
+       (inexact->exact x)
+       dx)))
