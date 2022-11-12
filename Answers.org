@@ -2499,7 +2499,7 @@ Proof it works:
 *** Question
 
 #+begin_quote
-Using the results of [[*Exercise 1.16][Exercise 1.16]] and [[*Exercise 1.17][Exercise 1.17]], devise a procedure that
+Using the results of Exercise 1.16 and Exercise 1.17, devise a procedure that
 generates an iterative process for multiplying two integers in terms of adding,
 doubling, and halving and uses a logarithmic number of steps.
 #+end_quote
@@ -2778,8 +2778,8 @@ the other number in the pair. This is Euclid's Algorithm.
 The process that a procedure generates is of course dependent on the rules used
 by the interpreter. As an example, consider the iterative src_scheme{gcd}
 procedure given above. Suppose we were to interpret this procedure using
-normal-order evaluation, as discussed in [[1.1.5: The Substitution Model for Procedure Application]]. (The normal-order-evaluation
-rule for src_scheme{if} is described in [[Exercise 1.5]].) Using the substitution
+normal-order evaluation, as discussed in 1.1.5: The Substitution Model for Procedure Application. (The normal-order-evaluation
+rule for src_scheme{if} is described in Exercise 1.5.) Using the substitution
 method (for normal order), illustrate the process generated in evaluating
 src_scheme{(gcd 206 40)} and indicate the src_scheme{remainder} operations that
 are actually performed. How many src_scheme{remainder} operations are actually
@@ -3208,7 +3208,7 @@ This suggests that the values used for test-divisor should not be 2, 3, 4, 5, 6,
 plus 2. Modify the smallest-divisor procedure to use src_scheme{(next
 test-divisor)} instead of src_scheme{(+ test-divisor 1)}. With
 ~timed-prime-test~ incorporating this modified version of ~smallest-divisor~,
-run the test for each of the 12 primes found in [[Exercise 1.22]]. Since this
+run the test for each of the 12 primes found in Exercise 1.22. Since this
 modification halves the number of test steps, you should expect it to run about
 twice as fast. Is this expectation confirmed? If not, what is the observed ratio
 of the speeds of the two algorithms, and how do you explain the fact that it is
@@ -3839,7 +3839,7 @@ taking these extra steps actually leads to an algorithm that performs better.
 *** Question
 
 #+begin_quote
-Louis Reasoner is having great difficulty doing [[Exercise 1.24]]. His ~fast-prime?~
+Louis Reasoner is having great difficulty doing Exercise 1.24. His ~fast-prime?~
 test seems to run more slowly than his ~prime?~ test. Louis calls his friend Eva
 Lu Ator over to help. When they examine Louis's code, they find that he has
 rewritten the ~expmod~ procedure to use an explicit multiplication, rather than
@@ -4795,7 +4795,7 @@ the ~fixed-point~ procedure.
 
 #+begin_quote
 Modify ~fixed-point~ so that it prints the sequence of approximations it
-generates, using the ~newline~ and ~display~ primitives shown in [[Exercise 1.22]].
+generates, using the ~newline~ and ~display~ primitives shown in Exercise 1.22.
 Then find a solution to \(x^x = 1000\) by finding a fixed point of \(x \mapsto
 \log(1000) / \log(x)\). (Use Scheme's primitive ~log~ procedure, which computes
 natural logarithms.) Compare the number of steps this takes with and without
@@ -5100,7 +5100,7 @@ A continued fraction representation of the tangent function was published in
 
 where \(x\) is in radians. Define a procedure src_scheme{(tan-cf x k)} that
 computes an approximation to the tangent function based on Lambert's formula.
-~k~ specifies the number of terms to compute, as in [[Exercise 1.37]].
+~k~ specifies the number of terms to compute, as in Exercise 1.37.
 #+end_quote
 
 *** Answer
@@ -5353,7 +5353,7 @@ takes as input a procedure that computes \(f\) and returns a procedure that
 computes the smoothed \(f\). It is sometimes valuable to repeatedly smooth a
 function (that is, smooth the smoothed function, and so on) to obtain the
 \(n\)-fold smoothed function. Show how to generate the \(n\)-fold smoothed
-function of any given function using ~smooth~ and ~repeated~ from [[Exercise 1.43]].
+function of any given function using ~smooth~ and ~repeated~ from Exercise 1.43.
 #+end_quote
 
 *** Answer
@@ -5386,7 +5386,7 @@ search does converge. Do some experiments to determine how many average damps
 are required to compute \(n^{\mathrm{th}}\) roots as a fixed-point search based
 upon repeated average damping of \(y \mapsto x / y^{n-1}\). Use this to implement a
 simple procedure for computing \(n^{\mathrm{th}}\) roots using ~fixed-point~,
-~average-damp~, and the ~repeated~ procedure of [[Exercise 1.43]]. Assume that any
+~average-damp~, and the ~repeated~ procedure of Exercise 1.43. Assume that any
 arithmetic operations you need are available as primitives.
 #+end_quote
 
@@ -6017,7 +6017,7 @@ optimized make-rat: ((0.0 . 0.0) 331.83410742)
 
 #+begin_quote
 Implement a representation for rectangles in a plane. (Hint: You may want to
-make use of [[Exercise 2.2]].) In terms of your constructors and selectors, create
+make use of Exercise 2.2.) In terms of your constructors and selectors, create
 procedures that compute the perimeter and the area of a given rectangle. Now
 implement a different representation for rectangles. Can you design your system
 with suitable abstraction barriers, so that the same perimeter and area
@@ -6364,7 +6364,7 @@ objects ~x~ and ~y~.
 
 #+begin_quote
 What is the corresponding definition of ~cdr~? (Hint: To verify that this works,
-make use of the substitution model of [[1.1.5: The Substitution Model for Procedure Application]].)
+make use of the substitution model of 1.1.5.)
 #+end_quote
 
 *** Answer
@@ -8273,7 +8273,7 @@ following expressions:
 
 *** Question
 
-Modify your src_scheme{reverse} procedure of [[Exercise 2.18]] to produce a
+Modify your src_scheme{reverse} procedure of Exercise 2.18 to produce a
 src_scheme{deep-reverse} procedure that takes a list as argument and returns as
 its value the list with its elements reversed and with all sublists
 deep-reversed as well. For example,
@@ -9389,8 +9389,8 @@ SUCCEED at commutative multiplication
 
 #+begin_quote
 Complete the following
-definitions of src_scheme{reverse} ([[Exercise 2.18]]) in terms of
-src_scheme{fold-right} and src_scheme{fold-left} from [[Exercise 2.38]]:
+definitions of src_scheme{reverse} (Exercise 2.18) in terms of
+src_scheme{fold-right} and src_scheme{fold-left} from Exercise 2.38:
 #+end_quote
 
 #+BEGIN_SRC scheme
@@ -9683,7 +9683,7 @@ SUCCEED at queens
 
 *** Question
 
-Louis Reasoner is having a terrible time doing [[Exercise 2.42]]. His
+Louis Reasoner is having a terrible time doing Exercise 2.42. His
 src_scheme{queens} procedure seems to work, but it runs extremely slowly. (Louis
 never does manage to wait long enough for it to solve even the \(6\times6\)
 case.) When Louis asks Eva Lu Ator for help, she points out that he has
@@ -9701,7 +9701,7 @@ writing it as
 
 Explain why this interchange makes the program run slowly. Estimate how long it
 will take Louis's program to solve the eight-queens puzzle, assuming that the
-program in [[Exercise 2.42]] solves the puzzle in time \(T\).
+program in Exercise 2.42 solves the puzzle in time \(T\).
 
 *** Answer
 
@@ -9967,7 +9967,7 @@ subtraction, and multiplying a vector by a scalar:
 
 *** Answer
 
-This is pretty close to the src_scheme{make-point} work done in [[Exercise 2.2]], as well as my 2nd implementation of a rectangle in [[Exercise 2.3]]. Let's start there. Also, /aren't these points and not vectors since they don't have direction??/
+This is pretty close to the src_scheme{make-point} work done in Exercise 2.2, as well as my 2nd implementation of a rectangle in Exercise 2.3. Let's start there. Also, /aren't these points and not vectors since they don't have direction??/
 
 #+NAME: make-vect
 #+BEGIN_SRC scheme -n :eval no-export :results silent
@@ -10045,14 +10045,14 @@ implementation for frames.
 A directed line segment in the plane can be represented as a pair of
 vectors---the vector running from the origin to the start-point of the segment,
 and the vector running from the origin to the end-point of the segment. Use your
-vector representation from [[Exercise 2.46]] to define a representation for segments
-with a constructor src_scheme{make-segment} and selectors
-src_scheme{start-segment} and src_scheme{end-segment}.
+vector representation from Exercise 2.46 to define a
+representation for segments with a constructor src_scheme{make-segment} and
+selectors src_scheme{start-segment} and src_scheme{end-segment}.
 #+end_quote
 
 *** Answer
 
-Again reminding me of [[Exercise 2.2]].
+Again reminding me of Exercise 2.2.
 
 #+NAME: make-segment
 #+BEGIN_SRC scheme -n :eval no-export :results silent
@@ -10177,6 +10177,6 @@ procedures, I should make it return a list of lines to be superimposed.
 #+END_SRC
 
 #+RESULTS[f42146238944e6c2b77f4029be96c902a0e4cb46]:
-file:2/pict/testline.svg
+[[file:2/pict/testline.svg]]
 
 Holy moly it actually works.
