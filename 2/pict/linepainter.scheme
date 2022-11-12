@@ -1,0 +1,66 @@
+;; [[file:../../Answers.org::linepainter-pict][linepainter-pict]]
+(use-modules (pict))
+;; [[[[file:~/SICP-group/Answers.org::make-frame][make-frame]]][make-frame]]
+(define (make-frame origin edge1 edge2)
+  "TODO")
+(define (origin-frame F)
+  "TODO")
+(define (edge1-frame F)
+  "TODO")
+(define (edge2-frame F)
+  "TODO")
+(define (make-vect x y)
+  "TODO")
+(define (xcor-vect v)
+  "TODO")
+(define (ycor-vect v)
+  "TODO")
+(define (add-vect v w)
+  "TODO")
+(define (sub-vect v w)
+  "TODO")
+(define (scale-vect v s)
+  "TODO")
+(define (make-segment start end)
+  "TODO")
+(define (start-segment seg)
+  "TODO")
+(define (end-segment seg)
+  "TODO")
+
+(define (frame-coord-map frame)
+  (lambda (v)
+    (add-vect
+     (origin-frame frame)
+     (make-vect (* (xcor-vect v) (edge1-frame frame))
+                (* (ycor-vect v) (edge2-frame frame))))))
+(define (draw-line start end)
+  (line (xcor-vect start)
+        (ycor-vect start)
+        (xcor-vect end)
+        (ycor-vect end)))
+(define (segments->painter segment-list)
+  (lambda (frame)
+    (map
+     (lambda (segment)
+       (draw-line
+        ((frame-coord-map frame)
+         (start-segment segment))
+        ((frame-coord-map frame)
+         (end-segment segment))))
+     segment-list)))
+;; [[[[file:~/SICP-group/Answers.org::painters][painters]]][painters]]
+(define outline
+  "TODO")
+(define frame-X
+  "TODO")
+(define diamond
+  "TODO")
+;; painters ends here
+(define (paint-lines painter)
+  (let ((Frame (make-frame (make-vect 0 0)
+                           100
+                           100)))
+    (apply lt-superimpose
+           (painter Frame))))
+;; linepainter-pict ends here
