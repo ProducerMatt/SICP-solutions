@@ -1,35 +1,25 @@
 (use-modules (pict))
 
-;; Procedures that are required for use are left as "TODO"
+;; ;; Procedures that are required for use
 
-(define (make-frame origin edge1 edge2)
-  "TODO")
-(define (origin-frame F)
-  "TODO")
-(define (edge1-frame F)
-  "TODO")
-(define (edge2-frame F)
-  "TODO")
-
-(define (make-vect x y)
-  "TODO")
-(define (xcor-vect v)
-  "TODO")
-(define (ycor-vect v)
-  "TODO")
-(define (add-vect v w)
-  "TODO")
-(define (sub-vect v w)
-  "TODO")
-(define (scale-vect v s)
-  "TODO")
-
-(define (make-segment start end)
-  "TODO")
-(define (start-segment seg)
-  "TODO")
-(define (end-segment seg)
-  "TODO")
+;; ;; Exercise 2.46
+;; (define (make-vect x y)
+;; (define (xcor-vect v)
+;; (define (ycor-vect v)
+;; (define (add-vect v w)
+;; (define (sub-vect v w)
+;; (define (scale-vect v s)
+;;
+;; ;; Exercise 2.47
+;; (define (make-frame origin edge1 edge2)
+;; (define (origin-frame F)
+;; (define (edge1-frame F)
+;; (define (edge2-frame F)
+;;
+;; ;; Exercise 2.48
+;; (define (make-segment start end)
+;; (define (start-segment seg)
+;; (define (end-segment seg)
 
 (define (frame-coord-map frame)
   ;; Returns a function for adjusting a frame by a vector
@@ -70,21 +60,23 @@
     (apply lt-superimpose
            (painter Frame))))
 
+;; ;; Define some shapes
+;; ;; Exercise 2.49
+;; (define outline
+;; (define frame-X
+;; (define diamond
+;; (define wave
+
 ;; then save to disk like this:
 (pict->file (paint-lines diamond)
             "2/pict/testline.svg")
 
-(define outline
-  "TODO")
-(define frame-X
-  "TODO")
-(define diamond
-  "TODO")
-(define wave
-  "TODO")
+;; --- End of Exercise ---
 
-;; NOTE: A related Guile tip for this section. Have you encountered little bugs
-;; from procedures mixing integers and floats? One solution for this problem is
+
+;; Side node:
+;; A related Guile tip for this section. Have you encountered little bugs from
+;; procedures mixing integers and floats? One solution for this problem is
 ;; making your constructors force a type when they're created. You can force
 ;; integers to floating point with this:
 (define (float x)
