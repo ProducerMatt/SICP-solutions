@@ -9534,7 +9534,7 @@ SUCCEED at unique-pairs
 SUCCEED at prime-sum-pairs with unique-pairs
 #+end_EXAMPLE
 
-** Exercise 2.41
+** Exercise 2.41: Ordered triples of positive integers
 
 *** Question
 
@@ -9593,7 +9593,7 @@ SUCCEED at unique-triplets
 SUCCEED at triplets-sum
 #+end_EXAMPLE
 
-** Exercise 2.42
+** Exercise 2.42: Eight Queens
 
 *** Question
 
@@ -9679,7 +9679,7 @@ Complete the program by writing the following:
 SUCCEED at queens
 #+end_EXAMPLE
 
-** Exercise 2.43
+** Exercise 2.43: Louis' ~queens~
 
 *** Question
 
@@ -9881,7 +9881,7 @@ and simultaneously check my work with Racket.
 #+END_SRC
 
 
-** Exercise 2.44
+** Exercise 2.44: ~up-split~
 
 *** Text Definitions
 
@@ -9913,7 +9913,7 @@ src_scheme{below} and src_scheme{beside}.
                (beside smaller smaller)))))
 #+END_SRC
 
-** Exercise 2.45
+** Exercise 2.45: Generalized splitting
 
 *** Question
 
@@ -9944,7 +9944,7 @@ same behaviors as the ones already defined.
   rec)
 #+END_SRC
 
-** Exercise 2.46
+** Exercise 2.46: Defining vectors
 
 *** Question
 
@@ -9992,12 +9992,14 @@ This is pretty close to the src_scheme{make-point} work done in [[Exercise 2.2]]
              (* s (ycor-vect v))))
 #+end_src
 
-** Exercise 2.47
+** Exercise 2.47: Defining frames
 
 *** Question
 
+#+begin_quote
 Here are two possible
 constructors for frames:
+#+end_quote
 
 #+BEGIN_SRC scheme -n
 (define (make-frame origin edge1 edge2)
@@ -10006,8 +10008,10 @@ constructors for frames:
   (cons origin (cons edge1 edge2)))
 #+END_SRC
 
+#+begin_quote
 For each constructor supply the appropriate selectors to produce an
 implementation for frames.
+#+end_quote
 
 *** Answer
 
@@ -10033,7 +10037,7 @@ implementation for frames.
   (cddr F))
 #+END_SRC
 
-** Exercise 2.48
+** Exercise 2.48: Line segments
 
 *** Question
 
@@ -10060,7 +10064,7 @@ Again reminding me of [[Exercise 2.2]].
   (cdr seg))
 #+END_SRC
 
-** Exercise 2.49
+** Exercise 2.49: Primitive painters
 
 *** Text Definitions
 
@@ -10173,5 +10177,6 @@ procedures, I should make it return a list of lines to be superimposed.
 #+END_SRC
 
 #+RESULTS[f42146238944e6c2b77f4029be96c902a0e4cb46]:
-#+begin_EXAMPLE
-#+end_EXAMPLE
+file:2/pict/testline.svg
+
+Holy moly it actually works.
