@@ -9819,7 +9819,7 @@ guile}. Now the src_scheme{pict} module is availale to me.
 #+END_SRC
 
 #+RESULTS[82505b44829f47d4c32c3a57ede30655376e2a61]:
-[[file:2/pict/test.svg]]
+[[file:2/pict/test.png]]
 
 So that works.
 
@@ -9836,7 +9836,7 @@ How about this?
 #+END_SRC
 
 #+RESULTS[cec397842ea51d3c519277b4aadef5d922398749]:
-file:2/pict/Rotato.svg
+file:2/pict/Rotato.png
 
 And I just realized there's no flip/mirror function in this library. Racket's
 picture language is more complete, but it won't integrate with org-mode how I
@@ -10195,7 +10195,129 @@ procedures, I should make it return a list of lines to be superimposed.
 ; but I can't get it to work.
 #+END_SRC
 
-#+RESULTS[f42146238944e6c2b77f4029be96c902a0e4cb46]:
-[[file:2/pict/testline.svg]]
+#+RESULTS[12db0e3d3c2fa37265938fade0fcb0759bc87660]:
+[[file:2/pict/testline.png]]
 
 Holy moly it actually works.
+
+** Exercise 2.50: Transforming painters
+
+*** Text Definitions
+
+#+NAME: frame-transforms-txt
+#+BEGIN_SRC scheme -n :eval no-export :results silent
+(define (transform-painter 
+         painter origin corner1 corner2)
+  (lambda (frame)
+    (let ((m (frame-coord-map frame)))
+      (let ((new-origin (m origin)))
+        (painter (make-frame new-origin
+                  (sub-vect (m corner1) 
+                            new-origin)
+                  (sub-vect (m corner2)
+                            new-origin)))))))
+
+(define (flip-vert painter)
+  (transform-painter 
+   painter
+   (make-vect 0.0 1.0)   ; new origin
+   (make-vect 1.0 1.0)   ; new end of edge1
+   (make-vect 0.0 0.0))) ; new end of edge2
+
+(define (rotate90 painter)
+  (transform-painter painter
+                     (make-vect 1.0 0.0)
+                     (make-vect 1.0 1.0)
+                     (make-vect 0.0 0.0)))
+
+(define (squash-inwards painter)
+  (transform-painter painter
+                     (make-vect 0.0 0.0)
+                     (make-vect 0.65 0.35)
+                     (make-vect 0.35 0.65)))
+
+(define (beside painter1 painter2)
+  (let ((split-point (make-vect 0.5 0.0)))
+    (let ((paint-left  (transform-painter 
+                        painter1
+                        (make-vect 0.0 0.0)
+                        split-point
+                        (make-vect 0.0 1.0)))
+          (paint-right (transform-painter
+                        painter2
+                        split-point
+                        (make-vect 1.0 0.0)
+                        (make-vect 0.5 1.0))))
+      (lambda (frame)
+        (paint-left frame)
+        (paint-right frame)))))
+
+(define (beside painter1 painter2)
+  (let ((split-point (make-vect 0.5 0.0)))
+    (let ((paint-left  (transform-painter 
+                        painter1
+                        (make-vect 0.0 0.0)
+                        split-point
+                        (make-vect 0.0 1.0)))
+          (paint-right (transform-painter
+                        painter2
+                        split-point
+                        (make-vect 1.0 0.0)
+                        (make-vect 0.5 1.0))))
+      (lambda (frame)
+        (paint-left frame)
+        (paint-right frame)))))
+#+END_SRC
+#+BEGIN_SRC scheme -n :eval no-export :results output
+<<linepainter-pict>>
+<<frame-transforms-txt>>
+(define leftbottom-tri
+  (segments->painter (list
+   (make-segment (make-vect 0 0)
+                 (make-vect 0 0.4))
+   (make-segment (make-vect 0 0.4)
+                 (make-vect 0.4 0))
+   (make-segment (make-vect 0.4 0)
+                 (make-vect 0 0)))))
+(pict->file (paint-lines (beside leftbottom-tri
+                                 (rotate90 leftbottom-tri)))
+            "2/pict/rotatetest.svg")
+#+END_SRC
+
+#+RESULTS[5b4da60c1e53f56b21a2db21111b337d6e4f2988]:
+#+begin_EXAMPLE
+ice-9/boot-9.scm:1685:16: In procedure raise-exception:
+In procedure *: Wrong type argument in position 2: (50.0 . 0.0)
+
+Entering a new prompt.  Type `,bt' for a backtrace or `,q' to continue.
+scheme@(guile-user) [1]> 
+#+end_EXAMPLE
+
+*** Question
+
+Define the transformation src_scheme{flip-horiz}, which flips painters
+horizontally, and transformations that rotate painters counterclockwise by 180
+degrees and 270 degrees.
+
+*** Answer
+
+#+NAME: flip-rotate2
+#+BEGIN_SRC scheme -n :eval no-export :results silent
+(define (flip-horiz painter)
+  (transform-painter 
+   painter
+   (make-vect 1.0 0.0)   ; new origin
+   (make-vect 0.0 0.0)   ; new end of edge1
+   (make-vect 1.0 1.0))) ; new end of edge2
+
+(define (rotate90 painter)
+  (transform-painter painter
+                     (make-vect 1.0 0.0)
+                     (make-vect 1.0 1.0)
+                     (make-vect 0.0 0.0)))
+(define (rotate90 painter)
+  (transform-painter painter
+                     (make-vect 1.0 0.0)
+                     (make-vect 1.0 1.0)
+                     (make-vect 0.0 0.0)))
+#+END_SRC
