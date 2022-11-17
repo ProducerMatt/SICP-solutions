@@ -8,7 +8,7 @@
 ;; (define (ycor-vect v)
 ;; (define (add-vect v w)
 ;; (define (sub-vect v w)
-;; (define (scale-vect v s)
+;; (define (scale-vect s v)
 ;;
 ;; ;; Exercise 2.47
 ;; (define (make-frame origin edge1 edge2)
@@ -26,8 +26,11 @@
   (lambda (v)
     (add-vect
      (origin-frame frame)
-     (make-vect (* (xcor-vect v) (edge1-frame frame))
-                (* (ycor-vect v) (edge2-frame frame))))))
+     (add-vect
+      (scale-vect (xcor-vect v)
+                  (edge1-frame frame))
+      (scale-vect (ycor-vect v)
+                  (edge2-frame frame))))))
 (define (draw-line start end)
   ;; take two vectors, returns a line SVG object for pict
   (line (xcor-vect start)
@@ -53,10 +56,10 @@
 
 (define (paint-lines painter)
   ;; use pict to compile an SVG with the elements described by painter
-  (define picture-size 100) ; <- pixels
+  (define picture-size 500) ; <- pixels
   (let ((Frame (make-frame (make-vect 0 0)
-                           picture-size
-                           picture-size)))
+                           (make-vect picture-size 0)
+                           (make-vect 0 picture-size)))
     (apply lt-superimpose
            (painter Frame))))
 
@@ -70,6 +73,25 @@
 ;; then save to disk like this:
 (pict->file (paint-lines diamond)
             "2/pict/testline.svg")
+
+;; If you have multiple line objects that need to be merged together like in
+;; (beside), just use (append):
+(define (beside painter1 painter2)
+  (let ((split-point (make-vect 0.5 0.0)))
+    (let ((paint-left  (transform-painter
+                        painter1
+                        (make-vect 0.0 0.0)
+                        split-point
+                        (make-vect 0.0 1.0)))
+          (paint-right (transform-painter
+                        painter2
+                        split-point
+                        (make-vect 1.0 0.0)
+                        (make-vect 0.5 1.0))))
+      (lambda (frame)
+        (append ;; <- the key change
+         (paint-left frame)
+         (paint-right frame))))))
 
 ;; --- End of Exercise ---
 
