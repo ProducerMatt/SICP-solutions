@@ -9971,10 +9971,21 @@ subtraction, and multiplying a vector by a scalar:
 
 This is pretty close to the src_scheme{make-point} work done in Exercise 2.2, as well as my 2nd implementation of a rectangle in Exercise 2.3. Let's start there. Also, /aren't these points and not vectors since they don't have direction??/
 
+#+NAME: force-float
+#+BEGIN_SRC scheme -n :eval no-export :results silent
+;; Guarentee x is a float
+(define (float x)
+  (if (inexact? x)
+      x
+      (exact->inexact x)))
+#+end_src
+
 #+NAME: make-vect
 #+BEGIN_SRC scheme -n :eval no-export :results silent
+<<force-float>>
 (define (make-vect x y)
-  (cons x y)) ;; make-point
+  (cons (float x)
+        (float y))) ;; make-point
 (define (xcor-vect v)
   (car v)) ;; x-point
 (define (ycor-vect v)
@@ -9989,10 +10000,14 @@ This is pretty close to the src_scheme{make-point} work done in Exercise 2.2, as
                 (xcor-vect w))
              (- (ycor-vect v)
                 (ycor-vect w))))
-(define (scale-vect v s)
+(define (scale-vect s v)
   (make-vect (* s (xcor-vect v))
              (* s (ycor-vect v))))
 #+end_src
+
+I originally got the definition for src_scheme{scale-vect} wrong by making it
+src_scheme{(scale v s)}, then modified src_scheme{frame-coord-map} when that
+broke. I realized my mistake once I went to write src_scheme{beside}.
 
 ** Exercise 2.47: Defining frames
 
@@ -10076,8 +10091,11 @@ Again reminding me of Exercise 2.2.
   (lambda (v)
     (add-vect
      (origin-frame frame)
-     (make-vect (* (xcor-vect v) (edge1-frame frame))
-               (* (ycor-vect v) (edge2-frame frame))))))
+     (add-vect 
+      (scale-vect (xcor-vect v)
+                  (edge1-frame frame))
+      (scale-vect (ycor-vect v)
+                  (edge2-frame frame))))))
 (define (segments->painter segment-list)
   (lambda (frame)
     (for-each
@@ -10152,8 +10170,11 @@ procedures, I should make it return a list of lines to be superimposed.
   (lambda (v)
     (add-vect
      (origin-frame frame)
-     (make-vect (* (xcor-vect v) (edge1-frame frame))
-                (* (ycor-vect v) (edge2-frame frame))))))
+     (add-vect 
+      (scale-vect (xcor-vect v)
+                  (edge1-frame frame))
+      (scale-vect (ycor-vect v)
+                  (edge2-frame frame))))))
 (define (draw-line start end)
   ;; take two vectors, returns a line SVG object for pict
   (line (xcor-vect start)
@@ -10173,17 +10194,17 @@ procedures, I should make it return a list of lines to be superimposed.
         ((frame-coord-map frame)
          (end-segment segment))))
      segment-list)))
-    ;; NOTE: in the text, draw-line is a function which triggers an action in
-    ;; some graphics driver, and returns nothing. Because of this, (map) was
-    ;; originally (for-each). Thus the final result would have been thrown away.
+;; NOTE: in the text, draw-line is a function which triggers an action in
+;; some graphics driver, and returns nothing. Because of this, (map) was
+;; originally (for-each). Thus the final result would have been thrown away.
 
 <<painters>>
 
 (define (paint-lines painter)
   ;; use pict to compile an SVG with the elements described by painter
   (let ((Frame (make-frame (make-vect 0 0)
-                           100
-                           100)))
+                           (make-vect 500 0)
+                           (make-vect 0 500))))
     (apply lt-superimpose
            (painter Frame))))
 #+END_SRC
@@ -10195,7 +10216,7 @@ procedures, I should make it return a list of lines to be superimposed.
 ; but I can't get it to work.
 #+END_SRC
 
-#+RESULTS[12db0e3d3c2fa37265938fade0fcb0759bc87660]:
+#+RESULTS[1166aed3387461ead23967b3741193798eacdc6f]:
 [[file:2/pict/testline.png]]
 
 Holy moly it actually works.
@@ -10212,10 +10233,10 @@ Holy moly it actually works.
     (let ((m (frame-coord-map frame)))
       (let ((new-origin (m origin)))
         (painter (make-frame new-origin
-                  (sub-vect (m corner1) 
-                            new-origin)
-                  (sub-vect (m corner2)
-                            new-origin)))))))
+                             (sub-vect (m corner1) 
+                                       new-origin)
+                             (sub-vect (m corner2)
+                                       new-origin)))))))
 
 (define (flip-vert painter)
   (transform-painter 
@@ -10235,7 +10256,6 @@ Holy moly it actually works.
                      (make-vect 0.0 0.0)
                      (make-vect 0.65 0.35)
                      (make-vect 0.35 0.65)))
-
 (define (beside painter1 painter2)
   (let ((split-point (make-vect 0.5 0.0)))
     (let ((paint-left  (transform-painter 
@@ -10249,49 +10269,30 @@ Holy moly it actually works.
                         (make-vect 1.0 0.0)
                         (make-vect 0.5 1.0))))
       (lambda (frame)
-        (paint-left frame)
-        (paint-right frame)))))
-
-(define (beside painter1 painter2)
-  (let ((split-point (make-vect 0.5 0.0)))
-    (let ((paint-left  (transform-painter 
-                        painter1
-                        (make-vect 0.0 0.0)
-                        split-point
-                        (make-vect 0.0 1.0)))
-          (paint-right (transform-painter
-                        painter2
-                        split-point
-                        (make-vect 1.0 0.0)
-                        (make-vect 0.5 1.0))))
-      (lambda (frame)
-        (paint-left frame)
-        (paint-right frame)))))
+        (append
+         (paint-left frame)
+         (paint-right frame))))))
 #+END_SRC
 #+BEGIN_SRC scheme -n :eval no-export :results output
 <<linepainter-pict>>
 <<frame-transforms-txt>>
-(define leftbottom-tri
+(define topleft-tri
   (segments->painter (list
-   (make-segment (make-vect 0 0)
-                 (make-vect 0 0.4))
-   (make-segment (make-vect 0 0.4)
-                 (make-vect 0.4 0))
-   (make-segment (make-vect 0.4 0)
-                 (make-vect 0 0)))))
-(pict->file (paint-lines (beside leftbottom-tri
-                                 (rotate90 leftbottom-tri)))
-            "2/pict/rotatetest.svg")
+                      (make-segment (make-vect 0 0)
+                                    (make-vect 0 0.4))
+                      (make-segment (make-vect 0 0.4)
+                                    (make-vect 0.4 0))
+                      (make-segment (make-vect 0.4 0)
+                                    (make-vect 0 0)))))
+(let ((picture (beside (beside topleft-tri
+                               topleft-tri)
+                       (rotate90 topleft-tri))))
+(pict->file (paint-lines picture)
+            "2/pict/rotatetest.svg"))
 #+END_SRC
 
-#+RESULTS[5b4da60c1e53f56b21a2db21111b337d6e4f2988]:
-#+begin_EXAMPLE
-ice-9/boot-9.scm:1685:16: In procedure raise-exception:
-In procedure *: Wrong type argument in position 2: (50.0 . 0.0)
-
-Entering a new prompt.  Type `,bt' for a backtrace or `,q' to continue.
-scheme@(guile-user) [1]> 
-#+end_EXAMPLE
+#+RESULTS[83fca324a30d1ea587072343d0fb160304d8cf31]:
+[[file:2/pict/rotatetest.svg]]
 
 *** Question
 
@@ -10310,14 +10311,35 @@ degrees and 270 degrees.
    (make-vect 0.0 0.0)   ; new end of edge1
    (make-vect 1.0 1.0))) ; new end of edge2
 
-(define (rotate90 painter)
+(define (rotate180 painter)
   (transform-painter painter
-                     (make-vect 1.0 0.0)
                      (make-vect 1.0 1.0)
-                     (make-vect 0.0 0.0)))
-(define (rotate90 painter)
+                     (make-vect 0.0 1.0)
+                     (make-vect 1.0 0.0)))
+(define (rotate270 painter)
   (transform-painter painter
-                     (make-vect 1.0 0.0)
-                     (make-vect 1.0 1.0)
-                     (make-vect 0.0 0.0)))
+                     (make-vect 0.0 1.0)
+                     (make-vect 0.0 0.0)
+                     (make-vect 1.0 1.0)))
+#+END_SRC
+#+BEGIN_SRC scheme -n :eval no-export :results output
+<<linepainter-pict>>
+<<frame-transforms-txt>>
+<<flip-rotate2>>
+(define topleft-tri
+  (segments->painter (list
+                      (make-segment (make-vect 0 0)
+                                    (make-vect 0 0.4))
+                      (make-segment (make-vect 0 0.4)
+                                    (make-vect 0.8 0))
+                      (make-segment (make-vect 0.8 0)
+                                    (make-vect 0 0)))))
+(let ((picture (beside (beside
+                        (flip-vert topleft-tri)
+                        (rotate90 topleft-tri))
+                       (beside
+                        (rotate180 topleft-tri)
+                        (rotate270 topleft-tri)))))
+  (pict->file (paint-lines picture)
+              "2/pict/rotate2.svg"))
 #+END_SRC

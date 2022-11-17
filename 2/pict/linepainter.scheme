@@ -11,8 +11,16 @@
   (cddr F))
 ;; make-frame ends here
 ;; [[[[file:~/SICP-group/Answers.org::make-vect][make-vect]]][make-vect]]
+;; [[[[file:~/SICP-group/Answers.org::force-float][force-float]]][force-float]]
+;; Guarentee x is a float
+(define (float x)
+  (if (inexact? x)
+      x
+      (exact->inexact x)))
+;; force-float ends here
 (define (make-vect x y)
-  (cons x y)) ;; make-point
+  (cons (float x)
+        (float y))) ;; make-point
 (define (xcor-vect v)
   (car v)) ;; x-point
 (define (ycor-vect v)
@@ -27,7 +35,7 @@
                 (xcor-vect w))
              (- (ycor-vect v)
                 (ycor-vect w))))
-(define (scale-vect v s)
+(define (scale-vect s v)
   (make-vect (* s (xcor-vect v))
              (* s (ycor-vect v))))
 ;; make-vect ends here
@@ -44,8 +52,11 @@
   (lambda (v)
     (add-vect
      (origin-frame frame)
-     (make-vect (* (xcor-vect v) (edge1-frame frame))
-                (* (ycor-vect v) (edge2-frame frame))))))
+     (add-vect 
+      (scale-vect (xcor-vect v)
+                  (edge1-frame frame))
+      (scale-vect (ycor-vect v)
+                  (edge2-frame frame))))))
 (define (draw-line start end)
   ;; take two vectors, returns a line SVG object for pict
   (line (xcor-vect start)
@@ -65,9 +76,9 @@
         ((frame-coord-map frame)
          (end-segment segment))))
      segment-list)))
-    ;; NOTE: in the text, draw-line is a function which triggers an action in
-    ;; some graphics driver, and returns nothing. Because of this, (map) was
-    ;; originally (for-each). Thus the final result would have been thrown away.
+;; NOTE: in the text, draw-line is a function which triggers an action in
+;; some graphics driver, and returns nothing. Because of this, (map) was
+;; originally (for-each). Thus the final result would have been thrown away.
 
 ;; [[[[file:~/SICP-group/Answers.org::painters][painters]]][painters]]
 (define outline
@@ -101,8 +112,8 @@
 (define (paint-lines painter)
   ;; use pict to compile an SVG with the elements described by painter
   (let ((Frame (make-frame (make-vect 0 0)
-                           100
-                           100)))
+                           (make-vect 500 0)
+                           (make-vect 0 500))))
     (apply lt-superimpose
            (painter Frame))))
 ;; linepainter-pict ends here
