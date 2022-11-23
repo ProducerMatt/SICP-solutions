@@ -8965,7 +8965,9 @@ graph TD;
 
 *** Question
 
+#+begin_quote
 Fill in the missing expressions to complete the following definitions of some basic list-manipulation operations as accumulations.
+#+end_quote
 
 #+BEGIN_SRC scheme
 (define (map p sequence)
@@ -9092,8 +9094,10 @@ Into this operation, left to right:
 
 *** Question
 
+#+begin_quote
 Redefine src_scheme{count-leaves} from
 2.2.2 as an accumulation:
+#+end_quote
 
 *** Answer
 
@@ -9128,6 +9132,7 @@ SUCCEED at count-leaves-acc
 
 *** Question
 
+#+begin_quote
 The procedure src_scheme{accumulate-n} is similar to src_scheme{accumulate}
 except that it takes as its third argument a sequence of sequences, which are
 all assumed to have the same number of elements. It applies the designated
@@ -9138,6 +9143,7 @@ src_scheme{((1 2 3) (4 5 6) (7 8 9) (10 11 12))}, then the value of
 src_scheme{(accumulate-n + 0 s)} should be the sequence src_scheme{(22 26 30)}.
 Fill in the missing expressions in the following definition of
 src_scheme{accumulate-n}:
+#+end_quote
 
 #+BEGIN_SRC scheme
 (define (accumulate-n op init seqs)
@@ -9348,9 +9354,11 @@ What are the values of
 
 *** Question B
 
+#+begin_quote
 Give a property that src_scheme{op} should satisfy to guarantee that
 src_scheme{fold-right} and src_scheme{fold-left} will produce the same values
 for any sequence.
+#+end_quote
 
 *** Answer B
 
@@ -9485,10 +9493,12 @@ SUCCEED at reverse-fl
 
 *** Question
 
+#+begin_quote
 Define a procedure src_scheme{unique-pairs} that, given an integer \(n\),
 generates the sequence of pairs \((i, j)\) with \(1 \le j < i \le n\). Use
 src_scheme{unique-pairs} to simplify the definition of
 src_scheme{prime-sum-pairs} given above.
+#+end_quote
 
 *** Answer
 
@@ -9538,9 +9548,11 @@ SUCCEED at prime-sum-pairs with unique-pairs
 
 *** Question
 
+#+begin_quote
 Write a procedure to find all ordered triples of distinct positive integers
 \(i\), \(j\), and \(k\) less than or equal to a given integer \(n\) that sum to
 a given integer \(s\).
+#+end_quote
 
 *** Answer
 
@@ -9622,6 +9634,7 @@ that no queen is in check from any other.
   (queen-cols board-size))
 #+end_src
 
+#+begin_quote
 Complete the program by writing the following:
 - representation for sets of board positions, including:
   - src_scheme{adjoin-position}, which adjoins a new row-column position to a
@@ -9631,6 +9644,7 @@ Complete the program by writing the following:
   in the \(k^{\mathrm{th\)}} column is safe with respect to the others. (Note
   that we need only check whether the new queen is safe---the other queens are
   already guaranteed safe with respect to each other.)
+#+end_quote
 
 *** Answer
 
@@ -9683,12 +9697,14 @@ SUCCEED at queens
 
 *** Question
 
+#+begin_quote
 Louis Reasoner is having a terrible time doing Exercise 2.42. His
 src_scheme{queens} procedure seems to work, but it runs extremely slowly. (Louis
 never does manage to wait long enough for it to solve even the \(6\times6\)
 case.) When Louis asks Eva Lu Ator for help, she points out that he has
 interchanged the order of the nested mappings in the src_scheme{flatmap},
 writing it as
+#+end_quote
 
 #+BEGIN_SRC scheme
 (flatmap
@@ -9699,9 +9715,11 @@ writing it as
  (enumerate-interval 1 board-size))
 #+END_SRC
 
+#+begin_quote
 Explain why this interchange makes the program run slowly. Estimate how long it
 will take Louis's program to solve the eight-queens puzzle, assuming that the
 program in Exercise 2.42 solves the puzzle in time \(T\).
+#+end_quote
 
 *** Answer
 
@@ -9897,9 +9915,11 @@ and simultaneously check my work with Racket.
 
 *** Question
 
+#+begin_quote
 Define the procedure src_scheme{up-split} used by src_scheme{corner-split}. It
 is similar to src_scheme{right-split}, except that it switches the roles of
 src_scheme{below} and src_scheme{beside}.
+#+end_quote
 
 *** Answer
 
@@ -9917,17 +9937,21 @@ src_scheme{below} and src_scheme{beside}.
 
 *** Question
 
+#+begin_quote
 src_scheme{right-split} and src_scheme{up-split} can be expressed as instances
 of a general splitting operation. Define a procedure src_scheme{split} with the
 property that evaluating
+#+end_quote
 
 #+BEGIN_SRC scheme -n :eval no-export :results silent
 (define right-split (split beside below))
 (define up-split (split below beside))
 #+END_SRC
 
+#+begin_quote
 produces procedures src_scheme{right-split} and src_scheme{up-split} with the
 same behaviors as the ones already defined.
+#+end_quote
 
 *** Answer
 
@@ -9950,6 +9974,7 @@ same behaviors as the ones already defined.
 
 *** Question
 
+#+begin_quote
 A two-dimensional vector \(\hbox{\bf v}\) running from the origin to a point can
 be represented as a pair consisting of an \(x\)-coordinate and a
 \(y\)-coordinate. Implement a data abstraction for vectors by giving a
@@ -9966,6 +9991,7 @@ subtraction, and multiplying a vector by a scalar:
 	s \cdot (x, y) 			& (sx, sy).
 \end{array}
 \]
+#+end_quote
 
 *** Answer
 
@@ -10292,13 +10318,15 @@ Holy moly it actually works.
 #+END_SRC
 
 #+RESULTS[83fca324a30d1ea587072343d0fb160304d8cf31]:
-[[file:2/pict/rotatetest.svg]]
+[[file:2/pict/rotatetest.png]]
 
 *** Question
 
+#+begin_quote
 Define the transformation src_scheme{flip-horiz}, which flips painters
 horizontally, and transformations that rotate painters counterclockwise by 180
 degrees and 270 degrees.
+#+end_quote
 
 *** Answer
 
@@ -10343,3 +10371,79 @@ degrees and 270 degrees.
   (pict->file (paint-lines picture)
               "2/pict/rotate2.svg"))
 #+END_SRC
+
+#+RESULTS[942a1cdf3a5aed31c833cf37149bb4e09ea82074]:
+[[file:2/pict/rotate2.png]]
+
+** Exercise 2.51
+
+*** Question
+
+#+begin_quote
+Define the src_scheme{below} operation
+for painters.  src_scheme{below} takes two painters as arguments.  The resulting
+painter, given a frame, draws with the first painter in the bottom of the frame
+and with the second painter in the top.  Define src_scheme{below} in two different
+ways---first by writing a procedure that is analogous to the src_scheme{beside}
+procedure given above, and again in terms of src_scheme{beside} and suitable
+rotation operations (from @ref{Exercise 2.50}).
+#+end_quote
+
+*** Answer
+
+#+NAME: below
+#+BEGIN_SRC scheme -n :eval no-export :results silent
+(define (below painter1 painter2)
+  (let ((split-point (make-vect 0.0 0.5)))
+    (let ((paint-left  (transform-painter 
+                        painter1
+                        (make-vect 0.0 0.0)
+                        (make-vect 1.0 0.0)
+                        split-point))
+          (paint-right (transform-painter
+                        painter2
+                        split-point
+                        (make-vect 1.0 0.5)
+                        (make-vect 0.0 1.0))))
+      (lambda (frame)
+        (append
+         (paint-left frame)
+         (paint-right frame))))))
+(define (below-rotate painter1 painter2)
+  (rotate270 (beside
+              (rotate90 painter2)
+              (rotate90 painter1))))
+#+END_SRC
+
+#+BEGIN_SRC scheme -n :eval no-export :results output
+<<linepainter-pict>>
+<<frame-transforms-txt>>
+<<flip-rotate2>>
+<<below>>
+(define topleft-tri
+  (segments->painter (list
+                      (make-segment (make-vect 0 0)
+                                    (make-vect 0 0.4))
+                      (make-segment (make-vect 0 0.4)
+                                    (make-vect 0.8 0))
+                      (make-segment (make-vect 0.8 0)
+                                    (make-vect 0 0)))))
+(let ((p1 (below (beside
+                        topleft-tri
+                        (rotate90 topleft-tri))
+                       (beside
+                        (rotate180 topleft-tri)
+                        (rotate270 topleft-tri))))
+      (p2 (below-rotate (beside
+                        topleft-tri
+                        (rotate90 topleft-tri))
+                       (beside
+                        (rotate180 topleft-tri)
+                        (rotate270 topleft-tri)))))
+  (pict->file (paint-lines (beside p1 p2))
+              "2/pict/rotate3.svg"))
+#+END_SRC
+
+#+RESULTS[419f2a4c29ab56d2d3463e20b1f63864eb193dcf]:
+[[file:2/pict/rotate3.png]]
+
