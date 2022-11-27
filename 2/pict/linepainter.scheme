@@ -81,6 +81,25 @@
 ;; originally (for-each). Thus the final result would have been thrown away.
 
 ;; [[[[file:~/SICP-group/Answers.org::painters][painters]]][painters]]
+;; [[[[file:~/SICP-group/Answers.org::continuous-lines][continuous-lines]]][continuous-lines]]
+(define (continuous-lines . vectors)
+  ;; Given a list of vectors, return a series of line segments
+  ;; that continuously follow the vectors until there are no more,
+  ;; at which point connect the last vector to the first.
+  (define (iter vecs lines)
+    (if (> 2 (length vecs))
+        lines
+        (let* ((first (car vecs))
+               (rest (cdr vecs))
+               (second (car rest))
+               (new-line (make-segment first second)))
+          (iter rest (cons new-line lines)))))
+  (let ((input (if (= 1 (length vectors))
+                   (car vectors) ; assume we were passed a list, unwrap it
+                   vectors)))
+    (iter (append input (list (car input))) ;; Connect to start
+          '())))
+;; continuous-lines ends here
 (define outline
   (segments->painter (list
    (make-segment (make-vect 0 0)

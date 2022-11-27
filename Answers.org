@@ -10144,7 +10144,7 @@ a. The painter that draws the outline of the designated frame.
 b. The painter that draws an =X= by connecting opposite corners of the frame.
 c. The painter that draws a diamond shape by connecting the midpoints of the
    sides of the frame.
-d. The src_scheme{wave} painter. \calligra{I refuse}
+d. The src_scheme{wave} painter.
 #+end_quote
 
 *** Answer
@@ -10152,8 +10152,10 @@ d. The src_scheme{wave} painter. \calligra{I refuse}
 In the past I would need to constantly execute my code to "see" what I'm doing.
 But I'm starting to think in larger chunks and need the feedback less.
 
+
 #+NAME: painters
 #+BEGIN_SRC scheme -n :eval no-export :results silent
+<<continuous-lines>>
 (define outline
   (segments->painter (list
    (make-segment (make-vect 0 0)
@@ -10299,6 +10301,25 @@ Holy moly it actually works.
          (paint-left frame)
          (paint-right frame))))))
 #+END_SRC
+#+BEGIN_SRC scheme -n :eval no-export :results output :exports none
+<<linepainter-pict>>
+<<frame-transforms-txt>>
+(define topleft-tri
+  (segments->painter (list
+                      (make-segment (make-vect 0 0)
+                                    (make-vect 0 0.4))
+                      (make-segment (make-vect 0 0.4)
+                                    (make-vect 0.8 0))
+                      (make-segment (make-vect 0.8 0)
+                                    (make-vect 0 0)))))
+(let ((picture topleft-tri))
+(pict->file (paint-lines picture)
+            "2/pict/tritest.svg"))
+#+END_SRC
+
+#+RESULTS[3b6460ef9bcc8e250580413268114952f9769c86]:
+[[file:2/pict/tritest.png]]
+
 #+BEGIN_SRC scheme -n :eval no-export :results output
 <<linepainter-pict>>
 <<frame-transforms-txt>>
@@ -10447,3 +10468,85 @@ rotation operations (from @ref{Exercise 2.50}).
 #+RESULTS[419f2a4c29ab56d2d3463e20b1f63864eb193dcf]:
 [[file:2/pict/rotate3.png]]
 
+An aside: I'm beginning to see what makes Lisp-style programming different from
+C style. In C, the pictures would be described with separate data structures
+specified up front, but in Lisp you can use the code to create the data
+structure. Off the top of my head, the biggest players here would be first-level
+functions, and how statements evaluate to specific values rather than being
+imperative commands that cause something to happen elsewhere.
+
+** 2.2.4 continued
+
+- stratified design :: is the notion that complex systems should be structured
+  as a sequence of levels with a sequence of languages. See how electronic
+  components are described in EE terms, the binary gates they form are described
+  in digital logic terms, the programs they run described in programming
+  language terms, the networks of programs described in network architecture
+  terms, etc.
+
+This stratified design can be seen in our picture language. We use lines and
+points to specify painters, use painters to make arrangements with beside/below,
+arrange these arrangements into higher-level arrangements like
+src_scheme{up-split}.
+
+** Exercise 2.52
+
+*** Question A
+
+Make changes to the square limit of src_scheme{wave} shown in Figure 2.9 by
+working at each of the levels described above. In particular:
+
+- Add some segments to the primitive src_scheme{wave} painter of Exercise 2.49 (to add a smile, for example).
+
+*** Answer
+
+I need to do what I've been slacking off on: actually making the src_scheme{wave} painter.
+First, I want a helper function to make inputting shapes easier.
+
+#+NAME: continuous-lines
+#+BEGIN_SRC scheme -n :eval no-export :results silent
+(define (continuous-lines . vectors)
+  ;; Given a list of vectors, return a series of line segments
+  ;; that continuously follow the vectors until there are no more,
+  ;; at which point connect the last vector to the first.
+  (define (iter vecs lines)
+    (if (> 2 (length vecs))
+        lines
+        (let* ((first (car vecs))
+               (rest (cdr vecs))
+               (second (car rest))
+               (new-line (make-segment first second)))
+          (iter rest (cons new-line lines)))))
+  (let ((input (if (= 1 (length vectors))
+                   (car vectors) ; assume we were passed a list, unwrap it
+                   vectors)))
+    (iter (append input (list (car input))) ;; Connect to start
+          '())))
+#+END_SRC
+
+#+BEGIN_SRC scheme -n :eval no-export :results output
+<<linepainter-pict>>
+<<frame-transforms-txt>>
+<<flip-rotate2>>
+<<below>>
+<<continuous-lines>>
+(define topleft-tri
+  (segments->painter (list
+                      (make-segment (make-vect 0 0)
+                                    (make-vect 0 0.4))
+                      (make-segment (make-vect 0 0.4)
+                                    (make-vect 0.8 0))
+                      (make-segment (make-vect 0.8 0)
+                                    (make-vect 0 0)))))
+(define topleft-tri2
+  (segments->painter (continuous-lines
+                      (make-vect 0 0)
+                      (make-vect 0 0.4)
+                      (make-vect 0.8 0))))
+(let ((p1 (beside topleft-tri topleft-tri2)))
+  (pict->file (paint-lines p1)
+              "2/pict/cl-test.svg"))
+#+END_SRC
+
+#+RESULTS[a664b95bd53144dec9218f09bd7c00d3cde47086]:
+[[file:2/pict/cl-test.png]]
