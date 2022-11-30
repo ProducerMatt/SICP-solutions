@@ -82,6 +82,14 @@
 
 ;; [[[[file:~/SICP-group/Answers.org::painters][painters]]][painters]]
 ;; [[[[file:~/SICP-group/Answers.org::continuous-lines][continuous-lines]]][continuous-lines]]
+;; [[[[file:~/SICP-group/Answers.org::unwrap-if-needed][unwrap-if-needed]]][unwrap-if-needed]]
+(define (unwrap-if-needed args)
+  ;; commonly needed in vararg functions
+  (if (and (= 1 (length args))
+           (list? (car args)))
+      (car args) ; assume we were passed a list, unwrap it
+      args))
+;; unwrap-if-needed ends here
 (define (continuous-lines . vectors)
   ;; Given a list of vectors, return a series of line segments
   ;; that continuously follow the vectors until there are no more,
@@ -94,9 +102,7 @@
                (second (car rest))
                (new-line (make-segment first second)))
           (iter rest (cons new-line lines)))))
-  (let ((input (if (= 1 (length vectors))
-                   (car vectors) ; assume we were passed a list, unwrap it
-                   vectors)))
+  (let ((input (unwrap-if-needed vectors)))
     (iter (append input (list (car input))) ;; Connect to start
           '())))
 (define (numbers-to-vectors . numbers)

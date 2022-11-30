@@ -10512,8 +10512,19 @@ working at each of the levels described above. In particular:
 I need to do what I've been slacking off on: actually making the src_scheme{wave} painter.
 First, I want a helper function to make inputting shapes easier.
 
+
+#+NAME: unwrap-if-needed
+#+BEGIN_SRC scheme -n :eval no-export :results silent
+(define (unwrap-if-needed args)
+  ;; commonly needed in vararg functions
+  (if (and (= 1 (length args))
+           (list? (car args)))
+      (car args) ; assume we were passed a list, unwrap it
+      args))
+#+END_SRC
 #+NAME: continuous-lines
 #+BEGIN_SRC scheme -n :eval no-export :results silent
+<<unwrap-if-needed>>
 (define (continuous-lines . vectors)
   ;; Given a list of vectors, return a series of line segments
   ;; that continuously follow the vectors until there are no more,
@@ -10526,9 +10537,7 @@ First, I want a helper function to make inputting shapes easier.
                (second (car rest))
                (new-line (make-segment first second)))
           (iter rest (cons new-line lines)))))
-  (let ((input (if (= 1 (length vectors))
-                   (car vectors) ; assume we were passed a list, unwrap it
-                   vectors)))
+  (let ((input (unwrap-if-needed vectors)))
     (iter (append input (list (car input))) ;; Connect to start
           '())))
 (define (numbers-to-vectors . numbers)
@@ -10627,6 +10636,50 @@ Now, let's write the wave painter.
               "2/pict/wave-test.svg"))
 #+END_SRC
 
+The question needs me to overlay something new. So I need some way to add more
+segments to a painter after it's already been written.
+
 #+RESULTS[7339620f004b1a5970840eb4d2ccfd0f7fcb976d]:
-#+begin_EXAMPLE
-#+end_EXAMPLE
+[[file:2/pict/wave-test.png]]
+
+#+NAME: append-painters
+#+BEGIN_SRC scheme -n :eval no-export :results silent
+<<unwrap-if-needed>>
+(define (append-painters-rec . args)
+  (lambda (frame)
+    (define (rec painters)
+      (if (null? painters)
+          '()
+          (append ((car painters) frame)
+                  (rec (cdr painters)))))
+    (rec (unwrap-if-needed args))))
+(define (append-painters . args)
+  (lambda (frame)
+    (define (iter segments to-paint)
+      (if (null? to-paint)
+          segments
+          (iter (append ((car to-paint) frame)
+                      segments)
+                      (cdr to-paint))))
+    (iter '()
+          (unwrap-if-needed args))))
+#+END_SRC
+#+BEGIN_SRC scheme -n :eval no-export :results output
+<<linepainter-pict>>
+<<frame-transforms-txt>>
+<<flip-rotate2>>
+<<below>>
+<<continuous-lines>>
+<<painters>>
+<<wave-painter>>
+<<append-painters>>
+(let ((p1 (append-painters
+           (beside wave (flip-vert wave))
+           frame-X
+           outline)))
+  (pict->file (paint-lines p1)
+              "2/pict/append-test.svg"))
+#+END_SRC
+
+#+RESULTS[c2ee764954c965185361915c7c56d64df1fbcf6b]:
+[[file:2/pict/append-test.png]]
