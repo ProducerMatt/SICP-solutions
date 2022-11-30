@@ -15,11 +15,47 @@ This infodump does not cover the SICP-descended Harvard courses.
 # Source material
 - [Fully-featured HTML edition](http://sarabander.github.io/sicp/html/index.xhtml)
 - [Texinfo edition](http://zv.github.io/sicp-in-texinfo)
+- [.info edition](https://github.com/webframp/sicp-info)
+- [SICP in PDF format](https://github.com/DiamondBond/sicp-pdf) with some bug fixes
 - [Structure and Interpretation of Computer Programs OpenCourseWare](https://ocw.mit.edu/courses/electrical-engineering-and-computer-science/6-001-structure-and-interpretation-of-computer-programs-spring-2005/)
-- [Holly Yanco SICP lectures](https://youtube.com/playlist?list=PLhrXA-RW-v-u1L7NuEQgNstePyJJuyoHM)
+- [Self-hostable mirror of all of the above](https://github.com/ProducerMatt/sicp-psets-mirror)
+- [SICP lectures on Youtube](https://gist.github.com/shmup/d58053ab657f45ec6656241db60d9d40) and which lectures go with what section of the book
+- [Holly Yanco SICP lectures on Youtube](https://youtube.com/playlist?list=PLhrXA-RW-v-u1L7NuEQgNstePyJJuyoHM)
 - [SICP vs SICP JS comparison](https://sicp.sourceacademy.org/)
 
-# Resources
+## Which Scheme should I use?
+
+You can submit your homework in any way that can be easily followed by others, preferably in a way that they won't need to run your code but can if they want.
+
+You may want to do your homework in an environment that intermixes source code with rich text and LaTeX for math. Some options:
+
+- Emacs org-mode + org-babel, providing an interactive development environment that can be turned into a Latex document
+- Jupyter notebooks with the Guile/Racket/Calysto module
+- just keeping your source code in one file and your fancy marked-up answers in another. I.e. static site generators with Latex support.
+
+The last may be the ideal path at the moment, I've spent many hours working out the kinks in org-mode + org-babel and it's still not how I want it.
+
+### Guile
+
+I recommend Guile for its high compatibility with SICP and its high quality and availability. A Jupyter kernel is available.
+
+A couple helpful and important details regarding Guile Scheme, especially how to enable read line support: http://www.starynkevitch.net/Basile/guile-tutorial-1.html
+
+Here's a small [benchmarking function](https://github.com/ProducerMatt/SICP-solutions/blob/main/mattbench.scm) and a small [unit tester](https://github.com/ProducerMatt/SICP-solutions/blob/main/mattcheck2.scm) that I've found quite helpful.
+
+To run code from SICP, you'll need to change:
+
+- `true` and `false` to `#t` and `#f`
+- `nil` to `'()` (*not* to `#nil`). See later note re: `nil`.
+
+### Racket
+
+Racket has the best debugger (DrRacket) but it will only have compatibility for extremely basic Scheme expressions. It has an SICP compatibility mode, but I found this broke some other desirable features. However don't be afraid to give it a try for yourself.
+
+### Calysto
+Another option which I haven't tried is [Calysto Scheme](https://github.com/Calysto/calysto_scheme), a Scheme interoperable with Python which is well-integrated for Jupyter notebooks. Compatibility with SICP not guaranteed.
+
+# Various Resources
 - [abrantesasf's study guide](https://github.com/abrantesasf/sicp-abrantes-study-guide)
 - [Notes for following along in the modern day](https://github.com/zv/SICP-guile), and Guile compatibility notes. Warning: contains some solutions
 - ["cheatsheet" for key ideas](https://www.physinf.com/sicp)
@@ -228,6 +264,7 @@ For the picture language section, install `guile-picture-language` package via G
 
 ## org doc support
 
+The most important part are the org-mode properties set at the top of the document.
 ``` org
 # Enable TOC at top of document
 #+OPTIONS: toc:t stat:t prop:t num:20
