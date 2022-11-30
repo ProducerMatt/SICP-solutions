@@ -1,19 +1,20 @@
-# Enable TOC, etc
+# Enable TOC at top of document
 #+OPTIONS: toc:t stat:t prop:t num:20
 
-# Don't export "noexport" sections
+# Don't export sections tagged "noexport"
 #+EXCLUDE_TAGS: noexport
 
-# Start folded
+# Open document folded
 #+STARTUP: overview
 
+# for org agenda, tag items with whether they are math-heavy or optional
 #+TAGS: math optional
 
 # Tangle when saving
 #+auto_tangle: t
 
 # ORG-BABEL DEFAULTS
-#+PROPERTY: header-args :tangle no :noeval :exports both :cache yes :results output wrap :noweb no-export :comments noweb :colnames no :rownames no :float multicolumn
+#+PROPERTY: header-args :tangle no :noeval :exports both :cache yes :results output wrap :noweb no-export :comments noweb :colnames no :rownames no
 #+PROPERTY: header-args:scheme :wrap EXAMPLE
 #+PROPERTY: header-args:gnuplot :prelude "reset" :session nil
 #+PROPERTY: header-args:mermaid :exports results
@@ -93,6 +94,12 @@
 
 #+BEGIN_SRC org
 #+ATTR_LATEX: :width 0.6\linewidth
+#+END_SRC
+
+*** Convert .svg's to .pngs
+
+#+BEGIN_SRC shell
+fd . -e svg -tf -E old --exec magick '{}' '{.}'.png
 #+END_SRC
 
 ** Helpers for org-mode tables
@@ -10184,6 +10191,8 @@ But I'm starting to think in larger chunks and need the feedback less.
                  (make-vect 0.5 0)))))
 #+END_SRC
 
+I'll make the wave painter once I have some graph paper in front of me.
+
 Ok, how can I verify this? I guess I could rewrite src_scheme{segments->painter}
 for src_scheme{pict}. Since this isn't a drawing system with imperative
 procedures, I should make it return a list of lines to be superimposed.
@@ -10498,7 +10507,7 @@ working at each of the levels described above. In particular:
 
 - Add some segments to the primitive src_scheme{wave} painter of Exercise 2.49 (to add a smile, for example).
 
-*** Answer
+*** Answer A
 
 I need to do what I've been slacking off on: actually making the src_scheme{wave} painter.
 First, I want a helper function to make inputting shapes easier.
@@ -10522,6 +10531,18 @@ First, I want a helper function to make inputting shapes easier.
                    vectors)))
     (iter (append input (list (car input))) ;; Connect to start
           '())))
+(define (numbers-to-vectors . numbers)
+  (define (iter input output)
+    (if (> 2 (length input))
+        output
+        (let* ((first (car input))
+              (d (cdr input))
+              (second (car d))
+              (dd (cdr d)))
+          (iter dd
+                (cons (make-vect first second)
+                      output)))))
+  (reverse (iter numbers '())))
 #+END_SRC
 
 #+BEGIN_SRC scheme -n :eval no-export :results output
@@ -10543,10 +10564,69 @@ First, I want a helper function to make inputting shapes easier.
                       (make-vect 0 0)
                       (make-vect 0 0.4)
                       (make-vect 0.8 0))))
-(let ((p1 (beside topleft-tri topleft-tri2)))
+(define topleft-tri3
+  (segments->painter (continuous-lines
+                      (numbers-to-vectors
+                       0 0
+                       0 0.4
+                       0.8 0))))
+(let ((p1 (below (beside topleft-tri topleft-tri2)
+                 (beside topleft-tri topleft-tri3))))
   (pict->file (paint-lines p1)
               "2/pict/cl-test.svg"))
 #+END_SRC
 
-#+RESULTS[a664b95bd53144dec9218f09bd7c00d3cde47086]:
+#+RESULTS[a2ef690a540771b7f579b7987827d14b86b9d47a]:
 [[file:2/pict/cl-test.png]]
+
+Now, let's write the wave painter.
+
+#+NAME: wave-painter
+#+BEGIN_SRC scheme -n :eval no-export :results silent
+<<continuous-lines>>
+;; Should be raising their left hand and
+;; lowering their right. (I screwed up the axes)
+(define wave
+  (segments->painter
+   (continuous-lines
+    (numbers-to-vectors
+    0.55 0
+    0.5 0.15
+    0.55 0.3
+    0.45 0.275
+    0.25 0.35
+    0 0.25
+    0 0.3
+    0.25 0.45
+    0.45 0.35
+    0.5 0.65
+    0.4 1
+    0.45 1
+    0.6 0.7
+    0.75 1
+    0.8 1
+    0.7 0.65
+    0.75 0.35
+    1 0.675
+    1 0.6
+    0.75 0.275
+    0.65 0.3
+    0.7 0.15
+    0.65 0))))
+#+END_SRC
+
+#+BEGIN_SRC scheme -n :eval no-export :results output
+<<linepainter-pict>>
+<<frame-transforms-txt>>
+<<flip-rotate2>>
+<<below>>
+<<continuous-lines>>
+<<wave-painter>>
+(let ((p1 (beside wave (flip-vert wave))))
+  (pict->file (paint-lines p1)
+              "2/pict/wave-test.svg"))
+#+END_SRC
+
+#+RESULTS[7339620f004b1a5970840eb4d2ccfd0f7fcb976d]:
+#+begin_EXAMPLE
+#+end_EXAMPLE

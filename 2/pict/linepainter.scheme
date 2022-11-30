@@ -99,6 +99,18 @@
                    vectors)))
     (iter (append input (list (car input))) ;; Connect to start
           '())))
+(define (numbers-to-vectors . numbers)
+  (define (iter input output)
+    (if (> 2 (length input))
+        output
+        (let* ((first (car input))
+              (d (cdr input))
+              (second (car d))
+              (dd (cdr d)))
+          (iter dd
+                (cons (make-vect first second)
+                      output)))))
+  (reverse (iter numbers '())))
 ;; continuous-lines ends here
 (define outline
   (segments->painter (list
