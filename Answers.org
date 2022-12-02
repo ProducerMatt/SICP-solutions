@@ -9974,7 +9974,15 @@ same behaviors as the ones already defined.
               (f2 smaller smaller)))))
   rec)
 (define right-split (split beside below))
-(define up-split (split below beside))
+;; This one goes down for some reason?
+;(define up-split (split below beside))
+(define (up-split painter n)
+  (if (= n 0)
+      painter
+      (let ((smaller (up-split painter 
+                               (- n 1))))
+        (below painter 
+               (beside smaller smaller)))))
 #+END_SRC
 
 ** Exercise 2.46: Defining vectors
@@ -10600,7 +10608,7 @@ Now, let's write the wave painter.
    (continuous-lines
     (numbers-to-vectors
     0.55 0
-    0.5 0.15
+    0.5 0.15 ;; center-left side of head
     0.55 0.3
     0.45 0.275
     0.25 0.35
@@ -10620,7 +10628,7 @@ Now, let's write the wave painter.
     1 0.6
     0.75 0.275
     0.65 0.3
-    0.7 0.15
+    0.7 0.15 ;; center-right side of head
     0.65 0))))
 #+END_SRC
 
@@ -10683,3 +10691,101 @@ segments to a painter after it's already been written.
 
 #+RESULTS[c2ee764954c965185361915c7c56d64df1fbcf6b]:
 [[file:2/pict/append-test.png]]
+
+Now let's (try to) add a smile.
+
+#+NAME: wave-smile
+#+BEGIN_SRC scheme -n :eval no-export :results silent
+<<wave-painter>>
+<<append-painters>>
+(define wave-smile
+  (append-painters
+   wave
+   (segments->painter
+    (continuous-lines
+     (numbers-to-vectors
+      0.55 0.2
+      0.6 0.225
+      0.65 0.2)))))
+#+END_SRC
+#+BEGIN_SRC scheme -n :eval no-export :results output
+<<linepainter-pict>>
+<<frame-transforms-txt>>
+<<flip-rotate2>>
+<<below>>
+<<continuous-lines>>
+<<wave-smile>>
+(pict->file (paint-lines wave-smile)
+            "2/pict/wave-smile-test.svg")
+#+END_SRC
+
+#+RESULTS[4ce5d12349ed189f5e2be1faaf7793a4670f68b3]:
+[[file:2/pict/wave-smile-test.png]]
+
+*** Question B
+
+Change the pattern constructed by src_scheme{corner-split} (for example, by
+using only one copy of the src_scheme{up-split} and src_scheme{right-split}
+images instead of two).
+
+#+NAME: corner-split
+#+BEGIN_SRC scheme -n :eval no-export :results silent
+(define (corner-split painter n)
+  (if (= n 0)
+      painter
+      (let ((up (up-split painter (- n 1)))
+            (right (right-split painter 
+                                (- n 1))))
+        (let ((top-left (beside up up))
+              (bottom-right (below right 
+                                   right))
+              (corner (corner-split painter 
+                                    (- n 1))))
+          (beside (below painter top-left)
+                  (below bottom-right 
+                         corner))))))
+
+(define (corner-split-mine painter n)
+  (if (= n 0)
+      painter
+      (let ((up (up-split painter (- n 1)))
+            (right (right-split painter 
+                                (- n 1))))
+        (let ((top-left up)
+              (bottom-right right)
+              (corner (corner-split-mine painter 
+                                    (- n 1))))
+          (beside (below painter top-left)
+                  (below bottom-right 
+                         corner))))))
+#+END_SRC
+
+#+BEGIN_SRC scheme -n :eval no-export :results output
+<<linepainter-pict>>
+<<frame-transforms-txt>>
+<<flip-rotate2>>
+<<below>>
+<<continuous-lines>>
+<<painters>>
+<<wave-smile>>
+<<append-painters>>
+<<splits-generalized>>
+<<corner-split>>
+(let ((p1 (beside (flip-horiz (corner-split wave-smile 5))
+                  (corner-split-mine wave-smile 5))))
+;(let ((p1 (up-split frame-X 5)))
+  (pict->file (paint-lines p1)
+              "2/pict/corner-splits.svg"))
+#+END_SRC
+
+#+RESULTS[a1a1d7df20056fcf0986da88ad48dbda23a1a791]:
+[[file:2/pict/corner-splits.png]]
+
+So my modified version doesn't split at the ~corner-split~ level, as predicted.
+However ~up-split~ and ~right-split~ do, so the effect is only delayed by one
+level. But more importantly:
+
+/Why does it go down instead of up? I don't get it./
+
+~corner-split~ and ~up-split~ are even the same code as every answer online.
+Could my ~paint-lines~ procedure be what's causing issues?
