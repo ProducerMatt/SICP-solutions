@@ -10789,3 +10789,219 @@ level. But more importantly:
 
 ~corner-split~ and ~up-split~ are even the same code as every answer online.
 Could my ~paint-lines~ procedure be what's causing issues?
+
+*** Question C
+
+#+begin_quote
+Modify the version of src_scheme{square-limit} that uses src_scheme{square-of-four} so as
+to assemble the corners in a different pattern.  (For example, you might make
+the big Mr. Rogers look outward from each corner of the square.)
+#+end_quote
+
+*** Textbook Definitions
+
+#+NAME: square-of-four-txt
+#+BEGIN_SRC scheme -n :eval no-export :results silent
+(define (square-of-four tl tr bl br)
+  (lambda (painter)
+    (let ((top (beside (tl painter) 
+                       (tr painter)))
+          (bottom (beside (bl painter) 
+                          (br painter))))
+      (below bottom top))))
+(define (square-limit painter n)
+  (let ((combine4 
+         (square-of-four flip-horiz 
+                         identity
+                         rotate180 
+                         flip-vert)))
+    (combine4 (corner-split painter n))))
+#+END_SRC
+
+*** Answer C
+
+#+NAME: square-limit-mine
+#+BEGIN_SRC scheme -n :eval no-export :results silent
+(define (square-limit-mine painter n)
+  (let ((combine4 
+         (square-of-four identity
+                         flip-horiz
+                         flip-vert 
+                         rotate180)))
+    (combine4 (corner-split painter n))))
+#+END_SRC
+#+BEGIN_SRC scheme -n :eval no-export :results output
+<<linepainter-pict>>
+<<frame-transforms-txt>>
+<<flip-rotate2>>
+<<below>>
+<<continuous-lines>>
+<<wave-smile>>
+<<splits-generalized>>
+<<corner-split>>
+<<square-of-four-txt>>
+<<square-limit-mine>>
+(pict->file (paint-lines (beside (square-limit wave-smile 5)
+                                 (square-limit-mine wave-smile 5)))
+            "2/pict/square-limits.svg")
+#+END_SRC
+
+#+RESULTS[111fcd56e310536b0fc3d2f409babc1ea1d841ef]:
+[[file:2/pict/square-limits.png]]
+
+Ok, I'm confused. Shouldn't the shape of ~square-limit~ be the same regardless
+of the operators passed to it? It looks like the operators effect each chunk
+separately.
+
+#+BEGIN_SRC scheme -n :eval no-export :results output
+<<linepainter-pict>>
+<<frame-transforms-txt>>
+<<flip-rotate2>>
+<<below>>
+<<continuous-lines>>
+<<wave-smile>>
+<<splits-generalized>>
+<<corner-split>>
+<<square-of-four-txt>>
+(define (square-limit-mine painter n)
+  (let ((combine4 
+         (square-of-four identity
+                         identity
+                         identity
+                         identity)))
+    (combine4 (corner-split painter n))))
+(pict->file (paint-lines (square-limit-mine wave-smile 5))
+            "2/pict/square-limit-identity.svg")
+#+END_SRC
+
+#+RESULTS[0e130aa614fce200f3b764b2780d3360302f430f]:
+[[file:2/pict/square-limit-identity.png]]
+
+I expected the operators would change the /image orientation/, not the
+/structure/. Maybe this is because my ~draw-lines~ makes recursively nested
+stacks of painter objects, rather than imperative calls to drawing procedures?
+Looking on the internet I see [[http://pipecode.blogspot.com/2013/04/sicp-exercise-252.html][someone else having the same results.]]
+
+** 2.3.1: Quotation
+
+Syntactic vs semantic use in Lisp:
+#+BEGIN_SRC scheme
+(define dog 123)
+(+ dog dog) ;; semantic usage
+(quote dog) ;; syntactic usage
+#+END_SRC
+
+This was introduced by famous LISP scientists, Abbott and Costello.
+
+** Exercise 2.53
+
+*** Question
+
+#+begin_quote
+What would the interpreter print
+in response to evaluating each of the following expressions?
+#+end_quote
+
+#+BEGIN_SRC scheme -n
+(list 'a 'b 'c)
+(list (list 'george))
+(cdr '((x1 x2) (y1 y2)))
+(cadr '((x1 x2) (y1 y2)))
+(pair? (car '(a short list)))
+(memq 'red '((red shoes) (blue socks)))
+(memq 'red '(red shoes blue socks))
+#+END_SRC
+
+*** Answer
+
+#+BEGIN_SRC scheme -n
+(list 'a 'b 'c) ;; (a b c)
+(list (list 'george)) ;; ((george))
+(cdr '((x1 x2) (y1 y2))) ;; ((y1 y2))
+(cadr '((x1 x2) (y1 y2))) ;; (y1 y2)
+(pair? (car '(a short list))) ;; false
+(memq 'red '((red shoes) (blue socks))) ;; false
+(memq 'red '(red shoes blue socks)) ;; (red shoes blue socks)
+#+END_SRC
+
+** Exercise 2.54
+
+#+begin_quote
+Two lists are said to be src_scheme{equal?} if they contain equal elements
+arranged in the same order. For example,
+#+end_quote
+
+#+BEGIN_SRC scheme
+(equal? '(this is a list) '(this is a list))
+#+END_SRC
+
+#+begin_quote
+is true, but
+#+end_quote
+
+#+BEGIN_SRC scheme
+(equal? '(this is a list) '(this (is a) list))
+#+END_SRC
+
+#+begin_quote
+is false. To be more precise, we can define src_scheme{equal?} recursively in
+terms of the basic src_scheme{eq?} equality of symbols by saying that
+src_scheme{a} and src_scheme{b} are src_scheme{equal?} if they are both symbols
+and the symbols are src_scheme{eq?}, or if they are both lists such that
+src_scheme{(car a)} is src_scheme{equal?} to src_scheme{(car b)} and
+src_scheme{(cdr a)} is src_scheme{equal?} to src_scheme{(cdr b)}. Using this
+idea, implement src_scheme{equal?} as a procedure.
+#+end_quote
+
+*** Answer
+
+#+NAME: my-equal?
+#+BEGIN_SRC scheme -n :eval no-export :results silent
+(define (equal? a b)
+  (cond ((and (symbol? a)
+              (symbol? b))
+         (eq? a b))
+        ((and (list? a)
+              (list? b))
+         (and (equal? (car a) (car b))
+              (equal? (cdr a) (cdr b))))
+        (else #f)))
+#+END_SRC
+
+#+BEGIN_SRC scheme -n :eval no-export :results output
+(load "mattcheck2.scm")
+(let ((a '(this is a list))
+      (aa '(this is a list))
+      (b '(this (quote is a) list)))
+  (mattcheck "equal? true"
+             (equal? a a))
+  (mattcheck "equal? trick question"
+             (equal? a a))
+  (mattcheck "equal? false"
+             (equal? a b)
+             #f))
+#+END_SRC
+
+#+RESULTS[d1cdfcb742c0d48a6430788621584446115ff02c]:
+#+begin_EXAMPLE
+SUCCEED at equal? true
+SUCCEED at equal? trick question
+SUCCEED at equal? false
+#+end_EXAMPLE
+
+** Exercise 2.55
+
+*** Question
+
+Eva Lu Ator types to the interpreter the expression
+
+#+BEGIN_SRC scheme
+(car ''abracadabra)
+#+END_SRC
+
+To her surprise, the interpreter prints back src_scheme{quote}. Explain.
+
+*** Answer
+
+You're quoting quote, silly! Who's on first? 🙂
+
