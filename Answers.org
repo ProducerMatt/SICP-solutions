@@ -11049,7 +11049,7 @@ Later:
   2. \(u\) to the power of \(n-1\)
   3. The derivative of \(u\) with respect to \(x\).
 
-** Exercise 2.56
+** Exercise 2.56: Differentiating exponentiation
 
 *** Text definitions
 
