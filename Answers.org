@@ -25,7 +25,7 @@
 # #+BEGIN_SRC scheme -n :eval no-export :results silent
 
 #+latex_class: article
-#+latex_class_options: [final,fleqn,titlepage,twoside,twocolumn]
+#+latex_class_options: [final,fleqn,titlepage,twoside]
 #+latex_engraved_theme:
 
 #+LATEX_COMPILER: xelatex
