@@ -11477,5 +11477,149 @@ SUCCEED at deriv: mult prioritization 2
 SUCCEED at deriv: mult prioritization 3
 #+end_EXAMPLE
 
-I was stuck on this problem for a while, only to find my /test cases/ were
+My solution (which turned out to work) was by modifying src_scheme{make-sum} to
+check the operator /after/ the current one, see if it was a multiplication, and
+if so to evaluate it with src_scheme{make-product} before doing the current
+addition. The "immutable variable" ways of problem solving makes this pretty
+easy to solve:
+#+BEGIN_SRC scheme -n
+;; I want to do f to the first item of x, unless some-condition? in the second
+;; item, in which case do g to the 2nd item before x to the first
+(define (foo x)
+  (if (some-condition? (cdr x))
+      (f (cons (car x)
+               (g (cdr x))))
+      (f x)))
+#+END_SRC
+
+If I were doing this with mutable variables, where I needed to perform these
+modifications in one data structure, I'd be concerned.
+
+Still, I was stuck on this problem for a while, only to find my /test cases/ were
 wrong.
+
+** Exercise 2.59
+
+*** Text definitions
+
+#+NAME: sets-txt
+#+BEGIN_SRC scheme :eval no-export :results silent
+(define (element-of-set?-manual x set)
+  (cond ((null? set) #f)
+        ((equal? x (car set)) #t)
+        (else (element-of-set? x (cdr set)))))
+(define element-of-set? member) ; builtins are faster :)
+
+(define (adjoin-set x set)
+  (if (element-of-set? x set)
+      set
+      (cons x set)))
+
+(define (intersection-set set1 set2)
+  (cond ((or (null? set1) (null? set2)) 
+         '())
+        ((element-of-set? (car set1) set2)
+         (cons (car set1)
+               (intersection-set (cdr set1) 
+                                 set2)))
+        (else (intersection-set (cdr set1) 
+                                set2))))
+#+END_SRC
+
+*** Question
+
+Implement the src_scheme{union-set} operation for the unordered-list representation of sets.
+
+*** Answer
+
+src_scheme{union-set} at a first glance looks like the opposite of
+src_scheme{intersection-set}, since the logic looks like "merge two sets, and if
+an element exists in both than don't include it". However it's actually just
+avoiding putting a symbol in twice.
+
+
+#+NAME: union-set
+#+BEGIN_SRC scheme :eval no-export :results silent
+(define (union-set-rec set1 set2)
+  (cond ((or (null? set1) (null? set2))
+         set2)
+        ((element-of-set? (car set1) set2)
+         (union-set-rec (cdr set1)
+                        set2))
+        (else (cons (car set1)
+                    (union-set-rec (cdr set1)
+                                   set2)))))
+(define (union-set set1 set2)
+    (define (iter s result)
+      (cond ((null? s)
+             (reverse result))
+            ((element-of-set? (car s) set2)
+             (iter (cdr s) result))
+            (else
+             (iter (cdr s)
+                   (cons (car s)
+                         result)))))
+    (append (iter set1 '())
+            set2))
+#+END_SRC
+
+#+BEGIN_SRC scheme :eval no-export :results output
+<<sets-txt>>
+<<union-set>>
+(load "mattcheck2.scm")
+(let ((set1 (list 1 2 3 4 5 6))
+      (set2 (list 4 5 6 7 8 9))
+      (set-union (list 1 2 3 4 5 6 7 8 9)))
+  (mattcheck "union-set-rec"
+             (union-set-rec set1 set2)
+             set-union)
+  (mattcheck "union-set"
+             (union-set set1 set2)
+             set-union))
+#+END_SRC
+
+#+RESULTS[971bc3eeb461037d460405c861033b95f51440e6]:
+#+begin_EXAMPLE
+SUCCEED at union-set-rec
+SUCCEED at union-set
+#+end_EXAMPLE
+
+#+NAME: union-set-benched
+#+begin_src scheme -n :eval no-export :results silent :tangle 2/Ex59.scheme
+<<enumerate-interval>>
+<<sets-txt>>
+<<union-set>>
+(load "../mattbench.scm")
+
+(let ((set1 (enumerate-interval 1 1000))
+      (set2 (enumerate-interval 500 1500)))
+  (define (test)
+    (format #t "~&recursive union-sets: ~a"
+            (cadr (mattbench2 (λ()(union-set-rec set1 set2)) 10000)))
+    (format #t "~&iterative union-sets: ~a"
+            (cadr (mattbench2 (λ()(union-set set1 set2)) 10000))))
+
+  (test))
+#+END_SRC
+
+#+RESULT:
+#+BEGIN_EXAMPLE
+recursive union-sets: 4704343.6974
+iterative union-sets: 4755592.2304
+#+END_EXAMPLE
+
+Man, my "optimized" versions never work. I would blame it on the Scheme compiler
+but I'm a new programmer so it's probably a skill issue.
+
+** Exercise 2.59
+
+*** Question
+
+We specified that a set would be represented as a list with no duplicates. Now
+suppose we allow duplicates. For instance, the set \(\{1, 2, 3\\)} could be
+represented as the list src_scheme{(2 3 2 1 3 2 2)}. Design procedures
+src_scheme{element-of-set?}, src_scheme{adjoin-set}, src_scheme{union-set}, and
+src_scheme{intersection-set} that operate on this representation. How does the
+efficiency of each compare with the corresponding procedure for the
+non-duplicate representation? Are there applications for which you would use
+this representation in preference to the non-duplicate one?

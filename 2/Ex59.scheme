@@ -1,0 +1,67 @@
+;; [[file:../Answers.org::union-set-benched][union-set-benched]]
+;; [[[[file:~/SICP-group/Answers.org::enumerate-interval][enumerate-interval]]][enumerate-interval]]
+(define (enumerate-interval low high)
+  (if (> low high)
+      '()
+      (cons low 
+            (enumerate-interval 
+             (+ low 1) 
+             high))))
+;; enumerate-interval ends here
+;; [[[[file:~/SICP-group/Answers.org::sets-txt][sets-txt]]][sets-txt]]
+(define (element-of-set?-manual x set)
+  (cond ((null? set) #f)
+        ((equal? x (car set)) #t)
+        (else (element-of-set? x (cdr set)))))
+(define element-of-set? member) ; builtins are faster :)
+
+(define (adjoin-set x set)
+  (if (element-of-set? x set)
+      set
+      (cons x set)))
+
+(define (intersection-set set1 set2)
+  (cond ((or (null? set1) (null? set2)) 
+         '())
+        ((element-of-set? (car set1) set2)
+         (cons (car set1)
+               (intersection-set (cdr set1) 
+                                 set2)))
+        (else (intersection-set (cdr set1) 
+                                set2))))
+;; sets-txt ends here
+;; [[[[file:~/SICP-group/Answers.org::union-set][union-set]]][union-set]]
+(define (union-set-rec set1 set2)
+  (cond ((or (null? set1) (null? set2))
+         set2)
+        ((element-of-set? (car set1) set2)
+         (union-set-rec (cdr set1)
+                        set2))
+        (else (cons (car set1)
+                    (union-set-rec (cdr set1)
+                                   set2)))))
+(define (union-set set1 set2)
+    (define (iter s result)
+      (cond ((null? s)
+             (reverse result))
+            ((element-of-set? (car s) set2)
+             (iter (cdr s) result))
+            (else
+             (iter (cdr s)
+                   (cons (car s)
+                         result)))))
+    (append (iter set1 '())
+            set2))
+;; union-set ends here
+(load "../mattbench.scm")
+
+(let ((set1 (enumerate-interval 1 1000))
+      (set2 (enumerate-interval 500 1500)))
+  (define (test)
+    (format #t "~&recursive union-sets: ~a"
+            (cadr (mattbench2 (λ()(union-set-rec set1 set2)) 10000)))
+    (format #t "~&iterative union-sets: ~a"
+            (cadr (mattbench2 (λ()(union-set set1 set2)) 10000))))
+
+  (test))
+;; union-set-benched ends here
