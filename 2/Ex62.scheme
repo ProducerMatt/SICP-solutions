@@ -1,0 +1,118 @@
+;; [[file:../Answers.org::*Answer][Answer:3]]
+;; [[[[file:~/SICP-group/Answers.org::enumerate-interval][enumerate-interval]]][enumerate-interval]]
+(define (enumerate-interval low high)
+  (if (> low high)
+      '()
+      (cons low 
+            (enumerate-interval 
+             (+ low 1) 
+             high))))
+;; enumerate-interval ends here
+;; [[[[file:~/SICP-group/Answers.org::sets-txt][sets-txt]]][sets-txt]]
+(define (element-of-set?-manual x set)
+  (cond ((null? set) #f)
+        ((equal? x (car set)) #t)
+        (else (element-of-set? x (cdr set)))))
+(define element-of-set? member) ; builtins are faster :)
+
+(define (adjoin-set x set)
+  (if (element-of-set? x set)
+      set
+      (cons x set)))
+
+(define (intersection-set set1 set2)
+  (cond ((or (null? set1) (null? set2)) 
+         '())
+        ((element-of-set? (car set1) set2)
+         (cons (car set1)
+               (intersection-set (cdr set1) 
+                                 set2)))
+        (else (intersection-set (cdr set1) 
+                                set2))))
+;; sets-txt ends here
+;; [[[[file:~/SICP-group/Answers.org::union-set][union-set]]][union-set]]
+(define (union-set-rec set1 set2)
+  (cond ((or (null? set1) (null? set2))
+         set2)
+        ((element-of-set? (car set1) set2)
+         (union-set-rec (cdr set1)
+                        set2))
+        (else (cons (car set1)
+                    (union-set-rec (cdr set1)
+                                   set2)))))
+(define (union-set set1 set2)
+    (define (iter s result)
+      (cond ((null? s)
+             (reverse result))
+            ((element-of-set? (car s) set2)
+             (iter (cdr s) result))
+            (else
+             (iter (cdr s)
+                   (cons (car s)
+                         result)))))
+    (append (iter set1 '())
+            set2))
+;; union-set ends here
+;; [[[[file:~/SICP-group/Answers.org::union-set-ordered][union-set-ordered]]][union-set-ordered]]
+(define (union-set-ordered set1 set2)
+  (define (iter s1 s2 result)
+    (cond ((null? s1)
+           (append (reverse result) s2))
+          ((null? s2)
+           (append (reverse result) s1))
+          (else
+           (let ((s1a (car s1))
+                 (s2a (car s2)))
+             (cond ((= s1a s2a)
+                    (iter (cdr s1) (cdr s2)
+                          (cons s1a result)))
+                   ((< s1a s2a)
+                    (iter (cdr s1) s2
+                          (cons s1a result)))
+                   ((> s1a s2a)
+                    (iter s1 (cdr s2)
+                          (cons s2a result))))))))
+  (iter set1 set2 '()))
+;; union-set-ordered ends here
+(use-modules (ice-9 format))
+(load "../mattbench.scm")
+
+;; http://community.schemewiki.org/?sicp-ex-2.62
+(define (union-set-alt set1 set2) 
+  (cond  ((null? set1) set2) 
+         ((null? set2) set1) 
+         (else  
+          (let ((x1 (car set1)) 
+                (x2 (car set2))) 
+            (cond ((= x1 x2) (cons x1 (union-set-alt (cdr set1) (cdr set2)))) 
+                  ((< x1 x2) (cons x1 (union-set-alt (cdr set1) set2))) 
+                  (else (cons x2 (union-set-alt set1 (cdr set2)))))))))
+(define (union-set-alt2 set1 set2) 
+  (cond ((null? set1) set2) 
+        ((null? set2) set1) 
+        (else 
+         (let ((x1 (car set1)) 
+               (x2 (car set2))) 
+           (cons (min x1 x2) 
+                 (union-set-alt2 (if (> x1 x2) 
+                                     set1 
+                                     (cdr set1)) 
+                                 (if (> x2 x1) 
+                                     set2 
+                                     (cdr set2))))))))
+
+(let ((set1 (enumerate-interval 1 1000))
+      (set2 (enumerate-interval 500 1500)))
+  (define (test)
+    (format #t "~&union-set: ~a"
+            (cadr (mattbench2 (λ()(union-set set1 set2)) 10000)))
+    (format #t "~&union-set-ordered: ~a"
+            (cadr (mattbench2 (λ()(union-set-ordered set1 set2)) 50000)))
+    (format #t "~&union-set-alt: ~a"
+            (cadr (mattbench2 (λ()(union-set-alt set1 set2)) 500000)))
+    (format #t "~&union-set-alt2: ~a"
+            (cadr (mattbench2 (λ()(union-set-alt2 set1 set2)) 500000)))
+    )
+
+  (test))
+;; Answer:3 ends here

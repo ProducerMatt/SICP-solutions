@@ -1,0 +1,92 @@
+;; [[file:../Answers.org::union-set-benched][union-set-benched]]
+;; [[[[file:~/SICP-group/Answers.org::enumerate-interval][enumerate-interval]]][enumerate-interval]]
+(define (enumerate-interval low high)
+  (if (> low high)
+      '()
+      (cons low 
+            (enumerate-interval 
+             (+ low 1) 
+             high))))
+;; enumerate-interval ends here
+;; [[[[file:~/SICP-group/Answers.org::sets-txt][sets-txt]]][sets-txt]]
+(define (element-of-set?-manual x set)
+  (cond ((null? set) #f)
+        ((equal? x (car set)) #t)
+        (else (element-of-set? x (cdr set)))))
+(define element-of-set? member) ; builtins are faster :)
+
+(define (adjoin-set x set)
+  (if (element-of-set? x set)
+      set
+      (cons x set)))
+
+(define (intersection-set set1 set2)
+  (cond ((or (null? set1) (null? set2)) 
+         '())
+        ((element-of-set? (car set1) set2)
+         (cons (car set1)
+               (intersection-set (cdr set1) 
+                                 set2)))
+        (else (intersection-set (cdr set1) 
+                                set2))))
+;; sets-txt ends here
+;; [[[[file:~/SICP-group/Answers.org::union-set][union-set]]][union-set]]
+(define (union-set-rec set1 set2)
+  (cond ((or (null? set1) (null? set2))
+         set2)
+        ((element-of-set? (car set1) set2)
+         (union-set-rec (cdr set1)
+                        set2))
+        (else (cons (car set1)
+                    (union-set-rec (cdr set1)
+                                   set2)))))
+(define (union-set set1 set2)
+    (define (iter s result)
+      (cond ((null? s)
+             (reverse result))
+            ((element-of-set? (car s) set2)
+             (iter (cdr s) result))
+            (else
+             (iter (cdr s)
+                   (cons (car s)
+                         result)))))
+    (append (iter set1 '())
+            set2))
+;; union-set ends here
+;; [[[[file:~/SICP-group/Answers.org::set-dupes][set-dupes]]][set-dupes]]
+(define (adjoin-set-dupes x set)
+  (cons x set))
+
+(define (union-set-dupes set1 set2)
+  (append set1 set2))
+
+(define (intersection-set-dupes set1 set2)
+  (let ((inter (intersection-set set1 set2)) ;; yes, we're calling the non-duplicate version
+        (union (union-set-dupes set1 set2)))
+    (filter (lambda(x) (element-of-set? x inter))
+            union)))
+(define (intersection-set-dupes2 set1 set2)
+  (let ((inter (intersection-set set1 set2)) ;; yes, we're calling the non-duplicate version
+        (inter2 (intersection-set set2 set1)))
+    (append inter inter2)))
+;; set-dupes ends here
+(use-modules (ice-9 format))
+(load "../mattbench.scm")
+
+(let ((set1 (enumerate-interval 1 1000))
+      (set2 (enumerate-interval 500 1500)))
+  (define (test)
+    (format #t "~&union-sets: ~a"
+            (cadr (mattbench2 (λ()(union-set set1 set2)) 10000)))
+    (format #t "~&union-sets-dupes: ~a"
+            (cadr (mattbench2 (λ()(union-set-dupes set1 set2)) 10000)))
+    (format #t "~&intersection-set: ~a"
+            (cadr (mattbench2 (λ()(intersection-set set1 set2)) 10000)))
+    (format #t "~&intersection-set-dupes: ~a"
+            (cadr (mattbench2 (λ()(intersection-set-dupes set1 set2)) 10000)))
+    (format #t "~&intersection-set-dupes2: ~a"
+            (cadr (mattbench2 (λ()(intersection-set-dupes2 set1 set2)) 10000)))
+    )
+
+  (test))
+;; union-set-benched ends here

@@ -11006,7 +11006,7 @@ To her surprise, the interpreter prints back src_scheme{quote}. Explain.
 
 You're quoting quote, silly! Who's on first? 🙂
 
-** 2.3.2: Example: Symbolic Differentiator
+** 2.3.2: Example: Symbolic differentiator
 
 I needed to get some help, but I think I have some understanding now.
 
@@ -11498,7 +11498,7 @@ modifications in one data structure, I'd be concerned.
 Still, I was stuck on this problem for a while, only to find my /test cases/ were
 wrong.
 
-** Exercise 2.59
+** Exercise 2.59: Representing sets
 
 *** Text definitions
 
@@ -11611,7 +11611,7 @@ iterative union-sets: 4755592.2304
 Man, my "optimized" versions never work. I would blame it on the Scheme compiler
 but I'm a new programmer so it's probably a skill issue.
 
-** Exercise 2.59
+** Exercise 2.59: Sets with duplicates
 
 *** Question
 
@@ -11623,3 +11623,266 @@ src_scheme{intersection-set} that operate on this representation. How does the
 efficiency of each compare with the corresponding procedure for the
 non-duplicate representation? Are there applications for which you would use
 this representation in preference to the non-duplicate one?
+
+*** Answer
+
+src_scheme{element-of-set} can be left unchanged. The others are a matter of
+getting sloppy: src_scheme{adjoin-set} can just be a src_scheme{cons}, and
+src_scheme{union-set} can be an append. Now the remaining question is, how to
+make src_scheme{intersection-set} keep the duplicates?
+
+#+NAME: set-dupes
+#+BEGIN_SRC scheme :eval no-export :results silent
+(define (adjoin-set-dupes x set)
+  (cons x set))
+
+(define (union-set-dupes set1 set2)
+  (append set1 set2))
+
+(define (intersection-set-dupes set1 set2)
+  (let ((inter (intersection-set set1 set2)) ;; yes, we're calling the non-duplicate version
+        (union (union-set-dupes set1 set2)))
+    (filter (lambda(x) (element-of-set? x inter))
+            union)))
+(define (intersection-set-dupes2 set1 set2)
+  (let ((inter (intersection-set set1 set2)) ;; yes, we're calling the non-duplicate version
+        (inter2 (intersection-set set2 set1)))
+    (append inter inter2)))
+#+END_SRC
+
+#+BEGIN_SRC scheme :eval no-export :results output
+<<sets-txt>>
+<<union-set>>
+<<set-dupes>>
+(load "mattcheck2.scm")
+(let ((set1 (list 1 2 3 4 5 6))
+      (set2 (list 4 5 6 7 8 9))
+      (set-union (list 1 2 3 4 5 6 7 8 9))
+      (set-union-dupes
+       (list 1 2 3 4 5 6 4 5 6 7 8 9))
+      (set-intersection (list 4 5 6))
+      (set-intersection-dupes
+       (list 4 5 6 4 5 6)))
+  (mattcheck "union-set-dupes"
+             (union-set-dupes set1 set2)
+             set-union-dupes)
+  (mattcheck "union-set"
+             (union-set set1 set2)
+             set-union)
+  (mattcheck "intersection-set"
+             (intersection-set set1 set2)
+             set-intersection)
+  (mattcheck "intersection-set-dupes"
+             (intersection-set-dupes set1 set2)
+             set-intersection-dupes)
+  (mattcheck "intersection-set-dupes2"
+             (intersection-set-dupes2 set1 set2)
+             set-intersection-dupes))
+#+END_SRC
+
+#+RESULTS[9aec8f2110e6e79ea7f4dea07511544bdf270e99]:
+#+begin_EXAMPLE
+SUCCEED at union-set-dupes
+SUCCEED at union-set
+SUCCEED at intersection-set
+SUCCEED at intersection-set-dupes
+SUCCEED at intersection-set-dupes2
+#+end_EXAMPLE
+
+#+NAME: union-set-benched
+#+begin_src scheme -n :results output :tangle 2/Ex60.scheme
+<<enumerate-interval>>
+<<sets-txt>>
+<<union-set>>
+<<set-dupes>>
+(use-modules (ice-9 format))
+(load "../mattbench.scm")
+
+(let ((set1 (enumerate-interval 1 1000))
+      (set2 (enumerate-interval 500 1500)))
+  (define (test)
+    (format #t "~&union-sets: ~a"
+            (cadr (mattbench2 (λ()(union-set set1 set2)) 10000)))
+    (format #t "~&union-sets-dupes: ~a"
+            (cadr (mattbench2 (λ()(union-set-dupes set1 set2)) 10000)))
+    (format #t "~&intersection-set: ~a"
+            (cadr (mattbench2 (λ()(intersection-set set1 set2)) 10000)))
+    (format #t "~&intersection-set-dupes: ~a"
+            (cadr (mattbench2 (λ()(intersection-set-dupes set1 set2)) 10000)))
+    (format #t "~&intersection-set-dupes2: ~a"
+            (cadr (mattbench2 (λ()(intersection-set-dupes2 set1 set2)) 10000)))
+    )
+
+  (test))
+#+END_SRC
+
+#+RESULTS:
+#+begin_example
+union-sets: 4734892.3798
+union-sets-dupes: 40132.52
+intersection-set: 4673425.9196
+intersection-set-dupes: 10325053.8432
+intersection-set-dupes2: 10872996.2555
+#+end_example
+
+So for src_scheme{union-sets} a significant speedup, while in algorithms that
+need to check for duplicates like src_scheme{intersection-set} it's much more
+time. Also, in a no-duplicate implementation src_scheme{element-of-set}, it
+wouldn't be wasting time checking duplicates.
+
+** Exercise 2.61: Ordered sets
+
+*** Question
+
+Give an implementation of src_scheme{adjoin-set} using the ordered
+representation. By analogy with src_scheme{element-of-set?} show how to take
+advantage of the ordering to produce a procedure that requires on the average
+about half as many steps as with the unordered representation.
+
+*** Answer
+
+#+NAME: set-ordered
+#+BEGIN_SRC scheme :eval no-export :results silent
+(define (element-of-set?-ordered x set)
+  (cond ((null? set) #f)
+        ((= x (car set)) #t)
+        ((< x (car set)) #f)
+        (else (element-of-set?-ordered x (cdr set)))))
+
+(define (adjoin-set-ordered x set)
+  (define (iter checked rest)
+    (cond ((null? rest)
+           (append checked (list x)))
+          ((= x (car rest)) set)
+          ((> x (car rest))
+           (iter (cons (car rest)
+                       checked)
+                 (cdr rest)))
+          (else (append (reverse checked)
+                        (cons x rest)))))
+  (iter '() set))
+#+END_SRC
+
+#+BEGIN_SRC scheme :eval no-export :results output
+<<sets-txt>>
+<<union-set>>
+<<set-ordered>>
+(load "mattcheck2.scm")
+(let ((set (list 1 2 4 5 6 7 8 9))
+      (answer (list 1 2 3 4 5 6 7 8 9)))
+  (mattcheck "adjoin-set-ordered"
+             (adjoin-set-ordered 3 set)
+             answer))
+#+END_SRC
+
+#+RESULTS[b958861e53e89ae15586f74de993afc93ce213b7]:
+#+begin_EXAMPLE
+SUCCEED at adjoin-set-ordered
+#+end_EXAMPLE
+
+** Exercise 2.62
+
+*** Question
+
+Give a \(\Theta(n)\) implementation of src_scheme{union-set} for sets
+represented as ordered lists.
+
+*** Answer
+
+#+NAME: union-set-ordered
+#+BEGIN_SRC scheme :eval no-export :results silent
+(define (union-set-ordered set1 set2)
+  (define (iter s1 s2 result)
+    (cond ((null? s1)
+           (append (reverse result) s2))
+          ((null? s2)
+           (append (reverse result) s1))
+          (else
+           (let ((s1a (car s1))
+                 (s2a (car s2)))
+             (cond ((= s1a s2a)
+                    (iter (cdr s1) (cdr s2)
+                          (cons s1a result)))
+                   ((< s1a s2a)
+                    (iter (cdr s1) s2
+                          (cons s1a result)))
+                   ((> s1a s2a)
+                    (iter s1 (cdr s2)
+                          (cons s2a result))))))))
+  (iter set1 set2 '()))
+#+END_SRC
+
+#+BEGIN_SRC scheme :eval no-export :results output
+<<sets-txt>>
+<<union-set>>
+<<set-ordered>>
+<<union-set-ordered>>
+(load "mattcheck2.scm")
+(let ((set1 (list 1 2 3 4 5))
+      (set2 (list 4 5 6 7 8 9))
+      (answer (list 1 2 3 4 5 6 7 8 9)))
+  (mattcheck "union-set-ordered"
+             (union-set-ordered set1 set2)
+             answer))
+#+END_SRC
+
+#+RESULTS[6e9f3027584203f12d47bab998f4fbe43ecc3cd2]:
+#+begin_EXAMPLE
+SUCCEED at union-set-ordered
+#+end_EXAMPLE
+
+#+begin_src scheme -n :results output :tangle 2/Ex62.scheme
+<<enumerate-interval>>
+<<sets-txt>>
+<<union-set>>
+<<union-set-ordered>>
+(use-modules (ice-9 format))
+(load "../mattbench.scm")
+
+;; http://community.schemewiki.org/?sicp-ex-2.62
+(define (union-set-alt set1 set2) 
+  (cond  ((null? set1) set2) 
+         ((null? set2) set1) 
+         (else  
+          (let ((x1 (car set1)) 
+                (x2 (car set2))) 
+            (cond ((= x1 x2) (cons x1 (union-set-alt (cdr set1) (cdr set2)))) 
+                  ((< x1 x2) (cons x1 (union-set-alt (cdr set1) set2))) 
+                  (else (cons x2 (union-set-alt set1 (cdr set2)))))))))
+(define (union-set-alt2 set1 set2) 
+  (cond ((null? set1) set2) 
+        ((null? set2) set1) 
+        (else 
+         (let ((x1 (car set1)) 
+               (x2 (car set2))) 
+           (cons (min x1 x2) 
+                 (union-set-alt2 (if (> x1 x2) 
+                                     set1 
+                                     (cdr set1)) 
+                                 (if (> x2 x1) 
+                                     set2 
+                                     (cdr set2))))))))
+
+(let ((set1 (enumerate-interval 1 1000))
+      (set2 (enumerate-interval 500 1500)))
+  (define (test)
+    (format #t "~&union-set: ~a"
+            (cadr (mattbench2 (λ()(union-set set1 set2)) 10000)))
+    (format #t "~&union-set-ordered: ~a"
+            (cadr (mattbench2 (λ()(union-set-ordered set1 set2)) 50000)))
+    (format #t "~&union-set-alt: ~a"
+            (cadr (mattbench2 (λ()(union-set-alt set1 set2)) 500000)))
+    (format #t "~&union-set-alt2: ~a"
+            (cadr (mattbench2 (λ()(union-set-alt2 set1 set2)) 500000)))
+    )
+
+  (test))
+#+END_SRC
+
+#+RESULTS:
+#+BEGIN_EXAMPLE
+union-set: 4758999.4984
+union-set-ordered: 107784.3673
+union-set-alt: 45441.7717
+union-set-alt2: 66262.4295
+#+END_EXAMPLE
