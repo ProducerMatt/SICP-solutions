@@ -7271,7 +7271,7 @@ I should've written this function a while ago.
   (string-append
    (apply string-append
     (map (λ(x)
-          (format #f "~a " x))
+          (format #f "~s " x))
         args))))
 (define (echo . args)
   (format #t "~&~a~%" (apply stringit args)))
@@ -11780,7 +11780,7 @@ about half as many steps as with the unordered representation.
 SUCCEED at adjoin-set-ordered
 #+end_EXAMPLE
 
-** Exercise 2.62
+** Exercise 2.62: ~union-set~ ordered
 
 *** Question
 
@@ -11886,3 +11886,109 @@ union-set-ordered: 107784.3673
 union-set-alt: 45441.7717
 union-set-alt2: 66262.4295
 #+END_EXAMPLE
+
+** Exercise 2.63
+
+*** Text definitions
+
+#+NAME: make-tree
+#+BEGIN_SRC scheme -n :eval no-export :results silent
+(define (entry tree) (car tree))
+(define (left-branch tree) (cadr tree))
+(define (right-branch tree) (caddr tree))
+(define (make-tree entry left right)
+  (list entry left right))
+#+END_SRC
+
+*** Question A
+
+Each of the following two
+procedures converts a binary tree to a list.
+
+#+NAME: tree-to-list
+#+BEGIN_SRC scheme -n :eval no-export :results silent
+<<make-tree>>
+(define (tree->list-1 tree)
+  (if (null? tree)
+      '()
+      (append (tree->list-1 (left-branch tree))
+              (cons (entry tree)
+                    (tree->list-1
+                      (right-branch tree))))))
+(define (tree->list-2 tree)
+  (define (copy-to-list tree result-list)
+    (if (null? tree)
+        result-list
+        (copy-to-list (left-branch tree)
+                      (cons (entry tree)
+                            (copy-to-list
+                              (right-branch tree)
+                              result-list)))))
+  (copy-to-list tree '()))
+#+END_SRC
+
+a. Do the two procedures produce the same result for every tree? If not, how do
+   the results differ? What lists do the two procedures produce for the trees in
+   Figure 2.16?
+
+*** Answer A
+
+#+BEGIN_SRC scheme -n :eval no-export :results output
+<<echo>>
+<<tree-to-list>>
+
+(define (rightward-tree list)
+  (if (null? list)
+      '()
+      (make-tree (car list) '()
+                 (rightward-tree (cdr list)))))
+(define (leftward-tree list)
+  (define (rec list)
+    (if (null? list)
+        '()
+        (make-tree (car list) (rec (cdr list))
+                   '())))
+  (rec (reverse list)))
+(define (nested-tree list)
+  (define (rec list)
+    (if (= 1 (length list))
+        (make-tree (car list) '() '())
+        (let ((halfway (truncate/ (length list)
+                                  2))
+              (make-tree (list-ref list halfway)
+                         (rec (list-head list halfway))
+                         (rec (list-tail list (1+ halfway))))))))
+  (rec list))
+
+(let* ((nil '())
+       (1-to-4 (list 1 2 3 4))
+       (tree-right
+        (rightward-tree 1-to-4))
+       (tree-left
+        (leftward-tree 1-to-4)))
+  (format #t "~&~a ~a" "tree-right:" tree-right)
+  (format #t "~&~a ~a" "tree-right list 1:" (tree->list-1 tree-right))
+  (format #t "~&~a ~a" "tree-right list 2:" (tree->list-2 tree-right))
+  (format #t "~& ")
+  (format #t "~&~a ~a" "tree-left:" tree-left)
+  (format #t "~&~a ~a" "tree-left list 1:" (tree->list-1 tree-left))
+  (format #t "~&~a ~a" "tree-left list 2:" (tree->list-2 tree-left)))
+#+END_SRC
+
+#+RESULTS[1daf8c659fc57052dc68f78f6c80613a61a61f30]:
+#+begin_EXAMPLE
+<unknown-location>: warning: possibly unbound variable `��'
+<unknown-location>: warning: possibly unbound variable `x'
+tree-right: (1 () (2 () (3 () (4 () ()))))
+tree-right list 1: (1 2 3 4)
+tree-right list 2: (1 2 3 4)
+ 
+tree-left: (4 (3 (2 (1 () ()) ()) ()) ())
+tree-left list 1: (1 2 3 4)
+tree-left list 2: (1 2 3 4)
+#+end_EXAMPLE
+
+*** Question B
+b. Do the two procedures have the same order of growth in the number of steps
+   required to convert a balanced tree with \(n\) elements to a list? If not,
+   which one grows more slowly?
