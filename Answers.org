@@ -7270,11 +7270,11 @@ I should've written this function a while ago.
 (define (stringit . args)
   (string-append
    (apply string-append
-    (map (λ(x)
-          (format #f "~s " x))
+    (map (lambda(x)
+          (format #f "~:a " x))
         args))))
 (define (echo . args)
-  (format #t "~&~a~%" (apply stringit args)))
+  (format #t "~&~:a~%" (apply stringit args)))
 #+END_SRC
 
 Now, let's examine how interval percents relate to each other.
@@ -11933,10 +11933,11 @@ a. Do the two procedures produce the same result for every tree? If not, how do
 
 *** Answer A
 
-#+BEGIN_SRC scheme -n :eval no-export :results output
-<<echo>>
-<<tree-to-list>>
+First let's check whether the arrangement of the input tree impacts the output
+list. I'd like a couple functions for generating lists.
 
+#+NAME: tree-makers
+#+BEGIN_SRC scheme -n :eval no-export :results silent
 (define (rightward-tree list)
   (if (null? list)
       '()
@@ -11948,47 +11949,143 @@ a. Do the two procedures produce the same result for every tree? If not, how do
         '()
         (make-tree (car list) (rec (cdr list))
                    '())))
-  (rec (reverse list)))
+  (rec list))
 (define (nested-tree list)
   (define (rec list)
-    (if (= 1 (length list))
-        (make-tree (car list) '() '())
-        (let ((halfway (truncate/ (length list)
-                                  2))
-              (make-tree (list-ref list halfway)
-                         (rec (list-head list halfway))
-                         (rec (list-tail list (1+ halfway))))))))
+    (cond ((= 1 (length list))
+           (make-tree (car list) '() '()))
+          ((= 2 (length list))
+           (make-tree (cadr list)
+                      (make-tree (car list) '() '())
+                      '()))
+          (else
+           (let ((halfway (truncate/ (length list)
+                                     2)))
+                 (make-tree (list-ref list halfway)
+                            (rec (list-head list halfway))
+                            (rec (list-tail list (1+ halfway))))))))
   (rec list))
+#+END_SRC
+#+BEGIN_SRC scheme -n :eval no-export :results output
+<<echo>>
+<<tree-to-list>>
+<<tree-makers>>
 
 (let* ((nil '())
        (1-to-4 (list 1 2 3 4))
        (tree-right
         (rightward-tree 1-to-4))
        (tree-left
-        (leftward-tree 1-to-4)))
-  (format #t "~&~a ~a" "tree-right:" tree-right)
-  (format #t "~&~a ~a" "tree-right list 1:" (tree->list-1 tree-right))
-  (format #t "~&~a ~a" "tree-right list 2:" (tree->list-2 tree-right))
-  (format #t "~& ")
-  (format #t "~&~a ~a" "tree-left:" tree-left)
-  (format #t "~&~a ~a" "tree-left list 1:" (tree->list-1 tree-left))
-  (format #t "~&~a ~a" "tree-left list 2:" (tree->list-2 tree-left)))
+        (leftward-tree 1-to-4))
+       (tree-middle
+        (nested-tree (iota 10))))
+  (echo "tree-right:" tree-right)
+  (echo "tree-right list 1:" (tree->list-1 tree-right))
+  (echo "tree-right list 2:" (tree->list-2 tree-right))
+  (newline)
+  (echo "tree-left:" tree-left)
+  (echo "tree-left list 1:" (tree->list-1 tree-left))
+  (echo "tree-left list 2:" (tree->list-2 tree-left))
+  (newline)
+  (echo "tree-middle:" tree-middle)
+  (echo "tree-middle list 1:" (tree->list-1 tree-middle))
+  (echo "tree-middle list 2:" (tree->list-2 tree-middle)))
 #+END_SRC
 
-#+RESULTS[1daf8c659fc57052dc68f78f6c80613a61a61f30]:
+#+RESULTS[3173e532dbff288efab93f5caf6e615a7dd98977]:
 #+begin_EXAMPLE
-<unknown-location>: warning: possibly unbound variable `��'
-<unknown-location>: warning: possibly unbound variable `x'
-tree-right: (1 () (2 () (3 () (4 () ()))))
-tree-right list 1: (1 2 3 4)
-tree-right list 2: (1 2 3 4)
- 
-tree-left: (4 (3 (2 (1 () ()) ()) ()) ())
-tree-left list 1: (1 2 3 4)
-tree-left list 2: (1 2 3 4)
+tree-right: (1 () (2 () (3 () (4 () ())))) 
+tree-right list 1: (1 2 3 4) 
+tree-right list 2: (1 2 3 4) 
+
+tree-left: (1 (2 (3 (4 () ()) ()) ()) ()) 
+tree-left list 1: (4 3 2 1) 
+tree-left list 2: (4 3 2 1) 
+
+tree-middle: (5 (2 (1 (0 () ()) ()) (4 (3 () ()) ())) (8 (7 (6 () ()) ()) (9 () ()))) 
+tree-middle list 1: (0 1 2 3 4 5 6 7 8 9) 
+tree-middle list 2: (0 1 2 3 4 5 6 7 8 9) 
 #+end_EXAMPLE
 
+So, the lists are the same for both.
+
+Fun fact: Emacs org-babel has suddenly stopped accepting the \lambda character
+in source code.
+
 *** Question B
-b. Do the two procedures have the same order of growth in the number of steps
-   required to convert a balanced tree with \(n\) elements to a list? If not,
-   which one grows more slowly?
+
+Do the two procedures have the same order of growth in the number of steps
+required to convert a balanced tree with \(n\) elements to a list? If not, which
+one grows more slowly?
+
+*** Answer B
+
+#+BEGIN_SRC scheme -n :eval no-export :results silent
+;; tree->list-1 evaluating the following tree:
+;;     7
+;;    / \
+;;   3   9
+;;  / \   \
+;; 1   5   11
+(append (append (append nil
+                        (cons 1
+                              nil))
+                (cons 3
+                      (append nil
+                              (cons 5
+                                    nil))))
+        (cons 7
+              (append nil
+                      (cons 9
+                            (append nil
+                                    (cons 11
+                                          nil))))))
+;; holy cow that is wasteful. So many appends of nothing.
+
+;; tree->list-2 evaluation (iterative)
+(copy-to-list [full tree] nil)
+(copy-to-list [tree 3 1 5]
+              (cons 7
+                    (copy-to-list
+                     [tree 9 11]
+                     nil)))
+(copy-to-list [tree 3 1 5]
+              (cons 7
+                    (copy-to-list
+                     nil
+                     (cons 9
+                           (copy-to-list
+                            [tree 11]
+                            nil)))))
+(copy-to-list [tree 3 1 5]
+              (cons 7
+                    (copy-to-list
+                     nil
+                     (cons 9
+                           (copy-to-list
+                            nil
+                            (cons 11
+                                  (copy-to-list nil nil)))))))
+(copy-to-list [tree 3 1 5]
+              '(7 9 11))
+(copy-to-list [tree 1]
+              (cons 3
+                    (copy-to-list
+                     nil
+                     (cons 5
+                           (copy-to-list
+                            nil
+                            '(7 9 11))))))
+(copy-to-list
+ nil
+ (cons 1
+       (copy-to-list
+        nil
+        '(3 5 7 9 11))))
+'(1 3 5 7 9 11)
+#+END_SRC
+
+So, assuming the evaluation isn't as slow as operations like src_scheme{append},
+the second is definitely faster -- it's basically just evaluating to a series of
+src_scheme{cons} statements. The internet suggests that the first is
+\(\Theta(n\log{n})\) while the second is \(\Theta(n)\).
