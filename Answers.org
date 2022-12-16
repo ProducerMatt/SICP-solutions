@@ -41,7 +41,7 @@
 #+LATEX_HEADER: \usemintedstyle{colorful}
 #+LATEX_HEADER: \setminted{fontsize=\small}
 # FIXME: keep minted inline code from being automatically wrapped
-#+LATEX_HEADER: \setmintedinline{breakbytoken=false,breakbytokenanywhere=false,breaklines=false,breakaftergroup=false}
+#+LATEX_HEADER: \setmintedinline{fontsize=\normalsize,breakbytoken=false,breakbytokenanywhere=false,breaklines=false,breakaftergroup=false}
 
 # SOURCE CODE FRAMES
 #+LATEX_HEADER: \usepackage{mdframed}
@@ -107,8 +107,8 @@ fd . -e svg -tf -E old --exec magick '{}' '{.}'.png
 
 *** ~try-these~
 
-Takes function ~f~ and list ~testvals~ and applies ~f~ to each item ~i~. For
-each ~i~ returns a list with ~i~ and the result. Useful dor making tables with a
+Takes function src_scheme{f} and list src_scheme{testvals} and applies src_scheme{f} to each item src_scheme{i}. For
+each src_scheme{i} returns a list with src_scheme{i} and the result. Useful for making tables with a
 column for input and a column for output.
 #+NAME: try-these
 #+BEGIN_SRC scheme -n :eval no-export :results silent
@@ -400,7 +400,7 @@ take the following code:
 (square 5)
 #+end_src
 
-~x~ is the formal parameter and ~5~ is the argument.
+ src_scheme{x} is the formal parameter and  src_scheme{5} is the argument.
 
 ** 1.1.1: Expressions
 
@@ -419,8 +419,8 @@ provides several advantages.
 The evaluator can evaluate nested expressions recursively. *Tree accumulation*
 is the process of evaluating nested combinations, "percolating" values upward.
 
-The recursive evaluation of src_scheme{(* (+ 2 (* 4 6)) (+ 3 5 7))} breaks down into four
-parts:
+The recursive evaluation of src_scheme{(* (+ 2 (* 4 6)) (+ 3 5 7))} breaks down
+into four parts:
 
 #+begin_src mermaid :file 1/fig/t_1-1-3.png
 graph BT;
@@ -561,8 +561,8 @@ A shorter form of conditional:
 (if predicate consequent alternative)
 #+end_src
 
-If ~predicate~ is true, ~consequent~ is returned. Else, ~alternative~ is
-returned.
+If src_scheme{predicate} is true, src_scheme{consequent} is returned. Else,
+src_scheme{alternative} is returned.
 
 Combining predicates:
 
@@ -586,10 +586,11 @@ D ; => compound procedure D
 #+end_src
 
 Special forms bring more nuances into the substitution model mentioned
-previously. For example, when evaluating an ~if~ expression, you evaluate the
-predicate and, depending on the result, either evaluate the *consequent* or the
-*alternative*. If you were evaluating in a standard manner, the consequent and
-alternative would both be evaluated, rendering the ~if~ expression ineffective.
+previously. For example, when evaluating an src_scheme{if} expression, you
+evaluate the predicate and, depending on the result, either evaluate the
+*consequent* or the *alternative*. If you were evaluating in a standard manner,
+the consequent and alternative would both be evaluated, rendering the
+src_scheme{if} expression ineffective.
 
 ** Exercise 1.1
 
@@ -706,11 +707,13 @@ following procedure:
 
 *** Answer
 
-This code accepts the variables ~a~ and ~b~, and if ~b~ is positive, it adds ~a~
-and ~b~. However, if ~b~ is zero or negative, it subtracts them. This decision
-is made by using the ~+~ and ~-~ procedures as the results of an if expression,
-and then evaluating according to the results of that expression. This is in
-contrast to a language like Python, which would do something like this:
+This code accepts the variables src_scheme{a} and src_scheme{b}, and if
+src_scheme{b} is positive, it adds src_scheme{a} and src_scheme{b}. However, if
+src_scheme{b} is zero or negative, it subtracts them. This decision is made by
+using the src_scheme{+} and src_scheme{-} procedures as the results of an if
+expression, and then evaluating according to the results of that expression.
+This is in contrast to a language like Python, which would do something like
+this:
 
 #+BEGIN_SRC python :noeval 
 if b > 0: a + b
@@ -754,11 +757,11 @@ expression.)
 
 *** Answer
 
-In either type of language, src_scheme{(define (p) (p))} is an infinite
-loop. However, a normal-order language will encounter the special form, return
-~0~, and never evaluate src_scheme{(p)}. An applicative-order language evaluates the
-arguments to src_scheme{(test 0 (p))}, thus triggering the infinite
-loop.
+In either type of language, src_scheme{(define (p) (p))} is an infinite loop.
+However, a normal-order language will encounter the special form, return
+src_scheme{0}, and never evaluate src_scheme{(p)}. An applicative-order language
+evaluates the arguments to src_scheme{(test 0 (p))}, thus triggering the
+infinite loop.
 
 ** 1.1.7: Example: Square Roots by Newton's Method
 
@@ -771,17 +774,17 @@ introduced any looping constructs like ~FOR~ loops.
 
 ** 1.1.8: Procedures as Black-Box Abstractions
 
-Notice how the ~sqrt~ procedure is divided into other procedures, which mirror
-the division of the square root problem into sub problems.
+Notice how the src_scheme{sqrt} procedure is divided into other procedures,
+which mirror the division of the square root problem into sub problems.
 
 A procedure should accomplish an identifiable task, and be ready to be used as a
 module in defining other procedures. This lets the programmer know how to use
 the procedure while not needing to know the details of how it works.
 
 Suppressing these details are particularly helpful:
-- Local names. :: A procedure user shouldn't need to know a procedure's choices of
-  variable names. A formal parameter of a procedure whose name is irrelevant is
-  called a *bound variable*. A procedure definition *binds* its parameters. A
+- Local names. :: A procedure user shouldn't need to know a procedure's choices
+  of variable names. A formal parameter of a procedure whose name is irrelevant
+  is called a *bound variable*. A procedure definition *binds* its parameters. A
   *free variable* isn't bound. The set of expressions in which a binding defines
   a name is the *scope* of that name.
 - Internal definitions and block structure. :: By nesting relevant definitions
@@ -827,10 +830,10 @@ Suppressing these details are particularly helpful:
 *** Question
 
 #+begin_quote
-Alyssa P. Hacker doesn't see why ~if~ needs to be provided as a
+Alyssa P. Hacker doesn't see why src_scheme{if} needs to be provided as a
 special form. "Why can't I just define it as an ordinary procedure in terms of
 cond?" she asks. Alyssa's friend Eva Lu Ator claims this can indeed be done, and
-she defines a new version of ~if~:
+she defines a new version of src_scheme{if}:
 #+end_quote
 
 #+BEGIN_SRC scheme -n :noeval 
@@ -853,7 +856,7 @@ Eva demonstrates the program for Alyssa:
 #+END_SRC
 
 #+begin_quote
-Delighted, Alyssa uses new-if to rewrite the square-root program:
+Delighted, Alyssa uses src_scheme{new-if} to rewrite the square-root program:
 #+end_quote
 
 #+BEGIN_SRC scheme -n :noeval 
@@ -869,10 +872,11 @@ What happens when Alyssa attempts to use this to compute square roots? Explain.
 
 *** Answer
 
-Using Alyssa's ~new-if~ leads to an infinite loop because the recursive call to
-~sqrt-iter~ is evaluated before the actual call to ~new-if~. This is because
-~if~ and ~cond~ are special forms that change the way evaluation is handled;
-whichever branch is chosen leaves the other branches unevaluated.
+Using Alyssa's src_scheme{new-if} leads to an infinite loop because the
+recursive call to src_scheme{sqrt-iter} is evaluated before the actual call to
+src_scheme{new-if}. This is because src_scheme{if} and src_scheme{cond} are
+special forms that change the way evaluation is handled; whichever branch is
+chosen leaves the other branches unevaluated.
 
 ** Exercise 1.7
 
@@ -963,7 +967,7 @@ reaches the precision limit of the system:
    (= (improve guess x) guess))
 #+END_SRC
 
-**** Imroving (sqrt) by avoiding extra (improve) call
+**** Imroving ~sqrt~ by avoiding extra ~improve~ call
 
 ***** Non-optimized
 
@@ -1052,7 +1056,7 @@ can resolve, but \(10^{13}\) cannot.
 #+end_example
 :end:
 
-So, my definition of ~sqrt~:
+So, my definition of src_scheme{sqrt}:
 #+NAME: sqrt
 #+BEGIN_SRC scheme -n :eval no-export :exports both :results value table
 <<average>>
@@ -1210,11 +1214,11 @@ Consider these two procedures for obtaining factorials:
 #+end_src
 
 These two procedures reach the same answers, but form very different processes.
-The ~factorial-recursion~ version takes more computational *time* and *space* to
-evaluate, by building up a chain of deferred operations. This is a *recursive
-process*. As the number of steps needed to operate, and the amount of info
-needed to keep track of these operations, both grow linearly with \(n\), this is
-a *linear recursive process*.
+The src_scheme{factorial-recursion} version takes more computational *time* and
+*space* to evaluate, by building up a chain of deferred operations. This is a
+*recursive process*. As the number of steps needed to operate, and the amount of
+info needed to keep track of these operations, both grow linearly with \(n\),
+this is a *linear recursive process*.
 
 The second version forms an *iterative process*. Its state can be summarized
 with a fixed number of state variables. The number of steps required grow
@@ -1223,14 +1227,15 @@ linearly with \(n\), so this is a *linear iterative process*.
 - recursive procedure ::  is a procedure whose definition refers to itself.
 - recursive process :: is a process that evolves recursively.
 
-So ~fact-iter~ is a recursive /procedure/ that generates an iterative /process/.
+So src_scheme{fact-iter} is a recursive /procedure/ that generates an iterative
+/process/.
 
 Many implementations of programming languages interpret all recursive procedures
 in a way that consume memory that grows with the number of procedure calls, even
 when the process is essentially iterative. These languages instead use looping
-constructs such as ~do~, ~repeat~, ~for~, etc. Implementations that execute
-iterative processes in constant space, even if the procedure is recursive, are
-*tail-recursive*.
+constructs such as src_scheme{do}, src_scheme{repeat}, src_scheme{for}, etc.
+Implementations that execute iterative processes in constant space, even if the
+procedure is recursive, are *tail-recursive*.
 
 ** Exercise 1.9
 
@@ -1340,8 +1345,8 @@ What are the values of the following expressions?
 
 #+begin_quote
 Give concise mathematical definitions for the functions computed by the
-procedures ~f~, ~g~, and ~h~ for positive integer values of \(n\). For example,
-src_scheme{(k n)} computes \(5n^2\).
+procedures src_scheme{f}, src_scheme{g}, and src_scheme{h} for positive integer
+values of \(n\). For example, src_scheme{(k n)} computes \(5n^2\).
 #+end_quote
 
 *** Answer
@@ -1869,7 +1874,7 @@ I want to generate this graph algorithmically.
 #+end_src
 
 I'm not going to include the full printout of the src_scheme{(count-change 11)},
-here's an example of what this looks like via ~1~.
+here's an example of what this looks like via src_scheme{1}.
 #+NAME: count-change-test
 #+BEGIN_SRC scheme -n :eval no-export  :exports both :results output code
 <<count-change-graphviz>>
@@ -1925,10 +1930,10 @@ process as the amount to be changed increases?
 
 *** Answer B
 
-Let's look at this via the number of function calls needed for value ~n~. Instead
-of returning an integer, I'll return a pair where ~car~ is the number of ways to
-count change, and ~cdr~ is the number of function calls that have occurred down
-that branch of the tree.
+Let's look at this via the number of function calls needed for value
+src_scheme{n}. Instead of returning an integer, I'll return a pair where
+src_scheme{car} is the number of ways to count change, and src_scheme{cdr} is
+the number of function calls that have occurred down that branch of the tree.
 
 #+NAME: cc-calls
 #+BEGIN_SRC scheme -n :eval no-export :exports code :results silent
@@ -2091,8 +2096,8 @@ angle is considered "sufficiently small" if its magnitude is not greater than
 #+end_src
 
 #+begin_quote
-How many times is the procedure ~p~ applied when src_scheme{(sine 12.15)} is
-evaluated?
+How many times is the procedure src_scheme{p} applied when src_scheme{(sine
+12.15)} is evaluated?
 #+end_quote
 
 *** Answer A
@@ -2121,14 +2126,14 @@ Let's find out!
 | -0.39980345741334 | 5 |
 :end:
 
-~p~ is evaluated 5 times.
+src_scheme{p} is evaluated 5 times.
 
 *** Question B
 
 #+begin_quote
-What is the order of growth in space and number of steps (as a function of ~a~)
-used by the process generated by the sine procedure when src_scheme{(sine a)} is
-evaluated?
+What is the order of growth in space and number of steps (as a function of
+src_scheme{a}) used by the process generated by the sine procedure when
+src_scheme{(sine a)} is evaluated?
 #+end_quote
 
 *** Answer B
@@ -2211,14 +2216,15 @@ plot data using 1:2 with fillsteps title 'function calls', \
 file:1/fig/1-15-step.png
 :end:
 
-This graph shows that the number of times ~sine~ will be called is logarithmic.
+This graph shows that the number of times src_scheme{sine} will be called is
+logarithmic.
 - 0.1 to 0.2 are divided once
 - 0.3 to 0.8 are divided twice
 - 0.9 to 2.6 are divided three times
 - 2.7 to 8 are divided four times
 - 8.5 to 23.8 are divided five times
 
-Given that the calls to ~p~ get stacked recursively, like this:
+Given that the calls to src_scheme{p} get stacked recursively, like this:
 #+BEGIN_SRC scheme :noeval :exports code
 (sine 12.15)
 (p (sine 4.05))
@@ -2584,12 +2590,12 @@ Some of my /very/ incorrect ideas:
 #+begin_quote
 There is a clever algorithm for computing the Fibonacci numbers in a logarithmic
 number of steps. Recall the transformation of the state variables a and b in the
-~fib-iter~ process of section 1-2-2:
+src_scheme{fib-iter} process of section 1-2-2:
 
 \[a <- a + b\text{ and }b <- a\]
 
 Call this transformation T, and observe that applying T over and over again n
-times, starting with 1 and 0, produces the pair _Fib_(n + 1) and _Fib_(n). In
+times, starting with 1 and 0, produces the pair Fib\((n + 1)\) and Fib\((n)\). In
 other words, the Fibonacci numbers are produced by applying \( T^n \), the nth
 power of the transformation T, starting with the pair (1,0). Now consider T to
 be the special case of p = 0 and q = 1 in a family of transformations \(
@@ -2661,12 +2667,10 @@ the attached list. so src_scheme{(T 0 1)} returns a fib function.
         (Tr-iter f (- n 1) (car l) (cdr l)))))
 #+END_SRC
 
-\[
-    \text{T}_{pq}: a,b\mapsto \begin{cases}
+\text{T}_{pq}: a,b\mapsto \begin{cases}
         a \leftarrow bq + aq + ap\\
         b \leftarrow bp + aq
     \end{cases}
-\]
 
 #+NAME: T-test
 #+BEGIN_SRC scheme -n :eval no-export  :exports both :results value table
@@ -3012,10 +3016,10 @@ checks the primality of consecutive odd integers in a specified range. Use your
 procedure to find the three smallest primes larger than 1000; larger than
 10,000; larger than 100,000; larger than 1,000,000. Note the time needed to test
 each prime. Since the testing algorithm has order of growth of
-\(\Theta(\sqrt{n\))}, you should expect that testing for primes around 10,000
-should take about \(\sqrt{10\)} times as long as testing for primes around 1000.
+\(\Theta(\sqrt{n})\), you should expect that testing for primes around 10,000
+should take about \(\sqrt{10}\) times as long as testing for primes around 1000.
 Do your timing data bear this out? How well do the data for 100,000 and
-1,000,000 support the \(\Theta(\sqrt{n\))} prediction? Is your result compatible
+1,000,000 support the \(\Theta(\sqrt{n})\) prediction? Is your result compatible
 with the notion that programs on your machine run in time proportional to the
 number of steps required for the computation?
 #+end_quote
@@ -3091,8 +3095,8 @@ There's proof it works. And here are the answers to the question:
 **** Part 2
 
 Repeatedly re-running, it I see it occasionally jump to twice the time. I'm not
-happy with this, so I'm going to refactor to use the ~mattbench2~ utility from
-the root of the project folder.
+happy with this, so I'm going to refactor to use the src_scheme{mattbench2}
+utility from the root of the project folder.
 
 #+NAME: mattbench2
 #+begin_src scheme :exports code :eval no-export :results output
@@ -3117,8 +3121,8 @@ the root of the project folder.
 #+end_src
 
 I'm going to get some more precise times. First, I need a prime searching
-variant that doesn't bother benchmarking. This will call ~prime?~, which will be
-bound later since we'll be trying different methods.
+variant that doesn't bother benchmarking. This will call src_scheme{prime?},
+which will be bound later since we'll be trying different methods.
 #+NAME: search-for-primes-untimed
 #+BEGIN_SRC scheme -n :eval no-export :exports code :results silent
 (define (search-for-primes minimum goal)
@@ -3207,20 +3211,20 @@ algorithm is slower than this other one," but when asked to find or prove the
 *** Question
 
 #+begin_quote
-The ~smallest-divisor~ procedure shown at the start of this section does lots of
-needless testing: After it checks to see if the number is divisible by 2 there
-is no point in checking to see if it is divisible by any larger even numbers.
-This suggests that the values used for test-divisor should not be 2, 3, 4, 5, 6,
-\dots, but rather 2, 3, 5, 7, 9, \dots. To implement this change, define a procedure
-~next~ that returns 3 if its input is equal to 2 and otherwise returns its input
-plus 2. Modify the smallest-divisor procedure to use src_scheme{(next
-test-divisor)} instead of src_scheme{(+ test-divisor 1)}. With
-~timed-prime-test~ incorporating this modified version of ~smallest-divisor~,
-run the test for each of the 12 primes found in Exercise 1.22. Since this
-modification halves the number of test steps, you should expect it to run about
-twice as fast. Is this expectation confirmed? If not, what is the observed ratio
-of the speeds of the two algorithms, and how do you explain the fact that it is
-different from 2?
+The src_scheme{smallest-divisor} procedure shown at the start of this section
+does lots of needless testing: After it checks to see if the number is divisible
+by 2 there is no point in checking to see if it is divisible by any larger even
+numbers. This suggests that the values used for test-divisor should not be 2, 3,
+4, 5, 6, \dots, but rather 2, 3, 5, 7, 9, \dots. To implement this change,
+define a procedure src_scheme{next} that returns 3 if its input is equal to 2
+and otherwise returns its input plus 2. Modify the smallest-divisor procedure to
+use src_scheme{(next test-divisor)} instead of src_scheme{(+ test-divisor 1)}.
+With src_scheme{timed-prime-test} incorporating this modified version of
+src_scheme{smallest-divisor}, run the test for each of the 12 primes found in
+Exercise 1.22. Since this modification halves the number of test steps, you
+should expect it to run about twice as fast. Is this expectation confirmed? If
+not, what is the observed ratio of the speeds of the two algorithms, and how do
+you explain the fact that it is different from 2?
 #+end_quote
 
 *** A Comedy of Error (just the one)
@@ -3592,12 +3596,12 @@ file:1/fig/1-22-4.png
 *** Question
 
 #+begin_quote
-Modify the ~timed-prime-test~ procedure of [[Exercise 1.22]] to use ~fast-prime?~ (the
-Fermat method), and test each of the 12 primes you found in that exercise. Since
-the Fermat test has \(\Theta(\text{log}n)\) growth, how would you expect the
-time to test primes near 1,000,000 to compare with the time needed to test
-primes near 1000? Do your data bear this out? Can you explain any discrepancy
-you find?
+Modify the src_scheme{timed-prime-test} procedure of [[Exercise 1.22]] to use
+src_scheme{fast-prime?} (the Fermat method), and test each of the 12 primes you
+found in that exercise. Since the Fermat test has \(\Theta(\text{log}n)\)
+growth, how would you expect the time to test primes near 1,000,000 to compare
+with the time needed to test primes near 1000? Do your data bear this out? Can
+you explain any discrepancy you find?
 #+end_quote
 
 *** Answer
@@ -3778,7 +3782,7 @@ aggressive bignum processing there?
 
 #+begin_quote
 Alyssa P. Hacker complains that we went to a lot of extra work in writing
-~expmod~. After all, she says, since we already know how to compute
+src_scheme{expmod}. After all, she says, since we already know how to compute
 exponentials, we could have simply written
 #+end_quote
 
@@ -3794,14 +3798,15 @@ Explain.
 
 *** Answer
 
-In Alyssa's version of ~expmod~, the result of the ~fast-expt~ operation is
-/extremely/ large. For example, in the process of checking for divisors of
-1,001, the number 455 will be tried. src_scheme{(expt 455 1001)} produces an
-integer 2,661 digits long. This is just one of the thousands of exponentiations
-that ~smallest-divisor~ will perform. It's best to avoid this, so we use to our
-advantage the fact that we only need to know the remainder of the
-exponentiations. ~expmod~ breaks down the exponentiation into smaller steps and
-performs ~remainder~ after every step, significantly reducing the memory
+In Alyssa's version of src_scheme{expmod}, the result of the
+src_scheme{fast-expt} operation is /extremely/ large. For example, in the
+process of checking for divisors of 1,001, the number 455 will be tried.
+src_scheme{(expt 455 1001)} produces an integer 2,661 digits long. This is just
+one of the thousands of exponentiations that src_scheme{smallest-divisor} will
+perform. It's best to avoid this, so we use to our advantage the fact that we
+only need to know the remainder of the exponentiations. src_scheme{expmod}
+breaks down the exponentiation into smaller steps and performs
+src_scheme{remainder} after every step, significantly reducing the memory
 requirements.
 
 As an example, let's trace (some of) the execution of src_scheme{(expmod 455 1001 1001)}:
@@ -3847,11 +3852,12 @@ taking these extra steps actually leads to an algorithm that performs better.
 *** Question
 
 #+begin_quote
-Louis Reasoner is having great difficulty doing Exercise 1.24. His ~fast-prime?~
-test seems to run more slowly than his ~prime?~ test. Louis calls his friend Eva
-Lu Ator over to help. When they examine Louis's code, they find that he has
-rewritten the ~expmod~ procedure to use an explicit multiplication, rather than
-calling ~square~:
+Louis Reasoner is having great difficulty doing Exercise 1.24. His
+src_scheme{fast-prime?} test seems to run more slowly than his
+src_scheme{prime?} test. Louis calls his friend Eva Lu Ator over to help. When
+they examine Louis's code, they find that he has rewritten the
+src_scheme{expmod} procedure to use an explicit multiplication, rather than
+calling src_scheme{square}:
 #+end_quote
 
 #+begin_src scheme -n
@@ -3928,19 +3934,20 @@ Little Theorem, which states that if \( n \) is a prime number and \( a \) is
 any positive integer less than \( n \), then \( a \) raised to the \( (n-1) \)
 -st power is congruent to 1 modulo \( n \). To test the primality of a number \(
 n \) by the Miller-Rabin test, we pick a random number \( a<n \) and raise \( a
-\) to the \( (n-1) \) -st power modulo \( n \) using the ~expmod~ procedure.
-However, whenever we perform the squaring step in ~expmod~, we check to see if
-we have discovered a "nontrivial square root of 1 modulo \( n \)," that is, a
-number not equal to 1 or \( n-1 \) whose square is equal to 1 modulo \( n \). It
-is possible to prove that if such a nontrivial square root of 1 exists, then \(
-n \) is not prime. It is also possible to prove that if \( n \) is an odd number
-that is not prime, then, for at least half the numbers \( a<n \), computing \(
-an-1 \) in this way will reveal a nontrivial square root of 1 modulo \( n \).
-(This is why the Miller-Rabin test cannot be fooled.) Modify the ~expmod~
-procedure to signal if it discovers a nontrivial square root of 1, and use this
-to implement the Miller-Rabin test with a procedure analogous to fermat-test.
-Check your procedure by testing various known primes and non-primes. Hint: One
-convenient way to make ~expmod~ signal is to have it return 0.
+\) to the \( (n-1) \) -st power modulo \( n \) using the src_scheme{expmod}
+procedure. However, whenever we perform the squaring step in src_scheme{expmod},
+we check to see if we have discovered a "nontrivial square root of 1 modulo \( n
+\)," that is, a number not equal to 1 or \( n-1 \) whose square is equal to 1
+modulo \( n \). It is possible to prove that if such a nontrivial square root of
+1 exists, then \( n \) is not prime. It is also possible to prove that if \( n
+\) is an odd number that is not prime, then, for at least half the numbers \(
+a<n \), computing \( an-1 \) in this way will reveal a nontrivial square root of
+1 modulo \( n \). (This is why the Miller-Rabin test cannot be fooled.) Modify
+the src_scheme{expmod} procedure to signal if it discovers a nontrivial square
+root of 1, and use this to implement the Miller-Rabin test with a procedure
+analogous to fermat-test. Check your procedure by testing various known primes
+and non-primes. Hint: One convenient way to make src_scheme{expmod} signal is to
+have it return 0.
 #+end_quote
 
 *** Analysis
@@ -4118,7 +4125,7 @@ and use that to determine whether the square is valid or not.
 
 Unfortunately this one has the same problem. What's the issue?
 
-Sadly, there's a massive issue in ~mr-test~.
+Sadly, there's a massive issue in src_scheme{mr-test}.
 #+BEGIN_SRC scheme +n :eval no-export :results output silent :exports code
 (define (mr-test n)
   (define (try-it a)
@@ -4180,9 +4187,9 @@ Which is equivalent to:
 
 \[\sum^{b}_{n~a}term(n)~term(a)+term(next(a))+term(next(next(a)))+\cdots+term(b)\]
 
-We can pass integers to ~a~ and ~b~ and functions to ~term~ and ~next~. Note
-that in order to simply sum integers, we'd need to define and pass an identity
-function to ~term~.
+We can pass integers to src_scheme{a} and src_scheme{b} and functions to
+src_scheme{term} and src_scheme{next}. Note that in order to simply sum
+integers, we'd need to define and pass an identity function to src_scheme{term}.
 
 ** Exercise 1.29
 
@@ -4212,15 +4219,16 @@ method illustrated above. Using Simpson's Rule, the integral of a function \(f\)
 between \(a\) and \(b\) is approximated as
 
 \[
-{h\over 3}(y_0 + 4y_1 + 2y_2 + 4y_3 + 2y_4 + \dots + 2y_{n-2} + 4y_{n-1} + y_n)
+\frac{h}{3}(y_0 + 4y_1 + 2y_2 + 4y_3 + 2y_4 + \dots + 2y_{n-2} + 4y_{n-1} + y_n)
 \]
 
 where \(h = (b - a) / n\), for some even integer \(n\), and \(y_k = f(a + kh)\).
 (Increasing \(n\) increases the accuracy of the approximation.) Define a
 procedure that takes as arguments \(f\), \(a\), \(b\), and \(n\) and returns the
 value of the integral, computed using Simpson's Rule. Use your procedure to
-integrate ~cube~ between 0 and 1 (with \(n = 100\) and \(n = 1000\)), and
-compare the results to those of the ~integral~ procedure shown above.
+integrate src_scheme{cube} between 0 and 1 (with \(n = 100\) and \(n = 1000\)),
+and compare the results to those of the src_scheme{integral} procedure shown
+above.
 #+end_quote
 
 *** Answer
@@ -4282,9 +4290,9 @@ So, more accurate for roughly the same effort or less.
 *** Question
 
 #+begin_quote
-The ~sum~ procedure above generates a linear recursion. The procedure can be
-rewritten so that the sum is performed iteratively. Show how to do this by
-filling in the missing expressions in the following definition:
+The src_scheme{sum} procedure above generates a linear recursion. The procedure
+can be rewritten so that the sum is performed iteratively. Show how to do this
+by filling in the missing expressions in the following definition:
 #+end_quote
 
 *** Answer
@@ -4328,10 +4336,10 @@ Let's check the stats!
 *** Question A.1
 
 #+begin_quote
-The ~sum~ procedure is only the simplest of a vast number of similar
+The src_scheme{sum} procedure is only the simplest of a vast number of similar
 abstractions that can be captured as higher-order procedures. Write an analogous
-procedure called ~product~ that returns the product of the values of a function
-at points over a given range.
+procedure called src_scheme{product} that returns the product of the values of a
+function at points over a given range.
 #+end_quote
 
 *** Answer A.1
@@ -4349,15 +4357,15 @@ at points over a given range.
 *** Question A.2
 
 #+begin_quote
-Show how to define ~factorial~ in terms of ~product~.
+Show how to define src_scheme{factorial} in terms of src_scheme{product}.
 #+end_quote
 
 *** Answer A.2
 
-I was briefly stumped because ~product~ only counts upward. Then I realized
-that's just how it's presented and it can go either direction, since addition
-and multiplication are commutative. I look forward to building up a more
-intuitive sense of numbers.
+I was briefly stumped because src_scheme{product} only counts upward. Then I
+realized that's just how it's presented and it can go either direction, since
+addition and multiplication are commutative. I look forward to building up a
+more intuitive sense of numbers.
 #+NAME: factorial-product
 #+BEGIN_SRC scheme -n :eval no-export :exports both :results output
 <<product-iter>>
@@ -4382,11 +4390,12 @@ intuitive sense of numbers.
 *** Question A.3
 
 #+begin_quote
-Also use ~product~ to compute approximations to \(\pi\) using the formula
+Also use src_scheme{product} to compute approximations to \(\pi\) using the
+formula
 
 \[
-{\pi\over 4} = {2\cdot 4\cdot 4\cdot 6\cdot 6\cdot 8\cdots\over
-		   3\cdot 3\cdot 5\cdot 5\cdot 7\cdot 7\cdots}
+\frac{\pi}{4} =
+\frac{2\cdot 4\cdot 4\cdot 6\cdot 6\cdot 8\cdots}{3\cdot 3\cdot 5\cdot 5\cdot 7\cdot 7\cdots}
 \]
 #+end_quote
 
@@ -4394,7 +4403,7 @@ Also use ~product~ to compute approximations to \(\pi\) using the formula
 
 Once this equation is encoded, you just need to multiply it by two to get \(\pi\).
 
-Fun fact: the formula is slightly wrong, it should start the series with \({1 \over 2}\).
+Fun fact: the formula is slightly wrong, it should start the series with \(\frac{1}{2}\).
 #+NAME: pi-product
 #+BEGIN_SRC scheme -n :eval no-export :exports both :results output
 <<product-iter>>
@@ -4471,9 +4480,9 @@ that generates a recursive process.
 *** Question A
 
 #+begin_quote
-Show that ~sum~ and ~product~ are both special cases of a still more general
-notion called ~accumulate~ that combines a collection of terms, using some
-general accumulation function:
+Show that src_scheme{sum} and src_scheme{product} are both special cases of a
+still more general notion called src_scheme{accumulate} that combines a
+collection of terms, using some general accumulation function:
 #+end_quote
 
 #+BEGIN_SRC scheme
@@ -4481,18 +4490,21 @@ general accumulation function:
 #+END_SRC
 
 #+begin_quote
-~accumulate~ takes as arguments the same term and range specifications as ~sum~
-and ~product~, together with a ~combiner~ procedure (of two arguments) that
-specifies how the current term is to be combined with the accumulation of the
-preceding terms and a ~null-value~ that specifies what base value to use when
-the terms run out. Write ~accumulate~ and show how ~sum~ and ~product~ can both
-be defined as simple calls to ~accumulate~.
+src_scheme{accumulate} takes as arguments the same term and range specifications
+as src_scheme{sum} and src_scheme{product}, together with a src_scheme{combiner}
+procedure (of two arguments) that specifies how the current term is to be
+combined with the accumulation of the preceding terms and a
+src_scheme{null-value} that specifies what base value to use when the terms run
+out. Write src_scheme{accumulate} and show how src_scheme{sum} and
+src_scheme{product} can both be defined as simple calls to
+src_scheme{accumulate}.
 #+end_quote
 
 *** Answer A
 
-When I first did this question, I struggled a lot before realizing ~accumulate~
-was much closer to the exact definitions of sum/product than I thought.
+When I first did this question, I struggled a lot before realizing
+src_scheme{accumulate} was much closer to the exact definitions of sum/product
+than I thought.
 #+NAME: accumulate-iter
 #+BEGIN_SRC scheme -n :eval no-export :results silent
 (define (accumulate-iter combiner null-value term a next b)
@@ -4535,8 +4547,8 @@ was much closer to the exact definitions of sum/product than I thought.
 *** Question B
 
 #+begin_quote
-If your ~accumulate~ procedure generates a recursive process, write one
-that generates an iterative process.  If it generates an iterative process,
+If your src_scheme{accumulate} procedure generates a recursive process, write
+one that generates an iterative process. If it generates an iterative process,
 write one that generates a recursive process.
 #+end_quote
 
@@ -4558,12 +4570,13 @@ write one that generates a recursive process.
 
 #+INDEX: filter
 #+begin_quote
-You can obtain an even more general version of ~accumulate~ by introducing the
-notion of a filter on the terms to be combined. That is, combine only those
-terms derived from values in the range that satisfy a specified condition. The
-resulting ~filtered-accumulate~ abstraction takes the same arguments as
-accumulate, together with an additional predicate of one argument that specifies
-the filter. Write ~filtered-accumulate~ as a procedure. 
+You can obtain an even more general version of src_scheme{accumulate} by
+introducing the notion of a filter on the terms to be combined. That is, combine
+only those terms derived from values in the range that satisfy a specified
+condition. The resulting src_scheme{filtered-accumulate} abstraction takes the
+same arguments as accumulate, together with an additional predicate of one
+argument that specifies the filter. Write src_scheme{filtered-accumulate} as a
+procedure.
 #+end_quote
 
 *** Answer A
@@ -4585,12 +4598,12 @@ the filter. Write ~filtered-accumulate~ as a procedure.
 
 *** Question B
 
-Show how to express the following using ~filtered-accumulate~:
+Show how to express the following using src_scheme{filtered-accumulate}:
 
 **** A
 
 Find the sum of the squares of the prime numbers in the interval \(a\) to \(b\)
-(assuming that you have a ~prime?~ predicate already written)
+(assuming that you have a src_scheme{prime?} predicate already written)
 
 #+BEGIN_SRC scheme -n :eval no-export :results output :results both
 (load "mattcheck.scm")
@@ -4670,11 +4683,12 @@ SUCCEED at Ex_1-33B
 ** 1.3.2: Constructing Procedures Using lambda
 
 A procedure that's only used once is more conveniently expressed as the special
-form ~lambda~.
+form src_scheme{lambda}.
 
 Variables that are only briefly used in a limited scope can be specified with
-the special form ~let~. Variables in ~let~ blocks override external variables.
-The authors recommend using ~define~ for procedures and ~let~ for variables.
+the special form src_scheme{let}. Variables in src_scheme{let} blocks override
+external variables. The authors recommend using src_scheme{define} for
+procedures and src_scheme{let} for variables.
 
 ** Exercise 1.34
 
@@ -4705,7 +4719,7 @@ src_scheme{(f f)}? Explain.
 
 *** Answer
 
-It ends up trying to execute ~2~ as a function.
+It ends up trying to execute src_scheme{2} as a function.
 #+BEGIN_SRC scheme -n :eval no-export :results output
 ;; Will be evaluated like this:
 ;;   (f f)
@@ -4774,7 +4788,7 @@ at a certain point? Or maybe that would just be \(~\), ie \(f(x)~etc\)/
 #+begin_quote
 Show that the golden ratio \(\varphi\) is a fixed point of the transformation
 \(x \mapsto 1 + 1 / x\), and use this fact to compute \(\varphi\) by means of
-the ~fixed-point~ procedure.
+the src_scheme{fixed-point} procedure.
 #+end_quote
 
 *** Answer
@@ -4802,19 +4816,20 @@ the ~fixed-point~ procedure.
 *** Question
 
 #+begin_quote
-Modify ~fixed-point~ so that it prints the sequence of approximations it
-generates, using the ~newline~ and ~display~ primitives shown in Exercise 1.22.
-Then find a solution to \(x^x = 1000\) by finding a fixed point of \(x \mapsto
-\log(1000) / \log(x)\). (Use Scheme's primitive ~log~ procedure, which computes
-natural logarithms.) Compare the number of steps this takes with and without
-average damping. (Note that you cannot start ~fixed-point~ with a guess of 1, as
-this would cause division by \(\log(1) = 0\).)
+Modify src_scheme{fixed-point} so that it prints the sequence of approximations
+it generates, using the src_scheme{newline} and src_scheme{display} primitives
+shown in Exercise 1.22. Then find a solution to \(x^x = 1000\) by finding a
+fixed point of \(x \mapsto \log(1000) / \log(x)\). (Use Scheme's primitive
+src_scheme{log} procedure, which computes natural logarithms.) Compare the
+number of steps this takes with and without average damping. (Note that you
+cannot start src_scheme{fixed-point} with a guess of 1, as this would cause
+division by \(\log(1) = 0\).)
 #+end_quote
 
 *** Answer
 
-Using the ~display~ and ~newline~ functions at any great extent is pretty
-exhausting, so I'll use ~format~ instead.
+Using the src_scheme{display} and src_scheme{newline} functions at any great
+extent is pretty exhausting, so I'll use src_scheme{format} instead.
 #+NAME: fixed-point-debug
 #+BEGIN_SRC scheme -n :eval no-export :results silent
 (use-modules (ice-9 format))
@@ -4935,11 +4950,11 @@ fraction}---has the form
 
 \[ \cfrac{N_1}{D_1 + \cfrac{N_2}{\ddots + \cfrac{N_k}{D_k}}} \]
 
-Suppose that ~n~ and ~d~ are procedures of one argument (the term index \(i\))
-that return the \(N_i\) and \(D_i\) of the terms of the continued fraction.
-Define a procedure ~cont-frac~ such that evaluating
-src_scheme{(cont-frac n d k)} computes the value of the \(k\)-term finite continued
-fraction.
+Suppose that src_scheme{n} and src_scheme{d} are procedures of one argument (the
+term index \(i\)) that return the \(N_i\) and \(D_i\) of the terms of the
+continued fraction. Define a procedure src_scheme{cont-frac} such that
+evaluating src_scheme{(cont-frac n d k)} computes the value of the \(k\)-term
+finite continued fraction.
 #+end_quote
 
 *** Answer A
@@ -4967,8 +4982,8 @@ Check your procedure by approximating \(1 / \varphi\) using
            k)
 #+END_SRC
 
-for successive values of ~k~. How large must you make ~k~ in order to get an
-approximation that is accurate to 4 decimal places?
+for successive values of src_scheme{k}. How large must you make src_scheme{k} in
+order to get an approximation that is accurate to 4 decimal places?
 
 *** Answer B
 
@@ -5022,9 +5037,9 @@ plot data using 2:xticlabels(1) with fillsteps fs solid 0.3 noborder lt 1 notitl
 *** Question C
 
 #+begin_quote
-If your ~cont-frac~ procedure generates a recursive process, write one that
-generates an iterative process. If it generates an iterative process, write one
-that generates a recursive process.
+If your src_scheme{cont-frac} procedure generates a recursive process, write one
+that generates an iterative process. If it generates an iterative process, write
+one that generates a recursive process.
 #+end_quote
 
 *** Answer C
@@ -5069,8 +5084,8 @@ In 1737, the Swiss mathematician Leonhard Euler published a memoir /De
 Fractionibus Continuis/, which included a continued fraction expansion for \(e -
 2\), where \(e\) is the base of the natural logarithms. In this fraction, the
 \(N_i\) are all 1, and the \(D_i\) are successively 1, 2, 1, 1, 4, 1, 1, 6, 1,
-1, 8, \(\dots\). Write a program that uses your ~cont-frac~ procedure from
-Exercise 1.37 to approximate \(e\), based on Euler's expansion.
+1, 8, \(\dots\). Write a program that uses your src_scheme{cont-frac} procedure
+from Exercise 1.37 to approximate \(e\), based on Euler's expansion.
 #+end_quote
 
 *** Answer
@@ -5108,7 +5123,7 @@ A continued fraction representation of the tangent function was published in
 
 where \(x\) is in radians. Define a procedure src_scheme{(tan-cf x k)} that
 computes an approximation to the tangent function based on Lambert's formula.
-~k~ specifies the number of terms to compute, as in Exercise 1.37.
+src_scheme{k} specifies the number of terms to compute, as in Exercise 1.37.
 #+end_quote
 
 *** Answer
@@ -5186,8 +5201,8 @@ derivative of \(g\) evaluated at \(x\).
 *** Question
 
 #+begin_quote
-Define a procedure ~cubic~ that can be used together with the ~newtons-method~
-procedure in expressions of the form:
+Define a procedure src_scheme{cubic} that can be used together with the
+src_scheme{newtons-method} procedure in expressions of the form:
 #+end_quote
 
 #+BEGIN_SRC scheme
@@ -5237,10 +5252,11 @@ to approximate zeros of the cubic \(x^3 + ax^2 + bx + c\).
 *** Question
 
 #+begin_quote
-Define a procedure ~double~ that takes a procedure of one argument as argument
-and returns a procedure that applies the original procedure twice. For example,
-if ~inc~ is a procedure that adds 1 to its argument, then src_scheme{(double inc)}
-should be a procedure that adds 2. What value is returned by
+Define a procedure src_scheme{double} that takes a procedure of one argument as
+argument and returns a procedure that applies the original procedure twice. For
+example, if src_scheme{inc} is a procedure that adds 1 to its argument, then
+src_scheme{(double inc)} should be a procedure that adds 2. What value is
+returned by
 #+end_quote
 
 #+NAME: Ex1-41
@@ -5277,7 +5293,7 @@ should be a procedure that adds 2. What value is returned by
 #+begin_quote
 Let \(f\) and \(g\) be two one-argument functions. The composition \(f\) after
 \(g\) is defined to be the function \(x \mapsto f(g(x))\). Define a procedure
-~compose~ that implements composition.
+src_scheme{compose} that implements composition.
 #+end_quote
 
 *** Answer
@@ -5356,12 +5372,13 @@ Success
 The idea of smoothing a function is an important concept in signal processing.
 If \(f\) is a function and \(dx\) is some small number, then the smoothed
 version of \(f\) is the function whose value at a point \(x\) is the average of
-\(f(x - dx)\), \(f(x)\), and \(f(x + dx)\). Write a procedure ~smooth~ that
-takes as input a procedure that computes \(f\) and returns a procedure that
+\(f(x - dx)\), \(f(x)\), and \(f(x + dx)\). Write a procedure src_scheme{smooth}
+that takes as input a procedure that computes \(f\) and returns a procedure that
 computes the smoothed \(f\). It is sometimes valuable to repeatedly smooth a
 function (that is, smooth the smoothed function, and so on) to obtain the
 \(n\)-fold smoothed function. Show how to generate the \(n\)-fold smoothed
-function of any given function using ~smooth~ and ~repeated~ from Exercise 1.43.
+function of any given function using src_scheme{smooth} and src_scheme{repeated}
+from Exercise 1.43.
 #+end_quote
 
 *** Answer
@@ -5384,18 +5401,19 @@ function of any given function using ~smooth~ and ~repeated~ from Exercise 1.43.
 
 #+begin_quote
 We saw in 1.3.3 that attempting to compute square roots by naively finding a
-fixed point of \(y \mapsto x / y\) does not converge, and that this can be fixed by
-average damping. The same method works for finding cube roots as fixed points of
-the average-damped \(y \mapsto x / y^2\). Unfortunately, the process does not work for
-fourth roots---a single average damp is not enough to make a fixed-point search
-for \(y \mapsto x / y^3\) converge. On the other hand, if we average damp twice (i.e.,
-use the average damp of the average damp of \(y \mapsto x / y^3\)) the fixed-point
-search does converge. Do some experiments to determine how many average damps
-are required to compute \(n^{\mathrm{th}}\) roots as a fixed-point search based
-upon repeated average damping of \(y \mapsto x / y^{n-1}\). Use this to implement a
-simple procedure for computing \(n^{\mathrm{th}}\) roots using ~fixed-point~,
-~average-damp~, and the ~repeated~ procedure of Exercise 1.43. Assume that any
-arithmetic operations you need are available as primitives.
+fixed point of \(y \mapsto x / y\) does not converge, and that this can be fixed
+by average damping. The same method works for finding cube roots as fixed points
+of the average-damped \(y \mapsto x / y^2\). Unfortunately, the process does not
+work for fourth roots---a single average damp is not enough to make a
+fixed-point search for \(y \mapsto x / y^3\) converge. On the other hand, if we
+average damp twice (i.e., use the average damp of the average damp of \(y
+\mapsto x / y^3\)) the fixed-point search does converge. Do some experiments to
+determine how many average damps are required to compute \(n^{\mathrm{th}}\)
+roots as a fixed-point search based upon repeated average damping of \(y \mapsto
+x / y^{n-1}\). Use this to implement a simple procedure for computing
+\(n^{\mathrm{th}}\) roots using src_scheme{fixed-point~, ~average-damp}, and the
+src_scheme{repeated} procedure of Exercise 1.43. Assume that any arithmetic
+operations you need are available as primitives.
 #+end_quote
 
 *** Answer
@@ -5636,10 +5654,10 @@ plot data using 1:3 with linespoints, \
 :end:
 
 I've spent too much time on this problem already but I have to wonder about
-floating-point issues, given that they are the core of the ~good-enough~
-procedure. I have to wonder whether a ~fixed-point~ version that replaces the
-~tolerance~ decision making, and instead retains the last three guesses and
-checks for a loop.
+floating-point issues, given that they are the core of the
+src_scheme{good-enough} procedure. I have to wonder whether a
+src_scheme{fixed-point} version that replaces the src_scheme{tolerance} decision
+making, and instead retains the last three guesses and checks for a loop. (TODO)
 
 **  Exercise 1.46
 
@@ -5651,12 +5669,13 @@ extremely general computational strategy known as /iterative improvement/.
 Iterative improvement says that, to compute something, we start with an initial
 guess for the answer, test if the guess is good enough, and otherwise improve
 the guess and continue the process using the improved guess as the new guess.
-Write a procedure ~iterative-improve~ that takes two procedures as arguments: a
-method for telling whether a guess is good enough and a method for improving a
-guess. ~iterative-improve~ should return as its value a procedure that takes a
-guess as argument and keeps improving the guess until it is good enough. Rewrite
-the ~sqrt~ procedure of 1.1.7 and the ~fixed-point~ procedure of 1.3.3 in terms
-of ~iterative-improve~.
+Write a procedure src_scheme{iterative-improve} that takes two procedures as
+arguments: a method for telling whether a guess is good enough and a method for
+improving a guess. src_scheme{iterative-improve} should return as its value a
+procedure that takes a guess as argument and keeps improving the guess until it
+is good enough. Rewrite the src_scheme{sqrt} procedure of 1.1.7 and the
+src_scheme{fixed-point} procedure of 1.3.3 in terms of
+src_scheme{iterative-improve}.
 #+end_quote
 
 *** Answer
@@ -5730,8 +5749,8 @@ The technique of isolating how data objects are /represented/ from how they are
 
 ** 2.1.1: Example: Arithmetic Operations for Rational Numbers
 
-Lisp gives the procedures ~cons~, ~car~, and ~cdr~ to create *pairs*. This is an
-easy system for representing rational numbers.
+Lisp gives the procedures src_scheme{cons}, src_scheme{car}, and src_scheme{cdr}
+to create *pairs*. This is an easy system for representing rational numbers.
 
 Note that the system proposed for representing and working with rational numbers
 has *abstraction barriers* isolating different parts of the system. The parts
@@ -5811,10 +5830,11 @@ architecture without modifying the programs that depend on it.
 *** Question
 
 #+begin_quote
-Define a better version of ~make-rat~ that handles both positive and negative
-arguments. ~make-rat~ should normalize the sign so that if the rational number
-is positive, both the numerator and denominator are positive, and if the
-rational number is negative, only the numerator is negative.
+Define a better version of src_scheme{make-rat} that handles both positive and
+negative arguments. src_scheme{make-rat} should normalize the sign so that if
+the rational number is positive, both the numerator and denominator are
+positive, and if the rational number is negative, only the numerator is
+negative.
 #+end_quote
 
 *** Answer
@@ -5911,15 +5931,16 @@ optimized make-rat: ((1 . 2) 233.99087033)
 #+begin_quote
 Consider the problem of representing line segments in a plane. Each segment is
 represented as a pair of points: a starting point and an ending point. Define a
-constructor ~make-segment~ and selectors ~start-segment~ and ~end-segment~ that
-define the representation of segments in terms of points. Furthermore, a point
-can be represented as a pair of numbers: the \(x\) coordinate and the \(y\)
-coordinate. Accordingly, specify a constructor ~make-point~ and selectors
-~x-point~ and ~y-point~ that define this representation. Finally, using your
-selectors and constructors, define a procedure ~midpoint-segment~ that takes a
-line segment as argument and returns its midpoint (the point whose coordinates
-are the average of the coordinates of the endpoints). To try your procedures,
-you'll need a way to print points:
+constructor src_scheme{make-segment} and selectors src_scheme{start-segment} and
+src_scheme{end-segment} that define the representation of segments in terms of
+points. Furthermore, a point can be represented as a pair of numbers: the \(x\)
+coordinate and the \(y\) coordinate. Accordingly, specify a constructor
+src_scheme{make-point} and selectors src_scheme{x-point} and src_scheme{y-point}
+that define this representation. Finally, using your selectors and constructors,
+define a procedure src_scheme{midpoint-segment} that takes a line segment as
+argument and returns its midpoint (the point whose coordinates are the average
+of the coordinates of the endpoints). To try your procedures, you'll need a way
+to print points:
 #+end_quote
 
 #+NAME: print-point
@@ -6358,8 +6379,8 @@ of src_scheme{(denom x)} should be equivalent to dividing \(n\) over \(d\).
 
 #+begin_quote
 Here is an alternative procedural representation of pairs. For this
-representation, verify that src_scheme{(car (cons x y))} yields ~x~ for any
-objects ~x~ and ~y~.
+representation, verify that src_scheme{(car (cons x y))} yields src_scheme{x} for any
+objects src_scheme{x} and src_scheme{y}.
 #+end_quote
 
 #+NAME: alt-pairs-txt
@@ -6371,8 +6392,8 @@ objects ~x~ and ~y~.
 #+END_SRC
 
 #+begin_quote
-What is the corresponding definition of ~cdr~? (Hint: To verify that this works,
-make use of the substitution model of 1.1.5.)
+What is the corresponding definition of src_scheme{cdr}? (Hint: To verify that
+this works, make use of the substitution model of 1.1.5.)
 #+end_quote
 
 *** Answer
@@ -6428,7 +6449,7 @@ Now for implementation.
 Show that we can represent pairs of nonnegative integers using only numbers and
 arithmetic operations if we represent the pair \(a\) and \(b\) as the integer
 that is the product \(2^a 3^b\). Give the corresponding definitions of the
-procedures ~cons~, ~car~, and ~cdr~.
+procedures src_scheme{cons}, src_scheme{car}, and src_scheme{cdr}.
 #+end_quote
 
 *** Answer
@@ -6444,7 +6465,7 @@ is the base we want to retrieve from and \(y\) is the value exponentiating
 number of times, and then applying \(\log_{q}\) to the result.
 #+end_quote
 
-First, let's make ~cons~.
+First, let's make src_scheme{cons}.
 #+NAME: cons-nnint
 #+BEGIN_SRC scheme -n :eval no-export :results silent
 (define (cons-nnint a b)
@@ -6551,7 +6572,8 @@ Now the second column has recovered its original values. Although we didn't know
 what the original integer values were, we can now tell which column has the
 correct numbers by looking at which are integer values.
 
-We can use this sign of a correct result in the proposed ~car~ and ~cdr~ procedures.
+We can use this sign of a correct result in the proposed src_scheme{car} and
+src_scheme{cdr} procedures.
 
 #+NAME: nnint-test
 #+BEGIN_SRC scheme -n :eval no-export :results value table :exports both
@@ -6705,8 +6727,8 @@ of the interval abstraction. Here is a definition of the interval constructor:
 #+END_SRC
 
 #+begin_quote
-Define selectors ~upper-bound~ and ~lower-bound~ to complete the
-implementation.
+Define selectors src_scheme{upper-bound} and src_scheme{lower-bound} to complete
+the implementation.
 #+end_quote
 
 *** Answer
@@ -6735,7 +6757,7 @@ implementation.
 #+begin_quote
 Using reasoning analogous to Alyssa's, describe how the difference of two
 intervals may be computed. Define a corresponding subtraction procedure, called
-~sub-interval~.
+src_scheme{sub-interval}.
 #+end_quote
 
 *** Answer
@@ -6822,7 +6844,6 @@ For this I wrote the following tests:
 
 #+RESULTS[fd604189d7982cfc00149ec25da8bbcd60053aa1]: interval-width
 #+begin_EXAMPLE
-<unknown-location>: warning: possibly unbound variable `mattcheck-float'
 SUCCEED at ia width = roughly .1
 SUCCEED at ib width = roughly .2
 SUCCEED at width addition is distributive
@@ -7454,8 +7475,8 @@ program for parallel resistances than src_scheme{par1}. Is she right? Why?
 *** Answer
 
 If I am correct in understanding that "uncertain number" means "a number with an
-error tolerance", than ~par2~ /is/ better -- it only uses two instances of
-variables with error tolerance, while ~par1~ uses four.
+error tolerance", than src_scheme{par2} /is/ better -- it only uses two
+instances of variables with error tolerance, while src_scheme{par1} uses four.
 
 It should be noted that this system does not directly translate to algebraic
 expressions. For example, take these expressions:
@@ -7510,12 +7531,12 @@ GitHub user "=diiq=" has an incredible analysis of this, which can be found here
 
 ** 2.2: Hierarchical Data and the Closure Property
 
-~cons~ pairs can be used to construct more complex data-types.
+src_scheme{cons} pairs can be used to construct more complex data-types.
 
 file:2/cons-cells.jpeg
 
 The ability to combine things using an operation, then combine those results
-using the same operation, can be called the *closure property*. ~cons~ can
+using the same operation, can be called the *closure property*. src_scheme{cons} can
 create pairs whose elements are pairs, which satisfies the closure property.
 This property enables you to create hierarchical structures. We've already
 regularly used the closure property in creating procedures composed of other
@@ -7536,7 +7557,7 @@ procedures.
 ** 2.2.1: Representing Sequences
 
 - *sequence* :: An ordered collection of data objects.
-- *list* :: A sequence of ~cons~ pairs.
+- *list* :: A sequence of src_scheme{cons} pairs.
 
 #+BEGIN_SRC scheme
 (cons 1
@@ -7550,8 +7571,9 @@ procedures.
 
 An aside: many parts of this book have covered ways to solve problems by
 splitting problems into simple recursive solutions. I may be getting ahead of
-myself, but I wanted to note how the ~cons~ pair system goes hand-in-hand with
-this. For example, when going over a list ~l~ with function ~f~:
+myself, but I wanted to note how the src_scheme{cons} pair system goes
+hand-in-hand with this. For example, when going over a list src_scheme{l} with
+function src_scheme{f}:
 #+BEGIN_SRC scheme :eval no-export :results value
 (define (map f l)
   (if (null? l)
@@ -7845,7 +7867,8 @@ same-parity2: (56007.042334)
 #+END_EXAMPLE
 
 Once again, my attempts to optimize are a complete failure. I'm guessing that
-the act of traversing the whole list in the call to ~append~ is the problem.
+the act of traversing the whole list in the call to src_scheme{append} is the
+problem.
 
 ** Exercise 2.21
 
@@ -8059,7 +8082,9 @@ structure, and the interpretation of this as a tree (as in Figure 2.6).
 
 *** Answer
 
-This is sort of a trick question -- on first reading, I read it like a series of ~cons~ statements. Looking again, though, I can see that the correct formulation is as follows:
+This is sort of a trick question -- on first reading, I read it like a series of
+src_scheme{cons} statements. Looking again, though, I can see that the correct
+formulation is as follows:
 #+BEGIN_SRC scheme -n :eval no-export :results output :exports both
 <<echo>>
 (let ((l1 (list 1 (list 2 (list 3 4))))
@@ -8873,10 +8898,10 @@ SUCCEED at subsets
 #+end_EXAMPLE
 
 Essentially, src_scheme{subsets} is rotating through members of the list in a
-similar way that a counter incrementing rotates through all numbers in its
-base. For a list with items \(1\) to \(n\), ~subsets~ makes a list with the last
-item, \([n]\), then lists \([n-1]\) and \([n-1, n]\), then lists \([n-2][n-2,
-n-1][n-2,n]\), then \([n-3][n-3,n-2][n-3,n-1][n-3,n]\) and so on.
+similar way that a counter incrementing rotates through all numbers in its base.
+For a list with items \(1\) to \(n\), src_scheme{subsets} makes a list with the
+last item, \([n]\), then lists \([n-1]\) and \([n-1, n]\), then lists
+\([n-2][n-2, n-1][n-2,n]\), then \([n-3][n-3,n-2][n-3,n-1][n-3,n]\) and so on.
 
 I'd like to try adding some debugging statements to subsets and see if it might
 help clarify the operation.
@@ -8940,8 +8965,8 @@ Enter with () {
 
 Abstractions are an important part of making code clearer and more easy to
 understand. One beneficial manner of abstraction is making available
-conventional interfaces for working with compound data, such as ~filter~ and
-~map~.
+conventional interfaces for working with compound data, such as
+src_scheme{filter} and src_scheme{map}.
 
 This allows for easily making "signal-flow" conceptions of processes:
 
@@ -8956,7 +8981,7 @@ graph TD;
 #+ATTR_LATEX: :width 0.3\linewidth
 [[file:2/fig/t_2-2-3.png]]
 
-** Exercise 2.33: The flexibility of ~(accumulate)~
+** Exercise 2.33: The flexibility of ~accumulate~
 
 *** Text Definitions
 
@@ -9040,11 +9065,11 @@ computation as
 
 \[ (\dots (a_n x + a_{n-1}) x + \dots + a_1) x + a_0. \]
 
-In other words, we start with \(a_n\), multiply by \(x\), add \(a_{n-1\)},
+In other words, we start with \(a_n\), multiply by \(x\), add \(a_{n-1}\),
 multiply by \(x\), and so on, until we reach \(a_0\).
 
 Fill in the following template to produce a procedure that evaluates a
-polynomial using Horner's rule.  Assume that the coefficients of the polynomial
+polynomial using Horner's rule. Assume that the coefficients of the polynomial
 are arranged in a sequence, from \(a_0\) through \(a_n\).
 #+end_quote
 
@@ -9196,7 +9221,6 @@ SUCCEED at accumulate-n
 
 Suppose we represent vectors as lists, and matrices as lists of vectors. For example:
 
-\[
 \left(
 \begin{array}{cccc}
   1 & 2 & 3 & 4 \\
@@ -9205,10 +9229,10 @@ Suppose we represent vectors as lists, and matrices as lists of vectors. For exa
 \end{array}
 \right)
 
-\texttt{((1 2 3 4) (4 5 6 6) (6 7 8 9))}
-\]
+src_scheme{'((1 2 3 4) (4 5 6 6) (6 7 8 9))}
 
 Define these operations:
+
 #+BEGIN_SRC scheme -n
 (define (dot-product v w)
   (accumulate + 0 (map * v w)))
@@ -9649,7 +9673,7 @@ Complete the program by writing the following:
     set of positions
   - src_scheme{empty-board}, which represents an empty set of positions.
 - src_scheme{safe?}, which determines for a set of positions, whether the queen
-  in the \(k^{\mathrm{th\)}} column is safe with respect to the others. (Note
+  in the \(k^{\mathrm{th}}\) column is safe with respect to the others. (Note
   that we need only check whether the new queen is safe---the other queens are
   already guaranteed safe with respect to each other.)
 #+end_quote
@@ -10782,14 +10806,15 @@ images instead of two).
 #+RESULTS[a1a1d7df20056fcf0986da88ad48dbda23a1a791]:
 [[file:2/pict/corner-splits.png]]
 
-So my modified version doesn't split at the ~corner-split~ level, as predicted.
-However ~up-split~ and ~right-split~ do, so the effect is only delayed by one
-level. But more importantly:
+So my modified version doesn't split at the src_scheme{corner-split} level, as
+predicted. However src_scheme{up-split} and src_scheme{right-split} do, so the
+effect is only delayed by one level. But more importantly:
 
 /Why does it go down instead of up? I don't get it./
 
-~corner-split~ and ~up-split~ are even the same code as every answer online.
-Could my ~paint-lines~ procedure be what's causing issues?
+src_scheme{corner-split} and src_scheme{up-split} are even the same code as
+every answer online. Could my src_scheme{paint-lines} procedure be what's
+causing issues?
 
 *** Question C
 
@@ -10850,9 +10875,9 @@ the big Mr. Rogers look outward from each corner of the square.)
 #+RESULTS[111fcd56e310536b0fc3d2f409babc1ea1d841ef]:
 [[file:2/pict/square-limits.png]]
 
-Ok, I'm confused. Shouldn't the shape of ~square-limit~ be the same regardless
-of the operators passed to it? It looks like the operators effect each chunk
-separately.
+Ok, I'm confused. Shouldn't the shape of src_scheme{square-limit} be the same
+regardless of the operators passed to it? It looks like the operators effect
+each chunk separately.
 
 #+BEGIN_SRC scheme -n :eval no-export :results output
 <<linepainter-pict>>
@@ -10879,9 +10904,9 @@ separately.
 [[file:2/pict/square-limit-identity.png]]
 
 I expected the operators would change the /image orientation/, not the
-/structure/. Maybe this is because my ~draw-lines~ makes recursively nested
-stacks of painter objects, rather than imperative calls to drawing procedures?
-Looking on the internet I see [[http://pipecode.blogspot.com/2013/04/sicp-exercise-252.html][someone else having the same results.]]
+/structure/. Maybe this is because my src_scheme{draw-lines} makes recursively
+nested stacks of painter objects, rather than imperative calls to drawing
+procedures? Looking on the internet I see [[http://pipecode.blogspot.com/2013/04/sicp-exercise-252.html][someone else having the same results.]]
 
 ** 2.3.1: Quotation
 
@@ -11004,7 +11029,7 @@ To her surprise, the interpreter prints back src_scheme{quote}. Explain.
 
 *** Answer
 
-You're quoting quote, silly! Who's on first? 🙂
+You're quoting quote, silly! Who's on first?
 
 ** 2.3.2: Example: Symbolic differentiator
 
@@ -11100,7 +11125,7 @@ Later:
 Show how to extend the basic differentiator to handle more kinds of expressions.
 For instance, implement the differentiation rule
 
-\[ {{\it d\,(u^n\,)} \over {\it dx}} = nu^{n-1} {{\it du} \over {\it dx}} \]
+\[ \frac{\it d\,(u^n\,)}{\it dx} = nu^{n-1} \frac{\it du}{\it dx} \]
 
 by adding a new clause to the src_scheme{deriv} program and defining appropriate
 procedures src_scheme{exponentiation?}, src_scheme{base}, src_scheme{exponent},
@@ -11616,7 +11641,7 @@ but I'm a new programmer so it's probably a skill issue.
 *** Question
 
 We specified that a set would be represented as a list with no duplicates. Now
-suppose we allow duplicates. For instance, the set \(\{1, 2, 3\\)} could be
+suppose we allow duplicates. For instance, the set \(\{1, 2, 3\}\) could be
 represented as the list src_scheme{(2 3 2 1 3 2 2)}. Design procedures
 src_scheme{element-of-set?}, src_scheme{adjoin-set}, src_scheme{union-set}, and
 src_scheme{intersection-set} that operate on this representation. How does the
@@ -12163,7 +12188,7 @@ For my own sake, I'll reorganize this with src_scheme{let*}.
 #+END_SRC
 
 Say we're evaluating src_scheme{'(1 3 5 7 9 11)}. We define
-src_scheme{left-size} as \(\floor{n/2}\). src_scheme{partial-tree} recurses
+src_scheme{left-size} as \(\lfloor n/2 \rfloor\). src_scheme{partial-tree} recurses
 until hitting \(n=0\), at which point it returns the starting list with
 src_scheme{'()} prepended to it. This is used as the empty left branch for the
 second-to-the-bottom row of the tree, in this case for the tree node of
