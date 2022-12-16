@@ -11887,7 +11887,7 @@ union-set-alt: 45441.7717
 union-set-alt2: 66262.4295
 #+END_EXAMPLE
 
-** Exercise 2.63
+** Exercise 2.63: binary trees
 
 *** Text definitions
 
@@ -12089,3 +12089,119 @@ So, assuming the evaluation isn't as slow as operations like src_scheme{append},
 the second is definitely faster -- it's basically just evaluating to a series of
 src_scheme{cons} statements. The internet suggests that the first is
 \(\Theta(n\log{n})\) while the second is \(\Theta(n)\).
+
+** Exercise 2.64
+
+The following procedure src_scheme{list->tree} converts an ordered list to a
+balanced binary tree. The helper procedure src_scheme{partial-tree} takes as
+arguments an integer \(n\) and list of at least \(n\) elements and constructs a
+balanced tree containing the first \(n\) elements of the list. The result
+returned by src_scheme{partial-tree} is a pair (formed with src_scheme{cons})
+whose src_scheme{car} is the constructed tree and whose src_scheme{cdr} is the
+list of elements not included in the tree.
+
+#+NAME: list-to-tree
+#+BEGIN_SRC scheme -n :eval no-export :results silent :tangle 2/Ex64-a.scheme
+<<make-tree>>
+(define (list->tree elements)
+  (car (partial-tree elements (length elements))))
+(define (partial-tree elts n)
+  (if (= n 0)
+      (cons '() elts)
+      (let ((left-size (quotient (- n 1) 2)))
+        (let ((left-result
+               (partial-tree elts left-size)))
+          (let ((left-tree (car left-result))
+                (non-left-elts (cdr left-result))
+                (right-size (- n (+ left-size 1))))
+            (let ((this-entry (car non-left-elts))
+                  (right-result
+                   (partial-tree
+                    (cdr non-left-elts)
+                    right-size)))
+              (let ((right-tree (car right-result))
+                    (remaining-elts
+                     (cdr right-result)))
+                (cons (make-tree this-entry
+                                 left-tree
+                                 right-tree)
+                      remaining-elts))))))))
+#+END_SRC
+
+*** Question A
+
+Write a short paragraph explaining as clearly as you can how
+src_scheme{partial-tree} works. Draw the tree produced by src_scheme{list->tree}
+for the list src_scheme{(1 3 5 7 9 11)}.
+
+*** Answer
+
+For my own sake, I'll reorganize this with src_scheme{let*}.
+
+#+BEGIN_SRC scheme -n :eval no-export :results silent
+(define (partial-tree elts n)
+  (if (= n 0)
+      (cons '() elts)
+      (let* ((left-size (quotient (- n 1) 2))
+            (left-result (partial-tree
+                          elts
+                          left-size))
+            (left-tree (car left-result))
+            (non-left-elts (cdr left-result))
+            (right-size (- n (+ left-size 1)))
+            (this-entry (car non-left-elts))
+            (right-result (partial-tree
+                           (cdr non-left-elts)
+                           right-size))
+            (right-tree (car right-result))
+            (remaining-elts (cdr right-result)))
+        (cons (make-tree this-entry
+                         left-tree
+                         right-tree)
+              remaining-elts))))
+
+#+END_SRC
+
+Say we're evaluating src_scheme{'(1 3 5 7 9 11)}. We define
+src_scheme{left-size} as \(\floor{n/2}\). src_scheme{partial-tree} recurses
+until hitting \(n=0\), at which point it returns the starting list with
+src_scheme{'()} prepended to it. This is used as the empty left branch for the
+second-to-the-bottom row of the tree, in this case for the tree node of
+src_scheme{1}. That empty tree branch is saved in src_scheme{left-tree},
+src_scheme{this-entry} (src_scheme{1}) is defined, then we recurse to the right
+branch, finding a bottom to place src_scheme{3}. Finally, the tree with only 3
+is returned, it becomes the right branch off src_scheme{1}, making
+src_scheme{(make-tree 1 '() (make-tree 3 '() '()))}. This gets
+src_scheme{cons}'d to the remaining list, src_scheme{'(5 7 9 11)}. Upon
+returning the new list, this will become the src_scheme{left-tree} of its parent
+process. All in all, this is a recursive algorithm that kind of solves itself
+with minimal logic. Note its evaluation always comes back to src_scheme{cons}
+operations.
+
+This is very elegant. However, I am left wondering how clear this is in
+comparison with some C routine that does the same thing.
+
+#+BEGIN_SRC dot -n :eval no-export :file 2/fig/Ex64.png :exports results
+digraph {
+        "5" -> "1" [label="L"]
+        "1" -> "3" [label="LR"]
+        "5" -> "9" [label="R"]
+        "9" -> "7" [label="RL"]
+        "9" -> "11" [label="RR"]
+}
+#+END_SRC
+
+#+RESULTS[7d444e0b76efcca23a8a5e91a1c99ff11e123b5a]:
+:results:
+[[file:2/fig/Ex64.png]]
+:end:
+
+*** Question B
+
+What is the order of growth in the number of steps required by
+src_scheme{list->tree} to convert a list of \(n\) elements?
+
+*** Answer B
+
+I'm going to estimate that it's \(\Theta(n)\) because of the src_scheme{cons}
+operations being the cornerstone of the procedure. The internet appears to agree in this case.
