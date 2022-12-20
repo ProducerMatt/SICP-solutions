@@ -8914,6 +8914,9 @@ help clarify the operation.
   x)    ;; but I don't know what it is
 (define (echo-return x)
   (doit echo x))
+(define (echo-y-return-x x . y)
+  (apply echo y)
+  x)
 #+END_SRC
 #+BEGIN_SRC scheme :eval no-export :results output
 <<subsets>>
@@ -12115,7 +12118,7 @@ the second is definitely faster -- it's basically just evaluating to a series of
 src_scheme{cons} statements. The internet suggests that the first is
 \(\Theta(n\log{n})\) while the second is \(\Theta(n)\).
 
-** Exercise 2.64
+** Exercise 2.64: Making a balanced binary tree
 
 The following procedure src_scheme{list->tree} converts an ordered list to a
 balanced binary tree. The helper procedure src_scheme{partial-tree} takes as
@@ -12159,7 +12162,7 @@ Write a short paragraph explaining as clearly as you can how
 src_scheme{partial-tree} works. Draw the tree produced by src_scheme{list->tree}
 for the list src_scheme{(1 3 5 7 9 11)}.
 
-*** Answer
+*** Answer A
 
 For my own sake, I'll reorganize this with src_scheme{let*}.
 
@@ -12229,4 +12232,216 @@ src_scheme{list->tree} to convert a list of \(n\) elements?
 *** Answer B
 
 I'm going to estimate that it's \(\Theta(n)\) because of the src_scheme{cons}
-operations being the cornerstone of the procedure. The internet appears to agree in this case.
+operations being the cornerstone of the procedure. The internet appears to agree
+in this case.
+
+** Exercise 2.65: Sets as binary trees
+
+*** Textbook Definitions
+
+#+NAME: tree-sets-txt
+#+BEGIN_SRC scheme -n :eval no-export :results silen
+(define (element-of-set?-tree x set)
+  (cond ((null? set) #f)
+        ((= x (entry set)) #t)
+        ((< x (entry set))
+         (element-of-set?-tree
+          x 
+          (left-branch set)))
+        ((> x (entry set))
+         (element-of-set?-tree
+          x 
+          (right-branch set)))))
+(define (adjoin-set-tree x set)
+  (cond ((null? set) (make-tree x '() '()))
+        ((= x (entry set)) set)
+        ((< x (entry set))
+         (make-tree 
+          (entry set)
+          (adjoin-set-tree x (left-branch set))
+          (right-branch set)))
+        ((> x (entry set))
+         (make-tree
+          (entry set)
+          (left-branch set)
+          (adjoin-set-tree x (right-branch set))))))
+#+END_SRC
+
+*** Question
+
+Use the results of Exercise 2.63 and Exercise 2.64 to give \(\Theta(n)\)
+implementations of src_scheme{union-set} and src_scheme{intersection-set} for
+sets implemented as (balanced) binary trees.
+
+*** Answer
+
+Ok, now that's stretching my brain for sure. Hmm...
+
+What's really holding me up is the \(\Theta(n)\) complexity. Since I'm probably not going to figure this out easily, let's try doing it the
+"wrong" way first.
+
+#+NAME: sets-as-trees
+#+BEGIN_SRC scheme -n :eval no-export :results silent :tangle 2/Ex65.scheme
+<<make-tree>>
+<<list-to-tree>>
+<<tree-to-list>>
+<<tree-sets-txt>>
+
+(define (tree->list-debug tree)
+  (define (copy-to-list tree result-list)
+    (if (null? tree)
+        result-list
+        (let ((result
+               (begin (echo ">> entering tree at" (entry tree) "results" result-list)
+                      (copy-to-list (left-branch tree)
+                                    (begin (echo "we'll cons" (entry tree))
+                                           (let ((pair
+                                                  (cons (entry tree)
+                                                        (copy-to-list
+                                                         (right-branch tree)
+                                                         result-list))))
+                                             (echo "  cons'd" pair)
+                                             pair))))))
+          (echo "<< leaving tree at" (entry tree) "results" result-list)
+          result)))
+  (copy-to-list tree '()))
+
+(define (union-set-tree-wrong1 set1 set2)
+  (define (copy-to-list tree held-tree result-list)
+    (define (swap-trees)
+      (copy-to-list held-tree tree result-list))
+    (define (advance-tree-no-cons)
+      (copy-to-list (left-branch tree)
+                    held-tree
+                    (copy-to-list
+                     (right-branch tree)
+                     held-tree
+                     result-list)))
+    (define (advance-tree-cons)
+      (copy-to-list (left-branch tree)
+                    held-tree
+                    (cons (entry tree)
+                          (copy-to-list
+                           (right-branch tree)
+                           held-tree
+                           result-list))))
+    (define (advance-both-cons)
+      (copy-to-list (left-branch tree)
+                    held-tree
+                    (cons (entry tree)
+                          (copy-to-list
+                           (right-branch tree)
+                           held-tree
+                           result-list))))
+    (cond ((and (null? tree)
+                (null? held-tree))
+           result-list)
+          ((null? tree)
+           (swap-trees))
+          ((= (entry tree)
+              (car result-list))
+           (advance-tree-no-cons))
+          ((= (entry tree) (entry held-tree))
+           (advance-both-cons))
+          ((< (entry tree) (entry held-tree))
+           (advance-tree-cons))
+          ((> (entry tree) (entry held-tree))
+           (swap-trees))))
+  (copy-to-list set1 set2 '()))
+
+(define (union-set-tree-wrong2 set1 set2)
+  (define (copy-to-tree tree result-tree)
+    (if (null? tree)
+        result-tree
+        (copy-to-tree (left-branch tree)
+                      (adjoin-set-tree (entry tree)
+                                       (copy-to-tree
+                                        (right-branch tree)
+                                        result-tree)))))
+  (copy-to-tree set1 set2))
+
+(define (intersection-set-tree-wrong1 set1 set2)
+  (define (copy-to-tree tree result-tree)
+    (if (null? tree)
+        result-tree
+        (let ((adjoin-or-not
+               (lambda (rest)
+                 (if (element-of-set?-tree (entry tree)
+                                           set2)
+                     (adjoin-set-tree (entry tree)
+                                      rest)
+                     rest))))
+          (copy-to-tree (left-branch tree)
+                        (adjoin-or-not
+                         (copy-to-tree
+                          (right-branch tree)
+                          result-tree))))))
+    (copy-to-tree set1 '()))
+#+END_SRC
+
+#+BEGIN_SRC scheme -n :eval no-export :results output
+<<sets-as-trees>>
+<<echo>>
+(load "mattcheck2.scm")
+(let ((set1 (list->tree '(1 3 5 7 9 11)))
+;; (5 (1 () (3 () ())) (9 (7 () ()) (11 () ())))
+      (set2 (list->tree '(2 4 6 7 8 11)))
+;; (6 (2 () (4 () ())) (8 (7 () ()) (11 () ())))
+      (union (list->tree '(1 2 3 4 5 6 7 8 9 11)))
+;; (5 (2 (1 () ()) (3 () (4 () ()))) (8 (6 () (7 () ())) (9 () (11 () ()))))
+      (union-unbal '(6 (2 (1 () ()) (4 (3 () ()) (5 () ()))) (8 (7 () ()) (11 (9 () ()) ()))))
+      (int-unbal '(11 (7 () ()) ()))
+      (int (list->tree '(7 11))))
+;; (7 () (11 () ()))
+  (mattcheck "element-of-set?-tree true"
+             (element-of-set?-tree 1 set1)
+             #t)
+  (mattcheck "element-of-set?-tree true"
+             (element-of-set?-tree 7 set1)
+             #t)
+  (mattcheck "element-of-set?-tree false"
+             (element-of-set?-tree 2 set1)
+             #f)
+  (mattcheck "union-set-tree-wrong2"
+             (union-set-tree-wrong2 set1 set2)
+             union-unbal)
+  (mattcheck "intersection-set-tree-wrong1"
+             (intersection-set-tree-wrong1 set1 set2)
+             int-unbal)
+  (echo (tree->list-debug set1)))
+#+END_SRC
+
+#+RESULTS[fbef205489d14bb8a8e7dfef03cd0bc5bead6020]:
+#+begin_EXAMPLE
+<unknown-location>: warning: possibly unbound variable `mattcheck'
+SUCCEED at element-of-set?-tree true
+SUCCEED at element-of-set?-tree true
+SUCCEED at element-of-set?-tree false
+SUCCEED at union-set-tree-wrong2
+SUCCEED at intersection-set-tree-wrong1
+>> entering tree at 5 results () 
+we'll cons 5 
+>> entering tree at 9 results () 
+we'll cons 9 
+>> entering tree at 11 results () 
+we'll cons 11 
+  cons'd (11) 
+<< leaving tree at 11 results () 
+  cons'd (9 11) 
+>> entering tree at 7 results (9 11) 
+we'll cons 7 
+  cons'd (7 9 11) 
+<< leaving tree at 7 results (9 11) 
+<< leaving tree at 9 results () 
+  cons'd (5 7 9 11) 
+>> entering tree at 1 results (5 7 9 11) 
+we'll cons 1 
+>> entering tree at 3 results (5 7 9 11) 
+we'll cons 3 
+  cons'd (3 5 7 9 11) 
+<< leaving tree at 3 results (5 7 9 11) 
+  cons'd (1 3 5 7 9 11) 
+<< leaving tree at 1 results (5 7 9 11) 
+<< leaving tree at 5 results () 
+(1 3 5 7 9 11) 
+#+end_EXAMPLE
