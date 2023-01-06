@@ -12592,3 +12592,67 @@ plot data using 2:xticlabels(1) with linespoints, \
 
 Not really enough datapoints, but you can at least see that the ~l2t~ variants
 are faster.
+
+** Exercise 2.66: binary tree ~lookup~
+
+*** Question
+
+Implement the src_scheme{lookup} procedure for the case where the set of records
+is structured as a binary tree, ordered by the numerical values of the keys.
+
+*** Answer
+
+First let's define what these records look like.
+
+#+NAME: make-record
+#+BEGIN_SRC scheme -n :eval no-export :results silent
+(define (make-record key value)
+  (cons key value))
+(define (key record)
+  (car record))
+(define (value record)
+  (cdr record))
+#+END_SRC
+
+#+NAME: lookup-tree
+#+BEGIN_SRC scheme -n :eval no-export :results silent
+<<make-tree>>
+<<make-record>>
+(define (lookup given-key tree-of-records)
+  (cond ((null? tree-of-records) #f)
+        ((= given-key
+            (key (entry tree-of-records)))
+         (entry tree-of-records))
+        ((< given-key
+            (key (entry tree-of-records)))
+         (lookup
+          given-key 
+          (left-branch tree-of-records)))
+        ((> given-key
+            (key (entry tree-of-records)))
+         (lookup
+          given-key 
+          (right-branch tree-of-records)))))
+#+END_SRC
+
+#+BEGIN_SRC scheme -n :eval no-export :results output
+<<lookup-tree>>
+<<list-to-tree>>
+<<echo>>
+(load "mattcheck2.scm")
+(let ((set1 (list->tree
+             (list (make-record 1 'a)
+                   (make-record 3 'b)
+                   (make-record 5 'c)
+                   (make-record 7 'd)
+                   (make-record 9 'e)
+                   (make-record 11 'f)))))
+  (mattcheck "lookup retrieves correct record"
+             (lookup 9 set1)
+             (make-record 9 'e)))
+#+END_SRC
+
+#+RESULTS[cf752c53cb3f389968afc12d5da222d0655272e5]:
+#+begin_EXAMPLE
+SUCCEED at lookup retrieves correct record
+#+end_EXAMPLE
