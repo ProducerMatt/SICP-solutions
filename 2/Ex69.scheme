@@ -1,0 +1,165 @@
+;; [[file:../Answers.org::gen-huff-trees-test][gen-huff-trees-test]]
+;; [[[[file:~/SICP-group/Answers.org::huffman-trees-txt][huffman-trees-txt]]][huffman-trees-txt]]
+;; huffman-trees-txt
+(define (make-leaf symbol weight)
+  (list 'leaf
+        symbol
+        weight))
+(define (leaf? object)
+  (eq? (car object)
+       'leaf))
+(define (symbol-leaf x)
+  (cadr x))
+(define (weight-leaf x)
+  (caddr x))
+
+(define (make-code-tree left right)
+  (list left
+        right
+        (append (symbols left) (symbols right))
+        (+ (weight left) (weight right))))
+
+(define (left-branch  tree)
+  (car tree))
+(define (right-branch tree)
+  (cadr tree))
+(define (symbols tree)
+  (if (leaf? tree)
+      (list (symbol-leaf tree))
+      (caddr tree)))
+(define (weight tree)
+  (if (leaf? tree)
+      (weight-leaf tree)
+      (cadddr tree)))
+(define (decode bits tree)
+  (define (decode-1 bits current-branch)
+    (if (null? bits)
+        '()
+        (let ((next-branch
+               (choose-branch (car bits) current-branch)))
+          (if (leaf? next-branch)
+              (cons (symbol-leaf next-branch)
+                    (decode-1 (cdr bits) tree))
+              (decode-1 (cdr bits) next-branch)))))
+  (decode-1 bits tree))
+(define (choose-branch bit branch)
+  (cond ((= bit 0) (left-branch branch))
+        ((= bit 1) (right-branch branch))
+        (else (error "bad bit: CHOOSE-BRANCH" bit))))
+(define (adjoin-set x set)
+  (cond ((null? set) (list x))
+        ((< (weight x) (weight (car set))) (cons x set))
+        (else (cons (car set)
+                    (adjoin-set x (cdr set))))))
+(define (make-leaf-set pairs)
+  (if (null? pairs)
+      '()
+      (let ((pair (car pairs)))
+        (adjoin-set (make-leaf (car pair)
+                               (cadr pair))
+                    (make-leaf-set (cdr pairs))))))
+;; huffman-trees-txt ends here
+;; [[[[file:~/SICP-group/Answers.org::encode-txt][encode-txt]]][encode-txt]]
+;; encode-txt
+(define (encode message tree)
+  (if (null? message)
+      '()
+      (append (encode-symbol (car message) tree)
+              (encode (cdr message) tree))))
+;; encode-txt ends here
+;; [[[[file:~/SICP-group/Answers.org::encode-symbol][encode-symbol]]][encode-symbol]]
+;; encode-symbol
+(define element-of-set? member)
+(define (encode-symbol symbol tree)
+  (define (rec t)
+    (cond ((and (leaf? t)
+                (eq? (symbol-leaf t)
+                     symbol))
+           '())
+          ((element-of-set? symbol
+                            (symbols (left-branch t)))
+           (cons 0
+                 (rec (left-branch t))))
+          ((element-of-set? symbol
+                            (symbols (right-branch t)))
+           (cons 1
+                 (rec (right-branch t))))
+          (else (error "encode-symbol: logic error"))))
+  (if (element-of-set? symbol (symbols tree))
+      (rec tree)
+      (error "encode-symbol: symbol not in tree")))
+;; encode-symbol ends here
+;; [[[[file:~/SICP-group/Answers.org::generate-huffman-tree][generate-huffman-tree]]][generate-huffman-tree]]
+;; generate-huffman-tree
+(use-srfis '(1))
+(define element-of-set? member)
+(define (generate-huffman-tree pairs)
+  (successive-merge (make-leaf-set pairs)))
+
+(define (successivemerge-iter delayed leaves)
+  (let ((dl (length delayed))
+        (ll (length leaves)))
+    (cond ((= ll 0)
+           (successivemerge-iter '()
+                                 delayed))
+          ((= dl 0)
+           (if (= ll 1)
+               (car leaves)
+               (successivemerge-iter (cons (car leaves) '())
+                                     (cdr leaves))))
+          ((and (= ll 1)
+                (= dl 1))
+           (make-code-tree (car delayed)
+                           (car leaves)))
+          ((<= (weight (car delayed))
+               (weight (car leaves)))
+           (successivemerge-iter (cdr delayed)
+                                 (cons (make-code-tree (car delayed)
+                                                       (car leaves))
+                                       (cdr leaves))))
+          ((> (weight (car delayed))
+              (weight (car leaves)))
+           (successivemerge-iter (cons (car leaves)
+                                       delayed)
+                                 (cdr leaves))))))
+
+  (define (successive-merge leaves)
+    (successivemerge-iter (cons (car leaves) '())
+                          (cdr leaves)))
+;; generate-huffman-tree ends here
+;; [[[[file:~/SICP-group/Answers.org::echo][echo]]][echo]]
+(use-modules (ice-9 format))
+(define (stringit . args)
+  (string-append
+   (apply string-append
+    (map (lambda(x)
+          (format #f "~:a " x))
+        args))))
+(define (echo . args)
+  (format #t "~&~:a~%" (apply stringit args)))
+;; echo ends here
+(load "mattcheck2.scm")
+
+(let ((pairs
+       (make-leaf-set '((A 8)(B 3)(C 1)(D 1)
+                        (E 1)(F 1)(G 1)(H 1))))
+      (answer
+       (make-code-tree (make-leaf 'A 8)
+                       (make-code-tree
+                        (make-code-tree
+                         (make-leaf 'B 3)
+                         (make-code-tree
+                          (make-leaf 'C 1)
+                          (make-leaf 'D 1)))
+                        (make-code-tree
+                         (make-code-tree
+                          (make-leaf 'E 1)
+                          (make-leaf 'F 1))
+                         (make-code-tree
+                          (make-leaf 'G 1)
+                          (make-leaf 'H 1)))))))
+  (mattcheck "successive-merge"
+             (successive-merge pairs)
+             answer)
+  (echo (successive-merge pairs)))
+;; gen-huff-trees-test ends here

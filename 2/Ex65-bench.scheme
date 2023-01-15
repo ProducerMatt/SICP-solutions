@@ -14,13 +14,13 @@
       (cons x set)))
 
 (define (intersection-set set1 set2)
-  (cond ((or (null? set1) (null? set2))
+  (cond ((or (null? set1) (null? set2)) 
          '())
         ((element-of-set? (car set1) set2)
          (cons (car set1)
-               (intersection-set (cdr set1)
+               (intersection-set (cdr set1) 
                                  set2)))
-        (else (intersection-set (cdr set1)
+        (else (intersection-set (cdr set1) 
                                 set2))))
 ;; sets-txt ends here
 ;; [[[[file:~/SICP-group/Answers.org::sets-as-trees][sets-as-trees]]][sets-as-trees]]
@@ -95,17 +95,17 @@
         ((= x (entry set)) #t)
         ((< x (entry set))
          (element-of-set?-tree
-          x
+          x 
           (left-branch set)))
         ((> x (entry set))
          (element-of-set?-tree
-          x
+          x 
           (right-branch set)))))
 (define (adjoin-set-tree x set)
   (cond ((null? set) (make-tree x '() '()))
         ((= x (entry set)) set)
         ((< x (entry set))
-         (make-tree
+         (make-tree 
           (entry set)
           (adjoin-set-tree x (left-branch set))
           (right-branch set)))
@@ -211,9 +211,9 @@
 (define (enumerate-interval low high)
   (if (> low high)
       '()
-      (cons low
-            (enumerate-interval
-             (+ low 1)
+      (cons low 
+            (enumerate-interval 
+             (+ low 1) 
              high))))
 ;; enumerate-interval ends here
 (define tree->list tree->list-2)

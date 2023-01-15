@@ -12657,7 +12657,7 @@ First let's define what these records look like.
 SUCCEED at lookup retrieves correct record
 #+end_EXAMPLE
 
-** Exercise 2.67
+** Exercise 2.67: decoding Huffman tree messages
 
 *** Text definitions
 
@@ -12761,7 +12761,7 @@ procedure to decode the message, and give the result.
 (who what Idontknow why) 
 #+end_EXAMPLE
 
-** Exercise 2.68
+** Exercise 2.68: ~encode-symbol~
 
 *** Question
 
@@ -12790,7 +12790,7 @@ original sample message.
 #+NAME: encode-symbol
 #+BEGIN_SRC scheme -n :eval no-export :results silent
 ;; encode-symbol
-(define element-of-set? member) ; builtins are faster :)
+(define element-of-set? member)
 (define (encode-symbol symbol tree)
   (define (rec t)
     (cond ((and (leaf? t)
@@ -12812,7 +12812,7 @@ original sample message.
 #+END_SRC
 
 #+NAME: encoding-test
-#+BEGIN_SRC scheme -n :eval no-export :results output :tangle 2/Ex68.scheme
+#+BEGIN_SRC scheme -n :eval no-export :results output
 <<huffman-trees-txt>>
 <<encode-txt>>
 <<encode-symbol>>
@@ -12850,3 +12850,186 @@ SUCCEED at sample encoded message
 SUCCEED at who's on first encoded message
 #+end_EXAMPLE
 
+** Exercise 2.69: Generating Huffman trees
+
+*** Question
+
+The following procedure takes as its argument a list of symbol-frequency pairs
+(where no symbol appears in more than one pair) and generates a Huffman encoding
+tree according to the Huffman algorithm.
+
+#+BEGIN_SRC scheme
+(define (generate-huffman-tree pairs)
+  (successive-merge (make-leaf-set pairs)))
+#+END_SRC
+
+src_scheme{make-leaf-set} is the procedure given above that transforms the list
+of pairs into an ordered set of leaves. src_scheme{successive-merge} is the
+procedure you must write, using src_scheme{make-code-tree} to successively merge
+the smallest-weight elements of the set until there is only one element left,
+which is the desired Huffman tree. (This procedure is slightly tricky, but not
+really complicated. If you find yourself designing a complex procedure, then you
+are almost certainly doing something wrong. You can take significant advantage
+of the fact that we are using an ordered set representation.)
+
+*** Answer
+
+This one took a while. The whole in-place-reorganization of the list seems
+tricky, since adding branches together makes a new branch which is higher value
+than the later entries. In a C language I'd be solving the problem by "moving" a
+play-head forward and back, but here I'll have to coerce the evaluator into
+doing it.
+
+#+NAME: generate-huffman-tree
+#+BEGIN_SRC scheme -n :eval no-export :results silent
+;; generate-huffman-tree
+(use-srfis '(1))
+(define element-of-set? member)
+(define (generate-huffman-tree pairs)
+  (successive-merge (make-leaf-set pairs)))
+
+(define (successivemerge-iter delayed leaves)
+  (let ((dl (length delayed))
+        (ll (length leaves)))
+    (cond ((= ll 0)
+           (successivemerge-iter '()
+                                 delayed))
+          ((= dl 0)
+           (if (= ll 1)
+               (car leaves)
+               (successivemerge-iter (cons (car leaves) '())
+                                     (cdr leaves))))
+          ((and (= ll 1)
+                (= dl 1))
+           (make-code-tree (car delayed)
+                           (car leaves)))
+          ((<= (weight (car delayed))
+               (weight (car leaves)))
+           (successivemerge-iter (cdr delayed)
+                                 (cons (make-code-tree (car delayed)
+                                                       (car leaves))
+                                       (cdr leaves))))
+          ((> (weight (car delayed))
+              (weight (car leaves)))
+           (successivemerge-iter (cons (car leaves)
+                                       delayed)
+                                 (cdr leaves))))))
+
+  (define (successive-merge leaves)
+    (successivemerge-iter (cons (car leaves) '())
+                          (cdr leaves)))
+#+END_SRC
+
+#+NAME: gen-huff-trees-test
+#+BEGIN_SRC scheme -n :eval no-export :results output  :tangle 2/Ex69.scheme
+<<huffman-trees-txt>>
+<<encode-txt>>
+<<encode-symbol>>
+<<generate-huffman-tree>>
+<<echo>>
+(load "mattcheck2.scm")
+
+(let ((pairs
+       (make-leaf-set '((A 8)(B 3)(C 1)(D 1)
+                        (E 1)(F 1)(G 1)(H 1))))
+      (answer
+       (make-code-tree (make-leaf 'A 8)
+                       (make-code-tree
+                        (make-code-tree
+                         (make-leaf 'B 3)
+                         (make-code-tree
+                          (make-leaf 'C 1)
+                          (make-leaf 'D 1)))
+                        (make-code-tree
+                         (make-code-tree
+                          (make-leaf 'E 1)
+                          (make-leaf 'F 1))
+                         (make-code-tree
+                          (make-leaf 'G 1)
+                          (make-leaf 'H 1)))))))
+  (mattcheck "successive-merge"
+             (successive-merge pairs)
+             answer)
+  (echo (successive-merge pairs)))
+#+END_SRC
+
+#+RESULTS[55428e0035118004f53c2be22e9fcf2432b59663]: gen-huff-trees-test
+#+begin_EXAMPLE
+<unknown-location>: warning: possibly unbound variable `mattcheck'
+FAIL at successive-merge
+expected: ((leaf A 8) (((leaf B 3) ((leaf C 1) (leaf D 1) (C D) 2) (B C D) 5) (# …) …) …)
+returned: (((((leaf H 1) (leaf G 1) (H G) 2) ((leaf F 1) (leaf E 1) (F E) 2) (…) …) …) …)
+(((((leaf H 1) (leaf G 1) (H G) 2) ((leaf F 1) (leaf E 1) (F E) 2) (H G F E) 4)
+  (((leaf D 1) (leaf C 1) (D C) 2) (leaf B 3) (D C B) 5) (H G F E D C B) 9)
+    (leaf A 8) (H G F E D C B A) 17) 
+#+end_EXAMPLE
+
+And the tree is /backwards/. But it is correct. \tiny{Sigh.}
+
+Time to be embarrassed by the internet's solution.
+
+#+NAME: s-merge-small
+#+BEGIN_SRC scheme -n :eval no-export :results silent
+;; see 2.67
+(define (adjoin-set x set)
+  (cond ((null? set) (list x))
+        ((< (weight x) (weight (car set)))
+         (cons x set))
+        (else (cons (car set)
+                    (adjoin-set x (cdr set))))))
+;; for my own edification
+(define (adjoin-set-iter x set)
+  (define (iter less more)
+    (cond ((null? more)
+           (reverse (cons x less)))
+          ((< (weight x) (weight (car more)))
+           (append (reverse (cons x less))
+                   more))
+          (else (adjoin-set-iter (cons (car more) less)
+                                 (cdr more)))))
+
+  (iter '() set))
+
+;; https://codereview.stackexchange.com/a/117980
+(define (successive-merge-small leaves)
+  (if (null? (cdr leaves))
+      (car leaves)
+      (successive-merge-small
+       (adjoin-set
+        (make-code-tree (car leaves)
+                        (cadr leaves))
+        (cddr leaves)))))
+#+END_SRC
+
+Comparing my above code with the code for src_scheme{adjoin-set}, mine is
+definitely unnecessarily complicated. How does the performance stack up?
+
+#+NAME: gen-huff-trees-bench
+#+BEGIN_SRC scheme -n :noeval :results output :exports results :tangle 2/Ex69-bench.scheme
+<<huffman-trees-txt>>
+<<encode-txt>>
+<<encode-symbol>>
+<<generate-huffman-tree>>
+<<s-merge-small>>
+<<echo>>
+(load "../mattbench.scm")
+
+(let ((pairs
+       (make-leaf-set '((A 8)(B 3)(C 1)(D 1)
+                        (E 1)(F 1)(G 1)(H 1))))
+      (reps 10000000))
+  (echo "Mine:"
+        (cadr (mattbench2 (lambda()
+                            (successive-merge pairs))
+                          reps)))
+  (echo "Theirs:"
+        (cadr (mattbench2 (lambda()
+                            (successive-merge-small pairs))
+                          reps))))
+#+END_SRC
+
+#+RESULTS[2160310f6b0a0dc9fe69528e4e2f901fdb22a270]: gen-huff-trees-bench
+#+begin_EXAMPLE
+Mine: 4453.0773347
+Theirs: 4554.0141235
+#+end_EXAMPLE
