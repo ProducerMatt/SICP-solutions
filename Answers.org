@@ -13111,12 +13111,14 @@ eight-symbol alphabet?
 <<echo>>
 (load "mattcheck2.scm")
 
+(echo "Length of unencoded message is" (length hippie-plaintext) "words.")
 (echo "Length of encoded message is" (length hippie-encoded) "bits")
 (echo "Unencoded message (newlines added):" (decode hippie-encoded hippie-tree))
 #+END_SRC
 
-#+RESULTS[ac4126bfaa3d17535783175ccd97f8fd66dde38b]: hippie-encoding
+#+RESULTS[2f2a669ae0d73d34081c4841b143434dedf560e1]: hippie-encoding
 #+begin_EXAMPLE
+Length of unencoded message is 36 words. 
 Length of encoded message is 84 bits 
 Unencoded message (newlines added):
 (GET A JOB
@@ -13124,9 +13126,11 @@ SHA NA NA NA NA NA NA NA NA
 GET A JOB SHA NA NA NA NA NA NA NA NA
 WAH YIP YIP YIP YIP
 YIP YIP YIP YIP YIP
-SHA BOOM)
+SHA BOOM) 
 #+end_EXAMPLE
 
+A fixed-length alphabet would take 3 bits per word, or 108 bits. So the VLE is
+77% the size of anything else.
 
 #+NAME: hippie-encoded-message
 #+BEGIN_SRC scheme -n :eval no-export :results value table :exports output
@@ -13184,3 +13188,18 @@ plot data matrix with image
 :results:
 [[file:2/fig/2-70.png]]
 :end:
+
+** Exercise 2.71
+
+*** Questions
+
+Suppose we have a Huffman tree for an alphabet of \(n\) symbols, and that the
+relative frequencies of the symbols are \(1, 2, 4, \dots, 2^{n-1}\). Sketch the
+tree for \(n=5\); for \(n=10\). In such a tree (for general \(n\)) how many bits
+are required to encode the most frequent symbol? The least frequent symbol?
+
+*** Answers
+
+In this type of tree, the most frequent symbol takes 1 bit. The \(n\)th symbol
+takes \(n\) bits. If it's the least frequent symbol and \(n\) is even, it takes
+\(n-1\) bits.
