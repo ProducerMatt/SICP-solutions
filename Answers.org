@@ -13112,11 +13112,19 @@ eight-symbol alphabet?
 (load "mattcheck2.scm")
 
 (echo "Length of encoded message is" (length hippie-encoded) "bits")
+(echo "Unencoded message (newlines added):" (decode hippie-encoded hippie-tree))
 #+END_SRC
 
-#+RESULTS[01eb2e7e44657268b21fede149fbc55420387467]: hippie-encoding
+#+RESULTS[ac4126bfaa3d17535783175ccd97f8fd66dde38b]: hippie-encoding
 #+begin_EXAMPLE
 Length of encoded message is 84 bits 
+Unencoded message (newlines added):
+(GET A JOB
+SHA NA NA NA NA NA NA NA NA
+GET A JOB SHA NA NA NA NA NA NA NA NA
+WAH YIP YIP YIP YIP
+YIP YIP YIP YIP YIP
+SHA BOOM)
 #+end_EXAMPLE
 
 
@@ -13161,7 +13169,7 @@ Length of encoded message is 84 bits
 |---+---+---+---+---+---+---|
 
 
-#+begin_src gnuplot :var data=hippie-encoded-message :file 2/fig/2-69.png :exports results :rownames no :colnames no :hlines no :cache no :eval no-export
+#+begin_src gnuplot :var data=hippie-encoded-message :file 2/fig/2-70.png :exports results :rownames no :colnames no :hlines no :cache no :eval no-export
 reset
 set title '50s slander'
 set xtics (0, 1, 2, 3, 4, 5, 6)
@@ -13174,5 +13182,5 @@ plot data matrix with image
 
 #+RESULTS:
 :results:
-[[file:2/fig/2-69.png]]
+[[file:2/fig/2-70.png]]
 :end:
