@@ -12761,7 +12761,7 @@ procedure to decode the message, and give the result.
 (who what Idontknow why) 
 #+end_EXAMPLE
 
-** Exercise 2.68: ~encode-symbol~
+** Exercise 2.68: encoding Huffman tree messages
 
 *** Question
 
@@ -12964,7 +12964,7 @@ returned: (((((leaf H 1) (leaf G 1) (H G) 2) ((leaf F 1) (leaf E 1) (F E) 2) (�
     (leaf A 8) (H G F E D C B A) 17) 
 #+end_EXAMPLE
 
-And the tree is /backwards/. But it is correct. \tiny{Sigh.}
+And the tree is /backwards/. But it is correct. \begin{tiny}Sigh.\end{tiny}
 
 Time to be embarrassed by the internet's solution.
 
@@ -13033,3 +13033,146 @@ definitely unnecessarily complicated. How does the performance stack up?
 Mine: 4453.0773347
 Theirs: 4554.0141235
 #+end_EXAMPLE
+
+So for all that unnecessary complexity it's still about the same.
+
+The lesson I keep failing to learn is remembering past work (i.e.
+src_scheme{adjoin-set}), since this book loves to integrate past exercises.
+
+** Exercise 2.70
+
+*** Question
+
+The following eight-symbol alphabet with associated relative frequencies was
+designed to efficiently encode the lyrics of 1950s rock songs. (Note that the
+“symbols” of an “alphabet” need not be individual letters.)
+
+
+| A    | 2 | NA  | 16 |
+| BOOM | 1 | SHA |  3 |
+| GET  | 2 | YIP |  9 |
+| JOB  | 2 | WAH |  1 |
+
+Use src_scheme{generate-huffman-tree} to generate a corresponding Huffman tree,
+and use src_scheme{encode} to encode the following message:
+
+#+begin_example
+Get a job
+Sha na na na na na na na na
+
+Get a job
+Sha na na na na na na na na
+
+Wah yip yip yip yip 
+yip yip yip yip yip
+Sha boom
+#+end_example
+
+How many bits are required for the encoding? What is the smallest number of bits
+that would be needed to encode this song if we used a fixed-length code for the
+eight-symbol alphabet?
+
+*** Answer
+
+#+NAME: hippie-trees
+#+BEGIN_SRC scheme -n :eval no-export :results silent
+(define hippie-set
+  '((NA 16)(YIP 9)(SHA 3)(A 2)
+    (GET 2)(JOB 2)(BOOM 1)(WAH 1)))
+(define hippie-tree
+  (generate-huffman-tree hippie-set))
+(define hippie-plaintext
+  '(GET A JOB
+    SHA NA NA NA NA NA NA NA NA
+    GET A JOB
+    SHA NA NA NA NA NA NA NA NA
+    WAH YIP YIP YIP YIP
+    YIP YIP YIP YIP YIP
+    SHA BOOM))
+(define hippie-encoded
+  (encode hippie-plaintext
+          hippie-tree))
+#+END_SRC
+#+NAME: hippie-encoding
+#+BEGIN_SRC scheme -n :eval no-export :results output
+<<huffman-trees-txt>>
+<<encode-txt>>
+<<encode-symbol>>
+<<generate-huffman-tree>>
+(define (successive-merge leaves)
+  (if (null? (cdr leaves))
+      (car leaves)
+      (successive-merge
+       (adjoin-set
+        (make-code-tree (car leaves)
+                        (cadr leaves))
+        (cddr leaves)))))
+<<hippie-trees>>
+<<echo>>
+(load "mattcheck2.scm")
+
+(echo "Length of encoded message is" (length hippie-encoded) "bits")
+#+END_SRC
+
+#+RESULTS[01eb2e7e44657268b21fede149fbc55420387467]: hippie-encoding
+#+begin_EXAMPLE
+Length of encoded message is 84 bits 
+#+end_EXAMPLE
+
+
+#+NAME: hippie-encoded-message
+#+BEGIN_SRC scheme -n :eval no-export :results value table :exports output
+<<huffman-trees-txt>>
+<<encode-txt>>
+<<encode-symbol>>
+<<generate-huffman-tree>>
+(define (successive-merge leaves)
+  (if (null? (cdr leaves))
+      (car leaves)
+      (successive-merge
+       (adjoin-set
+        (make-code-tree (car leaves)
+                        (cadr leaves))
+        (cddr leaves)))))
+<<hippie-trees>>
+(define (split-list-every-x list x)
+  (define (rec ll)
+    (if (< (length ll) x)
+        (cons ll '())
+        (cons (list-head ll x)
+              (rec (list-tail ll x)))))
+  (rec list))
+(split-list-every-x hippie-encoded 7)
+#+END_SRC
+
+#+RESULTS[5869ee5ed800f0edeb0c20e905c87712a2b63252]: hippie-encoded-message
+| 1 | 1 | 1 | 1 | 1 | 1 | 1 |
+| 0 | 0 | 1 | 1 | 1 | 1 | 0 |
+| 1 | 1 | 1 | 0 | 0 | 0 | 0 |
+| 0 | 0 | 0 | 0 | 0 | 1 | 1 |
+| 1 | 1 | 1 | 1 | 1 | 0 | 0 |
+| 1 | 1 | 1 | 1 | 0 | 1 | 1 |
+| 1 | 0 | 0 | 0 | 0 | 0 | 0 |
+| 0 | 0 | 0 | 1 | 1 | 0 | 1 |
+| 0 | 1 | 0 | 1 | 0 | 1 | 0 |
+| 1 | 0 | 1 | 0 | 1 | 0 | 1 |
+| 0 | 1 | 0 | 1 | 0 | 1 | 1 |
+| 1 | 0 | 1 | 1 | 0 | 1 | 1 |
+|---+---+---+---+---+---+---|
+
+
+#+begin_src gnuplot :var data=hippie-encoded-message :file 2/fig/2-69.png :exports results :rownames no :colnames no :hlines no :cache no :eval no-export
+reset
+set title '50s slander'
+set xtics (0, 1, 2, 3, 4, 5, 6)
+set ytics (0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11)
+unset colorbox
+set palette defined (0 "white", 1 "black")
+
+plot data matrix with image
+#+END_SRC
+
+#+RESULTS:
+:results:
+[[file:2/fig/2-69.png]]
+:end:
