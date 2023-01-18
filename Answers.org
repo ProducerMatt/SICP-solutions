@@ -2057,8 +2057,10 @@ possible to use calculus to remove the \(\sum\) from the equation. At this point
 I knew I was stuck and decided to look up a guide.
 
 After seeing a few solutions that I found somewhat confusing, I landed on [[https://codology.net/post/sicp-solution-exercise-1-14/][this
-awesome article from Codology.net]]. They show how you can remove the summation,
-and proposed this equation for count-change with 5 denominations:
+awesome article from Codology.net]][fn::
+https://codology.net/post/sicp-solution-exercise-1-14/]. They show how you can
+remove the summation, and proposed this equation for count-change with 5
+denominations:
 
 \[
 T(n,5)=\frac n{50}+1+\sum_{i=0}^{n/50}T(n-50i,1)
@@ -9284,7 +9286,7 @@ SUCCEED at matrix-*-matrix
 I struggled a lot with what order things should be processed and applied in.
 Some of that came from never having done matrix multiplication before now. I
 would probably still not understand it if I hadn't found [[https://youtu.be/MfN1lqArwAg][Herb Gross' lecture
-regarding matrix operations]].
+regarding matrix operations]][fn:: https://youtu.be/MfN1lqArwAg].
 
 The other issue is nested map operations. I find it easy to read Python-ish
 code like this:
@@ -9838,7 +9840,7 @@ of:
     have all the properties of Scheme procedures.   
 
 I'm going to have to get a little messy in order to make the picture language a
-reality. First I need a support library called [[https://git.elephly.net/gitweb.cgi?p=software/guile-picture-language.git;a=blob;f=pict.scm;h=54f0ce09f4ac33c3ecc3340f038d4c9da5f4a443;hb=HEAD][guile-picture-language]]. I
+reality. First I need a support library called [[https://git.elephly.net/gitweb.cgi?p=software/guile-picture-language.git;a=blob;f=pict.scm;h=54f0ce09f4ac33c3ecc3340f038d4c9da5f4a443;hb=HEAD][guile-picture-language]][fn:: https://git.elephly.net/gitweb.cgi?p=software/guile-picture-language.git;a=blob;f=pict.scm;h=54f0ce09f4ac33c3ecc3340f038d4c9da5f4a443;hb=HEAD] I
 installed Guix on my system and ran src_bash{guix shell guile-picture-language
 guile}. Now the src_scheme{pict} module is availale to me.
 
@@ -10886,7 +10888,8 @@ each chunk separately.
 I expected the operators would change the /image orientation/, not the
 /structure/. Maybe this is because my src_scheme{draw-lines} makes recursively
 nested stacks of painter objects, rather than imperative calls to drawing
-procedures? Looking on the internet I see [[http://pipecode.blogspot.com/2013/04/sicp-exercise-252.html][someone else having the same results.]]
+procedures? Looking on the internet I see [[http://pipecode.blogspot.com/2013/04/sicp-exercise-252.html][someone else having the same
+results.]][fn:: http://pipecode.blogspot.com/2013/04/sicp-exercise-252.html]
 
 ** 2.3.1: Quotation
 
@@ -13039,7 +13042,7 @@ So for all that unnecessary complexity it's still about the same.
 The lesson I keep failing to learn is remembering past work (i.e.
 src_scheme{adjoin-set}), since this book loves to integrate past exercises.
 
-** Exercise 2.70
+** Exercise 2.70: encoding 1950s rock songs
 
 *** Question
 
@@ -13203,3 +13206,49 @@ are required to encode the most frequent symbol? The least frequent symbol?
 In this type of tree, the most frequent symbol takes 1 bit. The \(n\)th symbol
 takes \(n\) bits. If it's the least frequent symbol and \(n\) is even, it takes
 \(n-1\) bits.
+
+** Exercise 2.72: order of growth of ~encode~
+
+Let's take a look at src_scheme{encode-symbol}. 
+
+#+BEGIN_SRC scheme -n :noeval
+;; encode-symbol
+(define (encode-symbol symbol tree)
+  (define (rec t) ;; rec is O(log n)
+    (cond ((and (leaf? t) 
+                (eq? (symbol-leaf t)
+                     symbol)) ; O(1)
+           '())
+          ((element-of-set? symbol ; O(symbols of left-branch)
+                            (symbols (left-branch t)))
+           (cons 0 ;; O(1)
+                 (rec (left-branch t)))) ;; rec is O(log symbols)
+          ((element-of-set? symbol ; O(symbols of right-branch)
+                            (symbols (right-branch t)))
+           (cons 1 ;; O(1)
+                 (rec (right-branch t)))) ;; rec is O(log symbols)
+          (else (error "encode-symbol: logic error"))))
+  (if (element-of-set? symbol (symbols tree)) ;; O(symbols)
+      (rec tree) ;; rec is O(log n)
+      (error "encode-symbol: symbol not in tree")))
+#+END_SRC
+
+I'm not expecting to get a correct answer,but here's what I'm able to derive.
+src_scheme{encode-symbol} uses binary search to find the symbol, which is
+\(\Theta(\log n\). However, at each step it needs to perform a \(\Theta(n)\)
+search of the left branch. If the symbol isn't found, it will execute a
+\(\Theta(n)\) search of the right branch. So these searches have a varying cost
+depending on if the tree is biased to the left or the right. So in the worst
+case of being right-biased, the searches will incur an order of \(\Theta(n2)\),
+while doing the overall binary search of \(\Theta(\log n\). So I think this
+simplifies to \(\Theta(n \log n)\). Time to check my answer...
+
+While I see a couple answers[fn:1] agreeing with mine, I see more saying that
+~encode-symbol~ is \(\Theta(1)\) for the most frequent symbol, and \(\Theta(n)\)
+for the average case. Some also say[fn:2] that in the worst case (the least
+frequent symbol), you may have to visit every non-leaf node for a complexity of
+\(\Theta(n^2)\).
+
+[fn:1] see the answer of =aos= here:
+http://community.schemewiki.org/?sicp-ex-2.72
+[fn:2] https://mk12.github.io/sicp/exercise/2/3.html#ex2.72 and others.
