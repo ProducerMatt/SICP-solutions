@@ -13235,13 +13235,13 @@ Let's take a look at src_scheme{encode-symbol}.
 
 I'm not expecting to get a correct answer,but here's what I'm able to derive.
 src_scheme{encode-symbol} uses binary search to find the symbol, which is
-\(\Theta(\log n\). However, at each step it needs to perform a \(\Theta(n)\)
+\(\Theta(\log{n})\). However, at each step it needs to perform a \(\Theta(n)\)
 search of the left branch. If the symbol isn't found, it will execute a
 \(\Theta(n)\) search of the right branch. So these searches have a varying cost
 depending on if the tree is biased to the left or the right. So in the worst
 case of being right-biased, the searches will incur an order of \(\Theta(n2)\),
-while doing the overall binary search of \(\Theta(\log n\). So I think this
-simplifies to \(\Theta(n \log n)\). Time to check my answer...
+while doing the overall binary search of \(\Theta(\log{n})\). So I think this
+simplifies to \(\Theta(n \log{n})\). Time to check my answer...
 
 While I see a couple answers[fn:1] agreeing with mine, I see more saying that
 ~encode-symbol~ is \(\Theta(1)\) for the most frequent symbol, and \(\Theta(n)\)
