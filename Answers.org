@@ -13252,3 +13252,58 @@ frequent symbol), you may have to visit every non-leaf node for a complexity of
 [fn:1] see the answer of =aos= here:
 http://community.schemewiki.org/?sicp-ex-2.72
 [fn:2] https://mk12.github.io/sicp/exercise/2/3.html#ex2.72 and others.
+
+** 2.4: Multiple Representations for Abstract Data
+
+We have learned how to abstract "higher" and "lower" parts of a system. Now we
+will talk about having multiple simultaneous representations of data in the same
+system. This could be considered "side-by-side" abstraction. The authors tout
+the "*principle of least commitment*": abstracting a system so it can work with
+many possible representations of data without being rewritten.
+
+To allow programmers to add and remove representations at will without modifying
+the original code, the authors suggest using a table lookup system to keep track
+of representations and their related methods. For example:
+
+| Operations | Polar Type      | Rectangular Type      |
+|------------+-----------------+-----------------------|
+| real-part  | real-part-polar | real-part-rectangular |
+| imag-part  | imag-part-polar | imag-part-rectangular |
+| magnitude  | magnitude-polar | magnitude-rectangular |
+| angle      | angle-polar     | angle-rectangular     |
+
+The book introduces two methods, src_scheme{(put 'operation 'type lambda)} to
+add such a method to the table, and src_scheme{(get 'operation 'type)} to fetch
+the saved lambda. I'll use Guile's native [[https://www.gnu.org/software/guile/manual/html_node/Hash-Table-Reference.html][hash tables]][fn::
+https://www.gnu.org/software/guile/manual/html_node/Hash-Table-Reference.html]
+to implement this.
+
+#+NAME: op-table
+#+BEGIN_SRC scheme -n :eval no-export :results silent
+(define op-table (make-hash-table 4))
+
+(define (put operation type f)
+  (hash-set! op-table (cons operation type) f))
+(define (get operation type)
+  (hash-ref op-table (cons operation type)))
+#+END_SRC
+
+#+BEGIN_SRC scheme -n :eval no-export :results output
+;; basic test of lambda storage
+<<op-table>>
+<<echo>>
+(put 'A 'X (lambda()'AX))
+(put 'B 'Y (lambda()'BY))
+(put 'C 'Z (lambda()'CZ))
+
+(echo ((get 'A 'X)))
+(echo ((get 'B 'Y)))
+(echo ((get 'C 'Z)))
+#+END_SRC
+
+#+RESULTS[77d37a918083fe388b51b2a525406394de91941b]:
+#+begin_EXAMPLE
+AX 
+BY 
+CZ 
+#+end_EXAMPLE
