@@ -13332,7 +13332,7 @@ One method to distinguish these types of items is called *type tagging*. Take th
               CONTENTS" datum)))
 #+END_SRC
 
-** Exercise 2.72: Data-driven symbolic differentiator
+** Exercise 2.73: Data-driven symbolic differentiator
 
 [[*2.3.2: Example: Symbolic differentiator][2.3.2: Example: Symbolic differentiator]] described a program that performs
 symbolic differentiation:
@@ -13621,3 +13621,187 @@ What corresponding changes to the derivative system are required?
 *** Answer D
 
 Besides the change given in the example above, all the src_scheme{put} calls would need their arguments switched.
+
+** Exercise 2.74
+
+*** Questions ABC
+
+Insatiable Enterprises, Inc., is a highly decentralized conglomerate company
+consisting of a large number of independent divisions located all over the
+world. The company's computer facilities have just been interconnected by means
+of a clever network-interfacing scheme that makes the entire network appear to
+any user to be a single computer. Insatiable's president, in her first attempt
+to exploit the ability of the network to extract administrative information from
+division files, is dismayed to discover that, although all the division files
+have been implemented as data structures in Scheme, the particular data
+structure used varies from division to division. A meeting of division managers
+is hastily called to search for a strategy to integrate the files that will
+satisfy headquarters' needs while preserving the existing autonomy of the
+divisions.
+
+Show how such a strategy can be implemented with data-directed programming. As
+an example, suppose that each division's personnel records consist of a single
+file, which contains a set of records keyed on employees' names. The structure
+of the set varies from division to division. Furthermore, each employee's record
+is itself a set (structured differently from division to division) that contains
+information keyed under identifiers such as src_scheme{address} and
+src_scheme{salary}. In particular:
+
+1. Implement for headquarters a src_scheme{get-record} procedure that retrieves
+   a specified employee's record from a specified personnel file. The procedure
+   should be applicable to any division's file. Explain how the individual
+   divisions' files should be structured. In particular, what type information
+   must be supplied?
+
+2. Implement for headquarters a src_scheme{get-salary} procedure that returns
+   the salary information from a given employee's record from any division's
+   personnel file. How should the record be structured in order to make this
+   operation work?
+
+3. Implement for headquarters a src_scheme{find-employee-record} procedure. This
+   should search all the divisions' files for the record of a given employee and
+   return the record. Assume that this procedure takes as arguments an
+   employee's name and a list of all the divisions' files.
+
+*** Answers ABC
+
+Let's talk assumptions:
+- Assume every division has one file
+- Assume HQ wants a consistent schema returned
+
+#+NAME: insatiable
+#+BEGIN_SRC scheme -n :eval no-export :results silent
+<<make-tree>>
+<<make-record>>
+<<op-table>>
+(define (find x ll)
+  (define (iter ll) ;; aka SRFI-1 'find'
+    (cond ((null? ll)
+           #f)
+          ((equal? id (employee-id-east (car ll)))
+           (car ll))
+          (else (iter (cdr ll)))))
+  (iter ll))
+
+;; East: records as named cdr aliases
+(define (install-east-package)
+  (define (make-employee-east id salary)
+    (cons id (/ salary 1000))) ;; East keeps salary in thousands
+  (define (employee-id-east record)
+    (car record))
+  (define (employee-salary-east record)
+    (* (cdr record) 1000))
+  (define East-Employee-List
+    (list (make-employee-east 101 37000) ; bob
+          (make-employee-east 102 48000) ; linda
+          (make-employee-east 103 29000) ; john
+          ))
+  (define (find-employee-east id)
+    (find id East-Employee-List))
+  (put 'employee-record 'East
+       (lambda (id)
+         (let ((e (find-employee-east id)))
+           (if e
+               (list (list 'id id)
+                     (list (employee-salary-east e)))
+               #f))))
+  (put 'employee-salary 'East
+       (lambda(id) 
+         (employee-salary-east (find-employee-east id)))))
+
+;; records as lookup trees (Ex 2.66)
+(define (install-west-package)
+  (define (maketree . args)
+    (apply list->tree args))
+  (define (make-employee-west id name salary)
+    (make-record 'id
+                 (maketree (make-record 'name name)
+                           (make-record 'salary salary))))
+  (define West-Record-File
+    (maketree (make-employee-west 201 "James" 55000)
+              (make-employee-west 202 "Joy" 45000)
+              (make-employee-west 203 "Richard" 73000)))
+  (define (employee-west id)
+    (lookup id West-Record-File))
+  (define (employee-attrib-west attrib record)
+    (lookup attrib record))
+  (put 'employee-record 'West
+       (lambda(id)
+         (let ((e (employee-west id)))
+           (if e
+               (list (list 'id id)
+                     (list 'name (employee-attrib-west 'name e))
+                     (list 'salary (employee-attrib-west 'salary e)))
+               #f))))
+  (put 'employee-salary 'West
+       (lambda(id)
+         (employee-attrib-west 'salary
+                               (employee-west id)))))
+
+;; South: records as lambdas
+(define (install-south-package)
+  (define (make-employee-south id name salary)
+    (lambda(value)
+      (cond ((eqv? 'id) id)
+            ((eqv? 'name) name)
+            ((eqv? 'salary) (* 1000
+                               (/ salary 1000))))))
+  (define South-Employee-File
+    (list (make-employee-south 301 "Jacquelyn" 49000)
+          (make-employee-south 302 "Mazie" 66000)))
+  (define (find-employee-south id)
+    (define (iter ll)
+      (cond ((null? ll)
+             #f)
+            ((equal? id ((car ll) 'id))
+             (car ll))
+            (else (iter (cdr ll)))))
+    (iter South-Employee-File))
+  
+  (put 'employee-record 'West
+       (lambda(id)
+         (let ((e (find-employee-south id)))
+           (if e
+               (list (list 'id id)
+                     (list 'name (e 'id))
+                     (list 'salary (e 'salary)))
+               #f))))
+  (put 'employee-salary 'South
+       (lambda(id)
+         ((find-employee-west id) 'salary))))
+
+;; HQ record fetcher
+(define (get-record employee-id division)
+  ((get 'employee-record division)
+   employee-id))
+
+;; HQ's salary fetcher
+(define (get-salary employee-id division)
+  ((get 'employee-salary division)
+   employee-id))
+
+;; HQ's employee finder
+;; problem asks for "list of files" but since we're working with
+;; differently-structured files it must need the procs as well
+;; and there's one file per division
+(define (find-employee-record id list-of-divisions)
+  (if (null? list-of-divisions)
+      #f
+      (let ((result (get-record id (car list-of-divisions))))
+        (if result
+            result
+            (find-employee-record (cdr list-of-divisions))))))
+#+END_SRC
+
+
+In retrospect I should have designed it so each file had a type tag for the division, methods took a file, and dispatch was made on the file's tag. This makes more sense in a real-world context.
+
+*** Question D
+
+When Insatiable takes over a new company, what changes must be made in order to
+incorporate the new personnel information into the central system?
+
+*** Answer D
+
+The new division must provide appropriate methods for src_scheme{get-record} and
+src_scheme{get-salary} to use.
