@@ -11125,7 +11125,7 @@ is 1 and anything raised to the power 1 is the thing itself.
 (define (base e) (cadr e))
 (define (exponent e) (caddr e))
 (define (make-exponentiation b e)
-  (cond ((=number? base 1) 1)
+  (cond ((=number? b 1) 1)
         ((=number? e 0) 1)
         ((=number? e 1) b)
         ((and (number? b) (number? e)) (expt b e))
@@ -13258,19 +13258,25 @@ http://community.schemewiki.org/?sicp-ex-2.72
 We have learned how to abstract "higher" and "lower" parts of a system. Now we
 will talk about having multiple simultaneous representations of data in the same
 system. This could be considered "side-by-side" abstraction. The authors tout
-the "*principle of least commitment*": abstracting a system so it can work with
-many possible representations of data without being rewritten.
+the 
 
 To allow programmers to add and remove representations at will without modifying
 the original code, the authors suggest using a table lookup system to keep track
 of representations and their related methods. For example:
 
+#+attr_latex: align "|l||l|l|"
 | Operations | Polar Type      | Rectangular Type      |
 |------------+-----------------+-----------------------|
+| /          | <               |                       |
 | real-part  | real-part-polar | real-part-rectangular |
 | imag-part  | imag-part-polar | imag-part-rectangular |
 | magnitude  | magnitude-polar | magnitude-rectangular |
 | angle      | angle-polar     | angle-rectangular     |
+
+- data-directed programming :: designing programs to organize their behaviors
+  by a table of operations like the one above.
+- principle of least commitment :: abstracting a system so it can work with
+many possible representations of data without being rewritten.
 
 The book introduces two methods, src_scheme{(put 'operation 'type lambda)} to
 add such a method to the table, and src_scheme{(get 'operation 'type)} to fetch
@@ -13280,7 +13286,7 @@ to implement this.
 
 #+NAME: op-table
 #+BEGIN_SRC scheme -n :eval no-export :results silent
-(define op-table (make-hash-table 4))
+(define op-table (make-hash-table))
 
 (define (put operation type f)
   (hash-set! op-table (cons operation type) f))
@@ -13296,14 +13302,322 @@ to implement this.
 (put 'B 'Y (lambda()'BY))
 (put 'C 'Z (lambda()'CZ))
 
-(echo ((get 'A 'X)))
-(echo ((get 'B 'Y)))
-(echo ((get 'C 'Z)))
+(echo ((get 'A 'X))
+      ((get 'B 'Y))
+      ((get 'C 'Z)))
 #+END_SRC
 
-#+RESULTS[77d37a918083fe388b51b2a525406394de91941b]:
+#+RESULTS[bf3d6e8c9239ce678bb3cce8f3c822ed667dc2fc]:
 #+begin_EXAMPLE
-AX 
-BY 
-CZ 
+AX BY CZ 
 #+end_EXAMPLE
+
+One method to distinguish these types of items is called *type tagging*. Take this code as an example:
+
+#+NAME: type-tagging
+#+BEGIN_SRC scheme -n :eval no-export :results silent
+(define (attach-tag type-tag contents)
+  (cons type-tag contents))
+
+(define (type-tag datum)
+  (if (pair? datum)
+      (car datum)
+      (error "Bad tagged datum: 
+              TYPE-TAG" datum)))
+
+(define (contents datum)
+  (if (pair? datum)
+      (cdr datum)
+      (error "Bad tagged datum: 
+              CONTENTS" datum)))
+#+END_SRC
+
+** Exercise 2.72: Data-driven symbolic differentiator
+
+[[*2.3.2: Example: Symbolic differentiator][2.3.2: Example: Symbolic differentiator]] described a program that performs
+symbolic differentiation:
+
+#+begin_src scheme -n
+(define (deriv exp var)
+  (cond ((number? exp) 0)
+        ((variable? exp)
+         (if (same-variable? exp var) 1 0))
+        ((sum? exp)
+         (make-sum (deriv (addend exp) var)
+                   (deriv (augend exp) var)))
+        ((product? exp)
+         (make-sum (make-product
+                    (multiplier exp)
+                    (deriv (multiplicand exp) var))
+                   (make-product
+                    (deriv (multiplier exp) var)
+                    (multiplicand exp))))
+        ;; more rules can be added here
+        (else (error "unknown expression type:
+                      DERIV" exp))))
+#+end_src
+
+We can regard this program as performing a dispatch on the type of the
+expression to be differentiated. In this situation the ''type tag'' of the datum
+is the algebraic operator symbol (such as src_scheme{+}) and the operation being
+performed is src_scheme{deriv}. We can transform this program into data-directed
+style by rewriting the basic derivative procedure as
+
+#+begin_src scheme -n
+(define (deriv exp var)
+  (cond ((number? exp) 0)
+        ((variable? exp) (if (same-variable? exp var) 1 0))
+        (else ((get 'deriv (operator exp))
+               (operands exp) var))))
+(define (operator exp) (car exp))
+(define (operands exp) (cdr exp))
+#+end_src
+
+*** Question A
+
+Explain what was done above. Why can't we assimilate the predicates
+src_scheme{number?} and src_scheme{variable?} into the data-directed dispatch?
+
+*** Answer A
+
+This rewrite removes the predicate-based tests for sums, products, etc,
+replacing them with the src_scheme{get}-based lookup system explained earlier.
+
+The call to ~get~ requires using the ~operator~ procedures on ~exp~, which would
+fail on a single-item ~exp~. So it is necessary to handle the number and
+variable checks before calling ~deriv~.
+
+*** Questions B and C
+
+- Write the procedures for derivatives of sums and products, and the auxiliary
+  code required to install them in the table used by the program above.
+- Choose any additional differentiation rule that you like, such as the one for
+  exponents ([[*Exercise 2.56: Differentiating exponentiation][Exercise 2.56: Differentiating exponentiation]]), and install it in
+  this data-directed system.
+
+*** Answer B & C version 1
+
+Here's my first solution, which is functional, but not at all idiomatic like the textbook's examples of such a system.
+
+#+NAME: deriv-datadriven
+#+BEGIN_SRC scheme -n :eval no-export :results silent
+(define (variable? x) (symbol? x))
+(define (same-variable? v1 v2)
+  (and (variable? v1) (variable? v2) (eq? v1 v2)))
+(define (operator exp) (car exp))
+(define (operands exp) (cdr exp))
+;; old ^^ vv new
+(define (deriv exp var)
+  (cond ((number? exp) 0)
+        ((variable? exp) (if (same-variable? exp var) 1 0))
+        (else ((get 'deriv (operator exp))
+               (operands exp) var))))
+;; vv old
+(define (addend s) (car s)) ;; these and similar procedures
+(define (augend s) (cadr s));; modified for 2-item lists of operands
+(define (multiplier p) (car p))
+(define (multiplicand p) (cadr p))
+(define (make-sum a1 a2)
+  (cond ((=number? a1 0) a2)
+        ((=number? a2 0) a1)
+        ((and (number? a1) (number? a2))
+         (+ a1 a2))
+        (else (list '+ a1 a2))))
+(define (=number? exp num)
+  (and (number? exp) (= exp num)))
+(define (make-product m1 m2)
+  (cond ((or (=number? m1 0) (=number? m2 0)) 0)
+        ((=number? m1 1) m2)
+        ((=number? m2 1) m1)
+        ((and (number? m1) (number? m2)) (* m1 m2))
+        (else (list '* m1 m2))))
+(define (base e) (car e))
+(define (exponent e) (cadr e))
+(define (make-exponentiation b e)
+  (cond ((=number? b 1) 1)
+        ((=number? e 0) 1)
+        ((=number? e 1) b)
+        ((and (number? b) (number? e)) (expt b e))
+        (else (list '** b e))))
+;; new table-entered functions
+(put 'deriv '+
+     (lambda (ops var)
+       (make-sum (deriv (addend ops) var)
+                 (deriv (augend ops) var))))
+(put 'deriv '*
+     (lambda (ops var)
+       (make-sum (make-product
+                  (multiplier ops)
+                  (deriv (multiplicand ops) var))
+                 (make-product
+                  (deriv (multiplier ops) var)
+                  (multiplicand ops)))))
+(put 'deriv '**
+     (lambda (ops var)
+         (make-product  
+          (make-product  
+           (exponent ops) 
+           (make-exponentiation (base ops) 
+                                (make-sum (exponent ops) -1)))                                                                                               
+          (deriv (base ops) var))))
+#+end_src
+#+BEGIN_SRC scheme :eval no-export :results output
+<<op-table>>
+<<deriv-datadriven>>
+(load "mattcheck2.scm")
+(mattcheck "deriv: basic addition"
+           (deriv '(+ x 3) 'x)
+           1)
+(mattcheck "deriv: basic multiplication"
+           (deriv '(* x y) 'x)
+           'y)
+
+(mattcheck "deriv: exponentiation 1"
+           (deriv (make-exponentiation 'a 5) 'a)
+           '(* 5 (** a 4)))
+(mattcheck "deriv: exponentiation 2"
+           (deriv (make-exponentiation 'a 'b) 'a)
+           '(* b (** a (+ b -1))))
+#+END_SRC
+
+#+RESULTS[5288240f64805e9fcb3c507e8acc8ac2a355c5ad]:
+#+begin_EXAMPLE
+SUCCEED at deriv: basic addition
+SUCCEED at deriv: basic multiplication
+SUCCEED at deriv: exponentiation 1
+SUCCEED at deriv: exponentiation 2
+#+end_EXAMPLE
+
+*** Answer B & C version 2
+
+#+NAME: deriv-datadriven2
+#+BEGIN_SRC scheme -n :eval no-export :results silent
+(define (deriv exp var)
+  (define (variable? x) (symbol? x))
+  (define (same-variable? v1 v2)
+    (and (variable? v1) (variable? v2) (eq? v1 v2)))
+  (define (operator exp) (type-tag exp)) ;; use type tags
+  (define (operands exp) (contents exp))
+
+  (cond ((number? exp) 0)
+        ((variable? exp) (if (same-variable? exp var) 1 0))
+        (else ((get 'deriv (operator exp))
+               (operands exp) var))))
+
+(define (install-deriv-package choice)
+  ;;shared procedures
+  (define (=number? exp num)
+    (and (number? exp) (= exp num)))
+  (define (make-sum a1 a2)
+    (cond ((=number? a1 0) a2)
+          ((=number? a2 0) a1)
+          ((and (number? a1) (number? a2))
+           (+ a1 a2))
+          (else (attach-tag '+ (list a1 a2)))))
+  (define (make-product m1 m2)
+    (cond ((or (=number? m1 0) (=number? m2 0)) 0)
+          ((=number? m1 1) m2)
+          ((=number? m2 1) m1)
+          ((and (number? m1) (number? m2)) (* m1 m2))
+          (else (attach-tag '* (list m1 m2)))))
+  (define (make-exponentiation b e)
+    (cond ((=number? b 1) 1)
+          ((=number? e 0) 1)
+          ((=number? e 1) b)
+          ((and (number? b) (number? e)) (expt b e))
+          (else (attach-tag '** (list b e)))))
+
+  ;; packages
+  (define (install-sum-package)
+    (define (addend s) (car s))
+    (define (augend s) (cadr s))
+    (put 'deriv '+
+         (lambda (ops var)
+           (make-sum (deriv (addend ops) var)
+                     (deriv (augend ops) var)))))
+
+  (define (install-mult-package)
+    (define (multiplier p) (car p))
+    (define (multiplicand p) (cadr p))
+    (put 'deriv '*
+         (lambda (ops var)
+           (make-sum (make-product
+                      (multiplier ops)
+                      (deriv (multiplicand ops) var))
+                     (make-product
+                      (deriv (multiplier ops) var)
+                      (multiplicand ops))))))
+  (define (install-exp-package)
+    (define (base e) (car e))
+    (define (exponent e) (cadr e))
+    (put 'deriv '**
+         (lambda (ops var)
+           (make-product  
+            (make-product  
+             (exponent ops) 
+             (make-exponentiation (base ops) 
+                                  (make-sum (exponent ops)
+                                            -1)))
+            (deriv (base ops) var)))))
+
+  ;;body
+  (cond ((eqv? choice 'sum)
+         (install-sum-package))
+        ((eqv? choice 'mult)
+         (install-mult-package))
+        ((eqv? choice 'exp)
+         (install-exp-package))))
+#+end_src
+#+BEGIN_SRC scheme :eval no-export :results output
+<<op-table>>
+<<type-tagging>>
+<<deriv-datadriven2>>
+(load "mattcheck2.scm")
+(install-deriv-package 'sum)
+(install-deriv-package 'mult)
+(install-deriv-package 'exp)
+(mattcheck "deriv: basic addition"
+           (deriv '(+ x 3) 'x)
+           1)
+(mattcheck "deriv: basic multiplication"
+           (deriv '(* x y) 'x)
+           'y)
+
+(mattcheck "deriv: exponentiation 1"
+           (deriv '(** a 5) 'a) ;; no more external access
+           '(* 5 (** a 4)))
+(mattcheck "deriv: exponentiation 2"
+           (deriv '(** a b) 'a)
+           '(* b (** a (+ b -1))))
+#+END_SRC
+
+#+RESULTS[648190c3e65622d195f73e9b5c1662c7fce221a3]:
+#+begin_EXAMPLE
+SUCCEED at deriv: basic addition
+SUCCEED at deriv: basic multiplication
+SUCCEED at deriv: exponentiation 1
+SUCCEED at deriv: exponentiation 2
+#+end_EXAMPLE
+
+It's notable that Scheme doesn't let you access the sub-definitions inside
+definitions, so I had to change my tests above. It makes me miss the dot
+notation that future languages would use for accessing children of objects. It
+also makes debugging processes less informative, not showing entries in the
+src_scheme{,trace foo} system call.
+
+*** Question D
+
+In this simple algebraic manipulator the type of an expression is the algebraic
+operator that binds it together. Suppose, however, we indexed the procedures in
+the opposite way, so that the dispatch line in src_scheme{deriv} looked like
+
+#+BEGIN_SRC scheme
+((get (operator exp) 'deriv)
+ (operands exp) var)
+#+END_SRC
+
+What corresponding changes to the derivative system are required?
+
+*** Answer D
+
+Besides the change given in the example above, all the src_scheme{put} calls would need their arguments switched.
