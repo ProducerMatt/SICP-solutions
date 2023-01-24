@@ -13622,7 +13622,7 @@ What corresponding changes to the derivative system are required?
 
 Besides the change given in the example above, all the src_scheme{put} calls would need their arguments switched.
 
-** Exercise 2.74
+** Exercise 2.74: Multi-division record storage
 
 *** Questions ABC
 
@@ -13805,3 +13805,78 @@ incorporate the new personnel information into the central system?
 
 The new division must provide appropriate methods for src_scheme{get-record} and
 src_scheme{get-salary} to use.
+
+** 2.4.3: Data-directed and message-passing programs
+
+Altogether the book has introduced 3 ways to organize functions and data types:
+
+1. Generic operations with explicit dispatch: functions which each include
+   src_scheme{case} statements to dispatch depending on type of data provided.
+   Bulk of the book so far.
+2. Data-directed style: given a tagged object and a desired operation, lookup
+   what function to call.
+3. Message-passing style: package operations with their appropriate data
+   objects, then fetch those operations from the object.
+
+** Exercise 2.75: Message-passing styled imaginary numbers
+
+*** Question
+
+Implement the constructor src_scheme{make-from-mag-ang} in message-passing
+style. This procedure should be analogous to the src_scheme{make-from-real-imag}
+procedure given above.
+
+*** Answer
+
+#+BEGIN_SRC scheme -n :eval no-export :results silent
+(define (make-from-mag-ang r a)
+  (define (dispatch op)
+    (cond ((eq? op 'magnitude) r)
+          ((eq? op 'angle) a)
+          ((eq? op 'real-part)
+           (* r (cos a)))
+          ((eq? op 'imag-part)
+           (* r (sin a)))
+          (else (error "Unknown op: MAKE-FROM-MAG-ANG" op))))
+
+  dispatch)
+#+END_SRC
+
+** Exercise 2.76: comparing generic operation solutions
+
+*** Question
+
+As a large system with generic operations evolves, new types of data objects or
+new operations may be needed. For each of the three strategies---generic
+operations with explicit dispatch, data-directed style, and
+message-passing-style---describe the changes that must be made to a system in
+order to add new types or new operations. Which organization would be most
+appropriate for a system in which new types must often be added? Which would be
+most appropriate for a system in which new operations must often be added?
+
+*** Answer
+
+The most important part of this is where code /doesn't/ need to be changed.
+
+- Generic operations with explicit dispatch :: let you add new functions without
+  changing existing code.
+- Message-passing style :: let you add new data types without modifying existing
+  code.
+- Data-directed table-lookups :: let you add new data types /and/ functions
+  without modifying existing code.
+
+Let's be clear: this does not really save you much code, only the cognitive load
+imposed when you have to enter old code to modify it. Let's say \(T\) is how
+many data types you have, \(O\) is how many desired operations you have. All of
+these are \(O\times T\), the key is where the code is being stored and what it
+effects.
+
+This issue of one change requiring traveling across your code to change dozens
+of definitions is described as the [[http://c2.com/cgi/wiki?ExpressionProblem][Expression Problem]][fn::
+http://c2.com/cgi/wiki?ExpressionProblem]. Data-directed table lookups appear to
+solve the problem, as discussed by [[http://community.schemewiki.org/?sicp-ex-2.76][torinmr in this Scheme wiki solution]][fn::
+http://community.schemewiki.org/?sicp-ex-2.76].
+
+Also of note is that this kind of decision-making between generic operations and
+generic datatypes is commonplace in modern OO programming. I wonder what the old
+heads from this time period think about OO as it stands today.
