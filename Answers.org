@@ -13877,6 +13877,267 @@ http://c2.com/cgi/wiki?ExpressionProblem]. Data-directed table lookups appear to
 solve the problem, as discussed by [[http://community.schemewiki.org/?sicp-ex-2.76][torinmr in this Scheme wiki solution]][fn::
 http://community.schemewiki.org/?sicp-ex-2.76].
 
+#+begin_quote
+"Old code should not stop working when you add new code." -Brian Harvey
+#+end_quote
+
 Also of note is that this kind of decision-making between generic operations and
 generic datatypes is commonplace in modern OO programming. I wonder what the old
 heads from this time period think about OO as it stands today.
+
+** Exercise 2.77: generic arithmetic package
+
+*** Question
+
+Louis Reasoner tries to evaluate the expression src_scheme{(magnitude z)} where
+src_scheme{z} is the object shown in Figure 2.24. To his surprise, instead of
+the answer 5 he gets an error message from src_scheme{apply-generic}, saying
+there is no method for the operation src_scheme{magnitude} on the types
+src_scheme{(complex)}. He shows this interaction to Alyssa P. Hacker, who says
+"The problem is that the complex-number selectors were never defined for
+src_scheme{complex} numbers, just for src_scheme{polar} and
+src_scheme{rectangular} numbers. All you have to do to make this work is add the
+following to the src_scheme{complex} package":
+
+#+BEGIN_SRC scheme -n
+(put 'real-part '(complex) real-part)
+(put 'imag-part '(complex) imag-part)
+(put 'magnitude '(complex) magnitude)
+(put 'angle '(complex) angle)
+#+END_SRC
+
+Describe in detail why this works. As an example, trace through all the
+procedures called in evaluating the expression src_scheme{(magnitude z)} where
+src_scheme{z} is the object shown in Figure 2.24. In particular, how many times
+is src_scheme{apply-generic} invoked? What procedure is dispatched to in each
+case?
+
+*** Answer
+
+Surprised to find I never actually imported src_scheme{apply-generic}.
+
+#+NAME: apply-generic-table
+#+BEGIN_SRC scheme -n :eval no-export :results silent
+<<op-table>>
+<<type-tagging>>
+(define (apply-generic op . args)
+  (let ((type-tags (map type-tag args)))
+    (let ((proc (get op type-tags)))
+      (if proc
+          (apply proc (map contents args))
+          (error
+            "No method for these types: APPLY-GENERIC"
+            (list op type-tags))))))
+#+END_SRC
+#+NAME: generic-arithmetic
+#+BEGIN_SRC scheme -n :eval no-export :results silent
+<<apply-generic-table>>
+(define (square x) (* x 2))
+(define (add x y) (apply-generic 'add x y))
+(define (sub x y) (apply-generic 'sub x y))
+(define (mul x y) (apply-generic 'mul x y))
+(define (div x y) (apply-generic 'div x y))
+(define (real-part z) (apply-generic 'real-part z))
+(define (imag-part z) (apply-generic 'imag-part z))
+(define (magnitude z) (apply-generic 'magnitude z))
+(define (angle z) (apply-generic 'angle z))
+
+(define (install-rational-package)
+  ;; internal procedures
+  (define (numer x) (car x))
+  (define (denom x) (cdr x))
+  (define (make-rat n d)
+    (let ((g (gcd n d)))
+      (cons (/ n g) (/ d g))))
+  (define (add-rat x y)
+    (make-rat (+ (* (numer x) (denom y))
+                 (* (numer y) (denom x)))
+              (* (denom x) (denom y))))
+  (define (sub-rat x y)
+    (make-rat (- (* (numer x) (denom y))
+                 (* (numer y) (denom x)))
+              (* (denom x) (denom y))))
+  (define (mul-rat x y)
+    (make-rat (* (numer x) (numer y))
+              (* (denom x) (denom y))))
+  (define (div-rat x y)
+    (make-rat (* (numer x) (denom y))
+              (* (denom x) (numer y))))
+  ;; interface to rest of the system
+  (define (tag x) (attach-tag 'rational x))
+  (put 'add '(rational rational)
+       (lambda (x y) (tag (add-rat x y))))
+  (put 'sub '(rational rational)
+       (lambda (x y) (tag (sub-rat x y))))
+  (put 'mul '(rational rational)
+       (lambda (x y) (tag (mul-rat x y))))
+  (put 'div '(rational rational)
+       (lambda (x y) (tag (div-rat x y))))
+  (put 'make 'rational
+       (lambda (n d) (tag (make-rat n d))))
+  'done)
+
+(define (make-rational n d)
+  ((get 'make 'rational) n d))
+
+(define (install-rectangular-package)
+  ;; internal procedures
+  (define (real-part z) (car z))
+  (define (imag-part z) (cdr z))
+  (define (make-from-real-imag x y) (cons x y))
+  (define (magnitude z)
+    (sqrt (+ (square (real-part z))
+             (square (imag-part z)))))
+  (define (angle z)
+    (atan (imag-part z) (real-part z)))
+  (define (make-from-mag-ang r a)
+    (cons (* r (cos a)) (* r (sin a))))
+
+  ;; interface to the rest of the system
+  (define (tag x) (attach-tag 'rectangular x))
+  (put 'real-part '(rectangular) real-part)
+  (put 'imag-part '(rectangular) imag-part)
+  (put 'magnitude '(rectangular) magnitude)
+  (put 'angle '(rectangular) angle)
+  (put 'make-from-real-imag 'rectangular
+       (lambda (x y) (tag (make-from-real-imag x y))))
+  (put 'make-from-mag-ang 'rectangular
+       (lambda (r a) (tag (make-from-mag-ang r a))))
+  'done)
+(define (install-polar-package)
+  ;; internal procedures
+  (define (magnitude z) (car z))
+  (define (angle z) (cdr z))
+  (define (make-from-mag-ang r a) (cons r a))
+  (define (real-part z) (* (magnitude z) (cos (angle z))))
+  (define (imag-part z) (* (magnitude z) (sin (angle z))))
+  (define (make-from-real-imag x y)
+    (cons (sqrt (+ (square x) (square y)))
+          (atan y x)))
+  ;; interface to the rest of the system
+  (define (tag x) (attach-tag 'polar x))
+  (put 'real-part '(polar) real-part)
+  (put 'imag-part '(polar) imag-part)
+  (put 'magnitude '(polar) magnitude)
+  (put 'angle '(polar) angle)
+  (put 'make-from-real-imag 'polar
+       (lambda (x y) (tag (make-from-real-imag x y))))
+  (put 'make-from-mag-ang 'polar
+       (lambda (r a) (tag (make-from-mag-ang r a))))
+  'done)
+(define (install-complex-package)
+  ;; imported procedures from rectangular and polar packages
+  (define (make-from-real-imag x y)
+    ((get 'make-from-real-imag 'rectangular) x y))
+  (define (make-from-mag-ang r a)
+    ((get 'make-from-mag-ang 'polar) r a))
+  ;; internal procedures
+  (define (add-complex z1 z2)
+    (make-from-real-imag (+ (real-part z1) (real-part z2))
+                         (+ (imag-part z1) (imag-part z2))))
+  (define (sub-complex z1 z2)
+    (make-from-real-imag (- (real-part z1) (real-part z2))
+                         (- (imag-part z1) (imag-part z2))))
+  (define (mul-complex z1 z2)
+    (make-from-mag-ang (* (magnitude z1) (magnitude z2))
+                       (+ (angle z1) (angle z2))))
+  (define (div-complex z1 z2)
+    (make-from-mag-ang (/ (magnitude z1) (magnitude z2))
+                       (- (angle z1) (angle z2))))
+  ;; interface to rest of the system
+  (define (tag z) (attach-tag 'complex z))
+  (put 'add '(complex complex)
+       (lambda (z1 z2) (tag (add-complex z1 z2))))
+  (put 'sub '(complex complex)
+       (lambda (z1 z2) (tag (sub-complex z1 z2))))
+  (put 'mul '(complex complex)
+       (lambda (z1 z2) (tag (mul-complex z1 z2))))
+  (put 'div '(complex complex)
+       (lambda (z1 z2) (tag (div-complex z1 z2))))
+  (put 'make-from-real-imag 'complex
+       (lambda (x y) (tag (make-from-real-imag x y))))
+  (put 'make-from-mag-ang 'complex
+       (lambda (r a) (tag (make-from-mag-ang r a))))
+  (put 'real-part '(complex) real-part)
+  (put 'imag-part '(complex) imag-part)
+  (put 'magnitude '(complex) magnitude)
+  (put 'angle '(complex) angle))
+
+(define (make-complex-from-real-imag x y)
+  ((get 'make-from-real-imag 'complex) x y))
+(define (make-complex-from-mag-ang r a)
+  ((get 'make-from-mag-ang 'complex) r a))
+#+END_SRC
+#+NAME: scheme-number-package
+#+BEGIN_SRC scheme -n :eval no-export :results silent
+(define (make-scheme-number n)
+  ((get 'make 'scheme-number) n))
+(define (install-scheme-number-package)
+  (define (tag x) (attach-tag 'scheme-number x))
+  (put 'add '(scheme-number scheme-number)
+       (lambda (x y) (tag (+ x y))))
+  (put 'sub '(scheme-number scheme-number)
+       (lambda (x y) (tag (- x y))))
+  (put 'mul '(scheme-number scheme-number)
+       (lambda (x y) (tag (* x y))))
+  (put 'div '(scheme-number scheme-number)
+       (lambda (x y) (tag (/ x y))))
+  (put 'make 'scheme-number (lambda (x) (tag x)))
+  'done)
+#+END_SRC
+
+
+#+BEGIN_SRC scheme :noeval
+<<generic-arithmetic>>
+<<scheme-number-package>>
+(load "mattcheck2.scm")
+
+(install-rational-package)
+(install-rectangular-package)
+(install-polar-package)
+(install-complex-package)
+(install-scheme-number-package)
+
+;,trace (magnitude (make-complex-from-real-imag 3 4))
+#+END_SRC
+
+I've heavily pared down this from the real debug output.
+
+#+RESULTS:
+#+begin_EXAMPLE
+(make-complex-from-real-imag 3 4)
+|  (get make-from-real-imag complex)
+|  #<procedure 1ca8ad0 at <unknown port>:166:4 (x y)>
+(_ 3 4)
+|  (get make-from-real-imag rectangular)
+|  #<procedure 1ca87e8 at <unknown port>:111:4 (x y)>
+|  (_ 3 4)
+|  (attach-tag rectangular (3 . 4))
+|  (rectangular 3 . 4)
+(attach-tag complex (rectangular 3 . 4))
+(complex rectangular 3 . 4) <- now fully tagged
+(magnitude (complex rectangular 3 . 4))
+(apply-generic magnitude (complex rectangular 3 . 4)) <- identifying complex number
+|  (map #<procedure type-tag (datum)> ((complex rectangular 3 . 4)))
+|  (complex)
+|  (get magnitude (complex))
+|  #<procedure magnitude (z)>
+|  (map #<procedure contents (datum)> ((complex rectangular 3 . 4)))
+|  ((rectangular 3 . 4))
+(_ #<procedure magnitude (z)> ((rectangular 3 . 4))) <- identifying rectangular number
+(magnitude (rectangular 3 . 4))
+(apply-generic magnitude (rectangular 3 . 4))
+|  (map #<procedure type-tag (datum)> ((rectangular 3 . 4)))
+|  (rectangular)
+|  (get magnitude (rectangular))
+|  #<procedure magnitude (z)>
+|  (map #<procedure contents (datum)> ((rectangular 3 . 4)))
+|  ((3 . 4))
+(_ #<procedure magnitude (z)> ((3 . 4)))
+(magnitude (3 . 4)) <- finally applying native operations
+|  (square 3)
+|  6
+|  (square 4)
+|  8
+3.7416573867739413
+#+end_EXAMPLE
