@@ -13919,7 +13919,6 @@ Surprised to find I never actually imported src_scheme{apply-generic}.
 #+NAME: apply-generic-table
 #+BEGIN_SRC scheme -n :eval no-export :results silent
 <<op-table>>
-<<type-tagging>>
 (define (apply-generic op . args)
   (let ((type-tags (map type-tag args)))
     (let ((proc (get op type-tags)))
@@ -13992,7 +13991,6 @@ Surprised to find I never actually imported src_scheme{apply-generic}.
     (atan (imag-part z) (real-part z)))
   (define (make-from-mag-ang r a)
     (cons (* r (cos a)) (* r (sin a))))
-
   ;; interface to the rest of the system
   (define (tag x) (attach-tag 'rectangular x))
   (put 'real-part '(rectangular) real-part)
@@ -14004,6 +14002,7 @@ Surprised to find I never actually imported src_scheme{apply-generic}.
   (put 'make-from-mag-ang 'rectangular
        (lambda (r a) (tag (make-from-mag-ang r a))))
   'done)
+
 (define (install-polar-package)
   ;; internal procedures
   (define (magnitude z) (car z))
@@ -14025,6 +14024,7 @@ Surprised to find I never actually imported src_scheme{apply-generic}.
   (put 'make-from-mag-ang 'polar
        (lambda (r a) (tag (make-from-mag-ang r a))))
   'done)
+
 (define (install-complex-package)
   ;; imported procedures from rectangular and polar packages
   (define (make-from-real-imag x y)
@@ -14088,6 +14088,7 @@ Surprised to find I never actually imported src_scheme{apply-generic}.
 
 
 #+BEGIN_SRC scheme :noeval
+<<type-tagging>>
 <<generic-arithmetic>>
 <<scheme-number-package>>
 (load "mattcheck2.scm")
@@ -14140,4 +14141,75 @@ I've heavily pared down this from the real debug output.
 |  (square 4)
 |  8
 3.7416573867739413
+#+end_EXAMPLE
+
+The procedures in src_scheme{apply-generic 'complex} are only proxies to other
+procedures at the moment. However they could be useful for other procedures that
+should need to know very little about the ~complex~ package.
+
+** Exercise 2.78: native scheme numbers
+
+*** Question
+
+The internal procedures in the src_scheme{scheme-number} package are essentially
+nothing more than calls to the primitive procedures src_scheme{+},
+src_scheme{-}, etc. It was not possible to use the primitives of the language
+directly because our type-tag system requires that each data object have a type
+attached to it. In fact, however, all Lisp implementations do have a type
+system, which they use internally. Primitive predicates such as
+src_scheme{symbol?} and src_scheme{number?} determine whether data objects have
+particular types. Modify the definitions of src_scheme{type-tag},
+src_scheme{contents}, and src_scheme{attach-tag} from 2.4.2 so that our
+generic system takes advantage of Scheme's internal type system. That is to say,
+the system should work as before except that ordinary numbers should be
+represented simply as Scheme numbers rather than as pairs whose src_scheme{car}
+is the symbol src_scheme{scheme-number}.
+
+*** Answer
+
+#+NAME: smarter-type-tagging
+#+BEGIN_SRC scheme -n :eval no-export :results silent
+(define (attach-tag type-tag contents)
+  (if (number? contents)
+      contents
+      (cons type-tag contents)))
+
+(define (type-tag datum)
+  (cond ((pair? datum)
+         (car datum))
+        ((number? datum)
+         'scheme-number)
+        (else (error "Bad tagged datum: 
+              TYPE-TAG" datum))))
+
+(define (contents datum)
+  (cond ((pair? datum)
+         (car datum))
+        ((number? datum)
+         datum)
+        (else (error "Bad tagged datum: 
+              CONTENTS" datum))))
+#+END_SRC
+
+#+BEGIN_SRC scheme -n :eval no-export :results output
+<<sqrt>>
+<<square>>
+<<echo>>
+<<smarter-type-tagging>>
+<<generic-arithmetic>>
+<<scheme-number-package>>
+(load "mattcheck2.scm")
+
+(install-rational-package)
+(install-rectangular-package)
+(install-polar-package)
+(install-complex-package)
+(install-scheme-number-package)
+
+(echo (add 3 5))
+#+END_SRC
+
+#+RESULTS[094c644ffb4958eb390d5c38cf951a994279dbfb]:
+#+begin_EXAMPLE
+8 
 #+end_EXAMPLE
