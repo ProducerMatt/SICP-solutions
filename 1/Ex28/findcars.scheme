@@ -54,9 +54,9 @@
 ;; find-divisor-faster-real ends here
 (define (prime? n)
   (= n (smallest-divisor n)))
-(call-with-output-file "Data/carmichael-verification.txt" (λ(port)
+(call-with-output-file "Data/carmichael-verification.txt" (lambda(port)
      (write (filter
-             (λ(x) (and (fermat-prime? x)
+             (lambda(x) (and (fermat-prime? x)
                         (not (prime? x))))
              (iota (- 1000000 1000) 1000))
             port)))

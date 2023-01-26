@@ -15,6 +15,6 @@
 (define (sqrt x)
   (sqrt-iter 1.0 x))
 (newline)
-(display (mattbench (λ() (sqrt 69420)) 400000000))
+(display (mattbench (lambda() (sqrt 69420)) 400000000))
 (newline)
 ;; Optimized:1 ends here

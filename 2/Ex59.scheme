@@ -59,9 +59,9 @@
       (set2 (enumerate-interval 500 1500)))
   (define (test)
     (format #t "~&recursive union-sets: ~a"
-            (cadr (mattbench2 (λ()(union-set-rec set1 set2)) 10000)))
+            (cadr (mattbench2 (lambda()(union-set-rec set1 set2)) 10000)))
     (format #t "~&iterative union-sets: ~a"
-            (cadr (mattbench2 (λ()(union-set set1 set2)) 10000))))
+            (cadr (mattbench2 (lambda()(union-set set1 set2)) 10000))))
 
   (test))
 ;; union-set-benched ends here

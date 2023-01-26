@@ -26,7 +26,7 @@
 ;; find-divisor-faster-real ends here
 (define (prime? n)
   (= n (smallest-divisor n)))
-(call-with-output-file "Data/primes-1k_to_1mil.txt" (λ(port)
+(call-with-output-file "Data/primes-1k_to_1mil.txt" (lambda(port)
   (write (filter prime? (iota (- 1000000 1000) 1000))
          port)))
 ;; findsomeprimes ends here

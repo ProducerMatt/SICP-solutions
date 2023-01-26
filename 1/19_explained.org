@@ -1,0 +1,176 @@
+#+PROPERTY: header-args :tangle no :noeval :exports both :cache yes :results output wrap :noweb no-export :comments noweb :colnames no :rownames no :float multicolumn
+#+PROPERTY: header-args:scheme :wrap EXAMPLE
+
+#+latex_class: article
+#+latex_class_options: [final,fleqn,titlepage,twoside,twocolumn]
+#+latex_engraved_theme:
+
+#+LATEX_COMPILER: xelatex
+#+LATEX_HEADER: \usepackage{fontspec}
+#+LATEX_HEADER: \usepackage{lmodern}
+#+LATEX_HEADER: \usepackage[T1]{fontenc}
+#+LATEX_HEADER: \setmonofont[Mapping=tex-text,Ligatures=TeX,Scale=MatchLowercase]{FiraMono-Regular}
+
+# SOURCE CODE HIGHLIGHTING
+#+LATEX_HEADER: \usepackage[cache=true]{minted}
+#+LATEX_HEADER: \usemintedstyle{colorful}
+#+LATEX_HEADER: \setminted{fontsize=\small}
+# FIXME: keep minted inline code from being automatically wrapped
+#+LATEX_HEADER: \setmintedinline{breakbytoken=false,breakbytokenanywhere=false,breaklines=false,breakaftergroup=false}
+
+# SOURCE CODE FRAMES
+#+LATEX_HEADER: \usepackage{mdframed}
+#+LATEX_HEADER: \definecolor{my-bg}{rgb}{0.99,0.99,0.99}
+#+LATEX_HEADER: \definecolor{gray}{rgb}{0.60,0.60,0.60}
+
+#+LATEX_HEADER: \mdfdefinestyle{theoremstyle}{%
+#+LATEX_HEADER: linecolor=gray,linewidth=.5pt,%
+#+LATEX_HEADER: backgroundcolor=my-bg
+#+LATEX_HEADER: }
+
+#+LATEX_HEADER: \usepackage{etoolbox}
+#+LATEX_HEADER: \BeforeBeginEnvironment{minted}{\begin{mdframed}[style=theoremstyle]}
+#+LATEX_HEADER: \AfterEndEnvironment{minted}{\end{mdframed}}
+
+# listfiles leaves a list of all files used during processing in the log
+# in-Emacs renders log to a buffer, not a file
+#+LATEX_HEADER: \listfiles
+
+
+#+title: Notes on Exercise 1-19
+#+AUTHOR: ProducerMatt
+#+date: \today
+
+#+NAME: echo
+#+BEGIN_SRC scheme -n :eval no-export :results silent :exports none
+(use-modules (ice-9 format))
+(define (stringit . args)
+  (string-append
+   (format #f "~&")   ; newline only if we aren't on the first column
+   (apply string-append
+    (map (λ(x)
+          (format #f "~a " x))
+        args))
+   (format #f "~%"))) ; newline
+(define (echo . args)
+  (format #t "~a" (apply stringit args)))
+#+END_SRC
+
+
+#+begin_quote
+There is a clever algorithm for computing the Fibonacci numbers in a logarithmic
+number of steps. Recall the transformation of the state variables \(a\) and
+\(b\) in the src_scheme{fib-iter} process of 1.2.2: \(a \gets a + b\) and \(b
+\gets a\). Call this transformation \(T\), and observe that applying \(T\) over
+and over again \(n\) times, starting with 1 and 0, produces the pair
+Fib(\(n+1\)) and Fib(\(n\)). In other words, the Fibonacci numbers are produced
+by applying \(T^n\), the \(n^{\mathrm{th\)}} power of the transformation \(T\),
+starting with the pair (1, 0).
+#+end_quote
+
+Sussman & Abelson are using standard algebra language to communicate their
+point. If you know this language, it clarifies their point, but if you don't it
+obstructs it. So let's put it in the Lisp dialect instead. Our function needs to
+return two numbers instead of one, so let's jump ahead in the book slightly and
+use ~cons~ to make pairs. The briefest overview:
+
+#+NAME: Tpq-func
+#+BEGIN_SRC scheme -n :eval no-export :exports code :results silent
+(define ab (cons 0 1))
+(car ab) ;; => 0
+(cdr ab) ;; => 1
+#+END_SRC
+
+#+NAME: Tpq-func
+#+BEGIN_SRC scheme -n :eval no-export :exports both :results output
+<<echo>>
+(define (T ab)
+  (define a (car ab))
+  (define b (cdr ab))
+  (cons (+ a b)
+        a))
+
+(define (Tr n)
+  (if (= n 0)
+      (cons 1 0)
+      (T (Tr (- n 1)))))
+
+(let ((count (iota 15)))
+  (for-each (λ(x)
+              (let ((ab (Tr x)))
+                (echo "Tr n =" x ":" "a =" (car ab) ", b =" (cdr ab))))
+            count))
+#+END_SRC
+
+#+RESULTS[7c4cfaeb49cc1c5a32772c9a0c65a8e0dc42c2e9]: Tpq-func
+#+begin_EXAMPLE
+Tr n = 0 : a = 1 , b = 0 
+Tr n = 1 : a = 1 , b = 1 
+Tr n = 2 : a = 2 , b = 1 
+Tr n = 3 : a = 3 , b = 2 
+Tr n = 4 : a = 5 , b = 3 
+Tr n = 5 : a = 8 , b = 5 
+Tr n = 6 : a = 13 , b = 8 
+Tr n = 7 : a = 21 , b = 13 
+Tr n = 8 : a = 34 , b = 21 
+Tr n = 9 : a = 55 , b = 34 
+Tr n = 10 : a = 89 , b = 55 
+Tr n = 11 : a = 144 , b = 89 
+Tr n = 12 : a = 233 , b = 144 
+Tr n = 13 : a = 377 , b = 233 
+Tr n = 14 : a = 610 , b = 377 
+#+end_EXAMPLE
+
+#+NAME: Tpq-func
+#+BEGIN_SRC scheme -n :eval no-export :exports code :results silent
+(define (T p q a b)
+  (cons (+ (* b q) (* a q) (* a p))
+        (+ (* b p) (* a q))))
+
+(define (T-fib a b)
+  (T 0 1 a b))
+(define (T-fib2 a b)
+  (T 1 1 a b))
+(define (T-fib3 a b)
+  (T 1 2 a b))
+
+;; Repeatedly applying T functions:
+(define (Tr f n)
+  (define (iter f n a b)
+    (if (= n 0)
+        a
+        (let ((l (f a b)))
+          (iter f (- n 1) (car l) (cdr l)))))
+  (iter f n 0 1))
+#+END_SRC
+
+#+BEGIN_SRC scheme -n :eval no-export :exports both :results output
+<<Tpq-func>>
+<<echo>>
+
+(let ((count (iota 15)))
+  (echo count)
+  (echo (map (λ(n)
+               (Tr T-fib n))
+             count))
+  (echo (map (λ(n)
+               (Tr T-fib2 n))
+             count))
+  (echo (map (λ(n)
+               (Tr T-fib3 n))
+             count)))
+#+END_SRC
+
+#+RESULTS[4a6edccd1e94c1ed6a8d7e5de58bb3ad3b640d6e]:
+#+begin_EXAMPLE
+(0 1 2 3 4 5 6 7 8 9 10 11 12 13 14) 
+(0 1 1 2 3 5 8 13 21 34 55 89 144 233 377) 
+(0 1 3 8 21 55 144 377 987 2584 6765 17711 46368 121393 317811) 
+(0 2 8 34 144 610 2584 10946 46368 196418 832040 3524578 14930352 63245986 267914296) 
+#+end_EXAMPLE
+
+Now consider \(T\) to be the special case of
+\(p=0\) and \(q=1\) in a family of transformations \(T_{pq\)}, where \(T_{pq\)}
+transforms the pair \((a, b)\) according to \(a \gets bq + aq + ap\) and \(b
+\gets bp + aq\).
+

@@ -75,14 +75,14 @@
                ((string? mode)
                 mode)))) ;; pass custom format string
       (format #t "~&|")
-      (map (λ(x) (format #t fmtstr x)) ll)
+      (map (lambda(x) (format #t fmtstr x)) ll)
       (format #t "~%")))
 (define* (print-table table #:key (colnames #f) (mode #f))
     (define (iter t)
       (print-row (car t) #:mode mode)
       (if colnames
           (print-row (car t) #:mode "---|"))
-      (map (λ(x) (print-row x #:mode mode)) (cdr t)))
+      (map (lambda(x) (print-row x #:mode mode)) (cdr t)))
     (cond ((and (= 1 (length table))
                 (list? (car table))) (iter (car table)))
           ((<= 1 (length table)) (iter table))
@@ -91,10 +91,10 @@
 
 (define benchmark-iterations 1000000)
 (define (testit f)
-  (list (cadr (mattbench2 (λ() (f 1000 3)) benchmark-iterations))
-        (cadr (mattbench2 (λ() (f 10000 3)) benchmark-iterations))
-        (cadr (mattbench2 (λ() (f 100000 3)) benchmark-iterations))
-        (cadr (mattbench2 (λ() (f 1000000 3)) benchmark-iterations))))
+  (list (cadr (mattbench2 (lambda() (f 1000 3)) benchmark-iterations))
+        (cadr (mattbench2 (lambda() (f 10000 3)) benchmark-iterations))
+        (cadr (mattbench2 (lambda() (f 100000 3)) benchmark-iterations))
+        (cadr (mattbench2 (lambda() (f 1000000 3)) benchmark-iterations))))
 
 (print-row
  (testit search-for-primes))

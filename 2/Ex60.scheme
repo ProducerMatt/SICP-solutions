@@ -77,15 +77,15 @@
       (set2 (enumerate-interval 500 1500)))
   (define (test)
     (format #t "~&union-sets: ~a"
-            (cadr (mattbench2 (λ()(union-set set1 set2)) 10000)))
+            (cadr (mattbench2 (lambda()(union-set set1 set2)) 10000)))
     (format #t "~&union-sets-dupes: ~a"
-            (cadr (mattbench2 (λ()(union-set-dupes set1 set2)) 10000)))
+            (cadr (mattbench2 (lambda()(union-set-dupes set1 set2)) 10000)))
     (format #t "~&intersection-set: ~a"
-            (cadr (mattbench2 (λ()(intersection-set set1 set2)) 10000)))
+            (cadr (mattbench2 (lambda()(intersection-set set1 set2)) 10000)))
     (format #t "~&intersection-set-dupes: ~a"
-            (cadr (mattbench2 (λ()(intersection-set-dupes set1 set2)) 10000)))
+            (cadr (mattbench2 (lambda()(intersection-set-dupes set1 set2)) 10000)))
     (format #t "~&intersection-set-dupes2: ~a"
-            (cadr (mattbench2 (λ()(intersection-set-dupes2 set1 set2)) 10000)))
+            (cadr (mattbench2 (lambda()(intersection-set-dupes2 set1 set2)) 10000)))
     )
 
   (test))

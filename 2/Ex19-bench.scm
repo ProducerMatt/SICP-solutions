@@ -27,11 +27,11 @@
 ;; Ex-2-19 ends here
 (let ((rev-us-coins (reverse us-coins)))
   (format #t "decreasing values: ~a~%"
-          (cdr (mattbench2 (λ()
+          (cdr (mattbench2 (lambda()
                              (cc 100 us-coins))
                            iters)))
   (format #t "increasing values: ~a~%"
-          (cdr (mattbench2 (λ()
+          (cdr (mattbench2 (lambda()
                              (cc 100 rev-us-coins))
                            iters))))
 ;; cc-list-benchmark ends here

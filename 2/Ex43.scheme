@@ -55,7 +55,7 @@
       (= row-diff col-diff)))
   (let* ((new (newer-position board))
          (compare (older-positions board)))
-    (and-map (λ(pos)
+    (and-map (lambda(pos)
                (not (or (same-row? new pos)
                    (diagonal? new pos))))
              compare)))
@@ -78,11 +78,11 @@
 
 (define (test size)
   (format #t "~&normal queens x~a: ~a" size
-          (mattbench (λ()(queens size)) 10000))
+          (mattbench (lambda()(queens size)) 10000))
   (format #t "~&swapped queens x~a: ~a" size
-          (mattbench (λ()(queens-louis size)) 1000)))
+          (mattbench (lambda()(queens-louis size)) 1000)))
 
-(map (λ(n)
+(map (lambda(n)
        (test n))
      (enumerate-interval 5 8))
 ;; queens-benched ends here

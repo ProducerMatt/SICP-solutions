@@ -62,12 +62,12 @@
 ;; rat-ops-txt ends here
 (load "../mattbench.scm")
 
-(let ((tryit (λ(f)
+(let ((tryit (lambda(f)
                (f 1 2)
                (f -1 2)
                (f 1 -2)
                (f -1 -2))))
 
-  (format #t "~&unoptimized make-rat: ~a~%"(mattbench2 (λ()(tryit make-rat)) 500000000))
-  (format #t "~&optimized make-rat: ~a~%"(mattbench2 (λ()(tryit make-rat-opt)) 500000000)))
+  (format #t "~&unoptimized make-rat: ~a~%"(mattbench2 (lambda()(tryit make-rat)) 500000000))
+  (format #t "~&optimized make-rat: ~a~%"(mattbench2 (lambda()(tryit make-rat-opt)) 500000000)))
 ;; Answer:3 ends here

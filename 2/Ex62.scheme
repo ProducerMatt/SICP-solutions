@@ -105,13 +105,13 @@
       (set2 (enumerate-interval 500 1500)))
   (define (test)
     (format #t "~&union-set: ~a"
-            (cadr (mattbench2 (λ()(union-set set1 set2)) 10000)))
+            (cadr (mattbench2 (lambda()(union-set set1 set2)) 10000)))
     (format #t "~&union-set-ordered: ~a"
-            (cadr (mattbench2 (λ()(union-set-ordered set1 set2)) 50000)))
+            (cadr (mattbench2 (lambda()(union-set-ordered set1 set2)) 50000)))
     (format #t "~&union-set-alt: ~a"
-            (cadr (mattbench2 (λ()(union-set-alt set1 set2)) 500000)))
+            (cadr (mattbench2 (lambda()(union-set-alt set1 set2)) 500000)))
     (format #t "~&union-set-alt2: ~a"
-            (cadr (mattbench2 (λ()(union-set-alt2 set1 set2)) 500000)))
+            (cadr (mattbench2 (lambda()(union-set-alt2 set1 set2)) 500000)))
     )
 
   (test))

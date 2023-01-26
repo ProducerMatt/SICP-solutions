@@ -13,11 +13,11 @@
       (p (sine (/ angle 3.0)))))
 ;; 1-15-deps ends here
 (let* ((vals (iota 300 0.1 0.1))
-       (times (map (λ (i)
-                     (mattbench (λ () (sine i)) 1000000))
+       (times (map (lambda (i)
+                     (mattbench (lambda () (sine i)) 1000000))
                    vals)))
-  (with-output-to-file "sine-bench.dat" (λ ()
-     (map (λ (x y)
+  (with-output-to-file "sine-bench.dat" (lambda ()
+     (map (lambda (x y)
            (format #t "~s~/~s~%" x y))
          vals times))))
 ;; 1-15-sine-bench ends here

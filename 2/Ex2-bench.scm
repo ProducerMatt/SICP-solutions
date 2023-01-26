@@ -37,9 +37,9 @@
 (let* ((p1 (make-point 1.0 2.0))
        (p2 (make-point -1.0 -2.0))
        (s (make-segment p1 p2))
-       (tryit (λ(f)
+       (tryit (lambda(f)
                (f s))))
 
-  (format #t "~&unoptimized midpoint-segment: ~a~%" (mattbench2 (λ()(tryit midpoint-segment)) 50000000))
-  (format #t "~&optimized midpoint-segment: ~a~%" (mattbench2 (λ()(tryit midpoint-segment-opt)) 50000000)))
+  (format #t "~&unoptimized midpoint-segment: ~a~%" (mattbench2 (lambda()(tryit midpoint-segment)) 50000000))
+  (format #t "~&optimized midpoint-segment: ~a~%" (mattbench2 (lambda()(tryit midpoint-segment-opt)) 50000000)))
 ;; Answer:3 ends here

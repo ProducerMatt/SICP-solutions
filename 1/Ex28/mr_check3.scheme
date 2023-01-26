@@ -39,6 +39,6 @@
 (define list-of-carmichaels (call-with-input-file "Data/carmichael.txt" read))
 ;; get-lists-of-primes ends here
 (format #t "      mr detects primes: ~a~%mr false-positives Carmichaels: ~a~%"
-        (and-map (λ(x)(mr-prime? x mr-times)) list-of-primes)
-      (and-map (λ(x)(mr-prime? x mr-times)) list-of-carmichaels))
+        (and-map (lambda(x)(mr-prime? x mr-times)) list-of-primes)
+      (and-map (lambda(x)(mr-prime? x mr-times)) list-of-carmichaels))
 ;; mr-verification2 ends here

@@ -255,24 +255,24 @@
 (define (test-with 2sets repeats)
   (format #t "~&union-set-tree-wrong2: ~a"
           (cadr (mattbench2
-                 (λ()(union-set-tree-wrong2
+                 (lambda()(union-set-tree-wrong2
                       (car 2sets)
                       (cdr 2sets)))
                  repeats)))
   (format #t "~&union-set-l2t: ~a"
           (cadr (mattbench2
-                 (λ()(union-set-l2t (car 2sets)
+                 (lambda()(union-set-l2t (car 2sets)
                                     (cdr 2sets)))
                  repeats)))
   (format #t "~&intersection-set-tree-wrong1: ~a"
           (cadr (mattbench2
-                 (λ()(intersection-set-tree-wrong1
+                 (lambda()(intersection-set-tree-wrong1
                       (car 2sets)
                       (cdr 2sets)))
                  repeats)))
   (format #t "~&intersection-set-l2t: ~a"
           (cadr (mattbench2
-                 (λ()(intersection-set-l2t (car 2sets)
+                 (lambda()(intersection-set-l2t (car 2sets)
                                            (cdr 2sets)))
                  repeats))))
 (format #t "~&~a" (make-2sets 10))

@@ -37,11 +37,11 @@
 ;; same-parity ends here
 (let ((l (cddr (iota 100))))
   (format #t "same-parity: ~a~%"
-          (cdr (mattbench2 (λ()
+          (cdr (mattbench2 (lambda()
                              (apply same-parity l))
                            iters)))
   (format #t "same-parity2: ~a~%"
-          (cdr (mattbench2 (λ()
+          (cdr (mattbench2 (lambda()
                              (apply same-parity2 l))
                            iters))))
 ;; same-parity-benchmark ends here

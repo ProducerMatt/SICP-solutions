@@ -98,14 +98,14 @@
                      (list nn pn)
                      (list nn nn))))
   (format #t "Unoptimized mul-interval: ~a"
-          (cdr (mattbench2 (λ()
-                             (map (λ(l)
+          (cdr (mattbench2 (lambda()
+                             (map (lambda(l)
                                     (apply mul-interval l))
                                   listofpairs))
                            iters)))
   (format #t "Unoptimized mul-interval: ~a"
-          (cdr (mattbench2 (λ()
-                             (map (λ(l)
+          (cdr (mattbench2 (lambda()
+                             (map (lambda(l)
                                     (apply mul-interval-opt l))
                                   listofpairs))
                            iters)))

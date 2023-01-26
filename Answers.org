@@ -118,7 +118,7 @@ column for input and a column for output.
                     (list? (car testvals)))
                (car testvals)
                testvals)))
-    (map (λ (i) (cons i
+    (map (lambda (i) (cons i
                       (cons (if (list? i)
                                 (apply f i)
                                 (f i))
@@ -185,14 +185,14 @@ colnames.
                ((string? mode)
                 mode)))) ;; pass custom format string
       (format #t "~&|")
-      (map (λ(x) (format #t fmtstr x)) ll)
+      (map (lambda(x) (format #t fmtstr x)) ll)
       (format #t "~%")))
 (define* (print-table table #:key (colnames #f) (mode #f))
     (define (iter t)
       (print-row (car t) #:mode mode)
       (if colnames
           (print-row (car t) #:mode "---|"))
-      (map (λ(x) (print-row x #:mode mode)) (cdr t)))
+      (map (lambda(x) (print-row x #:mode mode)) (cdr t)))
     (cond ((and (= 1 (length table))
                 (list? (car table))) (iter (car table)))
           ((<= 1 (length table)) (iter table))
@@ -244,13 +244,13 @@ TODO: Merge these together.
                 mode)))) ;; pass custom format string
     
       (format #t "~&") ;; ensure start of new line
-      (map (λ(x) (format #t fmtstr x)) ll)
+      (map (lambda(x) (format #t fmtstr x)) ll)
       (format #t "~%")))
 
 (define* (print-table table #:key (colnames #f) (mode #f))
     (define (iter t)
       (print-row (car t) #:mode mode)
-      (map (λ(x) (print-row x #:mode mode)) (cdr t)))
+      (map (lambda(x) (print-row x #:mode mode)) (cdr t)))
     (cond ((and (= 1 (length table))
                 (list? (car table))) (iter (car table)))
           ((<= 1 (length table)) (iter table))
@@ -328,7 +328,7 @@ can be called /procedural epistemology/.
   Define a box of the method for finding the fixed point of \(f()\).
 
   One way to find \(\sqrt{x}\) is to take our function for approaching a square
-  root src_scheme{(λ(guess target) (average guess (divide target guess)))}, applying
+  root src_scheme{(lambda(guess target) (average guess (divide target guess)))}, applying
   that to our method for finding a fixed point, and this creates a *procedure* to
   find a square root.
 
@@ -987,7 +987,7 @@ reaches the precision limit of the system:
 (define (sqrt x)
   (sqrt-iter 1.0 x))
 (newline)
-(display (mattbench (λ() (sqrt 69420)) 400000000))
+(display (mattbench (lambda() (sqrt 69420)) 400000000))
 (newline)
 ;; 4731.30 <- Benchmark results
 #+end_src
@@ -1011,7 +1011,7 @@ reaches the precision limit of the system:
 (define (sqrt x)
   (sqrt-iter 1.0 x))
 (newline)
-(display (mattbench (λ() (sqrt 69420)) 400000000))
+(display (mattbench (lambda() (sqrt 69420)) 400000000))
 (newline)
 #+end_src
 
@@ -1630,12 +1630,12 @@ infinite spreadsheet.
 <<try-these>>
 <<pascal-rec>>
 (let ((l (iota 8)))
-  (map (λ (row)
-         (map (λ (xy)
+  (map (lambda (row)
+         (map (lambda (xy)
                 (apply pascal xy))
               row))
-       (map (λ (x)
-              (map (λ (y)
+       (map (lambda (x)
+              (map (lambda (y)
                      (list x y))
                    l))
             l)))
@@ -1746,7 +1746,7 @@ exponential increase of the Fibonacci sequence itself.
 <<try-these>>
 
 (let* ((vals (drop (iota 500) 2))
-       (diffs (map (λ (i)
+       (diffs (map (lambda (i)
                      (- (fib-iter i) (fib-phi i)))
                    vals)))
   (zip vals diffs))
@@ -2145,7 +2145,7 @@ src_scheme{(sine a)} is evaluated?
 (use-srfis '(1))
 <<1-15-p-measure>>
 (let* ((vals (iota 300 0.1 0.1))
-       (sines (map (λ (i)
+       (sines (map (lambda (i)
                      (cdr (sine i)))
                    vals)))
   (zip vals sines))
@@ -2155,7 +2155,7 @@ src_scheme{(sine a)} is evaluated?
 (use-srfis '(1))
 <<1-15-p-measure>>
 (let* ((vals (iota 10 0.1 0.1))
-       (sines (map (λ (i)
+       (sines (map (lambda (i)
                      (cdr (sine i)))
                    vals)))
   (zip vals sines))
@@ -2233,11 +2233,11 @@ We can also prove this for the time by benchmarking the function:
 (load "../../mattbench.scm")
 <<1-15-deps>>
 (let* ((vals (iota 300 0.1 0.1))
-       (times (map (λ (i)
-                     (mattbench (λ () (sine i)) 1000000))
+       (times (map (lambda (i)
+                     (mattbench (lambda () (sine i)) 1000000))
                    vals)))
-  (with-output-to-file "sine-bench.dat" (λ ()
-     (map (λ (x y)
+  (with-output-to-file "sine-bench.dat" (lambda ()
+     (map (lambda (x y)
            (format #t "~s~/~s~%" x y))
          vals times))))
 #+END_SRC
@@ -2405,7 +2405,7 @@ The solution essentially follows this logic:
 #+BEGIN_SRC scheme -n :eval no-export  :exports yes :results value table
 <<fast-expt-iter>>
 <<try-these>>
-(try-these (λ(x) (fast-expt-iter 3 x)) (cdr (iota 11)))
+(try-these (lambda(x) (fast-expt-iter 3 x)) (cdr (iota 11)))
 #+end_src
 
 #+RESULTS[ae537d78c52d471bef9f5b0951596dc3d4340603]:
@@ -2470,7 +2470,7 @@ Proof it works:
 #+BEGIN_SRC scheme -n :eval no-export  :exports yes :results value table
 <<fast-mult-rec>>
 <<try-these>>
-(try-these (λ(x) (fast-mult-rec 3 x)) (cdr (iota 11)))
+(try-these (lambda(x) (fast-mult-rec 3 x)) (cdr (iota 11)))
 #+end_src
 
 #+RESULTS[3ce2cd1f0e04c83aac17e721c2e17a937fc0cb25]:
@@ -2507,8 +2507,8 @@ doubling, and halving and uses a logarithmic number of steps.
 <<fast-mult-rec>>
 <<print-table>>
 (print-table (list (list "fast-mult-rec" "fast-mult-iter")
-                   (list (mattbench (λ() (fast-mult-rec 32 32)) 10000000)
-                         (mattbench (λ() (fast-mult 32 32)) 10000000)))
+                   (list (mattbench (lambda() (fast-mult-rec 32 32)) 10000000)
+                         (mattbench (lambda() (fast-mult 32 32)) 10000000)))
              #:colnames #t)
 #+END_SRC
 
@@ -2545,7 +2545,7 @@ Some of my /very/ incorrect ideas:
 #+BEGIN_SRC scheme -n :eval no-export  :exports yes :results value table
 <<fast-mult-iter>>
 <<try-these>>
-(try-these (λ(x) (fast-mult 3 x)) (cdr (iota 11)))
+(try-these (lambda(x) (fast-mult 3 x)) (cdr (iota 11)))
 #+end_src
 
 #+RESULTS[900f6cc983a51f9e0902587546cbd7d746845b50]:
@@ -2629,7 +2629,7 @@ the attached list. so src_scheme{(T 0 1)} returns a fib function.
 #+NAME: T-func
 #+BEGIN_SRC scheme -n :eval no-export :exports code :results silent
 (define (T p q)
-  (λ (a b)
+  (lambda (a b)
     (cons (+ (* b q) (* a q) (* a p))
           (+ (* b p) (* a q)))))
 
@@ -2655,7 +2655,7 @@ the attached list. so src_scheme{(T 0 1)} returns a fib function.
 #+BEGIN_SRC scheme -n :eval no-export  :exports both :results value table
 <<T-func>>
 <<try-these>>
-(try-these (λ (x) (Tr (T 0 1) x)) (cdr (iota 11)))
+(try-these (lambda (x) (Tr (T 0 1) x)) (cdr (iota 11)))
 #+END_SRC
 
 #+RESULTS[b253f74cff9961bd33f160a88f16f5986ecc2d07]: T-test
@@ -3128,10 +3128,10 @@ I can benchmark these functions like so:
 
 (define benchmark-iterations 1000000)
 (define (testit f)
-  (list (cadr (mattbench2 (λ() (f 1000 3)) benchmark-iterations))
-        (cadr (mattbench2 (λ() (f 10000 3)) benchmark-iterations))
-        (cadr (mattbench2 (λ() (f 100000 3)) benchmark-iterations))
-        (cadr (mattbench2 (λ() (f 1000000 3)) benchmark-iterations))))
+  (list (cadr (mattbench2 (lambda() (f 1000 3)) benchmark-iterations))
+        (cadr (mattbench2 (lambda() (f 10000 3)) benchmark-iterations))
+        (cadr (mattbench2 (lambda() (f 100000 3)) benchmark-iterations))
+        (cadr (mattbench2 (lambda() (f 1000000 3)) benchmark-iterations))))
 
 (print-row
  (testit search-for-primes))
@@ -3242,10 +3242,10 @@ you explain the fact that it is different from 2?
 
 (define benchmark-iterations 1000000)
 (define (testit f)
-  (list (cadr (mattbench2 (λ() (f 1000 3)) benchmark-iterations))
-        (cadr (mattbench2 (λ() (f 10000 3)) benchmark-iterations))
-        (cadr (mattbench2 (λ() (f 100000 3)) benchmark-iterations))
-        (cadr (mattbench2 (λ() (f 1000000 3)) benchmark-iterations))))
+  (list (cadr (mattbench2 (lambda() (f 1000 3)) benchmark-iterations))
+        (cadr (mattbench2 (lambda() (f 10000 3)) benchmark-iterations))
+        (cadr (mattbench2 (lambda() (f 100000 3)) benchmark-iterations))
+        (cadr (mattbench2 (lambda() (f 1000000 3)) benchmark-iterations))))
 
 (print-row
  (testit search-for-primes))
@@ -3338,10 +3338,10 @@ Ok, let's try that again.
 
 (define benchmark-iterations 500000)
 (define (testit f)
-  (list (cadr (mattbench2 (λ() (f 1000 3)) benchmark-iterations))
-        (cadr (mattbench2 (λ() (f 10000 3)) benchmark-iterations))
-        (cadr (mattbench2 (λ() (f 100000 3)) benchmark-iterations))
-        (cadr (mattbench2 (λ() (f 1000000 3)) benchmark-iterations))))
+  (list (cadr (mattbench2 (lambda() (f 1000 3)) benchmark-iterations))
+        (cadr (mattbench2 (lambda() (f 10000 3)) benchmark-iterations))
+        (cadr (mattbench2 (lambda() (f 100000 3)) benchmark-iterations))
+        (cadr (mattbench2 (lambda() (f 1000000 3)) benchmark-iterations))))
 
 (print-row
  (testit search-for-primes))
@@ -3408,13 +3408,13 @@ Using it for percentage comparisons:
 (list (cons "% speedup for broken (next)"
             (cons (format #f "~2$%"
                           (apply average
-                                 (map (λ (x y) (* 100 (/ x y)))
+                                 (map (lambda (x y) (* 100 (/ x y)))
                                       (car smd) (car smdf))))
                   #nil))
       (cons "% speedup for real (next)"
             (cons (format #f "~2$%"
                           (apply average
-                                 (map (λ (x y) (* 100 (/ x y)))
+                                 (map (lambda (x y) (* 100 (/ x y)))
                                       (car smd) (car smdff))))
                   #nil)))
 #+END_SRC
@@ -3464,10 +3464,10 @@ something more like a 200% speedup. Let's try optimizing it further. Two observa
 
 (define benchmark-iterations 500000)
 (define (testit f)
-  (list (cadr (mattbench2 (λ() (f 1000 3)) benchmark-iterations))
-        (cadr (mattbench2 (λ() (f 10000 3)) benchmark-iterations))
-        (cadr (mattbench2 (λ() (f 100000 3)) benchmark-iterations))
-        (cadr (mattbench2 (λ() (f 1000000 3)) benchmark-iterations))))
+  (list (cadr (mattbench2 (lambda() (f 1000 3)) benchmark-iterations))
+        (cadr (mattbench2 (lambda() (f 10000 3)) benchmark-iterations))
+        (cadr (mattbench2 (lambda() (f 100000 3)) benchmark-iterations))
+        (cadr (mattbench2 (lambda() (f 1000000 3)) benchmark-iterations))))
 
 (print-row
  (testit search-for-primes))
@@ -3524,7 +3524,7 @@ file:1/fig/1-22-4.png
   (list (format #f "% speedup for ~a" name)
         (format #f "~2$%"
                 (apply average
-                       (map (λ (x y) (* 100 (/ x y)))
+                       (map (lambda (x y) (* 100 (/ x y)))
                             lista listb)))))
 (list (print-percentage "broken (next)" (car smd) (car smdf))
       (print-percentage "real (next)" (car smd) (car smdff))
@@ -3599,10 +3599,10 @@ you explain any discrepancy you find?
 
 (define benchmark-iterations 500000)
 (define (testit f)
-  (list (cadr (mattbench2 (λ() (f 1000 3)) benchmark-iterations))
-        (cadr (mattbench2 (λ() (f 10000 3)) benchmark-iterations))
-        (cadr (mattbench2 (λ() (f 100000 3)) benchmark-iterations))
-        (cadr (mattbench2 (λ() (f 1000000 3)) benchmark-iterations))))
+  (list (cadr (mattbench2 (lambda() (f 1000 3)) benchmark-iterations))
+        (cadr (mattbench2 (lambda() (f 10000 3)) benchmark-iterations))
+        (cadr (mattbench2 (lambda() (f 100000 3)) benchmark-iterations))
+        (cadr (mattbench2 (lambda() (f 1000000 3)) benchmark-iterations))))
 
 (print-row
  (testit search-for-primes))
@@ -3665,16 +3665,16 @@ to see more of the function.
 
 (define benchmark-iterations 100000)
 (define (testit f)
-  (list (cadr (mattbench2 (λ() (f 1000 3)) benchmark-iterations))
-        (cadr (mattbench2 (λ() (f 10000 3)) benchmark-iterations))
-        (cadr (mattbench2 (λ() (f 100000 3)) benchmark-iterations))
-        (cadr (mattbench2 (λ() (f 1000000 3)) benchmark-iterations))
-        (cadr (mattbench2 (λ() (f 10000000 3)) benchmark-iterations))
-        (cadr (mattbench2 (λ() (f 100000000 3)) benchmark-iterations))
-        (cadr (mattbench2 (λ() (f 1000000000 3)) benchmark-iterations))
-        (cadr (mattbench2 (λ() (f 10000000000 3)) benchmark-iterations))
-        (cadr (mattbench2 (λ() (f 100000000000 3)) benchmark-iterations))
-        (cadr (mattbench2 (λ() (f 1000000000000 3)) benchmark-iterations))))
+  (list (cadr (mattbench2 (lambda() (f 1000 3)) benchmark-iterations))
+        (cadr (mattbench2 (lambda() (f 10000 3)) benchmark-iterations))
+        (cadr (mattbench2 (lambda() (f 100000 3)) benchmark-iterations))
+        (cadr (mattbench2 (lambda() (f 1000000 3)) benchmark-iterations))
+        (cadr (mattbench2 (lambda() (f 10000000 3)) benchmark-iterations))
+        (cadr (mattbench2 (lambda() (f 100000000 3)) benchmark-iterations))
+        (cadr (mattbench2 (lambda() (f 1000000000 3)) benchmark-iterations))
+        (cadr (mattbench2 (lambda() (f 10000000000 3)) benchmark-iterations))
+        (cadr (mattbench2 (lambda() (f 100000000000 3)) benchmark-iterations))
+        (cadr (mattbench2 (lambda() (f 1000000000000 3)) benchmark-iterations))))
 
 (print-row
  (testit search-for-primes))
@@ -3694,16 +3694,16 @@ to see more of the function.
 
 (define benchmark-iterations 100000)
 (define (testit f)
-  (list (cadr (mattbench2 (λ() (f 1000 3)) benchmark-iterations))
-        (cadr (mattbench2 (λ() (f 10000 3)) benchmark-iterations))
-        (cadr (mattbench2 (λ() (f 100000 3)) benchmark-iterations))
-        (cadr (mattbench2 (λ() (f 1000000 3)) benchmark-iterations))
-        (cadr (mattbench2 (λ() (f 10000000 3)) benchmark-iterations))
-        (cadr (mattbench2 (λ() (f 100000000 3)) benchmark-iterations))
-        (cadr (mattbench2 (λ() (f 1000000000 3)) benchmark-iterations))
-        (cadr (mattbench2 (λ() (f 10000000000 3)) benchmark-iterations))
-        (cadr (mattbench2 (λ() (f 100000000000 3)) benchmark-iterations))
-        (cadr (mattbench2 (λ() (f 1000000000000 3)) benchmark-iterations))))
+  (list (cadr (mattbench2 (lambda() (f 1000 3)) benchmark-iterations))
+        (cadr (mattbench2 (lambda() (f 10000 3)) benchmark-iterations))
+        (cadr (mattbench2 (lambda() (f 100000 3)) benchmark-iterations))
+        (cadr (mattbench2 (lambda() (f 1000000 3)) benchmark-iterations))
+        (cadr (mattbench2 (lambda() (f 10000000 3)) benchmark-iterations))
+        (cadr (mattbench2 (lambda() (f 100000000 3)) benchmark-iterations))
+        (cadr (mattbench2 (lambda() (f 1000000000 3)) benchmark-iterations))
+        (cadr (mattbench2 (lambda() (f 10000000000 3)) benchmark-iterations))
+        (cadr (mattbench2 (lambda() (f 100000000000 3)) benchmark-iterations))
+        (cadr (mattbench2 (lambda() (f 1000000000000 3)) benchmark-iterations))))
 
 (print-row
  (testit search-for-primes))
@@ -3939,7 +3939,7 @@ read/write functions that save Lisp lists to text:
 <<find-divisor-faster-real>>
 (define (prime? n)
   (= n (smallest-divisor n)))
-(call-with-output-file "Data/primes-1k_to_1mil.txt" (λ(port)
+(call-with-output-file "Data/primes-1k_to_1mil.txt" (lambda(port)
   (write (filter prime? (iota (- 1000000 1000) 1000))
          port)))
 #+END_SRC
@@ -3965,9 +3965,9 @@ read/write functions that save Lisp lists to text:
 <<find-divisor-faster-real>>
 (define (prime? n)
   (= n (smallest-divisor n)))
-(call-with-output-file "Data/carmichael-verification.txt" (λ(port)
+(call-with-output-file "Data/carmichael-verification.txt" (lambda(port)
      (write (filter
-             (λ(x) (and (fermat-prime? x)
+             (lambda(x) (and (fermat-prime? x)
                         (not (prime? x))))
              (iota (- 1000000 1000) 1000))
             port)))
@@ -4056,8 +4056,8 @@ This will be useful in various future functions:
 (define mr-times 100)
 <<get-lists-of-primes>>
 (format #t "      mr detects primes: ~a~%mr false-positives Carmichaels: ~a~%"
-        (and-map (λ(x)(mr-prime? x mr-times)) list-of-primes)
-      (and-map (λ(x)(mr-prime? x mr-times)) list-of-carmichaels))
+        (and-map (lambda(x)(mr-prime? x mr-times)) list-of-primes)
+      (and-map (lambda(x)(mr-prime? x mr-times)) list-of-carmichaels))
 #+END_SRC
 
 #+RESULTS[949daa71bbf35095f8025130b9fb179b5308e7fa]: mr-verification
@@ -4098,8 +4098,8 @@ and use that to determine whether the square is valid or not.
 (define mr-times 100)
 <<get-lists-of-primes>>
 (format #t "      mr detects primes: ~a~%mr false-positives Carmichaels: ~a~%"
-        (and-map (λ(x)(mr-prime? x mr-times)) list-of-primes)
-      (and-map (λ(x)(mr-prime? x mr-times)) list-of-carmichaels))
+        (and-map (lambda(x)(mr-prime? x mr-times)) list-of-primes)
+      (and-map (lambda(x)(mr-prime? x mr-times)) list-of-carmichaels))
 #+END_SRC
 
 Unfortunately this one has the same problem. What's the issue?
@@ -4131,8 +4131,8 @@ One more time.
 (define mr-times 100)
 <<get-lists-of-primes>>
 (format #t "      mr detects primes: ~a~%mr false-positives Carmichaels: ~a~%"
-        (and-map (λ(x)(mr-prime? x mr-times)) list-of-primes)
-      (and-map (λ(x)(mr-prime? x mr-times)) list-of-carmichaels))
+        (and-map (lambda(x)(mr-prime? x mr-times)) list-of-primes)
+      (and-map (lambda(x)(mr-prime? x mr-times)) list-of-carmichaels))
 #+END_SRC
 
 #+BEGIN_SRC
@@ -4444,8 +4444,8 @@ that generates a recursive process.
 (define iterations 50000)
 (print-table
  (list (list "iterative" "recursive")
-       (list (cadr (mattbench2 (λ()(pi-product 1000)) iterations))
-             (cadr (mattbench2 (λ()(pi-product-rec 1000)) iterations))))
+       (list (cadr (mattbench2 (lambda()(pi-product 1000)) iterations))
+             (cadr (mattbench2 (lambda()(pi-product-rec 1000)) iterations))))
  #:colnames #t)
 #+END_SRC
 
@@ -4638,13 +4638,13 @@ relatively prime to \(n\) (i.e., all positive integers \(i < n\) such that
 
 (define (Ex_1-33B n)
   (filtered-accumulate-iter
-   (λ(i) (relative-prime? i n))
+   (lambda(i) (relative-prime? i n))
    ,* 1 id
    1 1+ (1- n)))
 
 (define (alternate n)
   (apply *
-         (filter (λ(i) (relative-prime? i n))
+         (filter (lambda(i) (relative-prime? i n))
                  (iota (- n 1) 1))))
 
 (mattcheck-equal "Ex_1-33B"
@@ -4777,7 +4777,7 @@ the src_scheme{fixed-point} procedure.
 <<close-enough>>
 <<fixed-point-txt>>
 (define golden-ratio
-  (fixed-point (λ(x)(+ 1 (/ 1 x)))
+  (fixed-point (lambda(x)(+ 1 (/ 1 x)))
                1.0))
 
 (display golden-ratio)
@@ -4830,7 +4830,7 @@ extent is pretty exhausting, so I'll use src_scheme{format} instead.
 #+BEGIN_SRC scheme -n :eval no-export :results output :exports code
 <<close-enough>>
 <<fixed-point-debug>>
-(fixed-point (λ(x) (/ (log 1000) (log x))) 1.1)
+(fixed-point (lambda(x) (/ (log 1000) (log x))) 1.1)
 #+END_SRC
 
 #+RESULTS[26e30764924462e2d22df8d8ba9a56af22698a31]:
@@ -4881,7 +4881,7 @@ Undamped, fixed-point makes 37 guesses.
 <<fixed-point-debug>>
 (define (average x y)
   (/ (+ x y) 2))
-(fixed-point (λ(x) (average (log x) (/ (log 1000) (log x)))) 1.1)
+(fixed-point (lambda(x) (average (log x) (/ (log 1000) (log x)))) 1.1)
 #+END_SRC
 
 #+RESULTS[c8b656c007db26b56776bc139a6cba1a86bb3755]:
@@ -4970,11 +4970,11 @@ order to get an approximation that is accurate to 4 decimal places?
 #+BEGIN_SRC scheme -n :eval no-export :results value table :exports results
 <<cont-frac>>
 (define (golden-ratio k)
-  (cont-frac (λ(i) 1.0)(λ(i)1.0) k))
+  (cont-frac (lambda(i) 1.0)(lambda(i)1.0) k))
 
-(map (λ(x y) (list x y))
+(map (lambda(x y) (list x y))
      (iota 10 1)
-      (map (λ(x)(- 0.61803398874989484820
+      (map (lambda(x)(- 0.61803398874989484820
                    (golden-ratio x)))
            (iota 10 1)))
 #+END_SRC
@@ -5037,9 +5037,9 @@ one that generates a recursive process.
 <<cont-frac>>
 <<cont-frac-rec>>
 (define (golden-ratio k)
-  (cont-frac (λ(i) 1.0)(λ(i)1.0) k))
+  (cont-frac (lambda(i) 1.0)(lambda(i)1.0) k))
 (define (golden-ratio-rec k)
-  (cont-frac-rec (λ(i) 1.0)(λ(i)1.0) k))
+  (cont-frac-rec (lambda(i) 1.0)(lambda(i)1.0) k))
 
 (load "mattcheck.scm")
 (mattcheck-equal "cont-frac iter and recursive equivalence"
@@ -5073,8 +5073,8 @@ from Exercise 1.37 to approximate \(e\), based on Euler's expansion.
 <<cont-frac>>
 (define (euler k)
   (+ 2
-     (cont-frac (λ(i) 1.0)
-             (λ(i) (let ((j (1+ i)))
+     (cont-frac (lambda(i) 1.0)
+             (lambda(i) (let ((j (1+ i)))
                      (if (= 0 (modulo j 3))
                          (* 2 (/ j 3))
                          1)))
@@ -5110,10 +5110,10 @@ src_scheme{k} specifies the number of terms to compute, as in Exercise 1.37.
 #+BEGIN_SRC scheme -n :eval no-export :results value :exports both
 <<cont-frac>>
 (define (tan-cf x k)
-  (cont-frac (λ(i) (if (= i 1)
+  (cont-frac (lambda(i) (if (= i 1)
                        x
                        (* x x -1.0)))
-             (λ(i) (if (= i 1)
+             (lambda(i) (if (= i 1)
                        1.0
                        (- (* i 2.0) 1.0)))
              k))
@@ -5248,7 +5248,7 @@ returned by
 #+NAME: double
 #+BEGIN_SRC scheme :eval no-export :results silent
 (define (double f)
-  (λ (x)
+  (lambda (x)
     (f (f x))))
 #+END_SRC
 
@@ -5280,7 +5280,7 @@ src_scheme{compose} that implements composition.
 #+NAME: compose
 #+BEGIN_SRC scheme :eval no-export :results silent
 (define (compose f g)
-  (λ(x)
+  (lambda(x)
     (f (g x))))
 #+END_SRC
 
@@ -5366,7 +5366,7 @@ from Exercise 1.43.
 #+BEGIN_SRC scheme :eval no-export :results silent
 <<average-varargs>>
 (define (smooth f)
-  (λ(x)
+  (lambda(x)
     (average (f (- x dx))
              (f x)
              (f (+ x dx)))))
@@ -5537,7 +5537,7 @@ dampings were needed to find them.
   (iter '()))
 (let* ((t (reverse (nth-tester 3 65))))
   (cons '("root" "result" "damps needed" "floor(sqrt(root))" "floor(log2(root))")
-        (map (λ(x)
+        (map (lambda(x)
                (append x
                        (list (floor (sqrt (car x)))
                              (floor (/ (log (car x))(log 2))))))
@@ -5890,14 +5890,14 @@ SUCCEED at make-rat-opt denominator negative
 <<rat-ops-txt>>
 (load "../mattbench.scm")
 
-(let ((tryit (λ(f)
+(let ((tryit (lambda(f)
                (f 1 2)
                (f -1 2)
                (f 1 -2)
                (f -1 -2))))
 
-  (format #t "~&unoptimized make-rat: ~a~%"(mattbench2 (λ()(tryit make-rat)) 500000000))
-  (format #t "~&optimized make-rat: ~a~%"(mattbench2 (λ()(tryit make-rat-opt)) 500000000)))
+  (format #t "~&unoptimized make-rat: ~a~%"(mattbench2 (lambda()(tryit make-rat)) 500000000))
+  (format #t "~&optimized make-rat: ~a~%"(mattbench2 (lambda()(tryit make-rat-opt)) 500000000)))
 #+end_src
 
 My "optimized" version shows no benefit at all:
@@ -6009,11 +6009,11 @@ SUCCEED at midpoint-segment-opt
 (let* ((p1 (make-point 1.0 2.0))
        (p2 (make-point -1.0 -2.0))
        (s (make-segment p1 p2))
-       (tryit (λ(f)
+       (tryit (lambda(f)
                (f s))))
 
-  (format #t "~&unoptimized midpoint-segment: ~a~%" (mattbench2 (λ()(tryit midpoint-segment)) 50000000))
-  (format #t "~&optimized midpoint-segment: ~a~%" (mattbench2 (λ()(tryit midpoint-segment-opt)) 50000000)))
+  (format #t "~&unoptimized midpoint-segment: ~a~%" (mattbench2 (lambda()(tryit midpoint-segment)) 50000000))
+  (format #t "~&optimized midpoint-segment: ~a~%" (mattbench2 (lambda()(tryit midpoint-segment-opt)) 50000000)))
 #+end_src
 
 And once again my bikeshedding is revealed:
@@ -6479,13 +6479,13 @@ Let's do some analysis to see how these numbers are related.
 <<cons-nnint>>
 (let*
     ((tablesize 7)
-     (inputs (map (λ(x)
-                    (map (λ(y)
+     (inputs (map (lambda(x)
+                    (map (lambda(y)
                            (cons x y))
                          (iota tablesize)))
                   (iota tablesize)))
-     (outputs (map (λ(row)
-                     (map (λ(col)
+     (outputs (map (lambda(row)
+                     (map (lambda(col)
                             (cons-nnint (car col) (cdr col)))
                           row))
                    inputs)))
@@ -6510,9 +6510,9 @@ Here are our scrambled numbers.
 <<repeated>>
 (let ((targetcol 2)
       (unwantedbase 3))
-  (map (λ(row)
-         (map (λ(item)
-                ((repeated (λ(x) 
+  (map (lambda(row)
+         (map (lambda(item)
+                ((repeated (lambda(x) 
                              (/ x unwantedbase)) targetcol)
                  item))
                 row))
@@ -6535,8 +6535,8 @@ being linearly exponentiated by 2 because the original numbers were linear.
 #+BEGIN_SRC scheme -n :eval no-export :results value table :exports both :var data=2-5-table2
 <<logn>>
 (let ((wantedbase 2))
-  (map (λ(row)
-         (map (λ(item)
+  (map (lambda(row)
+         (map (lambda(item)
                 (format #f "~6,3f" (logn 2 item)))
                 row))
        data))
@@ -6575,16 +6575,16 @@ src_scheme{cdr} procedures.
   (all-your-base ab 2 3))
 
 (let* ((initvalues '((2 3) (4 5) (7 2)))
-       (conslist (map (λ(x)
+       (conslist (map (lambda(x)
                         (apply cons-nnint x))
                       initvalues))
-       (carlist (map (λ(x)
+       (carlist (map (lambda(x)
                        (car-nnint x))
                      conslist))
-       (cdrlist (map (λ(x)
+       (cdrlist (map (lambda(x)
                        (cdr-nnint x))
                      conslist)))
-  (map (λ(x y) (cons x y))
+  (map (lambda(x y) (cons x y))
        (list "pairs" "cons'd" "car" "cdr")
        (list initvalues conslist carlist cdrlist)))
 #+END_SRC
@@ -6609,9 +6609,9 @@ numbers (at least insofar as nonnegative integers are concerned) by implementing
 
 #+NAME: lc-zero-add1
 #+BEGIN_SRC scheme -n :eval no-export
-(define zero (λ (f) (λ (x) x)))
+(define zero (lambda (f) (lambda (x) x)))
 (define (add-1 n)
-  (λ (f) (λ (x) (f ((n f) x)))))
+  (lambda (f) (lambda (x) (f ((n f) x)))))
 #+END_SRC
 
 #+begin_quote
@@ -6628,17 +6628,17 @@ src_scheme{+} (not in terms of repeated application of src_scheme{add-1}).
 
 First, let's check out src_scheme{(add-1 zero)}.
 #+BEGIN_SRC scheme -n
-(define zero (λ (f) (λ (x) x)))
+(define zero (lambda (f) (lambda (x) x)))
 (define (add-1 n)
-  (λ (f) (λ (x)
+  (lambda (f) (lambda (x)
            (f ((n f) x)))))
 
 (add-1 zero)
-((λ (f) (λ (x)
+((lambda (f) (lambda (x)
           (f ((zero f) x)))))
-((λ (f) (λ (x)
-          (f ((λ (x) x) x)))))
-((λ (f) (λ (x)
+((lambda (f) (lambda (x)
+          (f ((lambda (x) x) x)))))
+((lambda (f) (lambda (x)
           (f x))))
 #+END_SRC
 
@@ -6646,10 +6646,10 @@ So from this I believe the correct definition of one and two are:
 #+BEGIN_SRC scheme -n :eval no-export :exports both
 (load "mattcheck2.scm")
 (define one
-  (λ (f) (λ (x)
+  (lambda (f) (lambda (x)
            (f x))))
 (define two
-  (λ (f) (λ (x)
+  (lambda (f) (lambda (x)
             (f (f x)))))
 
 (mattcheck "1 = 1+0"
@@ -6660,7 +6660,7 @@ So from this I believe the correct definition of one and two are:
            ((two 1+) 0))
 
 (define (add a b)
-  (λ (f) (λ (x)
+  (lambda (f) (lambda (x)
            ((a f) ((b f) x)))))
 
 (mattcheck "3 = 1+2 = (1+0) + (1+1+0)"
@@ -6965,34 +6965,34 @@ Let's examine the nine cases.
                        (list nn pp)
                        (list nn pn)
                        (list nn nn)))
-         (givesign (λ(x)
+         (givesign (lambda(x)
                      (if (negative? x)
                          "-"
                          "+")))
-         (print-sign (λ(I)
+         (print-sign (lambda(I)
                        (format #f "~a ~a"
                                (givesign (upper-bound I))
                                (givesign (lower-bound I)))))
-         (print-int (λ(I)
+         (print-int (lambda(I)
                       (format #f "~a/~a"
                               (upper-bound I)
                               (lower-bound I))))
-         (print-ints (λ(I J)
+         (print-ints (lambda(I J)
                        (format #f "~a times ~a"
                                (print-int I)
                                (print-int J))))
-         (results (map (λ(p)
+         (results (map (lambda(p)
                          (apply f p))
                        listofpairs)))
     (list
-     (map (λ(p)
+     (map (lambda(p)
             (apply print-ints p))
           listofpairs)
      (map print-int results)
-     (map (λ(I)
+     (map (lambda(I)
             (print-sign I))
           results)
-     (map (λ(p)
+     (map (lambda(p)
             (format #f "~a // ~a"
                     (print-sign (car p))
                     (print-sign (cadr p))))
@@ -7089,7 +7089,7 @@ Let's examine the nine cases.
                        (list "nn*pp" nn pp)
                        (list "nn*pn" nn pn)
                        (list "nn*nn" nn nn))))
-    (map (λ(l)
+    (map (lambda(l)
            (mattcheck (car l)
                       (apply f1 (cdr l))
                       (apply f2 (cdr l))))
@@ -7135,14 +7135,14 @@ SUCCEED at nn*nn
                      (list nn pn)
                      (list nn nn))))
   (format #t "Unoptimized mul-interval: ~a"
-          (cdr (mattbench2 (λ()
-                             (map (λ(l)
+          (cdr (mattbench2 (lambda()
+                             (map (lambda(l)
                                     (apply mul-interval l))
                                   listofpairs))
                            iters)))
   (format #t "Unoptimized mul-interval: ~a"
-          (cdr (mattbench2 (λ()
-                             (map (λ(l)
+          (cdr (mattbench2 (lambda()
+                             (map (lambda(l)
                                     (apply mul-interval-opt l))
                                   listofpairs))
                            iters)))
@@ -7564,7 +7564,7 @@ function src_scheme{f}:
       (cons (f (car l))
             (map f (cdr l)))))
 
-(map (λ(x)(* x 2))
+(map (lambda(x)(* x 2))
      (list 1 2 3 4))
 #+END_SRC
 
@@ -7744,11 +7744,11 @@ Apparently, the order of the list does /not/ affect the value. However, it does 
 <<Ex-2-19>>
 (let ((rev-us-coins (reverse us-coins)))
   (format #t "decreasing values: ~a~%"
-          (cdr (mattbench2 (λ()
+          (cdr (mattbench2 (lambda()
                              (cc 100 us-coins))
                            iters)))
   (format #t "increasing values: ~a~%"
-          (cdr (mattbench2 (λ()
+          (cdr (mattbench2 (lambda()
                              (cc 100 rev-us-coins))
                            iters))))
 #+END_SRC
@@ -7834,11 +7834,11 @@ even-odd parity as the first argument.  For example,
 <<same-parity>>
 (let ((l (cddr (iota 100))))
   (format #t "same-parity: ~a~%"
-          (cdr (mattbench2 (λ()
+          (cdr (mattbench2 (lambda()
                              (apply same-parity l))
                            iters)))
   (format #t "same-parity2: ~a~%"
-          (cdr (mattbench2 (λ()
+          (cdr (mattbench2 (lambda()
                              (apply same-parity2 l))
                            iters))))
 #+END_SRC
@@ -8033,8 +8033,8 @@ src_scheme{for-each}.
 #+END_SRC
 #+BEGIN_SRC scheme -n :eval no-export :results output
 <<for-each-mine>>
-(for-each-mine (λ(x)(display x)(display " ")) (list "all" "your" "base"))
-(for-each (λ(x)(display x)(display " ")) (list "are" "belong" "to" "us"))
+(for-each-mine (lambda(x)(display x)(display " ")) (list "all" "your" "base"))
+(for-each (lambda(x)(display x)(display " ")) (list "are" "belong" "to" "us"))
 #+END_SRC
 
 #+RESULTS[97f7b4879e8dbad6864e9651b39d957072f54621]:
@@ -8856,7 +8856,7 @@ works:
   (if (null? s)
       (list '())
       (let ((rest (subsets (cdr s))))
-        (append rest (map (λ(x)
+        (append rest (map (lambda(x)
                             (cons (car s) x))
                           rest)))))
 #+END_SRC
@@ -8911,7 +8911,7 @@ help clarify the operation.
              (echo-return (list '()))
              (let ((rest (subsets-debug (cdr s))))
                (echo "[ iter" (car s) "over" rest "]")
-               (append rest (map (λ(x)
+               (append rest (map (lambda(x)
                                    (let ((y (cons (car s) x)))
                                      (format #t "~a " y)
                                      y))
@@ -9008,7 +9008,7 @@ Fill in the missing expressions to complete the following definitions of some ba
 (define (append-acc seq1 seq2)
   (accumulate cons seq2 seq1))
 (define (length-acc sequence)
-  (accumulate (λ(x y)
+  (accumulate (lambda(x y)
                 (1+ y))
               0 sequence))
 #+END_SRC
@@ -9123,9 +9123,9 @@ Redefine src_scheme{count-leaves} from
 #+NAME: count-leaves-acc
 #+BEGIN_SRC scheme -n :eval no-export :results silent
 (define (count-leaves-acc t)
-  (accumulate (λ(i total)
+  (accumulate (lambda(i total)
                 (+ i total))
-              0 (map (λ(x)
+              0 (map (lambda(x)
                        (if (pair? x)
                            (count-leaves-acc x)
                            1))
@@ -9237,15 +9237,15 @@ Define these operations:
 (define (dot-product v w)
   (accumulate + 0 (map * v w)))
 (define (matrix-*-vector m v)
-  (map (λ(row)
+  (map (lambda(row)
          (dot-product v row))
        m))
 (define (transpose mat)
   (accumulate-n cons '() mat))
 (define (matrix-*-matrix m n)
   (let ((cols (transpose n)))
-    (map (λ(row)
-           (map (λ(col)
+    (map (lambda(row)
+           (map (lambda(col)
                   (dot-product row col))
                 cols))
            m)))
@@ -9306,8 +9306,8 @@ for row in m1:
 But much harder to comprehend Lisp code like this:
 
 #+begin_src scheme
-(map (λ(row)
-       (map (λ(col)
+(map (lambda(row)
+       (map (lambda(col)
               (dot-product row col))
             m1t))
      m1)
@@ -9580,9 +9580,9 @@ a given integer \(s\).
 <<enumerate-interval>>
 <<flatmap>>
 (define (unique-triplets n)
-  (flatmap (λ(i)
-             (flatmap (λ(j)
-                        (map (λ(k) (list i j k))
+  (flatmap (lambda(i)
+             (flatmap (lambda(j)
+                        (map (lambda(k) (list i j k))
                              (enumerate-interval 1 (- j 1))))
                       (enumerate-interval 1 (- i 1))))
            (enumerate-interval 1 n)))
@@ -9591,7 +9591,7 @@ a given integer \(s\).
 #+NAME: triplets-sum
 #+BEGIN_SRC scheme -n :eval no-export :results silent
 (define (triplets-sum n s)
-  (filter (λ(triplet)
+  (filter (lambda(triplet)
             (= s (fold + 0 triplet)))
           (unique-triplets n)))
 #+END_SRC
@@ -9688,7 +9688,7 @@ Complete the program by writing the following:
       (= row-diff col-diff)))
   (let* ((new (newer-position board))
          (compare (older-positions board)))
-    (and-map (λ(pos)
+    (and-map (lambda(pos)
                (not (or (same-row? new pos)
                    (diagonal? new pos))))
              compare)))
@@ -9768,11 +9768,11 @@ with benchmarks.
 
 (define (test size)
   (format #t "~&normal queens x~a: ~a" size
-          (mattbench (λ()(queens size)) 10000))
+          (mattbench (lambda()(queens size)) 10000))
   (format #t "~&swapped queens x~a: ~a" size
-          (mattbench (λ()(queens-louis size)) 1000)))
+          (mattbench (lambda()(queens-louis size)) 1000)))
 
-(map (λ(n)
+(map (lambda(n)
        (test n))
      (enumerate-interval 5 8))
 #+END_SRC
@@ -11607,9 +11607,9 @@ SUCCEED at union-set
       (set2 (enumerate-interval 500 1500)))
   (define (test)
     (format #t "~&recursive union-sets: ~a"
-            (cadr (mattbench2 (λ()(union-set-rec set1 set2)) 10000)))
+            (cadr (mattbench2 (lambda()(union-set-rec set1 set2)) 10000)))
     (format #t "~&iterative union-sets: ~a"
-            (cadr (mattbench2 (λ()(union-set set1 set2)) 10000))))
+            (cadr (mattbench2 (lambda()(union-set set1 set2)) 10000))))
 
   (test))
 #+END_SRC
@@ -11714,15 +11714,15 @@ SUCCEED at intersection-set-dupes2
       (set2 (enumerate-interval 500 1500)))
   (define (test)
     (format #t "~&union-sets: ~a"
-            (cadr (mattbench2 (λ()(union-set set1 set2)) 10000)))
+            (cadr (mattbench2 (lambda()(union-set set1 set2)) 10000)))
     (format #t "~&union-sets-dupes: ~a"
-            (cadr (mattbench2 (λ()(union-set-dupes set1 set2)) 10000)))
+            (cadr (mattbench2 (lambda()(union-set-dupes set1 set2)) 10000)))
     (format #t "~&intersection-set: ~a"
-            (cadr (mattbench2 (λ()(intersection-set set1 set2)) 10000)))
+            (cadr (mattbench2 (lambda()(intersection-set set1 set2)) 10000)))
     (format #t "~&intersection-set-dupes: ~a"
-            (cadr (mattbench2 (λ()(intersection-set-dupes set1 set2)) 10000)))
+            (cadr (mattbench2 (lambda()(intersection-set-dupes set1 set2)) 10000)))
     (format #t "~&intersection-set-dupes2: ~a"
-            (cadr (mattbench2 (λ()(intersection-set-dupes2 set1 set2)) 10000)))
+            (cadr (mattbench2 (lambda()(intersection-set-dupes2 set1 set2)) 10000)))
     )
 
   (test))
@@ -11879,13 +11879,13 @@ SUCCEED at union-set-ordered
       (set2 (enumerate-interval 500 1500)))
   (define (test)
     (format #t "~&union-set: ~a"
-            (cadr (mattbench2 (λ()(union-set set1 set2)) 10000)))
+            (cadr (mattbench2 (lambda()(union-set set1 set2)) 10000)))
     (format #t "~&union-set-ordered: ~a"
-            (cadr (mattbench2 (λ()(union-set-ordered set1 set2)) 50000)))
+            (cadr (mattbench2 (lambda()(union-set-ordered set1 set2)) 50000)))
     (format #t "~&union-set-alt: ~a"
-            (cadr (mattbench2 (λ()(union-set-alt set1 set2)) 500000)))
+            (cadr (mattbench2 (lambda()(union-set-alt set1 set2)) 500000)))
     (format #t "~&union-set-alt2: ~a"
-            (cadr (mattbench2 (λ()(union-set-alt2 set1 set2)) 500000)))
+            (cadr (mattbench2 (lambda()(union-set-alt2 set1 set2)) 500000)))
     )
 
   (test))
@@ -12513,24 +12513,24 @@ Let's compare.
 (define (test-with 2sets repeats)
   (format #t "~&union-set-tree-wrong2: ~a"
           (cadr (mattbench2
-                 (λ()(union-set-tree-wrong2
+                 (lambda()(union-set-tree-wrong2
                       (car 2sets)
                       (cdr 2sets)))
                  repeats)))
   (format #t "~&union-set-l2t: ~a"
           (cadr (mattbench2
-                 (λ()(union-set-l2t (car 2sets)
+                 (lambda()(union-set-l2t (car 2sets)
                                     (cdr 2sets)))
                  repeats)))
   (format #t "~&intersection-set-tree-wrong1: ~a"
           (cadr (mattbench2
-                 (λ()(intersection-set-tree-wrong1
+                 (lambda()(intersection-set-tree-wrong1
                       (car 2sets)
                       (cdr 2sets)))
                  repeats)))
   (format #t "~&intersection-set-l2t: ~a"
           (cadr (mattbench2
-                 (λ()(intersection-set-l2t (car 2sets)
+                 (lambda()(intersection-set-l2t (car 2sets)
                                            (cdr 2sets)))
                  repeats))))
 (format #t "~&~a" (make-2sets 10))
