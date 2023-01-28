@@ -12450,7 +12450,6 @@ by using previously made algorithms.
 
 #+RESULTS[fbef205489d14bb8a8e7dfef03cd0bc5bead6020]:
 #+begin_EXAMPLE
-<unknown-location>: warning: possibly unbound variable `mattcheck'
 SUCCEED at element-of-set?-tree true
 SUCCEED at element-of-set?-tree true
 SUCCEED at element-of-set?-tree false
@@ -12962,7 +12961,6 @@ doing it.
 
 #+RESULTS[55428e0035118004f53c2be22e9fcf2432b59663]: gen-huff-trees-test
 #+begin_EXAMPLE
-<unknown-location>: warning: possibly unbound variable `mattcheck'
 FAIL at successive-merge
 expected: ((leaf A 8) (((leaf B 3) ((leaf C 1) (leaf D 1) (C D) 2) (B C D) 5) (# …) …) …)
 returned: (((((leaf H 1) (leaf G 1) (H G) 2) ((leaf F 1) (leaf E 1) (F E) 2) (…) …) …) …)
@@ -13944,6 +13942,11 @@ Surprised to find I never actually imported src_scheme{apply-generic}.
 (define (imag-part z) (apply-generic 'imag-part z))
 (define (magnitude z) (apply-generic 'magnitude z))
 (define (angle z) (apply-generic 'angle z))
+;; for future use
+(define (numer r)
+  ((get 'numer 'rational) r))
+(define (denom r)
+  ((get 'denom 'rational) r))
 
 (define (install-rational-package)
   ;; internal procedures
@@ -13978,6 +13981,8 @@ Surprised to find I never actually imported src_scheme{apply-generic}.
        (lambda (x y) (tag (div-rat x y))))
   (put 'make 'rational
        (lambda (n d) (tag (make-rat n d))))
+  (put 'numer 'rational numer) ;; my addition
+  (put 'denom 'rational denom)
   'done)
 
 (define (make-rational n d)
@@ -14090,11 +14095,13 @@ Surprised to find I never actually imported src_scheme{apply-generic}.
   'done)
 #+END_SRC
 
+First I want to do sanity checks on the system.
 
-#+BEGIN_SRC scheme :noeval
+#+BEGIN_SRC scheme :eval no-export :results output
 <<type-tagging>>
 <<generic-arithmetic>>
 <<scheme-number-package>>
+<<echo>>
 (load "mattcheck2.scm")
 
 (install-rational-package)
@@ -14103,7 +14110,32 @@ Surprised to find I never actually imported src_scheme{apply-generic}.
 (install-complex-package)
 (install-scheme-number-package)
 
-;,trace (magnitude (make-complex-from-real-imag 3 4))
+<<gen-math-tests>>
+#+END_SRC
+
+#+RESULTS[be80a0abe0b56abc26596013fa7d6c4a005216db]:
+#+begin_EXAMPLE
+5+5 = (scheme-number . 10) 
+5-5 = (scheme-number . 0) 
+5*5 = (scheme-number . 25) 
+5/5 = (scheme-number . 1) 
+1/2 + 1/2 = (rational 1 . 1) 
+1/2 - 1/2 = (rational 0 . 1) 
+1/2 * 1/2 = (rational 1 . 4) 
+1/2 / 1/2 = (rational 1 . 1) 
+3+4i + 3+4i = (complex rectangular 6 . 8) 
+3+4i - 3+4i = (complex rectangular 0 . 0) 
+3+4i * 3+4i = (complex polar 14.0 . 1.8545904360032244) 
+3+4i / 3+4i = (complex polar 1.0 . 0.0) 
+3m+4deg + 3m+4deg = (complex rectangular -3.921861725181672 . -4.540814971847569) 
+3m+4deg - 3m+4deg = (complex rectangular 0.0 . 0.0) 
+3m+4deg * 3m+4deg = (complex polar 9 . 8) 
+3m+4deg / 3m+4deg = (complex polar 1 . 0) 
+#+end_EXAMPLE
+
+Now let's run this:
+#+BEGIN_SRC scheme :eval no-export :results output
+,trace (magnitude (make-complex-from-real-imag 3 4))
 #+END_SRC
 
 I've heavily pared down this from the real debug output.
@@ -14188,13 +14220,39 @@ is the symbol src_scheme{scheme-number}.
 
 (define (contents datum)
   (cond ((pair? datum)
-         (car datum))
+         (cdr datum))
         ((number? datum)
          datum)
         (else (error "Bad tagged datum: 
               CONTENTS" datum))))
 #+END_SRC
 
+#+NAME: gen-math-tests
+#+BEGIN_SRC scheme -n :eval no-export :results silent
+(define msn make-scheme-number)
+(echo "5+5 =" (add (msn 5) (msn 5)))
+(echo "5-5 =" (sub (msn 5) (msn 5)))
+(echo "5*5 =" (mul (msn 5) (msn 5)))
+(echo "5/5 =" (div (msn 5) (msn 5)))
+(echo "1/2 + 1/2 =" (add (make-rational 1 2)
+                         (make-rational 1 2)))
+(echo "1/2 - 1/2 =" (sub (make-rational 1 2)
+                         (make-rational 1 2)))
+(echo "1/2 * 1/2 =" (mul (make-rational 1 2)
+                         (make-rational 1 2)))
+(echo "1/2 / 1/2 =" (div (make-rational 1 2)
+                         (make-rational 1 2)))
+(let ((r (make-complex-from-real-imag 3 4))
+      (p (make-complex-from-mag-ang 3 4)))
+  (echo "3+4i + 3+4i =" (add r r))
+  (echo "3+4i - 3+4i =" (sub r r))
+  (echo "3+4i * 3+4i =" (mul r r))
+  (echo "3+4i / 3+4i =" (div r r))
+  (echo "3m+4deg + 3m+4deg =" (add p p))
+  (echo "3m+4deg - 3m+4deg =" (sub p p))
+  (echo "3m+4deg * 3m+4deg =" (mul p p))
+  (echo "3m+4deg / 3m+4deg =" (div p p)))
+#+END_SRC
 #+BEGIN_SRC scheme -n :eval no-export :results output
 <<sqrt>>
 <<square>>
@@ -14210,10 +14268,197 @@ is the symbol src_scheme{scheme-number}.
 (install-complex-package)
 (install-scheme-number-package)
 
-(echo (add 3 5))
+<<gen-math-tests>>
 #+END_SRC
 
-#+RESULTS[094c644ffb4958eb390d5c38cf951a994279dbfb]:
+#+RESULTS[c529c1e2dbf70c1782dc16d5f0a261f7a595cab0]:
 #+begin_EXAMPLE
-8 
+5+5 = 10 
+5-5 = 0 
+5*5 = 25 
+5/5 = 1 
+1/2 + 1/2 = (rational 1 . 1) 
+1/2 - 1/2 = (rational 0 . 1) 
+1/2 * 1/2 = (rational 1 . 4) 
+1/2 / 1/2 = (rational 1 . 1) 
+3+4i + 3+4i = (complex rectangular 6 . 8) 
+3+4i - 3+4i = (complex rectangular 0 . 0) 
+3+4i * 3+4i = (complex polar 14.0 . 1.8545904360032244) 
+3+4i / 3+4i = (complex polar 1.0 . 0.0) 
+3m+4deg + 3m+4deg = (complex rectangular -3.921861725181672 . -4.540814971847569) 
+3m+4deg - 3m+4deg = (complex rectangular 0.0 . 0.0) 
+3m+4deg * 3m+4deg = (complex polar 9 . 8) 
+3m+4deg / 3m+4deg = (complex polar 1 . 0) 
+#+end_EXAMPLE
+
+Confirmed by debugging that these calls aren't adding any tags.
+
+** Exercise 2.79
+
+*** Question
+
+Define a generic equality predicate src_scheme{equ?} that tests the equality of
+two numbers, and install it in the generic arithmetic package. This operation
+should work for ordinary numbers, rational numbers, and complex numbers.
+
+*** Answer
+
+#+NAME: equ?
+#+BEGIN_SRC scheme -n :eval no-export :results silent
+(define (equ? x y) (apply-generic 'equ? x y))
+(define (install-equ?)
+  (put 'equ? '(scheme-number scheme-number)
+       (lambda(x y) (= x y)))
+  (put 'equ? '(complex complex)
+       (lambda(x y)
+         (apply-generic 'equ? x y)))
+  (let ((magnitude (get 'magnitude '(polar)))
+        (angle (get 'angle '(polar))))
+    (put 'equ? '(polar polar)
+         (lambda(x y)
+           (and (= (magnitude x)
+                   (magnitude y))
+                (= (angle x)
+                   (angle y))))))
+  (let ((real-part (get 'real-part '(rectangular)))
+        (imag-part (get 'imag-part '(rectangular))))
+    (put 'equ? '(rectangular rectangular)
+         (lambda(x y)
+           (and (= (real-part x)
+                   (real-part y))
+                (= (imag-part x)
+                   (imag-part y))))))
+  (put 'equ? '(rational rational)
+       (lambda(x y)
+         (and (= (numer x)
+                 (numer y))
+              (= (denom x)
+                 (denom y))))))
+#+END_SRC
+
+#+BEGIN_SRC scheme -n :eval no-export :results output :tangle 2/Ex79.scheme
+<<sqrt>>
+<<square>>
+<<echo>>
+<<smarter-type-tagging>>
+<<generic-arithmetic>>
+<<scheme-number-package>>
+<<equ?>>
+(load "mattcheck2.scm")
+
+(install-rational-package)
+(install-rectangular-package)
+(install-polar-package)
+(install-complex-package)
+(install-scheme-number-package)
+(install-equ?)
+
+<<gen-math-tests>>
+
+(mattcheck "basic equ? true" (equ? 5 5) #t)
+(mattcheck "basic equ? false" (equ? 4 5) #f)
+(mattcheck "rect equ? true" (equ? (make-complex-from-real-imag 2 3)
+                                  (make-complex-from-real-imag 2 3)) #t)
+(mattcheck "rect equ? false" (equ? (make-complex-from-real-imag 2 3)
+                                   (make-complex-from-real-imag 2 5)) #f)
+(mattcheck "polar equ? true" (equ? (make-complex-from-mag-ang 2 3)
+                                   (make-complex-from-mag-ang 2 3)) #t)
+(mattcheck "polar equ? false" (equ? (make-complex-from-mag-ang 2 3)
+                                    (make-complex-from-mag-ang 2 5)) #f)
+(mattcheck "rational equ? true" (equ? (make-rational 2 3)
+                                      (make-rational 2 3)) #t)
+(mattcheck "rational equ? false" (equ? (make-rational 2 3)
+                                       (make-rational 2 5)) #f)
+#+END_SRC
+
+#+RESULTS[464f15d5f40c1c1f8ff7ae4d287e15a4cf80c689]:
+#+begin_EXAMPLE
+<gen-math-tests output>
+SUCCEED at basic equ? true
+SUCCEED at basic equ? false
+SUCCEED at rect equ? true
+SUCCEED at rect equ? false
+SUCCEED at polar equ? true
+SUCCEED at polar equ? false
+SUCCEED at rational equ? true
+SUCCEED at rational equ? false
+#+end_EXAMPLE
+
+** Exercise 2.80
+
+*** Question
+
+Define a generic predicate src_scheme{=zero?} that tests if its argument is
+zero, and install it in the generic arithmetic package. This operation should
+work for ordinary numbers, rational numbers, and complex numbers.
+
+*** Answer
+
+#+NAME: eqzero?
+#+BEGIN_SRC scheme -n :eval no-export :results silent
+(define (=zero? x) (apply-generic '=zero? x))
+(define (install-=zero?)
+  (put '=zero? '(scheme-number)
+       (lambda(x) (= x 0)))
+  (put '=zero? '(complex)
+       (lambda(x)
+         (apply-generic '=zero? x)))
+  (let ((magnitude (get 'magnitude '(polar))))
+    (put '=zero? '(polar)
+         (lambda(x)
+           (= 0 (magnitude x)))))
+  (let ((real-part (get 'real-part '(rectangular)))
+        (imag-part (get 'imag-part '(rectangular))))
+    (put '=zero? '(rectangular)
+         (lambda(x)
+           (and (= 0 (real-part x))
+                (= 0 (imag-part x))))))
+  (put '=zero? '(rational)
+       (lambda(x)
+         (or (= 0 (numer x))
+             (= 0 (denom x))))))
+#+END_SRC
+
+#+BEGIN_SRC scheme -n :eval no-export :results output :tangle 2/Ex80.scheme
+<<sqrt>>
+<<square>>
+<<echo>>
+<<smarter-type-tagging>>
+<<generic-arithmetic>>
+<<scheme-number-package>>
+<<equ?>>
+<<eqzero?>>
+(load "mattcheck2.scm")
+
+(install-rational-package)
+(install-rectangular-package)
+(install-polar-package)
+(install-complex-package)
+(install-scheme-number-package)
+(install-equ?)
+(install-=zero?)
+<<gen-math-tests>>
+
+(mattcheck "basic =zero? true" (=zero? 0) #t)
+(mattcheck "basic =zero? false" (=zero? 5) #f)
+(mattcheck "rect =zero? true" (=zero? (make-complex-from-real-imag 0 0)) #t)
+(mattcheck "rect =zero? false" (=zero? (make-complex-from-real-imag 2 5)) #f)
+(mattcheck "polar =zero? true" (=zero? (make-complex-from-mag-ang 0 3)) #t)
+(mattcheck "polar =zero? false" (=zero? (make-complex-from-mag-ang 2 0)) #f)
+(mattcheck "rational =zero? true" (=zero? (make-rational 0 3)) #t)
+(mattcheck "rational =zero? false" (=zero? (make-rational 2 3)) #f)
+#+END_SRC
+
+#+RESULTS[f6541b2f3f66c988411b9bcfa385c6f73b8bb3b7]:
+#+begin_EXAMPLE
+<gen-math-tests output>
+
+SUCCEED at basic =zero? true
+SUCCEED at basic =zero? false
+SUCCEED at rect =zero? true
+SUCCEED at rect =zero? false
+SUCCEED at polar =zero? true
+SUCCEED at polar =zero? false
+SUCCEED at rational =zero? true
+SUCCEED at rational =zero? false
 #+end_EXAMPLE
