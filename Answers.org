@@ -1,5 +1,6 @@
-# Enable TOC at top of document
-#+OPTIONS: toc:t stat:t prop:t num:20
+# -*- org-publish-project-alist: (("SICP-Answers" :base-directory "~/SICP-group" :publishing-directory "~/SICP-group/texpub" :publishing-function org-latex-export-to-pdf :makeindex t)); -*-
+# enable TOC:
+#+OPTIONS: toc:t stat:t prop:t num:20 makeindex:t
 #+HUGO_BASE_DIR: docs/
 
 # Don't export sections tagged "noexport"
@@ -294,6 +295,9 @@ grows. Because of this, it's important to make fundamentals that can be relied
 upon to support larger structures.
 
 ** Preface, 1e
+#+INDEX: procedural epistemology
+#+INDEX: declarative knowledge
+#+INDEX: imperative knowledge
 
 "Computer Science" isn't really about computers or science, in the same way that
 geometry isn't really about measuring the earth ('geometry' translates to
@@ -592,14 +596,13 @@ evaluate the predicate and, depending on the result, either evaluate the
 the consequent and alternative would both be evaluated, rendering the
 src_scheme{if} expression ineffective.
 
-** Exercise 1.1
+** Exercise 1.1: Trying expressions
 
 *** Question
-#+begin_quote
 Below is a sequence of expressions. What is the result printed by the
 interpreter in response to each expression? Assume that the sequence is to be
 evaluated in the order in which it is presented.
-#+end_quote
+
 
 *** Answer
 
@@ -626,17 +629,16 @@ evaluated in the order in which it is presented.
    (+ a 1)) ;; 16
 #+END_SRC
 
-** Exercise 1.2
+** Exercise 1.2: Prefix form
 
 *** Question
 
-#+begin_quote
 Translate the following expression into prefix form:
 \[
   \frac{5 + 2 + (2 - 3 - (6 + \frac{4}{5})))}
             {3(6 - 2)(2 - 7)}
 \]
-#+end_quote
+
 
 *** Answer
 
@@ -653,14 +655,12 @@ Translate the following expression into prefix form:
 #+end_example
 :end:
 
-** Exercise 1.3
+** Exercise 1.3: Conditionals
 
 *** Question
 
-#+begin_quote
-Define a procedure that takes three numbers as arguments and returns the sum of
-the squares of the two larger numbers.
-#+end_quote
+Define a procedure that takes three numbers as arguments and
+returns the sum of the squares of the two larger numbers.
 
 *** Answer
 
@@ -689,15 +689,13 @@ the squares of the two larger numbers.
 | (3 5 7) | 74 |
 :end:
 
-** Exercise 1.4
+** Exercise 1.4: Compound expressions
 
 *** Question
 
-#+begin_quote
 Observe that our model of evaluation allows for combinations whose operators are
 compound expressions. Use this observation to describe the behavior of the
 following procedure:
-#+end_quote
 
 #+NAME: a-plus-abs-b
 #+BEGIN_SRC scheme -n
@@ -720,15 +718,13 @@ if b > 0: a + b
 else: a - b
 #+END_SRC
 
-** Exercise 1.5
+** Exercise 1.5: Applicative vs normal-order evaluation
 
 *** Question
 
-#+begin_quote
 Ben Bitdiddle has invented a test to determine whether the interpreter he is
 faced with is using applicative-order evaluation or normal-order evaluation. He
 defines the following two procedures:
-#+end_quote
 
 #+BEGIN_SRC scheme -n :noeval 
 (define (p) (p))
@@ -738,14 +734,13 @@ defines the following two procedures:
       0
       y))
 #+END_SRC
-#+begin_quote
+
 Then he evaluates the expression:
-#+end_quote
 
 #+BEGIN_SRC scheme -n :noeval 
 (test 0 (p))
 #+END_SRC
-#+begin_quote
+
 What behavior will Ben observe with an interpreter that uses applicative-order
 evaluation?  What behavior will he observe with an interpreter that uses
 normal-order evaluation?  Explain your answer.  (Assume that the evaluation
@@ -753,7 +748,6 @@ rule for the special form src_scheme{if} is the same whether the interpreter is
 using normal or applicative order: The predicate expression is evaluated first,
 and the result determines whether to evaluate the consequent or the alternative
 expression.)
-#+end_quote
 
 *** Answer
 
@@ -792,7 +786,7 @@ Suppressing these details are particularly helpful:
   is called *block structure*. Nesting these definitions also allows relevant
   variables to be shared across procedures, which is called *lexical scoping*.
 
-** Exercise 1.6
+** Exercise 1.6: Special form evaluation
 
 *** Text code
 #+NAME: abs
@@ -829,12 +823,10 @@ Suppressing these details are particularly helpful:
 
 *** Question
 
-#+begin_quote
 Alyssa P. Hacker doesn't see why src_scheme{if} needs to be provided as a
 special form. "Why can't I just define it as an ordinary procedure in terms of
 cond?" she asks. Alyssa's friend Eva Lu Ator claims this can indeed be done, and
 she defines a new version of src_scheme{if}:
-#+end_quote
 
 #+BEGIN_SRC scheme -n :noeval 
 (define (new-if predicate
@@ -843,9 +835,8 @@ she defines a new version of src_scheme{if}:
   (cond (predicate then-clause)
         (else else-clause)))
 #+END_SRC
-#+begin_quote
+
 Eva demonstrates the program for Alyssa:
-#+end_quote
 
 #+BEGIN_SRC scheme -n :noeval 
 (new-if (= 2 3) 0 5)
@@ -855,9 +846,7 @@ Eva demonstrates the program for Alyssa:
 ;; => 0
 #+END_SRC
 
-#+begin_quote
 Delighted, Alyssa uses src_scheme{new-if} to rewrite the square-root program:
-#+end_quote
 
 #+BEGIN_SRC scheme -n :noeval 
 (define (sqrt-iter guess x)
@@ -866,9 +855,7 @@ Delighted, Alyssa uses src_scheme{new-if} to rewrite the square-root program:
           (sqrt-iter (improve guess x) x)))
 #+END_SRC
 
-#+begin_quote
 What happens when Alyssa attempts to use this to compute square roots? Explain.
-#+end_quote
 
 *** Answer
 
@@ -878,7 +865,7 @@ src_scheme{new-if}. This is because src_scheme{if} and src_scheme{cond} are
 special forms that change the way evaluation is handled; whichever branch is
 chosen leaves the other branches unevaluated.
 
-** Exercise 1.7
+** Exercise 1.7: ~sqrt~ with small and large numbers
 
 *** Text
 
@@ -890,7 +877,6 @@ chosen leaves the other branches unevaluated.
 
 *** Question
 
-#+begin_quote
 The src_scheme{good-enough?} test used in computing square roots will not be
 very effective for finding the square roots of very small numbers. Also, in real
 computers, arithmetic operations are almost always performed with limited
@@ -901,7 +887,6 @@ watch how src_scheme{guess} changes from one iteration to the next and to stop
 when the change is a very small fraction of the guess. Design a square-root
 procedure that uses this kind of end test. Does this work better for small and
 large numbers?
-#+end_quote
 
 *** Diary
 
@@ -1087,11 +1072,10 @@ So, my definition of src_scheme{sqrt}:
 |  1e-10 | 9.999999999999999e-06 |
 :end:
 
-** Exercise 1.8
+** Exercise 1.8: Cube roots
 
 *** Question
 
-#+begin_quote
 Newton's method for cube roots is based on the fact that if \(y\) is an
 approximation to the cube root of \(x\), then a better approximation is given by
 the value
@@ -1101,10 +1085,9 @@ the value
 \]
 
 Use this formula to implement a cube-root procedure analogous to the
-src_scheme{square-root} procedure. (In 1.3.4 we will see how to implement
-Newton's method in general as an abstraction of these square-root and cube-root
-procedures.)
-#+end_quote
+src_scheme{square-root} procedure. (In [[*1.3.4 Procedures as Returned Values][1.3.4 Procedures as Returned Values]] we
+will see how to implement Newton's method in general as an abstraction of these
+square-root and cube-root procedures.)
 
 *** Diary
 
@@ -1237,14 +1220,13 @@ constructs such as src_scheme{do}, src_scheme{repeat}, src_scheme{for}, etc.
 Implementations that execute iterative processes in constant space, even if the
 procedure is recursive, are *tail-recursive*.
 
-** Exercise 1.9
+** Exercise 1.9: Peano counting and recursion
 
 *** Question
-#+begin_quote
+
 Each of the following two procedures defines a method for adding two positive
 integers in terms of the procedures src_scheme{inc}, which increments its
 argument by 1, and src_scheme{dec}, which decrements its argument by 1.
-#+end_quote
 
 #+BEGIN_SRC scheme -n :noeval 
 (define (+ a b)
@@ -1258,10 +1240,8 @@ argument by 1, and src_scheme{dec}, which decrements its argument by 1.
       (+ (dec a) (inc b))))
 #+END_SRC
 
-#+begin_quote
 Using the substitution model, illustrate the process generated by each procedure
 in evaluating src_scheme{(+ 4 5)}. Are these processes iterative or recursive?
-#+end_quote
 
 *** Answer
 
@@ -1294,14 +1274,13 @@ tail-recursion.
 9
 #+END_SRC
 
-** Exercise 1.10
+** Exercise 1.10: Ackermann's Function
 
 *** Question
 
-#+begin_quote
 The following procedure computes a mathematical function called Ackermann's
 function.
-#+end_quote
+
 #+NAME: ackermann
 #+BEGIN_SRC scheme -n :eval no-export :exports code :results silent
 (define (A x y)
@@ -1312,9 +1291,7 @@ function.
                  (A x (- y 1))))))
 #+END_SRC
 
-#+begin_quote
 What are the values of the following expressions?
-#+end_quote
 
 #+BEGIN_SRC scheme -n :noeval 
 (A 1 10)
@@ -1343,11 +1320,9 @@ What are the values of the following expressions?
 (define (k n) (* 5 n n))
 #+END_SRC
 
-#+begin_quote
 Give concise mathematical definitions for the functions computed by the
 procedures src_scheme{f}, src_scheme{g}, and src_scheme{h} for positive integer
 values of \(n\). For example, src_scheme{(k n)} computes \(5n^2\).
-#+end_quote
 
 *** Answer
 
@@ -1463,11 +1438,10 @@ variables.
 
 I should come back and try to make the "better algorithm" suggested.
 
-** Exercise 1.11
+** Exercise 1.11: More recursion vs iteration
 
 *** Question
 
-#+begin_quote
 A function \(f\) is defined by the rule that:
 \[
 f(n)=n \text{ if } n<3
@@ -1481,7 +1455,6 @@ f(n)=f(n-1)+2f(n-2)+3f(n-3) \text{ if } n \geq 3
 
 Write a procedure that computes \(f\) by means of a recursive process. Write a
 procedure that computes \(f\) by means of an iterative process.
-#+end_quote
 
 *** Answer
 
@@ -1588,13 +1561,11 @@ It works but it seems wasteful.
 
 I like that better.
 
-** Exercise 1.12
+** Exercise 1.12: Pascal's Triangle
 
 *** Question
 
-#+begin_quote
 The following pattern of numbers is called Pascal's triangle.
-#+end_quote
 
 #+BEGIN_EXAMPLE
         1
@@ -1605,11 +1576,9 @@ The following pattern of numbers is called Pascal's triangle.
       . . .
 #+END_EXAMPLE
 
-#+begin_quote
 The numbers at the edge of the triangle are all 1, and each number inside the
 triangle is the sum of the two numbers above it. Write a procedure that
 computes elements of Pascal's triangle by means of a recursive process.
-#+end_quote
 
 *** Answer
 
@@ -1655,11 +1624,10 @@ infinite spreadsheet.
 
 The test code was much harder to write than the actual solution.
 
-** Exercise 1.13 :optional:
+** Exercise 1.13: Proving Fibonacci approximation :optional:
 
 *** Question
 
-#+begin_quote
 Prove that \(\text{Fib}(n)\) is the closest integer to
 \(\frac\Phi^n}{\sqrt{5}}\) where \(\Phi\) is \(\frac{1 + \sqrt{5}}{2}\). Hint: let
 \(\Upsilon = \frac{1 - \sqrt{5}}{2}\). Use induction and the definition of the
@@ -1668,7 +1636,6 @@ Fibonacci numbers to prove that
 \[
  \text{Fib}(n) = \frac{\Phi^n - \Upsilon^n}{\sqrt{5}}
 \]
-#+end_quote
 
 *** Answer
 
@@ -1791,7 +1758,7 @@ Some algorithms we've already seen:
 Orders of growth are very crude descriptions of process behaviors, but they are
 useful in indicating how a process will change with the size of the problem.
 
-** Exercise 1.14
+** Exercise 1.14: ~count-change~
 
 *** Text
 Below is the default version of the src_scheme{count-change} function. I'll be
@@ -1820,12 +1787,10 @@ aggressively modifying it in order to get a graph out of it.
         ((= kinds-of-coins 5) 50)))
 #+end_src
 
-*** Question A
+*** Question A: Draw the tree
 
-#+begin_quote
 Draw the tree illustrating the process generated by the src_scheme{count-change}
-procedure of 1.2.2 in making change for 11 cents.
-#+end_quote
+procedure of [[*1.2.2: Tree Recursion][1.2.2: Tree Recursion]] in making change for 11 cents.
 
 *** Answer
 
@@ -1921,12 +1886,10 @@ $data
 [[file:1/fig/cc-11.png]]
 :end:
 
-*** Question B
+*** Question B: Analyzing process growth
 
-#+begin_quote
 What are the orders of growth of the space and number of steps used by this
 process as the amount to be changed increases?
-#+end_quote
 
 *** Answer B
 
@@ -2074,18 +2037,16 @@ like this since college. It's inspired me to restart my remedial math courses, I
 don't think I really grasped the nature of math as a tool of empowerment until
 now.
 
-** Exercise 1.15
+** Exercise 1.15: Sine approximation
 
 *** Question A
 
-#+begin_quote
 The sine of an angle (specified in radians) can be computed by making use of the
 approximation \(\sin x \approx x\) if \(x\) is sufficiently small, and the
 trigonometric identity \(\sin x = 3\sin\frac{x}{3} - 4\sin^3\frac{x}{3}\)
 to reduce the size of the argument of sin. (For purposes of this exercise an
 angle is considered "sufficiently small" if its magnitude is not greater than
 0.1 radians.) These ideas are incorporated in the following procedures:
-#+end_quote
 
 #+NAME: 1-15-deps
 #+BEGIN_SRC scheme -n :eval no-export :exports code :results silent
@@ -2097,10 +2058,8 @@ angle is considered "sufficiently small" if its magnitude is not greater than
       (p (sine (/ angle 3.0)))))
 #+end_src
 
-#+begin_quote
 How many times is the procedure src_scheme{p} applied when src_scheme{(sine
 12.15)} is evaluated?
-#+end_quote
 
 *** Answer A
 
@@ -2132,11 +2091,9 @@ src_scheme{p} is evaluated 5 times.
 
 *** Question B
 
-#+begin_quote
 What is the order of growth in space and number of steps (as a function of
 src_scheme{a}) used by the process generated by the sine procedure when
 src_scheme{(sine a)} is evaluated?
-#+end_quote
 
 *** Answer B
 
@@ -2286,7 +2243,7 @@ But note it could be approached faster with squaring:
 b^4 &= b^2\cdot b^2\\
 b^8 &= b^4 \cdot b^4\end{aligned}\]
 
-** Exercise 1.16
+** Exercise 1.16: Making ~fast-expt~ iterative
 
 *** Text
 
@@ -2316,7 +2273,6 @@ b^8 &= b^4 \cdot b^4\end{aligned}\]
 
 *** Question
 
-#+begin_quote
 Design a procedure that evolves an iterative exponentiation process that uses
 successive squaring and uses a logarithmic number of steps, as does fast-expt.
 (Hint: Using the observation that \((b^{n/2})^2=(b^2)^{n/2}\), keep, along with
@@ -2327,7 +2283,6 @@ be 1, and the answer is given by the value of \(a\) at the end of the process.
 In general, the technique of defining an /invariant quantity/ that remains
 unchanged from state to state is a powerful way to think about the design of
 iterative algorithms.)
-#+end_quote
 
 *** Diary
 
@@ -2422,17 +2377,15 @@ The solution essentially follows this logic:
 | 10 | 59049 |
 :end:
 
-** Exercise 1.17
+** Exercise 1.17: Logarithmic multiplication (recursive)
 
 *** Question
 
-#+begin_quote
 The exponentiation algorithms in this section are based on performing
 exponentiation by means of repeated multiplication. In a similar way, one can
 perform integer multiplication by means of repeated addition. The following
 multiplication procedure (in which it is assumed that our language can only add,
 not multiply) is analogous to the expt procedure:
-#+end_quote
 
 #+BEGIN_SRC scheme -n
 (define (* a b)
@@ -2441,13 +2394,11 @@ not multiply) is analogous to the expt procedure:
       (+ a (* a (- b 1)))))
 #+end_src
 
-#+begin_quote
 This algorithm takes a number of steps that is linear in \( b \). Now suppose we
 include, together with addition, operations double, which doubles an integer,
 and halve, which divides an (even) integer by 2. Using these, design a
 multiplication procedure analogous to fast-expt that uses a logarithmic number
 of steps.
-#+end_quote
 
 *** Answer
 
@@ -2487,15 +2438,13 @@ Proof it works:
 | 10 | 30 |
 :end:
 
-** Exercise 1.18
+** Exercise 1.18: Logarithmic multiplication (iterative)
 
 *** Question
 
-#+begin_quote
 Using the results of Exercise 1.16 and Exercise 1.17, devise a procedure that
 generates an iterative process for multiplying two integers in terms of adding,
 doubling, and halving and uses a logarithmic number of steps.
-#+end_quote
 
 *** Diary
 
@@ -2562,11 +2511,10 @@ Some of my /very/ incorrect ideas:
 | 10 | 30 |
 :end:
 
-** Exercise 1.19
+** Exercise 1.19: Logarithmic fibonacci computing with \(T\)
 
 *** Question
 
-#+begin_quote
 There is a clever algorithm for computing the Fibonacci numbers in a logarithmic
 number of steps. Recall the transformation of the state variables a and b in the
 src_scheme{fib-iter} process of section 1-2-2:
@@ -2586,7 +2534,6 @@ of p and q. This gives us an explicit way to square these transformations, and
 thus we can compute \( T^n \) using successive squaring, as in the `fast-expt'
 procedure. Put this all together to complete the following procedure, which runs
 in a logarithmic number of steps:
-#+end_quote
 #+BEGIN_SRC scheme -n :noeval  :exports code :results silent
 (define (fib n)
   (fib-iter 1 0 0 1 n))
@@ -2751,7 +2698,7 @@ the other number in the pair. This is Euclid's Algorithm.
    equal to the \(k^{th}\)Fibonacci number.
 #+end_quote
 
-** Exercise 1.20
+** Exercise 1.20: Inefficiency of normal-order evaluation
 
 *** Text
 
@@ -2765,7 +2712,6 @@ the other number in the pair. This is Euclid's Algorithm.
 
 *** Question
 
-#+begin_quote
 The process that a procedure generates is of course dependent on the rules used
 by the interpreter. As an example, consider the iterative src_scheme{gcd}
 procedure given above. Suppose we were to interpret this procedure using
@@ -2776,7 +2722,6 @@ src_scheme{(gcd 206 40)} and indicate the src_scheme{remainder} operations that
 are actually performed. How many src_scheme{remainder} operations are actually
 performed in the normal-order evaluation of src_scheme{(gcd 206 40)}? In the
 applicative-order evaluation?
-#+end_quote
 
 *** Answer
 
@@ -2934,10 +2879,8 @@ likelihood of a correct answer.
 
 *** Question
 
-#+begin_quote
 Use the smallest-divisor procedure to find the smallest divisor of each of the
 following numbers: 199, 1999, 19999.
-#+end_quote
 
 *** Answer
 
@@ -2955,7 +2898,6 @@ following numbers: 199, 1999, 19999.
 
 *** Question
 
-#+begin_quote
 Most Lisp implementations include a primitive called src_scheme{runtime} that
 returns an integer that specifies the amount of time the system has been running
 (measured, for example, in microseconds). The following
@@ -2963,7 +2905,6 @@ src_scheme{timed-prime-test} procedure, when called with an integer \(n\),
 prints \(n\) and checks to see if \(n\) is prime. If \(n\) is prime, the
 procedure prints three asterisks followed by the amount of time used in
 performing the test.
-#+end_quote
 #+NAME: prime-smallest-divisor
 #+BEGIN_SRC scheme -n :eval no-export :exports code :results output
 <<find-divisor-txt>>
@@ -2989,7 +2930,6 @@ performing the test.
   (display elapsed-time))
 #+END_SRC
 
-#+begin_quote
 Using this procedure, write a procedure src_scheme{search-for-primes} that
 checks the primality of consecutive odd integers in a specified range. Use your
 procedure to find the three smallest primes larger than 1000; larger than
@@ -3001,7 +2941,6 @@ Do your timing data bear this out? How well do the data for 100,000 and
 1,000,000 support the \(\Theta(\sqrt{n})\) prediction? Is your result compatible
 with the notion that programs on your machine run in time proportional to the
 number of steps required for the computation?
-#+end_quote
 
 *** Answer
 
@@ -3189,7 +3128,6 @@ algorithm is slower than this other one," but when asked to find or prove the
 
 *** Question
 
-#+begin_quote
 The src_scheme{smallest-divisor} procedure shown at the start of this section
 does lots of needless testing: After it checks to see if the number is divisible
 by 2 there is no point in checking to see if it is divisible by any larger even
@@ -3204,7 +3142,6 @@ Exercise 1.22. Since this modification halves the number of test steps, you
 should expect it to run about twice as fast. Is this expectation confirmed? If
 not, what is the observed ratio of the speeds of the two algorithms, and how do
 you explain the fact that it is different from 2?
-#+end_quote
 
 *** A Comedy of Error (just the one)
 
@@ -3574,14 +3511,12 @@ file:1/fig/1-22-4.png
 
 *** Question
 
-#+begin_quote
 Modify the src_scheme{timed-prime-test} procedure of [[Exercise 1.22]] to use
 src_scheme{fast-prime?} (the Fermat method), and test each of the 12 primes you
 found in that exercise. Since the Fermat test has \(\Theta(\text{log}n)\)
 growth, how would you expect the time to test primes near 1,000,000 to compare
 with the time needed to test primes near 1000? Do your data bear this out? Can
 you explain any discrepancy you find?
-#+end_quote
 
 *** Answer
 
@@ -3759,21 +3694,17 @@ aggressive bignum processing there?
 
 *** Question
 
-#+begin_quote
 Alyssa P. Hacker complains that we went to a lot of extra work in writing
 src_scheme{expmod}. After all, she says, since we already know how to compute
 exponentials, we could have simply written
-#+end_quote
 
 #+BEGIN_SRC scheme -n 
 (define (expmod base exp m)
   (remainder (fast-expt base exp) m))
 #+END_SRC
 
-#+begin_quote
 Is she correct? Would this procedure serve as well for our fast prime tester?
 Explain.
-#+end_quote
 
 *** Answer
 
@@ -3830,14 +3761,12 @@ taking these extra steps actually leads to an algorithm that performs better.
 
 *** Question
 
-#+begin_quote
 Louis Reasoner is having great difficulty doing Exercise 1.24. His
 src_scheme{fast-prime?} test seems to run more slowly than his
 src_scheme{prime?} test. Louis calls his friend Eva Lu Ator over to help. When
 they examine Louis's code, they find that he has rewritten the
 src_scheme{expmod} procedure to use an explicit multiplication, rather than
 calling src_scheme{square}:
-#+end_quote
 
 #+begin_src scheme -n
 (define (expmod base exp m)
@@ -3854,11 +3783,9 @@ calling src_scheme{square}:
           m))))
 #+end_src
 
-#+begin_quote
 "I don't see what difference that could make," says Louis. "I do." says Eva. "By
 writing the procedure like that, you have transformed the \(\Theta(\log n)\)
 process into a \(\Theta(n)\) process." Explain.
-#+end_quote
 
 *** Answer
 
@@ -3871,12 +3798,10 @@ problem. Since the number of processes used increases exponentially, this turns
 
 *** Question
 
-#+begin_quote
 Demonstrate that the Carmichael numbers listed in Footnote 1.47 really do fool
 the Fermat test. That is, write a procedure that takes an integer \(n\) and
 tests whether \(a^n\) is congruent to \(a\) modulo \(n\) for every \(a < n\),
 and try your procedure on the given Carmichael numbers.
-#+end_quote
 #+NAME: carmichael
 | 561 | 1105 | 1729 | 2465 | 2821 | 6601 |
 
@@ -3906,28 +3831,26 @@ and try your procedure on the given Carmichael numbers.
 
 *** Question
 
-#+begin_quote
-One variant of the Fermat test that cannot be fooled is called the Miller-Rabin
-test (Miller 1976; Rabin 1980). This starts from an alternate form of Fermat's
-Little Theorem, which states that if \( n \) is a prime number and \( a \) is
-any positive integer less than \( n \), then \( a \) raised to the \( (n-1) \)
--st power is congruent to 1 modulo \( n \). To test the primality of a number \(
-n \) by the Miller-Rabin test, we pick a random number \( a<n \) and raise \( a
-\) to the \( (n-1) \) -st power modulo \( n \) using the src_scheme{expmod}
-procedure. However, whenever we perform the squaring step in src_scheme{expmod},
-we check to see if we have discovered a "nontrivial square root of 1 modulo \( n
-\)," that is, a number not equal to 1 or \( n-1 \) whose square is equal to 1
-modulo \( n \). It is possible to prove that if such a nontrivial square root of
-1 exists, then \( n \) is not prime. It is also possible to prove that if \( n
-\) is an odd number that is not prime, then, for at least half the numbers \(
-a<n \), computing \( an-1 \) in this way will reveal a nontrivial square root of
-1 modulo \( n \). (This is why the Miller-Rabin test cannot be fooled.) Modify
-the src_scheme{expmod} procedure to signal if it discovers a nontrivial square
-root of 1, and use this to implement the Miller-Rabin test with a procedure
-analogous to fermat-test. Check your procedure by testing various known primes
-and non-primes. Hint: One convenient way to make src_scheme{expmod} signal is to
-have it return 0.
-#+end_quote
+One variant of the Fermat test that cannot be fooled is called the
+**Miller-Rabin test** (Miller 1976; Rabin 1980). This starts from an alternate
+form of Fermat's Little Theorem, which states that if \( n \) is a prime number
+and \( a \) is any positive integer less than \( n \), then \( a \) raised to
+the \( (n-1) \) -st power is congruent to 1 modulo \( n \). To test the
+primality of a number \( n \) by the Miller-Rabin test, we pick a random number
+\( a<n \) and raise \( a \) to the \( (n-1) \) -st power modulo \( n \) using
+the src_scheme{expmod} procedure. However, whenever we perform the squaring step
+in src_scheme{expmod}, we check to see if we have discovered a "nontrivial
+square root of 1 modulo \( n \)," that is, a number not equal to 1 or \( n-1 \)
+whose square is equal to 1 modulo \( n \). It is possible to prove that if such
+a nontrivial square root of 1 exists, then \( n \) is not prime. It is also
+possible to prove that if \( n \) is an odd number that is not prime, then, for
+at least half the numbers \( a<n \), computing \( an-1 \) in this way will
+reveal a nontrivial square root of 1 modulo \( n \). (This is why the
+Miller-Rabin test cannot be fooled.) Modify the src_scheme{expmod} procedure to
+signal if it discovers a nontrivial square root of 1, and use this to implement
+the Miller-Rabin test with a procedure analogous to fermat-test. Check your
+procedure by testing various known primes and non-primes. Hint: One convenient
+way to make src_scheme{expmod} signal is to have it return 0.
 
 *** Analysis
 
@@ -4192,7 +4115,6 @@ integers, we'd need to define and pass an identity function to src_scheme{term}.
 
 *** Question
 
-#+begin_quote
 Simpson's Rule is a more accurate method of numerical integration than the
 method illustrated above. Using Simpson's Rule, the integral of a function \(f\)
 between \(a\) and \(b\) is approximated as
@@ -4208,7 +4130,6 @@ value of the integral, computed using Simpson's Rule. Use your procedure to
 integrate src_scheme{cube} between 0 and 1 (with \(n = 100\) and \(n = 1000\)),
 and compare the results to those of the src_scheme{integral} procedure shown
 above.
-#+end_quote
 
 *** Answer
 
@@ -4268,11 +4189,9 @@ So, more accurate for roughly the same effort or less.
 
 *** Question
 
-#+begin_quote
 The src_scheme{sum} procedure above generates a linear recursion. The procedure
 can be rewritten so that the sum is performed iteratively. Show how to do this
 by filling in the missing expressions in the following definition:
-#+end_quote
 
 *** Answer
 
@@ -4314,12 +4233,10 @@ Let's check the stats!
 
 *** Question A.1
 
-#+begin_quote
 The src_scheme{sum} procedure is only the simplest of a vast number of similar
 abstractions that can be captured as higher-order procedures. Write an analogous
 procedure called src_scheme{product} that returns the product of the values of a
 function at points over a given range.
-#+end_quote
 
 *** Answer A.1
 
@@ -4335,9 +4252,7 @@ function at points over a given range.
 
 *** Question A.2
 
-#+begin_quote
 Show how to define src_scheme{factorial} in terms of src_scheme{product}.
-#+end_quote
 
 *** Answer A.2
 
@@ -4368,7 +4283,6 @@ more intuitive sense of numbers.
 
 *** Question A.3
 
-#+begin_quote
 Also use src_scheme{product} to compute approximations to \(\pi\) using the
 formula
 
@@ -4376,7 +4290,6 @@ formula
 \frac{\pi}{4} =
 \frac{2\cdot 4\cdot 4\cdot 6\cdot 6\cdot 8\cdots}{3\cdot 3\cdot 5\cdot 5\cdot 7\cdot 7\cdots}
 \]
-#+end_quote
 
 *** Answer A.3
 
@@ -4405,11 +4318,9 @@ Fun fact: the formula is slightly wrong, it should start the series with \(\frac
 
 *** Question B
 
-#+begin_quote
 If your product procedure generates a recursive process, write one that
 generates an iterative process. If it generates an iterative process, write one
 that generates a recursive process.
-#+end_quote
 
 *** Answer B
 
@@ -4458,17 +4369,14 @@ that generates a recursive process.
 
 *** Question A
 
-#+begin_quote
 Show that src_scheme{sum} and src_scheme{product} are both special cases of a
 still more general notion called src_scheme{accumulate} that combines a
 collection of terms, using some general accumulation function:
-#+end_quote
 
 #+BEGIN_SRC scheme
 (accumulate combiner null-value term a next b)
 #+END_SRC
 
-#+begin_quote
 src_scheme{accumulate} takes as arguments the same term and range specifications
 as src_scheme{sum} and src_scheme{product}, together with a src_scheme{combiner}
 procedure (of two arguments) that specifies how the current term is to be
@@ -4477,7 +4385,6 @@ src_scheme{null-value} that specifies what base value to use when the terms run
 out. Write src_scheme{accumulate} and show how src_scheme{sum} and
 src_scheme{product} can both be defined as simple calls to
 src_scheme{accumulate}.
-#+end_quote
 
 *** Answer A
 
@@ -4525,11 +4432,9 @@ than I thought.
 
 *** Question B
 
-#+begin_quote
 If your src_scheme{accumulate} procedure generates a recursive process, write
 one that generates an iterative process. If it generates an iterative process,
 write one that generates a recursive process.
-#+end_quote
 
 *** Answer B
 
@@ -4548,7 +4453,6 @@ write one that generates a recursive process.
 *** Question A
 
 #+INDEX: filter
-#+begin_quote
 You can obtain an even more general version of src_scheme{accumulate} by
 introducing the notion of a filter on the terms to be combined. That is, combine
 only those terms derived from values in the range that satisfy a specified
@@ -4556,7 +4460,6 @@ condition. The resulting src_scheme{filtered-accumulate} abstraction takes the
 same arguments as accumulate, together with an additional predicate of one
 argument that specifies the filter. Write src_scheme{filtered-accumulate} as a
 procedure.
-#+end_quote
 
 *** Answer A
 

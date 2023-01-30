@@ -53,24 +53,6 @@
               CONTENTS" datum))))
 ;; smarter-type-tagging ends here
 ;; [[[[file:~/SICP-group/Answers.org::generic-arithmetic][generic-arithmetic]]][generic-arithmetic]]
-;; [[[[file:~/SICP-group/Answers.org::apply-generic-table][apply-generic-table]]][apply-generic-table]]
-;; [[[[file:~/SICP-group/Answers.org::op-table][op-table]]][op-table]]
-(define op-table (make-hash-table))
-
-(define (put operation type f)
-  (hash-set! op-table (cons operation type) f))
-(define (get operation type)
-  (hash-ref op-table (cons operation type)))
-;; op-table ends here
-(define (apply-generic op . args)
-  (let ((type-tags (map type-tag args)))
-    (let ((proc (get op type-tags)))
-      (if proc
-          (apply proc (map contents args))
-          (error
-            "No method for these types: APPLY-GENERIC"
-            (list op type-tags))))))
-;; apply-generic-table ends here
 (define (square x) (* x 2))
 (define (add x y) (apply-generic 'add x y))
 (define (sub x y) (apply-generic 'sub x y))
