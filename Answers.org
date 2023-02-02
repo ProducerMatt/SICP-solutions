@@ -14537,6 +14537,21 @@ arguments have the same type.
                "No method for these types"
                (list op type-tags)))))))
 #+END_SRC
+#+NAME: basic-coercions
+#+BEGIN_SRC scheme -n :eval no-export :results silent
+(put-coercion 'scheme-number 'rational
+              (lambda(num)
+                (make-rational num 1)))
+(put-coercion 'rational 'complex
+              (lambda(num)
+                (make-complex-from-real-imag
+                 (if (= 1 (denom num)) ; if rat could be integer
+                     (denom num)       ; might as well simplify
+                     num) 0)))
+(put-coercion 'scheme-number 'complex
+              (lambda(num)
+                (make-complex-from-real-imag num 0)))
+#+END_SRC
 
 #+BEGIN_SRC scheme -n :noeval :results output
 <<op-table>>
@@ -14560,22 +14575,203 @@ arguments have the same type.
 (install-equ?)
 (install-=zero?)
 <<gen-math-tests>>
+<<basic-coercions>>
 
-(put-coercion 'scheme-number 'rational
-              (lambda(num)
-                (make-rational num 1)))
-(let ((failgood #t))
 (mattcheck "good coercion test"
            (mul (make-rational 8 1)
                 (make-rational 2 3))
            (mul 8 (make-rational 2 3)))
 (mattcheck "bad coercion test"
            (apply-generic 'foobar 8 9)
-           'failgood))
+           'failgood)
 #+END_SRC
 
 #+RESULTS[c0530395a63ee325701dc0ea8cd10e9b4b9a48fa]:
 #+begin_EXAMPLE
 SUCCEED at good coercion test
 SUCCEED at bad coercion test
+#+end_EXAMPLE
+
+** Exercise 2.82
+
+*** Question
+
+Show how to generalize src_scheme{apply-generic} to handle coercion in the
+general case of multiple arguments. One strategy is to attempt to coerce all the
+arguments to the type of the first argument, then to the type of the second
+argument, and so on. Give an example of a situation where this strategy (and
+likewise the two-argument version given above) is not sufficiently general.
+(Hint: Consider the case where there are some suitable mixed-type operations
+present in the table that will not be tried.)
+
+*** Answer
+
+These strategies are not sufficient when a path to the correct type will require
+multiple coercions. Say you want to coerce arguments of types \(ABCD\). There
+are coercions for \( A \rightarrow B \), \( B \rightarrow C \), \( A \rightarrow
+D \), \( C \rightarrow A \) but /not/ \( C \rightarrow D \). If fed arguments of
+types \( ABCD \), ~apply-generic~ will first coerce A to B, then B to C, and
+then fail to find a coercion from C to D despite a path \( C \rightarrow A
+\rightarrow D \) existing.
+
+The other scenario is if there is a different type not included in the original
+set which all types could convert to. For example if coercions to \(E\) exist
+for all \(ABCD\), this would not be checked for.
+
+Here's an implementation of the first strategy, which is a mess:
+
+#+NAME: apply-generic-coerce-varargs-naive
+#+BEGIN_SRC scheme -n :eval no-export :results silent
+(use-srfis '(1))
+;; Version of apply-generic that look for coercion functions
+;; that work for the entire list
+(define (apply-generic op . args)
+  (define types (map type-tag args))
+  (define (coercions-for-list ll target)
+    (map (lambda(item) ; find coercion functions, if identical type return id func
+           (let ((type (type-tag item)))
+             (if (equal? type target)
+                 (lambda(x)x)
+                 (get-coercion type target))))
+         args))
+  ;; map-coercions: list of types -> list of tagged numbers.
+  ;; find one type which all items can be coerced to,
+  ;; then do all coercions and return as list
+  (define (map-coercions ll)
+    (if (null? ll) ;; exhausted possibilities
+        (error
+         "No method between all these types"
+         (list op types))
+        (let ((tries (coercions-for-list ll (car ll))))
+          (if (every procedure? tries); if all coercions found, apply them
+              (map (lambda(f x) (f x))  
+                   tries args)
+              (map-coercions (cdr ll)))))) ; else keep trying
+  (let ((proc (get op types)))
+    (if proc
+        (apply proc (map contents args))
+        (let ((coerced (map-coercions types)))
+          (apply (get op (map type-tag coerced))
+                 (map contents coerced))))))
+#+END_SRC
+
+Testing my code:
+
+#+BEGIN_SRC scheme -n :eval no-export :results output
+<<op-table>>
+<<type-table>>
+<<sqrt>>
+<<square>>
+<<echo>>
+<<smarter-type-tagging>>
+<<apply-generic-coerce-varargs-naive>>
+<<generic-arithmetic>>
+<<scheme-number-package>>
+<<equ?>>
+<<eqzero?>>
+(load "mattcheck2.scm")
+
+(install-rational-package)
+(install-rectangular-package)
+(install-polar-package)
+(install-complex-package)
+(install-scheme-number-package)
+(install-equ?)
+(install-=zero?)
+<<gen-math-tests>>
+<<basic-coercions>>
+
+(mattcheck "num -> frac coercion test"
+           (mul (make-rational 8 1)
+                (make-rational 2 3))
+           (mul 8 (make-rational 2 3)))
+(mattcheck "num -> complex coercion test"
+           (mul (make-complex-from-real-imag 8 0)
+                (make-complex-from-real-imag 2 3))
+           (mul 8 (make-complex-from-real-imag 2 3)))
+#+END_SRC
+
+#+RESULTS[f88f798e03d9974d8307306e0ce2826bc5054373]:
+#+begin_EXAMPLE
+SUCCEED at num -> frac coercion test
+SUCCEED at num -> complex coercion test
+#+end_EXAMPLE
+
+The strategy I implemented was "search the list and find one type which all
+others coerce to." However, a superior strategy, [[https://github.com/danielpi/SICP-Exercises/blob/46a6b38fd83faae21db239f40d913ff24062d2e6/Racket/Ex%202.82%20Generalized%20apply-generic.rkt#L269][as implemented by danielpi on
+GitHub]][fn:: starting on line 269
+https://github.com/danielpi/SICP-Exercises/blob/46a6b38fd83faae21db239f40d913ff24062d2e6/Racket/Ex%202.82%20Generalized%20apply-generic.rkt#L269]
+is to iterate through the list's types, attempting every coercion that works,
+and leaving unmodified every number that doesn't have one. In a linear "tower"
+structure, the types will raise as far as is necessary -- assuming the types are
+ordered lowest-to-highest.
+
+Here's my attempt at a much simplified version. 
+
+#+NAME: apply-generic-coerce-less-naive
+#+BEGIN_SRC scheme -n :eval no-export :results silent
+(use-srfis '(1))
+;; Version of apply-generic that tries to coerce each variable
+;; into each type represebted in args.
+(define (apply-generic op . args)
+  (define types (map type-tag args))
+  ;; map-coercion: type, list of tagged numbers -> list of tagged numbers
+  ;; try to coerce all items in list to given type. If this isn't possible,
+  ;; leave the item alone. Meant for fold.
+  (define (map-coercion type-to-try items)
+    (map (lambda(item) ; find and apply coercion functions,
+           (let* ((coerce (get-coercion (type-tag item) type-to-try)))
+             (cond ((or (not coerce)
+                        (equal? (type-tag item) type-to-try))
+                    item)
+                   (else (coerce item)))))
+         items))
+  
+  (let ((proc (get op types)))
+    (if proc ; is this already doable?
+        (apply proc (map contents args))
+        ; if not, try type coercion
+        (let ((coerced (fold map-coercion args types)))
+          (apply (get op (map type-tag coerced))
+                 (map contents coerced))))))
+#+END_SRC
+
+#+BEGIN_SRC scheme -n :eval no-export :results output
+<<op-table>>
+<<type-table>>
+<<sqrt>>
+<<square>>
+<<echo>>
+<<smarter-type-tagging>>
+<<apply-generic-coerce-less-naive>>
+<<generic-arithmetic>>
+<<scheme-number-package>>
+<<equ?>>
+<<eqzero?>>
+(load "mattcheck2.scm")
+
+(install-rational-package)
+(install-rectangular-package)
+(install-polar-package)
+(install-complex-package)
+(install-scheme-number-package)
+(install-equ?)
+(install-=zero?)
+<<gen-math-tests>>
+<<basic-coercions>>
+
+(mattcheck "num -> frac coercion test"
+           (mul (make-rational 8 1)
+                (make-rational 2 3))
+           (mul 8 (make-rational 2 3)))
+(mattcheck "num -> complex coercion test"
+           (mul (make-complex-from-real-imag 8 0)
+                (make-complex-from-real-imag 2 3))
+           (mul 8 (make-complex-from-real-imag 2 3)))
+#+END_SRC
+
+#+RESULTS[633365c51eaf198e68b25d2508e9cd812365c8d4]:
+#+begin_EXAMPLE
+SUCCEED at num -> frac coercion test
+SUCCEED at num -> complex coercion test
 #+end_EXAMPLE
