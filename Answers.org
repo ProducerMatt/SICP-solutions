@@ -14775,3 +14775,134 @@ Here's my attempt at a much simplified version.
 SUCCEED at num -> frac coercion test
 SUCCEED at num -> complex coercion test
 #+end_EXAMPLE
+
+** Exercise 2.83
+
+*** Question
+
+Suppose you are designing a generic arithmetic system for dealing with the tower
+of types shown in Figure 2.25: integer, rational, real, complex. For each type
+(except complex), design a procedure that raises objects of that type one level
+in the tower. Show how to install a generic src_scheme{raise} operation that
+will work for each type (except complex).
+
+*** Answer
+
+I'm again getting the feeling that the authors are asking for a theoretical
+exercise, but one that I'm not satisfied leaving to theory. First we need a
+structure to clarify the promotional possibilities of the tower. Then we need
+coercions for each type which can be used when following the tower.
+
+Something which I haven't defined before but will now is a src_scheme{'real}
+type. A real number is a superset of ints and rationals, but isn't fundamentally
+different from these until a non-zero imaginary part is added. So my first
+instinct was to make it an untagged type like src_scheme{'scheme-number} that is
+detected by src_scheme{type-tag} with the builtin predicate src_scheme{real?}.
+However after thinking about it some more I think I'll just implement it in the
+type table and have it pass its arguments off to the "real" types.
+
+#+NAME: eqnumber
+#+BEGIN_SRC scheme -n :eval no-export :results silent
+(define (=number? x y)
+  (and (number? x)
+       (number? y)
+       (= x y)))
+(define (=int? x y)
+  (and (number? x)
+       (number? y)
+       (integer? x)
+       (integer? y)
+       (= x y)))
+#+END_SRC
+#+NAME: basic-tower-coercions
+#+BEGIN_SRC scheme -n :eval no-export :results silent
+(define tower
+  '(scheme-number rational real complex))
+
+(define (raise x)
+  (let ((t1 (type-tag x)))
+    (let recurse ((ll tower))
+      (let ((t2 (car ll)))
+        (cond ((null? (cdr ll)) #f)
+              ((equal? t1 t2)
+               ((get-coercion t1 (cadr ll)) x))
+              (else (recurse (cdr ll))))))))
+
+(put-coercion 'scheme-number 'rational
+              (lambda(num)
+                (make-rational num 1)))
+<<eqnumber>>
+(put-coercion 'rational 'real
+              (lambda(num)
+                (make-real
+                 (if (=number? 1 (denom num)) ; if rat could be integer
+                     (denom num)       ; might as well simplify
+                     num))))
+(put-coercion 'real 'complex
+              (lambda(num)
+                (make-complex-from-real-imag
+                 num 0)))
+#+END_SRC
+
+#+NAME: real-package
+#+BEGIN_SRC scheme -n :eval no-export :results silent
+(define (install-real-package)
+  ;; interface to rest of the system
+  (define (tag x) (attach-tag 'real x))
+  (put 'add '(real real)
+       (lambda (x y) (tag (add x y))))
+  (put 'sub '(real real)
+       (lambda (x y) (tag (sub x y))))
+  (put 'mul '(real real)
+       (lambda (x y) (tag (mul x y))))
+  (put 'div '(real real)
+       (lambda (x y) (tag (div x y))))
+  (put 'make 'real
+       (lambda (r) (tag r)))
+  'done)
+
+(define (make-real r)
+  ((get 'make 'real) r))
+#+END_SRC
+
+#+BEGIN_SRC scheme -n :eval no-export :results output
+<<op-table>>
+<<type-table>>
+<<sqrt>>
+<<square>>
+<<echo>>
+<<smarter-type-tagging>>
+<<apply-generic-coerce-less-naive>>
+<<generic-arithmetic>>
+<<scheme-number-package>>
+<<real-package>>
+<<equ?>>
+<<eqzero?>>
+<<real-package>>
+
+(install-rational-package)
+(install-rectangular-package)
+(install-polar-package)
+(install-complex-package)
+(install-scheme-number-package)
+(install-real-package)
+(install-equ?)
+(install-=zero?)
+<<gen-math-tests>>
+<<basic-tower-coercions>>
+
+(let recurse ((x 42))
+  (let ((x2 (raise x)))
+    (if (eqv? #f x2)
+        (echo "Done")
+        (begin (echo x2)
+               (recurse x2)))))
+#+END_SRC
+
+#+RESULTS[7cadcda822660c0417198168ece273331f232ea3]:
+#+begin_EXAMPLE
+(rational 42 . 1) 
+(real rational 42 . 1) 
+(complex rectangular (real rational 42 . 1) . 0) 
+Done 
+#+end_EXAMPLE
