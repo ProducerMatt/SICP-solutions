@@ -14734,6 +14734,7 @@ Here's my attempt at a much simplified version.
         (let ((coerced (fold map-coercion args types)))
           (apply (get op (map type-tag coerced))
                  (map contents coerced))))))
+;; However this won't actually handle multiple arguments
 #+END_SRC
 
 #+BEGIN_SRC scheme -n :eval no-export :results output
@@ -14768,12 +14769,18 @@ Here's my attempt at a much simplified version.
            (mul (make-complex-from-real-imag 8 0)
                 (make-complex-from-real-imag 2 3))
            (mul 8 (make-complex-from-real-imag 2 3)))
+(mattcheck "multiple arguments test"
+           (false-if-exception (apply-generic 'add 8 (make-rational 2 3)
+                                              (make-complex-from-real-imag 2 3))))
 #+END_SRC
 
-#+RESULTS[633365c51eaf198e68b25d2508e9cd812365c8d4]:
+#+RESULTS[aa987f0ee5a7ce7068b3f0885f61a58b0f67ee5c]:
 #+begin_EXAMPLE
 SUCCEED at num -> frac coercion test
 SUCCEED at num -> complex coercion test
+FAIL at multiple arguments test
+expected: "boolean true"
+returned: "boolean false"
 #+end_EXAMPLE
 
 ** Exercise 2.83
