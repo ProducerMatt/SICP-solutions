@@ -14808,7 +14808,7 @@ returned: "boolean false"
   (let ((proc (get op types)))
     (if proc ; is this already doable?
         (apply proc (map contents args))
-                                        ; if not, try type coercion
+        ; if not, try type coercion
         (let ((coerced (fold map-coercion args types)))
           (if (< (length args) 3)
               ;; short args
@@ -14818,7 +14818,6 @@ returned: "boolean false"
               (reduce (lambda(elem previous)
                         (apply-generic op previous elem))
                       "ERROR" coerced))))))
-;; However this won't actually handle multiple arguments
 #+END_SRC
 
 #+BEGIN_SRC scheme -n :eval no-export :results output
@@ -14847,15 +14846,26 @@ returned: "boolean false"
 (mattcheck "multiple arguments test"
            (apply-generic 'add 8 2 3)
            13)
+(mattcheck "multiple arguments test 2"
+           (apply-generic 'add (make-complex-from-real-imag 3 5)
+                          (make-complex-from-real-imag 3 5)
+                          (make-complex-from-real-imag 3 5))
+           (cons 'complex
+                 (cons 'rectangular
+                       (cons 9 15))))
 (mattcheck "multiple arguments coercion test"
            (false-if-exception
             (apply-generic 'add 8 (make-rational 2 3)
             (make-complex-from-real-imag 2 3))))
 #+END_SRC
 
-#+RESULTS[f119e6fa3deba2915653258a9168021bd7993613]:
+#+RESULTS[b742b1dc80842a1e75fa2f553d525b41605e7283]:
 #+begin_EXAMPLE
+<unknown-location>: warning: possibly unbound variable `fold'
+<unknown-location>: warning: possibly unbound variable `reduce'
+<unknown-location>: warning: possibly unbound variable `mattcheck'
 SUCCEED at multiple arguments test
+SUCCEED at multiple arguments test 2
 FAIL at multiple arguments coercion test
 expected: "boolean true"
 returned: "boolean false"
@@ -14892,6 +14902,9 @@ instinct was to make it an untagged type like src_scheme{'scheme-number} that is
 detected by src_scheme{type-tag} with the builtin predicate src_scheme{real?}.
 However after thinking about it some more I think I'll just implement it in the
 type table and have it pass its arguments off to the "real" types.
+
+=Real numbers are a superset of integers, rationals, and **irrational** numbers,
+which are not a part of this system yet. -Matt=
 
 #+NAME: eqnumber
 #+BEGIN_SRC scheme -n :eval no-export :results silent
@@ -15021,6 +15034,12 @@ lead to problems in adding new levels to the tower.
 ;; takes a list and items to find in the list
 ;; returns the index of each or #f
 (define (list-indices lst . items)
+  ;; folder: item, ongoing list of search results
+  ;;             -> list of search results
+  ;; List of results is a list of #f for unfound items
+  ;; and indices for found ones. Take an item to be
+  ;; searched for in lst and prior search results. Check
+  ;; for each unfound item and if now found, mark index.
   (define (folder x counters)
     (cons (1+ (car counters))
           (let rec ((il items)
@@ -15033,16 +15052,62 @@ lead to problems in adding new levels to the tower.
                       '()
                       (rec (cdr il) (cdr cl)))))))
   (if (= 1 (length items))
-      (list-index lst (car items))
+      ;; list-index is good enough
+      (cons (list-index (lambda(x)
+                          (equal? x (car items)))
+                        lst)
+            '())
       (cdr (fold folder (cons 0
-                         (make-list (1+ (length items)) #f))    
-            lst))))
+                              (make-list (1+ (length items)) #f))    
+                 lst))))
+(define (max-index lst)
+  (define (folder x result)
+    (let ((index (car result))
+          (max-i (cadr result))
+          (max-value (caddr result)))
+    (cons (1+ index)
+          (if (> x max-value)
+              (list (1+ index)
+                    x)
+              (list max-i
+                    max-value)))))
+
+  (cadr (fold folder (list -1 0 0)
+               lst)))
+
+;; My first definition for max-index was this under the
+;; assumption it would be faster. It was not.
+;(define (max-index lst)
+;  (define index car)
+;  (define max-i cadr)
+;  (define max-value caddr)
+;  (define (folder x result)
+;    (cons (1+ (index result))
+;          (if (> x (max-value result))
+;              (list (1+ (index result))
+;                    x)
+;              (list (max-i result)
+;                    (max-value result)))))
+;
+;  (max-i (fold folder (list -1 0 0)
+;               lst)))
 #+END_SRC
 #+NAME: apply-generic-raise
 #+BEGIN_SRC scheme -n :eval no-export :results silent
 (use-srfis '(1))
 (define (is-earlier-in-tower? a b)
-  (apply < (list-indices tower a b)))
+  (let ((result (list-indices tower a b)))
+    (if (member #f result)
+        (error "type missing from tower!" result)
+        (apply < result))))
+(define (latest-in-tower . args)
+  (let* ((types (if (and (= 1 (length args))
+                         (list? (car args)))
+                    (car args)
+                    args))
+         (result (apply list-indices
+                       tower types)))
+    (list-ref types (max-index result))))
 ;; Version of apply-generic that tries raising
 ;; its arguments.
 (define (apply-generic op . args)
@@ -15050,11 +15115,11 @@ lead to problems in adding new levels to the tower.
   ;; map-coercion: type, list of tagged numbers -> list of tagged numbers
   ;; try to coerce all items in list to given type. If this isn't possible,
   ;; leave the item alone. Meant for fold.
-  (define (map-coercion type-to-try items)
+  (define (map-raise highest-type items)
     (map (lambda(item) ; find and apply coercion functions,
-           (let* ((coerce (get-coercion (type-tag item) type-to-try)))
+           (let* ((coerce (get-coercion (type-tag item) highest-type)))
              (cond ((or (not coerce)
-                        (equal? (type-tag item) type-to-try))
+                        (equal? (type-tag item) highest-type))
                     item)
                    (else (coerce item)))))
          items))
@@ -15063,19 +15128,26 @@ lead to problems in adding new levels to the tower.
     (if proc ; is this already doable?
         (apply proc (map contents args))
         ; if not, try type coercion
-        (let ((coerced (fold map-coercion args types)))
-          (apply (get op (map type-tag coerced))
-                 (map contents coerced))))))
+        (let ((raised (map map-raise args)))
+          (if (< (length args) 3)
+              ;; short args
+              (apply (get op (map type-tag raised))
+                     (map contents raised))
+              ;; long args
+              (reduce (lambda(elem previous)
+                        (apply-generic op previous elem))
+                      "ERROR" raised))))))
 #+END_SRC
 
-#+BEGIN_SRC scheme -n :eval no-export :results output
+#+BEGIN_SRC scheme -n :eval no-export :results output :tangle 2/Ex84.scheme
+(load "mattcheck2.scm")
 <<op-table>>
 <<type-table>>
 <<sqrt>>
 <<square>>
 <<echo>>
 <<smarter-type-tagging>>
-<<apply-generic-coerce-less-naive>>
+<<apply-generic-raise>>
 <<generic-arithmetic>>
 <<scheme-number-package>>
 <<real-package>>
@@ -15095,12 +15167,32 @@ lead to problems in adding new levels to the tower.
 <<basic-tower-coercions>>
 <<list-indices>>
 
-(echo (is-earlier-in-tower? 'scheme-number 'real))
+(mattcheck "is-earlier-in-tower? true"
+           (is-earlier-in-tower? 'scheme-number 'real))
+(mattcheck "is-earlier-in-tower? false"
+           #f (is-earlier-in-tower? 'complex 'scheme-number))
+(mattcheck "max-index"
+           (max-index (list 1 3 5 4 2 0))
+           2)
+(mattcheck "latest-in-tower"
+           (apply latest-in-tower (reverse tower))
+           'complex)
+(mattcheck "latest-in-tower"
+           (apply latest-in-tower tower)
+           'complex)
+(mattcheck "latest-in-tower"
+           (apply latest-in-tower '(scheme-number real))
+           'real)
+(mattcheck "latest-in-tower"
+           (apply latest-in-tower '(real))
+           'real)
 #+END_SRC
 
-#+RESULTS[21c3e4728518bbf97e35b875dcdb565a87348e8f]:
+#+RESULTS[909d56ef5bdf81794b945079e531801fb7a851e9]:
 #+begin_EXAMPLE
+<unknown-location>: warning: possibly unbound variable `reduce'
 <unknown-location>: warning: possibly unbound variable `fold'
+<unknown-location>: warning: possibly unbound variable `mattcheck'
 5+5 = 10 
 5-5 = 0 
 5*5 = 25 
@@ -15117,5 +15209,22 @@ lead to problems in adding new levels to the tower.
 3m+4deg - 3m+4deg = (complex rectangular 0.0 . 0.0) 
 3m+4deg * 3m+4deg = (complex polar 9 . 8) 
 3m+4deg / 3m+4deg = (complex polar 1 . 0) 
-#t 
+SUCCEED at is-earlier-in-tower? true
+SUCCEED at is-earlier-in-tower? false
+SUCCEED at max-index
+SUCCEED at latest-in-tower
+SUCCEED at latest-in-tower
+SUCCEED at latest-in-tower
+SUCCEED at latest-in-tower
+#+end_EXAMPLE
+
+#+begin_EXAMPLE
+           4 (eval (#<procedure 7f8729e192c0 at <unknown port>:512:0 ()>) #<directory (guile-user) 7f872d1fdc80>)
+In current input:
+   513:11  3 (_)
+    90:17  2 (latest-in-tower . _)
+In srfi/srfi-1.scm:
+    241:2  1 (list-index _ _ . _)
+In ice-9/boot-9.scm:
+  1685:16  0 (raise-exception _ #:continuable? _)
 #+end_EXAMPLE
