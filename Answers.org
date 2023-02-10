@@ -14546,7 +14546,7 @@ arguments have the same type.
 (put-coercion 'rational 'complex
               (lambda(num)
                 (make-complex-from-real-imag
-                 (if (=number? 1 (denom num)) ; if rat could be integer
+                 (if (=number? 1 (numer num)) ; if rat could be integer
                      (denom num)       ; might as well simplify
                      num) 0)))
 (put-coercion 'scheme-number 'complex
@@ -15025,6 +15025,8 @@ lead to problems in adding new levels to the tower.
 
 *** Answer
 
+First some (unnecessarily general) ways to find items in a list.
+
 #+NAME: list-indices
 #+BEGIN_SRC scheme -n :eval no-export :results silent
 (use-srfis '(1))
@@ -15058,7 +15060,7 @@ lead to problems in adding new levels to the tower.
                         lst)
             '())
       (cdr (fold folder (cons 0
-                              (make-list (1+ (length items)) #f))    
+                              (make-list (length items) #f))    
                  lst))))
 (define (max-index lst)
   (define (folder x result)
@@ -15076,7 +15078,9 @@ lead to problems in adding new levels to the tower.
                lst)))
 
 ;; My first definition for max-index was this under the
-;; assumption it would be faster. It was not.
+;; assumption it would be faster, because the former
+;; makes variables for each fold. But they benchmarked
+;; identically.
 ;(define (max-index lst)
 ;  (define index car)
 ;  (define max-i cadr)
@@ -15092,43 +15096,52 @@ lead to problems in adding new levels to the tower.
 ;  (max-i (fold folder (list -1 0 0)
 ;               lst)))
 #+END_SRC
+
+The new apply-generic and helper functions.
 #+NAME: apply-generic-raise
 #+BEGIN_SRC scheme -n :eval no-export :results silent
 (use-srfis '(1))
+;; type, type -> bool
+;; Return true if type a is the lowest, false otherwise.
 (define (is-earlier-in-tower? a b)
   (let ((result (list-indices tower a b)))
-    (if (member #f result)
+    (if (any (lambda(x) (eq? x #f)) result)
         (error "type missing from tower!" result)
         (apply < result))))
+;; types -> type
+;; Take types to check on tower. Finds the
+;; highest-ranked and returns it.
 (define (latest-in-tower . args)
   (let* ((types (if (and (= 1 (length args))
                          (list? (car args)))
                     (car args)
                     args))
          (result (apply list-indices
-                       tower types)))
-    (list-ref types (max-index result))))
+                        tower types)))
+    (if (any (lambda(x) (eq? x #f)) result)
+        (error "type missing from tower!"
+               "args" args "types" types "result" result)
+        (list-ref types (max-index result)))))
 ;; Version of apply-generic that tries raising
 ;; its arguments.
 (define (apply-generic op . args)
   (define types (map type-tag args))
-  ;; map-coercion: type, list of tagged numbers -> list of tagged numbers
-  ;; try to coerce all items in list to given type. If this isn't possible,
-  ;; leave the item alone. Meant for fold.
-  (define (map-raise highest-type items)
-    (map (lambda(item) ; find and apply coercion functions,
-           (let* ((coerce (get-coercion (type-tag item) highest-type)))
-             (cond ((or (not coerce)
-                        (equal? (type-tag item) highest-type))
-                    item)
-                   (else (coerce item)))))
-         items))
+  (define (map-raise highest-type item)
+    (if (equal? (type-tag item) highest-type)
+        item
+        (let ((raised (raise item)))
+          (if (not raised)
+              (error "map-raise: could not raise:" item highest-type)
+              (map-raise highest-type raised)))))
   
   (let ((proc (get op types)))
     (if proc ; is this already doable?
         (apply proc (map contents args))
-        ; if not, try type coercion
-        (let ((raised (map map-raise args)))
+                                        ; if not, try type coercion
+  
+        (let* ((highest-type (apply latest-in-tower types))
+               (map-raise-prime (lambda(item)(map-raise highest-type item)))
+               (raised (map map-raise-prime args)))
           (if (< (length args) 3)
               ;; short args
               (apply (get op (map type-tag raised))
@@ -15139,6 +15152,16 @@ lead to problems in adding new levels to the tower.
                       "ERROR" raised))))))
 #+END_SRC
 
+I discovered that the prior method for avoiding tagging scheme-numbers also keeps you from tagging other things. Here's one tbat avoids the problem:
+
+#+NAME: attach-tag-fixed
+#+BEGIN_SRC scheme -n :eval no-export :results silent
+(define (attach-tag type-tag contents)
+  (if (eqv? type-tag 'scheme-number)
+      contents
+      (cons type-tag contents)))
+#+END_SRC
+
 #+BEGIN_SRC scheme -n :eval no-export :results output :tangle 2/Ex84.scheme
 (load "mattcheck2.scm")
 <<op-table>>
@@ -15147,6 +15170,8 @@ lead to problems in adding new levels to the tower.
 <<square>>
 <<echo>>
 <<smarter-type-tagging>>
+<<attach-tag-fixed>>
+<<list-indices>>
 <<apply-generic-raise>>
 <<generic-arithmetic>>
 <<scheme-number-package>>
@@ -15154,6 +15179,7 @@ lead to problems in adding new levels to the tower.
 <<equ?>>
 <<eqzero?>>
 <<real-package>>
+<<basic-tower-coercions>>
 
 (install-rational-package)
 (install-rectangular-package)
@@ -15164,8 +15190,6 @@ lead to problems in adding new levels to the tower.
 (install-equ?)
 (install-=zero?)
 <<gen-math-tests>>
-<<basic-tower-coercions>>
-<<list-indices>>
 
 (mattcheck "is-earlier-in-tower? true"
            (is-earlier-in-tower? 'scheme-number 'real))
@@ -15175,23 +15199,34 @@ lead to problems in adding new levels to the tower.
            (max-index (list 1 3 5 4 2 0))
            2)
 (mattcheck "latest-in-tower"
-           (apply latest-in-tower (reverse tower))
-           'complex)
-(mattcheck "latest-in-tower"
            (apply latest-in-tower tower)
            'complex)
-(mattcheck "latest-in-tower"
+(mattcheck "latest-in-tower reverse"
+           (apply latest-in-tower (reverse tower))
+           'complex)
+(mattcheck "latest-in-tower 2 args"
            (apply latest-in-tower '(scheme-number real))
            'real)
-(mattcheck "latest-in-tower"
+(mattcheck "latest-in-tower 1 arg"
            (apply latest-in-tower '(real))
            'real)
+(mattcheck "raise success"
+           (raise 78)
+           (make-rational 78 1))
+(mattcheck "raise fail"
+           (raise (make-complex-from-mag-ang 78 64))
+           #f)
+(mattcheck "apply-generic 1"
+           (add 1 (make-rational 3 5))
+           (make-rational 8 5))
+           ;(add (make-real 2) (make-complex-from-mag-ang 3 5))
 #+END_SRC
 
-#+RESULTS[909d56ef5bdf81794b945079e531801fb7a851e9]:
+#+RESULTS[c2978930b0dba85596572c62bef22a4c494ff139]:
 #+begin_EXAMPLE
-<unknown-location>: warning: possibly unbound variable `reduce'
 <unknown-location>: warning: possibly unbound variable `fold'
+<unknown-location>: warning: possibly unbound variable `any'
+<unknown-location>: warning: possibly unbound variable `reduce'
 <unknown-location>: warning: possibly unbound variable `mattcheck'
 5+5 = 10 
 5-5 = 0 
@@ -15213,18 +15248,30 @@ SUCCEED at is-earlier-in-tower? true
 SUCCEED at is-earlier-in-tower? false
 SUCCEED at max-index
 SUCCEED at latest-in-tower
-SUCCEED at latest-in-tower
-SUCCEED at latest-in-tower
-SUCCEED at latest-in-tower
+SUCCEED at latest-in-tower reverse
+SUCCEED at latest-in-tower 2 args
+SUCCEED at latest-in-tower 1 arg
+SUCCEED at raise success
+SUCCEED at raise fail
+SUCCEED at apply-generic 1
 #+end_EXAMPLE
 
+Although src_scheme{apply-generic} can successfully raise arguments to the top
+of the tower, further progress is blocked when actually attempting an operation
+past the level of src_scheme{'rational}. From src_scheme{'real} and above,
+numbers passed to math primitives will fail from receiving numbers tagged
+src_scheme{'real}.
+
+#+BEGIN_SRC scheme -n :eval no-export :results silent
+(add (make-real 2)
+     (make-complex-from-mag-ang 3 5))
+;; eventually reaches...
+(add-complex (rectangular (real . 2) . 0)
+             (polar 3 . 5))
+;; which resulfs in...
+#+END_SRC
+
 #+begin_EXAMPLE
-           4 (eval (#<procedure 7f8729e192c0 at <unknown port>:512:0 ()>) #<directory (guile-user) 7f872d1fdc80>)
-In current input:
-   513:11  3 (_)
-    90:17  2 (latest-in-tower . _)
-In srfi/srfi-1.scm:
-    241:2  1 (list-index _ _ . _)
-In ice-9/boot-9.scm:
-  1685:16  0 (raise-exception _ #:continuable? _)
+ice-9/boot-9.scm:1685:16: In procedure raise-exception:
+In procedure +: Wrong type argument in position 1: (real . 2)
 #+end_EXAMPLE
