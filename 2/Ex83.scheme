@@ -1,5 +1,4 @@
 ;; [[file:../Answers.org::*Answer][Answer:4]]
-(load "mattcheck2.scm")
 ;; [[[[file:~/SICP-group/Answers.org::op-table][op-table]]][op-table]]
 (define op-table (make-hash-table))
 
@@ -74,127 +73,34 @@
   (if (eqv? type-tag 'scheme-number)
       contents
       (cons type-tag contents)))
-;; attach-tag-fixed ends here
-;; [[[[file:~/SICP-group/Answers.org::list-indices][list-indices]]][list-indices]]
+;; attach-tag-fixed ends here ;; time travel due to numer/denom fixes
+;; [[[[file:~/SICP-group/Answers.org::apply-generic-coerce-less-naive][apply-generic-coerce-less-naive]]][apply-generic-coerce-less-naive]]
 (use-srfis '(1))
-;; list, items to find -> list of indices
-;; example: (list-indices '(c b a) a b c z)
-;;          (2 1 0 #f)
-;; takes a list and items to find in the list
-;; returns the index of each or #f
-(define (list-indices lst . items)
-  ;; folder: item, ongoing list of search results
-  ;;             -> list of search results
-  ;; List of results is a list of #f for unfound items
-  ;; and indices for found ones. Take an item to be
-  ;; searched for in lst and prior search results. Check
-  ;; for each unfound item and if now found, mark index.
-  (define (folder x counters)
-    (cons (1+ (car counters))
-          (let rec ((il items)
-                    (cl (cdr counters)))
-            (cons (if (and (equal? (car cl) #f)
-                           (equal? x (car il)))
-                      (car counters)
-                      (car cl))
-                  (if (null? (cdr il))
-                      '()
-                      (rec (cdr il) (cdr cl)))))))
-  (if (= 1 (length items))
-      ;; list-index is good enough
-      (cons (list-index (lambda(x)
-                          (equal? x (car items)))
-                        lst)
-            '())
-      (cdr (fold folder (cons 0
-                              (make-list (length items) #f))    
-                 lst))))
-(define (max-index lst)
-  (define (folder x result)
-    (let ((index (car result))
-          (max-i (cadr result))
-          (max-value (caddr result)))
-    (cons (1+ index)
-          (if (> x max-value)
-              (list (1+ index)
-                    x)
-              (list max-i
-                    max-value)))))
-
-  (cadr (fold folder (list -1 0 0)
-               lst)))
-
-;; My first definition for max-index was this under the
-;; assumption it would be faster, because the former
-;; makes variables for each fold. But they benchmarked
-;; identically.
-;(define (max-index lst)
-;  (define index car)
-;  (define max-i cadr)
-;  (define max-value caddr)
-;  (define (folder x result)
-;    (cons (1+ (index result))
-;          (if (> x (max-value result))
-;              (list (1+ (index result))
-;                    x)
-;              (list (max-i result)
-;                    (max-value result)))))
-;
-;  (max-i (fold folder (list -1 0 0)
-;               lst)))
-;; list-indices ends here
-;; [[[[file:~/SICP-group/Answers.org::apply-generic-raise][apply-generic-raise]]][apply-generic-raise]]
-(use-srfis '(1))
-;; type, type -> bool
-;; Return true if type a is the lowest, false otherwise.
-(define (is-earlier-in-tower? a b)
-  (let ((result (list-indices tower a b)))
-    (if (any (lambda(x) (eq? x #f)) result)
-        (error "type missing from tower!" result)
-        (apply < result))))
-;; types -> type
-;; Take types to check on tower. Finds the
-;; highest-ranked and returns it.
-(define (latest-in-tower . args)
-  (let* ((types (if (and (= 1 (length args))
-                         (list? (car args)))
-                    (car args)
-                    args))
-         (result (apply list-indices
-                        tower types)))
-    (if (any (lambda(x) (eq? x #f)) result)
-        (error "type missing from tower!"
-               "args" args "types" types "result" result)
-        (list-ref types (max-index result)))))
-;; Version of apply-generic that tries raising
-;; its arguments.
+;; Version of apply-generic that tries to coerce each variable
+;; into each type represebted in args.
 (define (apply-generic op . args)
   (define types (map type-tag args))
-  (define (map-raise highest-type item)
-    (if (equal? (type-tag item) highest-type)
-        item
-        (let ((raised (raise item)))
-          (if (not raised)
-              (error "map-raise: could not raise:" item highest-type)
-              (map-raise highest-type raised)))))
+  ;; map-coercion: type, list of tagged numbers -> list of tagged numbers
+  ;; try to coerce all items in list to given type. If this isn't possible,
+  ;; leave the item alone. Meant for fold.
+  (define (map-coercion type-to-try items)
+    (map (lambda(item) ; find and apply coercion functions,
+           (let* ((coerce (get-coercion (type-tag item) type-to-try)))
+             (cond ((or (not coerce)
+                        (equal? (type-tag item) type-to-try))
+                    item)
+                   (else (coerce item)))))
+         items))
   
   (let ((proc (get op types)))
     (if proc ; is this already doable?
         (apply proc (map contents args))
-                                        ; if not, try type coercion
-  
-        (let* ((highest-type (apply latest-in-tower types))
-               (map-raise-prime (lambda(item)(map-raise highest-type item)))
-               (raised (map map-raise-prime args)))
-          (if (< (length args) 3)
-              ;; short args
-              (apply (get op (map type-tag raised))
-                     (map contents raised))
-              ;; long args
-              (reduce (lambda(elem previous)
-                        (apply-generic op previous elem))
-                      "ERROR" raised))))))
-;; apply-generic-raise ends here
+        ; if not, try type coercion
+        (let ((coerced (fold map-coercion args types)))
+          (apply (get op (map type-tag coerced))
+                 (map contents coerced))))))
+;; However this won't actually handle multiple arguments
+;; apply-generic-coerce-less-naive ends here
 ;; [[[[file:~/SICP-group/Answers.org::generic-arithmetic][generic-arithmetic]]][generic-arithmetic]]
 (define (square x) (* x 2))
 (define (add x y) (apply-generic 'add x y))
@@ -524,36 +430,10 @@
   (echo "3m+4deg / 3m+4deg =" (div p p)))
 ;; gen-math-tests ends here
 
-(mattcheck "is-earlier-in-tower? true"
-           (is-earlier-in-tower? 'scheme-number 'real))
-(mattcheck "is-earlier-in-tower? false"
-           #f (is-earlier-in-tower? 'complex 'scheme-number))
-(mattcheck "max-index"
-           (max-index (list 1 3 5 4 2 0))
-           2)
-(mattcheck "latest-in-tower"
-           (apply latest-in-tower tower)
-           'complex)
-(mattcheck "latest-in-tower reverse"
-           (apply latest-in-tower (reverse tower))
-           'complex)
-(mattcheck "latest-in-tower 2 args"
-           (apply latest-in-tower '(scheme-number real))
-           'real)
-(mattcheck "latest-in-tower 1 arg"
-           (apply latest-in-tower '(real))
-           'real)
-(mattcheck "raise success"
-           (raise 78)
-           (make-rational 78 1))
-(mattcheck "raise fail"
-           (raise (make-complex-from-mag-ang 78 64))
-           #f)
-(mattcheck "apply-generic 1"
-           (add 1 (make-rational 3 5))
-           (make-rational 8 5))
-(mattcheck "apply-generic 2"
-           (add (make-real 2)
-                (make-complex-from-mag-ang 3 5))
-           (make-complex-from-real-imag 2.850986556389679 -2.8767728239894153))
+(let recurse ((x 42))
+  (let ((x2 (raise x)))
+    (if (eqv? #f x2)
+        (echo "Done")
+        (begin (echo x2)
+               (recurse x2)))))
 ;; Answer:4 ends here

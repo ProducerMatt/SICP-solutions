@@ -62,11 +62,6 @@
 (define (imag-part z) (apply-generic 'imag-part z))
 (define (magnitude z) (apply-generic 'magnitude z))
 (define (angle z) (apply-generic 'angle z))
-;; for future use
-(define (numer r)
-  ((get 'numer 'rational) r))
-(define (denom r)
-  ((get 'denom 'rational) r))
 
 (define (install-rational-package)
   ;; internal procedures
@@ -104,6 +99,14 @@
   (put 'numer 'rational numer) ;; my addition
   (put 'denom 'rational denom)
   'done)
+
+;; for future use
+(define (numer r)
+  ((get 'numer 'rational)
+   (contents r)))
+(define (denom r)
+  ((get 'denom 'rational)
+   (contents r)))
 
 (define (make-rational n d)
   ((get 'make 'rational) n d))

@@ -13844,11 +13844,6 @@ Surprised to find I never actually imported src_scheme{apply-generic}.
 (define (imag-part z) (apply-generic 'imag-part z))
 (define (magnitude z) (apply-generic 'magnitude z))
 (define (angle z) (apply-generic 'angle z))
-;; for future use
-(define (numer r)
-  ((get 'numer 'rational) r))
-(define (denom r)
-  ((get 'denom 'rational) r))
 
 (define (install-rational-package)
   ;; internal procedures
@@ -13886,6 +13881,14 @@ Surprised to find I never actually imported src_scheme{apply-generic}.
   (put 'numer 'rational numer) ;; my addition
   (put 'denom 'rational denom)
   'done)
+
+;; for future use
+(define (numer r)
+  ((get 'numer 'rational)
+   (contents r)))
+(define (denom r)
+  ((get 'denom 'rational)
+   (contents r)))
 
 (define (make-rational n d)
   ((get 'make 'rational) n d))
@@ -14904,7 +14907,8 @@ However after thinking about it some more I think I'll just implement it in the
 type table and have it pass its arguments off to the "real" types.
 
 =Real numbers are a superset of integers, rationals, and **irrational** numbers,
-which are not a part of this system yet. -Matt=
+which are not a part of this system yet. Also it turns out this module expected
+a "real" number to be a decimal. -Matt=
 
 #+NAME: eqnumber
 #+BEGIN_SRC scheme -n :eval no-export :results silent
@@ -14940,13 +14944,12 @@ which are not a part of this system yet. -Matt=
 (put-coercion 'rational 'real
               (lambda(num)
                 (make-real
-                 (if (=number? 1 (denom num)) ; if rat could be integer
-                     (denom num)       ; might as well simplify
-                     num))))
+                 (exact->inexact (/ (numer num)
+                                    (denom num))))))
 (put-coercion 'real 'complex
               (lambda(num)
                 (make-complex-from-real-imag
-                 num 0)))
+                 (contents num) 0)))
 #+END_SRC
 
 #+NAME: real-package
@@ -14970,13 +14973,14 @@ which are not a part of this system yet. -Matt=
   ((get 'make 'real) r))
 #+END_SRC
 
-#+BEGIN_SRC scheme -n :eval no-export :results output
+#+BEGIN_SRC scheme -n :eval no-export :results output :tangle 2/Ex83.scheme
 <<op-table>>
 <<type-table>>
 <<sqrt>>
 <<square>>
 <<echo>>
 <<smarter-type-tagging>>
+<<attach-tag-fixed>> ;; time travel due to numer/denom fixes
 <<apply-generic-coerce-less-naive>>
 <<generic-arithmetic>>
 <<scheme-number-package>>
@@ -14984,6 +14988,7 @@ which are not a part of this system yet. -Matt=
 <<equ?>>
 <<eqzero?>>
 <<real-package>>
+<<basic-tower-coercions>>
 
 (install-rational-package)
 (install-rectangular-package)
@@ -14994,7 +14999,6 @@ which are not a part of this system yet. -Matt=
 (install-equ?)
 (install-=zero?)
 <<gen-math-tests>>
-<<basic-tower-coercions>>
 
 (let recurse ((x 42))
   (let ((x2 (raise x)))
@@ -15004,11 +15008,28 @@ which are not a part of this system yet. -Matt=
                (recurse x2)))))
 #+END_SRC
 
-#+RESULTS[7cadcda822660c0417198168ece273331f232ea3]:
+#+RESULTS[69156083a1e47c209d1ee268f3575929dcb0abc0]:
 #+begin_EXAMPLE
+<unknown-location>: warning: possibly unbound variable `fold'
+5+5 = 10 
+5-5 = 0 
+5*5 = 25 
+5/5 = 1 
+1/2 + 1/2 = (rational 1 . 1) 
+1/2 - 1/2 = (rational 0 . 1) 
+1/2 * 1/2 = (rational 1 . 4) 
+1/2 / 1/2 = (rational 1 . 1) 
+3+4i + 3+4i = (complex rectangular 6 . 8) 
+3+4i - 3+4i = (complex rectangular 0 . 0) 
+3+4i * 3+4i = (complex polar 14.0 . 1.8545904360032244) 
+3+4i / 3+4i = (complex polar 1.0 . 0.0) 
+3m+4deg + 3m+4deg = (complex rectangular -3.921861725181672 . -4.540814971847569) 
+3m+4deg - 3m+4deg = (complex rectangular 0.0 . 0.0) 
+3m+4deg * 3m+4deg = (complex polar 9 . 8) 
+3m+4deg / 3m+4deg = (complex polar 1 . 0) 
 (rational 42 . 1) 
-(real rational 42 . 1) 
-(complex rectangular (real rational 42 . 1) . 0) 
+(real . 42.0) 
+(complex rectangular (real . 42.0) . 0) 
 Done 
 #+end_EXAMPLE
 
@@ -15152,7 +15173,7 @@ The new apply-generic and helper functions.
                       "ERROR" raised))))))
 #+END_SRC
 
-I discovered that the prior method for avoiding tagging scheme-numbers also keeps you from tagging other things. Here's one tbat avoids the problem:
+I discovered that the prior method for avoiding tagging scheme-numbers also keeps you from tagging other things. Here's one that avoids the problem:
 
 #+NAME: attach-tag-fixed
 #+BEGIN_SRC scheme -n :eval no-export :results silent
@@ -15219,10 +15240,13 @@ I discovered that the prior method for avoiding tagging scheme-numbers also keep
 (mattcheck "apply-generic 1"
            (add 1 (make-rational 3 5))
            (make-rational 8 5))
-           ;(add (make-real 2) (make-complex-from-mag-ang 3 5))
+(mattcheck "apply-generic 2"
+           (add (make-real 2)
+                (make-complex-from-mag-ang 3 5))
+           (make-complex-from-real-imag 2.850986556389679 -2.8767728239894153))
 #+END_SRC
 
-#+RESULTS[c2978930b0dba85596572c62bef22a4c494ff139]:
+#+RESULTS[4a83738b0f48d10db1fedd7867342bb2dd9f2e06]:
 #+begin_EXAMPLE
 <unknown-location>: warning: possibly unbound variable `fold'
 <unknown-location>: warning: possibly unbound variable `any'
@@ -15254,12 +15278,15 @@ SUCCEED at latest-in-tower 1 arg
 SUCCEED at raise success
 SUCCEED at raise fail
 SUCCEED at apply-generic 1
+SUCCEED at apply-generic 2
 #+end_EXAMPLE
 
-Although src_scheme{apply-generic} can successfully raise arguments to the top
-of the tower, further progress is blocked when actually attempting an operation
-past the level of src_scheme{'rational}. From src_scheme{'real} and above,
-numbers passed to math primitives will fail from receiving numbers tagged
+In this implementation, In order to add a new type, all that will be needed is
+to replace the tower variable (the horrors of =setq=...) and add a coercion to
+the respective type.
+
+My first attempt at this exercise had a problem from src_scheme{'real} and above,
+where numbers passed to math primitives would fail, because of receiving numbers tagged
 src_scheme{'real}.
 
 #+BEGIN_SRC scheme -n :eval no-export :results silent
@@ -15275,3 +15302,11 @@ src_scheme{'real}.
 ice-9/boot-9.scm:1685:16: In procedure raise-exception:
 In procedure +: Wrong type argument in position 1: (real . 2)
 #+end_EXAMPLE
+
+This issue was caused by not consuming the src_scheme{'real} tag when being
+coerced to a new type.
+
+My code also had an issue where real numbers raised from rational couldn't be
+operated on because they were always nested inside the real number. This is
+solved by reducing the fraction to a decimal number, which fixes a few "bugs" in
+the book's code as well.
