@@ -155,8 +155,6 @@ Be sure to install Guile, and Texlive.
 
 For graphing, install `gnuplot` and `graphviz`.
 
-For the picture language section, install `guile-picture-language` package via Guix.
-
 ## Doom-Emacs minimum dependencies
 
 `init.el`
@@ -337,3 +335,111 @@ The most important part are the org-mode properties set at the top of the docume
 # #+ATTR_LATEX: :width 0.6\linewidth
 ```
 
+# SICP's Picture Language with `guile-picture-language`
+
+First, you'll need `guile-picture-language` and a Guile install that knows where
+to find it. The easiest way is by installing Guix and executing `guix shell
+guile-picture-language guile`. This will make the Guile module `pict` available
+in your shell. Try running the following code:
+
+``` scheme
+(use-modules (pict))
+(pict->file (triangle 50 70)
+           "triangle.svg")
+```
+
+You should see a picture like this: ![triangle test](2/pict/test.png) If you
+need the `svg`s in png format, I can recommend ImageMagick.
+
+Now for the tricky part. The code in the textbooks expects drawing primitives to
+exist in your system (this would have been common in the 80s and 90s school
+mainframes). We do not have these, so we will have to put the drawing procedures
+of `pict` together so that the book's code can work with them.
+
+When you start the picture language exercises at 2.44 you won't have enough
+procedures to actually bring it all together, so you'll have to do the first
+couple exercises without running them -- luckily they are very similar (or
+identical) to some previous exercises, such as the implementation of line
+segments in 2.2 and rectangles in 2.3. Once you have defined them up to 2.49,
+you can make procedures for `pict` that will create SICP's pictures. Here is
+such a system, which modifies some textbook code. It expects:
+
+- [ ] a vector implementation (Exercise 2.46)
+  - [ ] `(make-vect x y)` return a vector
+  - [ ] `(xcor-vect v)` return the x coordinate
+  - [ ] `(ycor-vect v)` return the y coordinate
+  - [ ] `(add-vect v w)` add vectors
+  - [ ] `(sub-vect v w)` subtract vectors
+  - [ ] `(scale-vect s v)` scale vector `v` by factor `s` (don't get these backwards :smile: )
+- [ ] An implementation of frames (Exercise 2.47)
+  - [ ] `(make-frame origin edge1 edge2)` make a frame object
+  - [ ] `(origin-frame F)` return the origin
+  - [ ] `(edge1-frame F)` return the first edge
+  - [ ] `(edge2-frame F)` return the second edge
+- [ ] An implementation of line segments
+  - [ ] `(make-segment start end)` make a segment from two vectors
+  - [ ] `(start-segment S)` return the starting vector
+  - [ ] `(end-segment S)` return the ending vector
+- 
+
+``` scheme
+(use-modules (pict))
+
+;; Here is the place for your frame, segment, and vector code
+
+(define (frame-coord-map frame)
+  ;; Returns a function for adjusting a frame by a vector
+  (lambda (v)
+    (add-vect
+     (origin-frame frame)
+     (add-vect 
+      (scale-vect (xcor-vect v)
+                  (edge1-frame frame))
+      (scale-vect (ycor-vect v)
+                  (edge2-frame frame))))))
+
+(define (draw-line start end)
+  ;; take two vectors, returns a line SVG object for pict
+  (line (xcor-vect start)
+        (ycor-vect start)
+        (xcor-vect end)
+        (ycor-vect end)))
+
+(define (segments->painter segment-list)
+  ;; takes a list of segments, returns a "painter" lambda, which applies a frame
+  ;; to those segments, and then maps over the result with draw-line to make a
+  ;; list of SVG line objects which pict can combine.
+  (lambda (frame)
+    (map
+     (lambda (segment)
+       (draw-line
+        ((frame-coord-map frame)
+         (start-segment segment))
+        ((frame-coord-map frame)
+         (end-segment segment))))
+     segment-list)))
+
+;; NOTE: in the text, draw-line is a function which triggers an action in
+;; some graphics driver, and returns nothing. Because of this, (map) was
+;; originally (for-each). Thus the final result would have been thrown away.
+
+(define (paint-lines painter)
+  ;; use pict to compile an SVG with the elements described by painter
+  (let ((Frame (make-frame (make-vect 0 0)
+                           (make-vect 500 0)
+                           (make-vect 0 500))))
+    (apply lt-superimpose
+           (painter Frame))))
+```
+
+A complete version of this with my own answers can be found under
+[../2/pict/linepainter.scheme](2/pict/linepainter.scheme).
+
+Try testing it:
+
+``` scheme
+(pict->file (paint-lines diamond)
+            "2/pict/testline.svg")
+```
+
+![Test output](2/pict/testline.png)
