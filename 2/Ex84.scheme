@@ -1,4 +1,4 @@
-;; [[file:../Answers.org::*Answer][Answer:4]]
+;; [[file:../Answers.org::*Answer][Answer:5]]
 (load "mattcheck2.scm")
 ;; [[[[file:~/SICP-group/Answers.org::op-table][op-table]]][op-table]]
 (define op-table (make-hash-table))
@@ -143,8 +143,7 @@
 ;  (max-i (fold folder (list -1 0 0)
 ;               lst)))
 ;; list-indices ends here
-;; [[[[file:~/SICP-group/Answers.org::apply-generic-raise][apply-generic-raise]]][apply-generic-raise]]
-(use-srfis '(1))
+;; [[[[file:~/SICP-group/Answers.org::tower-predicates][tower-predicates]]][tower-predicates]]
 ;; type, type -> bool
 ;; Return true if type a is the lowest, false otherwise.
 (define (is-earlier-in-tower? a b)
@@ -166,6 +165,9 @@
         (error "type missing from tower!"
                "args" args "types" types "result" result)
         (list-ref types (max-index result)))))
+;; tower-predicates ends here
+;; [[[[file:~/SICP-group/Answers.org::apply-generic-raise][apply-generic-raise]]][apply-generic-raise]]
+(use-srfis '(1))
 ;; Version of apply-generic that tries raising
 ;; its arguments.
 (define (apply-generic op . args)
@@ -211,8 +213,11 @@
   (define (numer x) (car x))
   (define (denom x) (cdr x))
   (define (make-rat n d)
-    (let ((g (gcd n d)))
-      (cons (/ n g) (/ d g))))
+    (if (or (inexact? n)
+            (inexact? d))
+        (cons n d)
+        (let ((g (gcd n d)))
+          (cons (/ n g) (/ d g)))))
   (define (add-rat x y)
     (make-rat (+ (* (numer x) (denom y))
                  (* (numer y) (denom x)))
@@ -239,16 +244,16 @@
        (lambda (x y) (tag (div-rat x y))))
   (put 'make 'rational
        (lambda (n d) (tag (make-rat n d))))
-  (put 'numer 'rational numer) ;; my addition
-  (put 'denom 'rational denom)
+  (put 'numer '(rational) numer) ;; my addition
+  (put 'denom '(rational) denom)
   'done)
 
 ;; for future use
 (define (numer r)
-  ((get 'numer 'rational)
+  ((get 'numer '(rational))
    (contents r)))
 (define (denom r)
-  ((get 'denom 'rational)
+  ((get 'denom '(rational))
    (contents r)))
 
 (define (make-rational n d)
@@ -385,29 +390,27 @@
        (lambda(x y) (= x y)))
   (put 'equ? '(complex complex)
        (lambda(x y)
-         (apply-generic 'equ? x y)))
-  (let ((magnitude (get 'magnitude '(polar)))
-        (angle (get 'angle '(polar))))
-    (put 'equ? '(polar polar)
-         (lambda(x y)
-           (and (= (magnitude x)
-                   (magnitude y))
-                (= (angle x)
-                   (angle y))))))
-  (let ((real-part (get 'real-part '(rectangular)))
-        (imag-part (get 'imag-part '(rectangular))))
-    (put 'equ? '(rectangular rectangular)
-         (lambda(x y)
-           (and (= (real-part x)
-                   (real-part y))
-                (= (imag-part x)
-                   (imag-part y))))))
+         (let ((t1 (type-tag x))
+               (t2 (type-tag y)))
+           (cond ((and (eqv? t1 'polar)
+                       (eqv? t2 'polar))
+                    (and (= (apply-generic 'magnitude x)
+                            (apply-generic 'magnitude y))
+                         (= (apply-generic 'angle x)
+                            (apply-generic 'angle y))))
+                 (else
+                    (and (= (apply-generic 'real-part x)
+                            (apply-generic 'real-part y))
+                         (= (apply-generic 'imag-part x)
+                            (apply-generic 'imag-part y))))))))
   (put 'equ? '(rational rational)
        (lambda(x y)
-         (and (= (numer x)
-                 (numer y))
-              (= (denom x)
-                 (denom y))))))
+         (and (= ((get 'numer '(rational)) x)
+                 ((get 'numer '(rational)) y))
+              (= ((get 'denom '(rational)) x)
+                 ((get 'denom '(rational)) y)))))
+  (put 'equ? '(real real)
+       (lambda(x y) (= x y))))
 ;; equ? ends here
 ;; [[[[file:~/SICP-group/Answers.org::eqzero?][eqzero?]]][eqzero?]]
 (define (=zero? x) (apply-generic '=zero? x))
@@ -429,8 +432,8 @@
                 (= 0 (imag-part x))))))
   (put '=zero? '(rational)
        (lambda(x)
-         (or (= 0 (numer x))
-             (= 0 (denom x))))))
+         (or (= 0 ((get 'numer '(rational)) x))
+             (= 0 ((get 'denom '(rational)) x))))))
 ;; eqzero? ends here
 ;; [[[[file:~/SICP-group/Answers.org::real-package][real-package]]][real-package]]
 (define (install-real-package)
@@ -461,7 +464,7 @@
       (let ((t2 (car ll)))
         (cond ((null? (cdr ll)) #f)
               ((equal? t1 t2)
-               ((get-coercion t1 (cadr ll)) x))
+               ((get-coercion t1 (cadr ll)) (contents x)))
               (else (recurse (cdr ll))))))))
 
 (put-coercion 'scheme-number 'rational
@@ -482,12 +485,12 @@
 (put-coercion 'rational 'real
               (lambda(num)
                 (make-real
-                 (exact->inexact (/ (numer num)
-                                    (denom num))))))
+                 (exact->inexact (/ ((get 'numer '(rational)) num)
+                                    ((get 'denom '(rational)) num))))))
 (put-coercion 'real 'complex
               (lambda(num)
                 (make-complex-from-real-imag
-                 (contents num) 0)))
+                 num 0)))
 ;; basic-tower-coercions ends here
 
 (install-rational-package)
@@ -556,4 +559,4 @@
            (add (make-real 2)
                 (make-complex-from-mag-ang 3 5))
            (make-complex-from-real-imag 2.850986556389679 -2.8767728239894153))
-;; Answer:4 ends here
+;; Answer:5 ends here

@@ -1,4 +1,21 @@
-;; [[file:../Answers.org::*Answer][Answer:2]]
+;; [[file:../Answers.org::*Answer][Answer:3]]
+(load "mattcheck2.scm")
+;; [[[[file:~/SICP-group/Answers.org::op-table][op-table]]][op-table]]
+(define op-table (make-hash-table))
+
+(define (put operation type f)
+  (hash-set! op-table (cons operation type) f))
+(define (get operation type)
+  (hash-ref op-table (cons operation type)))
+;; op-table ends here
+;; [[[[file:~/SICP-group/Answers.org::type-table][type-table]]][type-table]]
+(define type-table (make-hash-table))
+
+(define (put-coercion type1 type2 f)
+  (hash-set! type-table (cons type1 type2) f))
+(define (get-coercion type1 type2)
+  (hash-ref type-table (cons type1 type2)))
+;; type-table ends here
 ;; [[[[file:~/SICP-group/Answers.org::sqrt][sqrt]]][sqrt]]
 ;; [[[[file:~/SICP-group/Answers.org::average][average]]][average]]
 (define (average x y)
@@ -52,6 +69,165 @@
         (else (error "Bad tagged datum: 
               CONTENTS" datum))))
 ;; smarter-type-tagging ends here
+;; [[[[file:~/SICP-group/Answers.org::attach-tag-fixed][attach-tag-fixed]]][attach-tag-fixed]]
+(define (attach-tag type-tag contents)
+  (if (eqv? type-tag 'scheme-number)
+      contents
+      (cons type-tag contents)))
+;; attach-tag-fixed ends here
+;; [[[[file:~/SICP-group/Answers.org::list-indices][list-indices]]][list-indices]]
+(use-srfis '(1))
+;; list, items to find -> list of indices
+;; example: (list-indices '(c b a) a b c z)
+;;          (2 1 0 #f)
+;; takes a list and items to find in the list
+;; returns the index of each or #f
+(define (list-indices lst . items)
+  ;; folder: item, ongoing list of search results
+  ;;             -> list of search results
+  ;; List of results is a list of #f for unfound items
+  ;; and indices for found ones. Take an item to be
+  ;; searched for in lst and prior search results. Check
+  ;; for each unfound item and if now found, mark index.
+  (define (folder x counters)
+    (cons (1+ (car counters))
+          (let rec ((il items)
+                    (cl (cdr counters)))
+            (cons (if (and (equal? (car cl) #f)
+                           (equal? x (car il)))
+                      (car counters)
+                      (car cl))
+                  (if (null? (cdr il))
+                      '()
+                      (rec (cdr il) (cdr cl)))))))
+  (if (= 1 (length items))
+      ;; list-index is good enough
+      (cons (list-index (lambda(x)
+                          (equal? x (car items)))
+                        lst)
+            '())
+      (cdr (fold folder (cons 0
+                              (make-list (length items) #f))    
+                 lst))))
+(define (max-index lst)
+  (define (folder x result)
+    (let ((index (car result))
+          (max-i (cadr result))
+          (max-value (caddr result)))
+    (cons (1+ index)
+          (if (> x max-value)
+              (list (1+ index)
+                    x)
+              (list max-i
+                    max-value)))))
+
+  (cadr (fold folder (list -1 0 0)
+               lst)))
+
+;; My first definition for max-index was this under the
+;; assumption it would be faster, because the former
+;; makes variables for each fold. But they benchmarked
+;; identically.
+;(define (max-index lst)
+;  (define index car)
+;  (define max-i cadr)
+;  (define max-value caddr)
+;  (define (folder x result)
+;    (cons (1+ (index result))
+;          (if (> x (max-value result))
+;              (list (1+ (index result))
+;                    x)
+;              (list (max-i result)
+;                    (max-value result)))))
+;
+;  (max-i (fold folder (list -1 0 0)
+;               lst)))
+;; list-indices ends here
+;; [[[[file:~/SICP-group/Answers.org::tower-predicates][tower-predicates]]][tower-predicates]]
+;; type, type -> bool
+;; Return true if type a is the lowest, false otherwise.
+(define (is-earlier-in-tower? a b)
+  (let ((result (list-indices tower a b)))
+    (if (any (lambda(x) (eq? x #f)) result)
+        (error "type missing from tower!" result)
+        (apply < result))))
+;; types -> type
+;; Take types to check on tower. Finds the
+;; highest-ranked and returns it.
+(define (latest-in-tower . args)
+  (let* ((types (if (and (= 1 (length args))
+                         (list? (car args)))
+                    (car args)
+                    args))
+         (result (apply list-indices
+                        tower types)))
+    (if (any (lambda(x) (eq? x #f)) result)
+        (error "type missing from tower!"
+               "args" args "types" types "result" result)
+        (list-ref types (max-index result)))))
+;; tower-predicates ends here
+;; [[[[file:~/SICP-group/Answers.org::drop-project][drop-project]]][drop-project]]
+(define (project x)
+  (let ((t1 (type-tag x)))
+    (let ((p (get 'project t1)))
+      (if p
+          (p (contents x))
+          #f))))
+
+(define (drop x)
+  (if (not (pair? x))
+      x
+      (let ((projected (project x)))
+        (cond ((eqv? projected #f)
+               x)
+              ((equ? x projected)
+               (drop projected))
+              (else x)))))
+
+(put 'project 'rational
+     (lambda(num)
+       ((get 'numer '(rational))
+        num)))
+(put 'project 'real
+     (lambda(num)
+       (round num)))
+(put 'project 'complex
+     (lambda(num)
+       (make-real
+        ((get 'real-part '(complex)) num))))
+;; drop-project ends here
+;; [[[[file:~/SICP-group/Answers.org::apply-generic-drop][apply-generic-drop]]][apply-generic-drop]]
+(use-srfis '(1))
+;; Version of apply-generic that tries raising
+;; its arguments.
+(define (apply-generic op . args)
+  (define types (map type-tag args))
+  (define (map-raise highest-type item)
+    (if (equal? (type-tag item) highest-type)
+        item
+        (let ((raised (raise item)))
+          (if (not raised)
+              (error "map-raise: could not raise:" item highest-type)
+              (map-raise highest-type raised)))))
+  
+  (drop
+   (let ((proc (get op types)))
+     (if proc ; is this already doable?
+         (apply proc (map contents args))
+                                        ; if not, try type coercion
+         
+         (let* ((highest-type (apply latest-in-tower types))
+                (map-raise-prime (lambda(item)(map-raise highest-type item)))
+                (raised (map map-raise-prime args)))
+           (if (< (length raised) 3)
+               ;; short args
+               (apply (get op (map type-tag raised))
+                      (map contents raised))
+               ;; long args
+               (reduce (lambda(elem previous)
+                         (apply-generic op previous elem))
+                       "ERROR" raised)))))))
+;; apply-generic-drop ends here
 ;; [[[[file:~/SICP-group/Answers.org::generic-arithmetic][generic-arithmetic]]][generic-arithmetic]]
 (define (square x) (* x 2))
 (define (add x y) (apply-generic 'add x y))
@@ -219,6 +395,25 @@
   (put 'make 'scheme-number (lambda (x) (tag x)))
   'done)
 ;; scheme-number-package ends here
+;; [[[[file:~/SICP-group/Answers.org::real-package][real-package]]][real-package]]
+(define (install-real-package)
+  ;; interface to rest of the system
+  (define (tag x) (attach-tag 'real x))
+  (put 'add '(real real)
+       (lambda (x y) (tag (add x y))))
+  (put 'sub '(real real)
+       (lambda (x y) (tag (sub x y))))
+  (put 'mul '(real real)
+       (lambda (x y) (tag (mul x y))))
+  (put 'div '(real real)
+       (lambda (x y) (tag (div x y))))
+  (put 'make 'real
+       (lambda (r) (tag r)))
+  'done)
+
+(define (make-real r)
+  ((get 'make 'real) r))
+;; real-package ends here
 ;; [[[[file:~/SICP-group/Answers.org::equ?][equ?]]][equ?]]
 (define (equ? x y) (apply-generic 'equ? x y))
 (define (install-equ?)
@@ -271,13 +466,70 @@
          (or (= 0 ((get 'numer '(rational)) x))
              (= 0 ((get 'denom '(rational)) x))))))
 ;; eqzero? ends here
-(load "mattcheck2.scm")
+;; [[[[file:~/SICP-group/Answers.org::real-package][real-package]]][real-package]]
+(define (install-real-package)
+  ;; interface to rest of the system
+  (define (tag x) (attach-tag 'real x))
+  (put 'add '(real real)
+       (lambda (x y) (tag (add x y))))
+  (put 'sub '(real real)
+       (lambda (x y) (tag (sub x y))))
+  (put 'mul '(real real)
+       (lambda (x y) (tag (mul x y))))
+  (put 'div '(real real)
+       (lambda (x y) (tag (div x y))))
+  (put 'make 'real
+       (lambda (r) (tag r)))
+  'done)
+
+(define (make-real r)
+  ((get 'make 'real) r))
+;; real-package ends here
+;; [[[[file:~/SICP-group/Answers.org::basic-tower-coercions][basic-tower-coercions]]][basic-tower-coercions]]
+(define tower
+  '(scheme-number rational real complex))
+
+(define (raise x)
+  (let ((t1 (type-tag x)))
+    (let recurse ((ll tower))
+      (let ((t2 (car ll)))
+        (cond ((null? (cdr ll)) #f)
+              ((equal? t1 t2)
+               ((get-coercion t1 (cadr ll)) (contents x)))
+              (else (recurse (cdr ll))))))))
+
+(put-coercion 'scheme-number 'rational
+              (lambda(num)
+                (make-rational num 1)))
+;; [[[[file:~/SICP-group/Answers.org::eqnumber][eqnumber]]][eqnumber]]
+(define (=number? x y)
+  (and (number? x)
+       (number? y)
+       (= x y)))
+(define (=int? x y)
+  (and (number? x)
+       (number? y)
+       (integer? x)
+       (integer? y)
+       (= x y)))
+;; eqnumber ends here
+(put-coercion 'rational 'real
+              (lambda(num)
+                (make-real
+                 (exact->inexact (/ ((get 'numer '(rational)) num)
+                                    ((get 'denom '(rational)) num))))))
+(put-coercion 'real 'complex
+              (lambda(num)
+                (make-complex-from-real-imag
+                 num 0)))
+;; basic-tower-coercions ends here
 
 (install-rational-package)
 (install-rectangular-package)
 (install-polar-package)
 (install-complex-package)
 (install-scheme-number-package)
+(install-real-package)
 (install-equ?)
 (install-=zero?)
 ;; [[[[file:~/SICP-group/Answers.org::gen-math-tests][gen-math-tests]]][gen-math-tests]]
@@ -306,12 +558,26 @@
   (echo "3m+4deg / 3m+4deg =" (div p p)))
 ;; gen-math-tests ends here
 
-(mattcheck "basic =zero? true" (=zero? 0) #t)
-(mattcheck "basic =zero? false" (=zero? 5) #f)
-(mattcheck "rect =zero? true" (=zero? (make-complex-from-real-imag 0 0)) #t)
-(mattcheck "rect =zero? false" (=zero? (make-complex-from-real-imag 2 5)) #f)
-(mattcheck "polar =zero? true" (=zero? (make-complex-from-mag-ang 0 3)) #t)
-(mattcheck "polar =zero? false" (=zero? (make-complex-from-mag-ang 2 0)) #f)
-(mattcheck "rational =zero? true" (=zero? (make-rational 0 3)) #t)
-(mattcheck "rational =zero? false" (=zero? (make-rational 2 3)) #f)
-;; Answer:2 ends here
+(mattcheck "raise success"
+           (raise 78)
+           (make-rational 78 1))
+(mattcheck "raise fail"
+           (raise (make-complex-from-mag-ang 78 64))
+           #f)
+(mattcheck "apply-generic 1"
+           (add 1 (make-rational 3 5))
+           (make-rational 8 5))
+(mattcheck "apply-generic 2"
+           (add (make-real 2)
+                (make-complex-from-mag-ang 3 5))
+           (make-complex-from-real-imag 2.850986556389679 -2.8767728239894153))
+(mattcheck "drop 1"
+           (drop (make-complex-from-real-imag 5 0))
+           5)
+(mattcheck "drop 2"
+           (drop (make-real 5))
+           5)
+(mattcheck "drop 3"
+           (drop (make-rational 5 1))
+           5)
+;; Answer:3 ends here
