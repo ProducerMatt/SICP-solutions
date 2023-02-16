@@ -15312,7 +15312,7 @@ operated on because they were always nested inside the real number. This is
 solved by reducing the fraction to a decimal number, which fixes a few "bugs" in
 the book's code as well.
 
-** Exercise 2.85
+** Exercise 2.85: ~append-generic~ with ~drop~
 
 *** Question
 
@@ -15502,3 +15502,347 @@ functions in the type system expected tagged numbers, others expect untagged
 src_scheme{contents}, which means those functions cannot be used in the same
 places. I've had to run over the system and make sure I'm doing it at the right
 time.
+
+** Exercise 2.86: complex numbers with flexible types
+
+*** Question
+
+Suppose we want to handle complex numbers whose real parts, imaginary parts,
+magnitudes, and angles can be either ordinary numbers, rational numbers, or
+other numbers we might wish to add to the system. Describe and implement the
+changes to the system needed to accommodate this. You will have to define
+operations such as src_scheme{sine} and src_scheme{cosine} that are generic over
+ordinary numbers and rational numbers.
+
+*** Answer
+
+We'll need the internal procedures in the complex package to themselves be calls
+to src_scheme{apply-generic}, so that calculations with our new data types can
+be handled.
+
+In the real and complex parts of the tower, I had assumed that the return of
+src_scheme{real-part} would always be of tagged type src_scheme{'real}. However,
+in this version it may be either real or rational, so I'll want to adjust the
+src_scheme{project} procedures accordingly.
+
+#+NAME: generic-arithmetic-complex-parts
+#+BEGIN_SRC scheme -n :eval no-export :results silent
+(define (add x y) (apply-generic 'add x y))
+(define (sub x y) (apply-generic 'sub x y))
+(define (mul x y) (apply-generic 'mul x y))
+(define (div x y) (apply-generic 'div x y))
+(define (real-part z) (apply-generic 'real-part z))
+(define (imag-part z) (apply-generic 'imag-part z))
+(define (magnitude z) (apply-generic 'magnitude z))
+(define (angle z) (apply-generic 'angle z))
+;; Now we begin to change code for support
+;; These will be named slightly different so the primitive
+;; functions aren't shadowed
+(define (square x) (mul x 2))
+(define (sine x) (apply-generic 'sine x)) ;; (sin)
+(define (cosine x) (apply-generic 'cosine x)); (cos)
+(define (square-root x) (apply-generic 'square-root x));(sqrt)
+(define (arctan x y) (apply-generic 'arctan x y));(atan)
+
+(define (make-scheme-number n)
+  ((get 'make 'scheme-number) n))
+(define (install-scheme-number-package)
+  (define (tag x) (attach-tag 'scheme-number x))
+  (put 'add '(scheme-number scheme-number)
+       (lambda (x y) (tag (+ x y))))
+  (put 'sub '(scheme-number scheme-number)
+       (lambda (x y) (tag (- x y))))
+  (put 'mul '(scheme-number scheme-number)
+       (lambda (x y) (tag (* x y))))
+  (put 'div '(scheme-number scheme-number)
+       (lambda (x y) (tag (/ x y))))
+  (put 'sine '(scheme-number)
+       (lambda (x) (tag (sin x))))
+  (put 'cosine '(scheme-number)
+       (lambda (x) (tag (cos x))))
+  (put 'square-root '(scheme-number)
+       (lambda (x) (tag (sqrt x))))
+  (put 'arctan '(scheme-number scheme-number)
+       (lambda (x y) (tag (atan x y))))
+  (put 'make 'scheme-number (lambda (x) (tag x)))
+  'done)
+
+(define (install-rational-package)
+  ;; internal procedures
+  (define (numer x) (car x))
+  (define (denom x) (cdr x))
+  (define (make-rat n d)
+    (if (or (inexact? n)
+            (inexact? d))
+        (cons n d)
+        (let ((g (gcd n d)))
+          (cons (/ n g) (/ d g)))))
+  (define (add-rat x y)
+    (make-rat (+ (* (numer x) (denom y))
+                 (* (numer y) (denom x)))
+              (* (denom x) (denom y))))
+  (define (sub-rat x y)
+    (make-rat (- (* (numer x) (denom y))
+                 (* (numer y) (denom x)))
+              (* (denom x) (denom y))))
+  (define (mul-rat x y)
+    (make-rat (* (numer x) (numer y))
+              (* (denom x) (denom y))))
+  (define (div-rat x y)
+    (make-rat (* (numer x) (denom y))
+              (* (denom x) (numer y))))
+  ;; interface to rest of the system
+  (define (tag x) (attach-tag 'rational x))
+  (put 'add '(rational rational)
+       (lambda (x y) (tag (add-rat x y))))
+  (put 'sub '(rational rational)
+       (lambda (x y) (tag (sub-rat x y))))
+  (put 'mul '(rational rational)
+       (lambda (x y) (tag (mul-rat x y))))
+  (put 'div '(rational rational)
+       (lambda (x y) (tag (div-rat x y))))
+  (put 'make 'rational
+       (lambda (n d) (tag (make-rat n d))))
+  (put 'numer '(rational) numer)
+  (put 'denom '(rational) denom)
+  (put 'sine '(rational)
+       (lambda(r) ((get 'sine '(scheme-number))
+                   (/ (numer r) (denom r)))))
+  (put 'cosine '(rational)
+       (lambda(r) ((get 'cosine '(scheme-number))
+                   (/ (numer r) (denom r)))))
+  (put 'square-root '(rational)
+       (lambda(r) ((get 'square-root '(scheme-number))
+                   (/ (numer r) (denom r)))))
+  (put 'arctan '(rational)
+       (lambda(r s) ((get 'arctan '(scheme-number))
+                     (/ (numer r) (denom r)) (/ (numer s) (denom s)))))
+  'done)
+
+;; for future use
+(define (numer r)
+  ((get 'numer '(rational))
+   (contents r)))
+(define (denom r)
+  ((get 'denom '(rational))
+   (contents r)))
+
+(define (make-rational n d)
+  ((get 'make 'rational) n d))
+
+(define (install-rectangular-package)
+  ;; internal procedures
+  (define (real-part z) (car z))
+  (define (imag-part z) (cdr z))
+  (define (make-from-real-imag x y) (cons x y))
+  (define (magnitude z)
+    (square-root (add (square (real-part z))
+                      (square (imag-part z)))))
+  (define (angle z)
+    (arctan (imag-part z) (real-part z)))
+  (define (make-from-mag-ang r a)
+    (cons (mul r (cosine a)) (mul r (sine a))))
+  ;; interface to the rest of the system
+  (define (tag x) (attach-tag 'rectangular x))
+  (put 'real-part '(rectangular) real-part)
+  (put 'imag-part '(rectangular) imag-part)
+  (put 'magnitude '(rectangular) magnitude)
+  (put 'angle '(rectangular) angle)
+  (put 'make-from-real-imag 'rectangular
+       (lambda (x y) (tag (make-from-real-imag x y))))
+  (put 'make-from-mag-ang 'rectangular
+       (lambda (r a) (tag (make-from-mag-ang r a))))
+  'done)
+
+(define (install-polar-package)
+  ;; internal procedures
+  (define (magnitude z) (car z))
+  (define (angle z) (cdr z))
+  (define (make-from-mag-ang r a) (cons r a))
+  (define (real-part z) (mul (magnitude z) (cosine (angle z))))
+  (define (imag-part z) (mul (magnitude z) (sine (angle z))))
+  (define (make-from-real-imag x y)
+    (cons (sqrt (+ (square x) (square y)))
+          (atan y x)))
+  ;; interface to the rest of the system
+  (define (tag x) (attach-tag 'polar x))
+  (put 'real-part '(polar) real-part)
+  (put 'imag-part '(polar) imag-part)
+  (put 'magnitude '(polar) magnitude)
+  (put 'angle '(polar) angle)
+  (put 'make-from-real-imag 'polar
+       (lambda (x y) (tag (make-from-real-imag x y))))
+  (put 'make-from-mag-ang 'polar
+       (lambda (r a) (tag (make-from-mag-ang r a))))
+  'done)
+
+(define (install-complex-package)
+  (define (make-from-real-imag x y)
+    ((get 'make-from-real-imag 'rectangular) x y))
+  (define (make-from-mag-ang r a)
+    ((get 'make-from-mag-ang 'polar) r a))
+  ;; let's make these generic
+  (define (add-complex z1 z2)
+    (make-from-real-imag (add (real-part z1) (real-part z2))
+                         (add (imag-part z1) (imag-part z2))))
+  (define (sub-complex z1 z2)
+    (make-from-real-imag (sub (real-part z1) (real-part z2))
+                         (sub (imag-part z1) (imag-part z2))))
+  (define (mul-complex z1 z2)
+    (make-from-mag-ang (mul (magnitude z1) (magnitude z2))
+                       (add (angle z1) (angle z2))))
+  (define (div-complex z1 z2)
+    (make-from-mag-ang (div (magnitude z1) (magnitude z2))
+                       (sub (angle z1) (angle z2))))
+  ;; interface to rest of the system
+  (define (tag z) (attach-tag 'complex z))
+  (put 'add '(complex complex)
+       (lambda (z1 z2) (tag (add-complex z1 z2))))
+  (put 'sub '(complex complex)
+       (lambda (z1 z2) (tag (sub-complex z1 z2))))
+  (put 'mul '(complex complex)
+       (lambda (z1 z2) (tag (mul-complex z1 z2))))
+  (put 'div '(complex complex)
+       (lambda (z1 z2) (tag (div-complex z1 z2))))
+  (put 'make-from-real-imag 'complex
+       (lambda (x y) (tag (make-from-real-imag x y))))
+  (put 'make-from-mag-ang 'complex
+       (lambda (r a) (tag (make-from-mag-ang r a))))
+  (put 'real-part '(complex) real-part)
+  (put 'imag-part '(complex) imag-part)
+  (put 'magnitude '(complex) magnitude)
+  (put 'angle '(complex) angle))
+
+(define (make-complex-from-real-imag x y)
+  ((get 'make-from-real-imag 'complex) x y))
+(define (make-complex-from-mag-ang r a)
+  ((get 'make-from-mag-ang 'complex) r a))
+
+(define (project x)
+  (let ((t1 (type-tag x)))
+    (let ((p (get 'project t1)))
+      (if p
+          (p (contents x))
+          #f))))
+
+(define (drop x)
+  (if (not (pair? x))
+      x
+      (let ((projected (project x)))
+        (cond ((eqv? projected #f)
+               x)
+              ((equ? x projected)
+               (drop projected))
+              (else x)))))
+
+(put 'project 'rational
+     (lambda(num)
+       ((get 'numer '(rational))
+        num)))
+(put 'project 'real
+     (lambda(num)
+       (round num)))
+;; projecting a complex number may return something other than a single number
+(put 'project 'complex
+     (lambda(num)
+       (let ((r ((get 'real-part '(complex)) num)))
+         (if (number? (contents r))
+             (make-real (contents r))
+             r))))
+
+;; equality testing with complex numbers also changes
+(define (equ? x y) (apply-generic 'equ? x y))
+(define (install-equ?)
+  (put 'equ? '(scheme-number scheme-number)
+       (lambda(x y) (= x y)))
+  (put 'equ? '(complex complex)
+       (lambda(x y)
+         (let ((t1 (type-tag x))
+               (t2 (type-tag y)))
+           (cond ((and (eqv? t1 'polar)
+                       (eqv? t2 'polar))
+                  (and (equ? (apply-generic 'magnitude x)
+                             (apply-generic 'magnitude y))
+                       (equ? (apply-generic 'angle x)
+                             (apply-generic 'angle y))))
+                 (else
+                  (and (equ? (apply-generic 'real-part x)
+                             (apply-generic 'real-part y))
+                       (equ? (apply-generic 'imag-part x)
+                             (apply-generic 'imag-part y))))))))
+  (put 'equ? '(rational rational)
+       (lambda(x y)
+         (and (= ((get 'numer '(rational)) x)
+                 ((get 'numer '(rational)) y))
+              (= ((get 'denom '(rational)) x)
+                 ((get 'denom '(rational)) y)))))
+  (put 'equ? '(real real)
+       (lambda(x y) (= x y))))
+#+END_SRC
+
+#+BEGIN_SRC scheme -n :eval no-export :results output :tangle 2/Ex86.scheme
+(load "mattcheck2.scm")
+<<op-table>>
+<<type-table>>
+<<sqrt>>
+<<echo>>
+<<smarter-type-tagging>>
+<<attach-tag-fixed>>
+<<list-indices>>
+<<tower-predicates>>
+<<apply-generic-drop>>
+<<generic-arithmetic-complex-parts>>
+<<real-package>>
+<<eqzero?>>
+<<real-package>>
+<<basic-tower-coercions>>
+
+(install-rational-package)
+(install-rectangular-package)
+(install-polar-package)
+(install-complex-package)
+(install-scheme-number-package)
+(install-real-package)
+(install-equ?)
+(install-=zero?)
+<<gen-math-tests>>
+
+(mattcheck "raise success"
+           (raise 78)
+           (make-rational 78 1))
+(mattcheck "raise fail"
+           (raise (make-complex-from-mag-ang 78 64))
+           #f)
+(mattcheck "apply-generic 1"
+           (add 1 (make-rational 3 5))
+           (make-rational 8 5))
+(mattcheck "apply-generic 2"
+           (add (make-real 2)
+                (make-complex-from-mag-ang 3 5))
+           (make-complex-from-real-imag 2.850986556389679 -2.8767728239894153))
+(mattcheck "drop 1"
+           (drop (make-complex-from-real-imag 5 0))
+           5)
+(mattcheck "drop 2"
+           (drop (make-real 5))
+           5)
+(mattcheck "drop 3"
+           (drop (make-rational 5 1))
+           5)
+(mattcheck "complex with nested rational"
+           (make-complex-from-real-imag 2 (make-rational 3 5))
+           (cons 'complex (cons 'rectangular (cons 2 (cons 'rational (cons 3 5))))))
+(mattcheck "math on complex with nested rational"
+           (add (make-complex-from-real-imag 2 (make-rational 3 5))
+                (make-complex-from-mag-ang (make-rational 3 5) 2))
+           (cons 'complex (cons 'rectangular
+                 (cons (cons 'rational (cons 8.751559490358574 5))
+                       (cons 'rational (cons 28.639461402385223 25))))))
+#+END_SRC
+
+#+RESULTS[5cf08ac865e0198aad8907b7c105bcb047b21b4e]:
+#+begin_EXAMPLE
+(etc)
+SUCCEED at complex with nested rational
+SUCCEED at math on complex with nested rational
+#+end_EXAMPLE
