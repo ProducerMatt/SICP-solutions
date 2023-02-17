@@ -15846,3 +15846,219 @@ src_scheme{project} procedures accordingly.
 SUCCEED at complex with nested rational
 SUCCEED at math on complex with nested rational
 #+end_EXAMPLE
+
+** 2.5: Symbolic Algebra
+
+In this section, we implement an addition to the generic math system we have
+been building by adding support for polynomials (with only addition and
+multiplication involved) to start.
+
+I'm going to split the polynomial package into two blocks so I can insert code
+inside without needing to copy the whole block again.
+
+#+NAME: polynomials-package-top
+#+BEGIN_SRC scheme -n :eval no-export :results silent
+(define (install-polynomial-package)
+  ;; internal procedures
+  ;; representation of poly
+  (define (make-poly variable term-list) (cons variable term-list))
+  (define (variable p) (car p))
+  (define (term-list p) (cdr p))
+  (define (variable? x) (symbol? x))
+  (define (same-variable? v1 v2)
+    (and (variable? v1) (variable? v2) (eq? v1 v2)))
+  ;; representation of terms and term lists
+  (define (adjoin-term term term-list)
+    (if (=zero? (coeff term))
+        term-list
+        (cons term term-list)))
+  (define (the-empty-termlist) '())
+  (define (first-term term-list) (car term-list))
+  (define (rest-terms term-list) (cdr term-list))
+  (define (empty-termlist? term-list) (null? term-list))
+  (define (make-term order coeff) (list order coeff))
+  (define (order term) (car term))
+  (define (coeff term) (cadr term))
+  (define (add-poly p1 p2)
+    (if (same-variable? (variable p1) (variable p2))
+        (make-poly (variable p1)
+                   (add-terms (term-list p1) (term-list p2)))
+        (error "Polys not in same var: ADD-POLY" (list p1 p2))))
+  (define (mul-poly p1 p2)
+    (if (same-variable? (variable p1) (variable p2))
+        (make-poly (variable p1)
+                   (mul-terms (term-list p1) (term-list p2)))
+        (error "Polys not in same var: MUL-POLY" (list p1 p2))))
+  (define (add-terms L1 L2)
+    (cond ((empty-termlist? L1) L2)
+          ((empty-termlist? L2) L1)
+          (else
+           (let ((t1 (first-term L1))
+                 (t2 (first-term L2)))
+             (cond ((> (order t1) (order t2))
+                    (adjoin-term
+                     t1 (add-terms (rest-terms L1) L2)))
+                   ((< (order t1) (order t2))
+                    (adjoin-term
+                     t2 (add-terms L1 (rest-terms L2))))
+                   (else
+                    (adjoin-term
+                     (make-term (order t1)
+                                (add (coeff t1) (coeff t2)))
+                     (add-terms (rest-terms L1)
+                                (rest-terms L2)))))))))
+  (define (mul-terms L1 L2)
+    (if (empty-termlist? L1)
+        (the-empty-termlist)
+        (add-terms (mul-term-by-all-terms (first-term L1) L2)
+                   (mul-terms (rest-terms L1) L2))))
+  (define (mul-term-by-all-terms t1 L)
+    (if (empty-termlist? L)
+        (the-empty-termlist)
+        (let ((t2 (first-term L)))
+          (adjoin-term
+           (make-term (+ (order t1) (order t2))
+                      (mul (coeff t1) (coeff t2)))
+           (mul-term-by-all-terms t1 (rest-terms L))))))
+  ;; interface to rest of the system
+  (define (tag p) (attach-tag 'polynomial p))
+  (put 'add '(polynomial polynomial)
+       (lambda (p1 p2) (tag (add-poly p1 p2))))
+  (put 'mul '(polynomial polynomial)
+       (lambda (p1 p2) (tag (mul-poly p1 p2))))
+  (put 'make 'polynomial
+       (lambda (var terms) (tag (make-poly var terms))))
+  
+#+END_SRC
+
+#+NAME: polynomials-package-bottom
+#+BEGIN_SRC scheme -n :eval no-export :results silent
+  'done)
+
+(define (make-polynomial var terms)
+  ((get 'make 'polynomial) var terms))
+#+END_SRC
+
+** Exercise 2.87: ~=zero?~ for polynomials
+
+*** Question
+
+Install src_scheme{=zero?} for polynomials in the generic arithmetic package.
+This will allow src_scheme{adjoin-term} to work for polynomials with
+coefficients that are themselves polynomials.
+
+*** Answer
+
+After testing, I see a problem. Adding these nested polynomials works fine.
+However, when a coefficient is a polynomial, src_scheme{mul-term-by-all-terms}
+will call src_scheme{mul} with the types src_scheme{'(polynomial
+scheme-number)}. If I added polynomials to the type tower and used
+src_scheme{raise} to make it into a src_scheme{'(polynomial polynomial)} call, I
+need to specify a matching variable for the raised number, which is not
+available in src_scheme{raise}. It seems like I'll need to modify the
+multiplication procedures to detect when one item is a polynomial and the other
+isn't, and turn the non-polynomial entry into a polynomial before calling
+src_scheme{mul}.
+
+#+NAME: poly-terms-eqzero
+#+BEGIN_SRC scheme -n :eval no-export :results silent
+  (define (terms-=zero? L)
+    (or (empty-termlist? L)
+        (and (=zero? (coeff (first-term L)))
+             (terms-=zero? (rest-term L)))))
+  (define (poly-=zero? p)
+    (terms-=zero? (term-list p)))
+  (put '=zero? '(polynomial) poly-=zero?)
+#+END_SRC
+
+#+BEGIN_SRC scheme -n :eval no-export :results output :tangle 2/Ex87.scheme
+(load "../mattcheck2.scm")
+<<op-table>>
+<<type-table>>
+<<sqrt>>
+<<echo>>
+<<smarter-type-tagging>>
+<<attach-tag-fixed>>
+<<list-indices>>
+<<tower-predicates>>
+<<apply-generic-drop>>
+<<generic-arithmetic-complex-parts>>
+<<real-package>>
+<<eqzero?>>
+<<real-package>>
+<<basic-tower-coercions>>
+
+<<polynomials-package-top>>
+<<poly-terms-eqzero>>
+<<polynomials-package-bottom>>
+
+(install-rational-package)
+(install-rectangular-package)
+(install-polar-package)
+(install-complex-package)
+(install-scheme-number-package)
+(install-real-package)
+(install-equ?)
+(install-=zero?)
+(install-polynomial-package)
+<<gen-math-tests>>
+
+(mattcheck "raise success"
+           (raise 78)
+           (make-rational 78 1))
+(mattcheck "raise fail"
+           (raise (make-complex-from-mag-ang 78 64))
+           #f)
+(mattcheck "apply-generic 1"
+           (add 1 (make-rational 3 5))
+           (make-rational 8 5))
+(mattcheck "apply-generic 2"
+           (add (make-real 2)
+                (make-complex-from-mag-ang 3 5))
+           (make-complex-from-real-imag 2.850986556389679 -2.8767728239894153))
+(mattcheck "drop 1"
+           (drop (make-complex-from-real-imag 5 0))
+           5)
+(mattcheck "drop 2"
+           (drop (make-real 5))
+           5)
+(mattcheck "drop 3"
+           (drop (make-rational 5 1))
+           5)
+(mattcheck "complex with nested rational"
+           (make-complex-from-real-imag 2 (make-rational 3 5))
+           (cons 'complex (cons 'rectangular (cons 2 (cons 'rational (cons 3 5))))))
+(mattcheck "math on complex with nested rational"
+           (add (make-complex-from-real-imag 2 (make-rational 3 5))
+                (make-complex-from-mag-ang (make-rational 3 5) 2))
+           (cons 'complex (cons 'rectangular
+                                (cons (cons 'rational (cons 8.751559490358574 5))
+                                      (cons 'rational (cons 28.639461402385223 25))))))
+(let ((p1 '((100 1)(2 2)(0 1)))
+      (p2 (list (list 7 (make-polynomial 'x '((3 2)))))))
+  (mattcheck "polynomial addition"
+             (add (make-polynomial 'x p1)
+                  (make-polynomial 'x p1))
+             '(polynomial x (100 2)(2 4)(0 2)))
+  (mattcheck "polynomial multiplication"
+             (mul (make-polynomial 'x p1)
+                  (make-polynomial 'x p1))
+             '(polynomial x (200 1) (102 4) (100 2) (4 4) (2 4) (0 1)))
+  (mattcheck "nested polynomial addition"
+             (add (make-polynomial 'x p2)
+                  (make-polynomial 'x p1))
+             '(polynomial x (100 1) (7 (polynomial x (3 2))) (2 2) (0 1)))
+  (mattcheck "nested polynomial mult"
+             (mul (make-polynomial 'x p2)
+                  (make-polynomial 'x p1))
+             '(polynomial x (100 1) (7 (polynomial x (3 2))) (2 2) (0 1))))
+#+END_SRC
+
+#+RESULTS[7ed123073aa2d9ddbd14a134c42d1c5b20471b64]:
+#+begin_EXAMPLE
+ice-9/boot-9.scm:1685:16: In procedure raise-exception:
+Wrong type to apply: #f
+
+Entering a new prompt.  Type `,bt' for a backtrace or `,q' to continue.
+scheme@(guile-user) [1]> 
+#+end_EXAMPLE

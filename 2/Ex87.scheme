@@ -1,0 +1,723 @@
+;; [[file:../Answers.org::*Answer][Answer:2]]
+(load "../mattcheck2.scm")
+;; [[[[file:~/SICP-group/Answers.org::op-table][op-table]]][op-table]]
+(define op-table (make-hash-table))
+
+(define (put operation type f)
+  (hash-set! op-table (cons operation type) f))
+(define (get operation type)
+  (hash-ref op-table (cons operation type)))
+;; op-table ends here
+;; [[[[file:~/SICP-group/Answers.org::type-table][type-table]]][type-table]]
+(define type-table (make-hash-table))
+
+(define (put-coercion type1 type2 f)
+  (hash-set! type-table (cons type1 type2) f))
+(define (get-coercion type1 type2)
+  (hash-ref type-table (cons type1 type2)))
+;; type-table ends here
+;; [[[[file:~/SICP-group/Answers.org::sqrt][sqrt]]][sqrt]]
+;; [[[[file:~/SICP-group/Answers.org::average][average]]][average]]
+(define (average x y)
+  (/ (+ x y) 2))
+;; average ends here
+(define (improve guess x)
+  (average guess (/ x guess)))
+(define (good-enough? guess x)
+   (= (improve guess x) guess))
+(define (sqrt-iter guess x)
+  (if (good-enough? guess x)
+      guess
+      (sqrt-iter (improve guess x) x)))
+(define (sqrt x)
+  (sqrt-iter 1.0 x))
+;; sqrt ends here
+;; [[[[file:~/SICP-group/Answers.org::echo][echo]]][echo]]
+(use-modules (ice-9 format))
+(define (stringit . args)
+  (string-append
+   (apply string-append
+    (map (lambda(x)
+          (format #f "~:a " x))
+        args))))
+(define (echo . args)
+  (format #t "~&~:a~%" (apply stringit args)))
+;; echo ends here
+;; [[[[file:~/SICP-group/Answers.org::smarter-type-tagging][smarter-type-tagging]]][smarter-type-tagging]]
+(define (attach-tag type-tag contents)
+  (if (number? contents)
+      contents
+      (cons type-tag contents)))
+
+(define (type-tag datum)
+  (cond ((pair? datum)
+         (car datum))
+        ((number? datum)
+         'scheme-number)
+        (else (error "Bad tagged datum: 
+              TYPE-TAG" datum))))
+
+(define (contents datum)
+  (cond ((pair? datum)
+         (cdr datum))
+        ((number? datum)
+         datum)
+        (else (error "Bad tagged datum: 
+              CONTENTS" datum))))
+;; smarter-type-tagging ends here
+;; [[[[file:~/SICP-group/Answers.org::attach-tag-fixed][attach-tag-fixed]]][attach-tag-fixed]]
+(define (attach-tag type-tag contents)
+  (if (eqv? type-tag 'scheme-number)
+      contents
+      (cons type-tag contents)))
+;; attach-tag-fixed ends here
+;; [[[[file:~/SICP-group/Answers.org::list-indices][list-indices]]][list-indices]]
+(use-srfis '(1))
+;; list, items to find -> list of indices
+;; example: (list-indices '(c b a) a b c z)
+;;          (2 1 0 #f)
+;; takes a list and items to find in the list
+;; returns the index of each or #f
+(define (list-indices lst . items)
+  ;; folder: item, ongoing list of search results
+  ;;             -> list of search results
+  ;; List of results is a list of #f for unfound items
+  ;; and indices for found ones. Take an item to be
+  ;; searched for in lst and prior search results. Check
+  ;; for each unfound item and if now found, mark index.
+  (define (folder x counters)
+    (cons (1+ (car counters))
+          (let rec ((il items)
+                    (cl (cdr counters)))
+            (cons (if (and (equal? (car cl) #f)
+                           (equal? x (car il)))
+                      (car counters)
+                      (car cl))
+                  (if (null? (cdr il))
+                      '()
+                      (rec (cdr il) (cdr cl)))))))
+  (if (= 1 (length items))
+      ;; list-index is good enough
+      (cons (list-index (lambda(x)
+                          (equal? x (car items)))
+                        lst)
+            '())
+      (cdr (fold folder (cons 0
+                              (make-list (length items) #f))    
+                 lst))))
+(define (max-index lst)
+  (define (folder x result)
+    (let ((index (car result))
+          (max-i (cadr result))
+          (max-value (caddr result)))
+    (cons (1+ index)
+          (if (> x max-value)
+              (list (1+ index)
+                    x)
+              (list max-i
+                    max-value)))))
+
+  (cadr (fold folder (list -1 0 0)
+               lst)))
+
+;; My first definition for max-index was this under the
+;; assumption it would be faster, because the former
+;; makes variables for each fold. But they benchmarked
+;; identically.
+;(define (max-index lst)
+;  (define index car)
+;  (define max-i cadr)
+;  (define max-value caddr)
+;  (define (folder x result)
+;    (cons (1+ (index result))
+;          (if (> x (max-value result))
+;              (list (1+ (index result))
+;                    x)
+;              (list (max-i result)
+;                    (max-value result)))))
+;
+;  (max-i (fold folder (list -1 0 0)
+;               lst)))
+;; list-indices ends here
+;; [[[[file:~/SICP-group/Answers.org::tower-predicates][tower-predicates]]][tower-predicates]]
+;; type, type -> bool
+;; Return true if type a is the lowest, false otherwise.
+(define (is-earlier-in-tower? a b)
+  (let ((result (list-indices tower a b)))
+    (if (any (lambda(x) (eq? x #f)) result)
+        (error "type missing from tower!" result)
+        (apply < result))))
+;; types -> type
+;; Take types to check on tower. Finds the
+;; highest-ranked and returns it.
+(define (latest-in-tower . args)
+  (let* ((types (if (and (= 1 (length args))
+                         (list? (car args)))
+                    (car args)
+                    args))
+         (result (apply list-indices
+                        tower types)))
+    (if (any (lambda(x) (eq? x #f)) result)
+        (error "type missing from tower!"
+               "args" args "types" types "result" result)
+        (list-ref types (max-index result)))))
+;; tower-predicates ends here
+;; [[[[file:~/SICP-group/Answers.org::apply-generic-drop][apply-generic-drop]]][apply-generic-drop]]
+(use-srfis '(1))
+;; Version of apply-generic that tries raising
+;; its arguments.
+(define (apply-generic op . args)
+  (define types (map type-tag args))
+  (define (map-raise highest-type item)
+    (if (equal? (type-tag item) highest-type)
+        item
+        (let ((raised (raise item)))
+          (if (not raised)
+              (error "map-raise: could not raise:" item highest-type)
+              (map-raise highest-type raised)))))
+  
+  (drop
+   (let ((proc (get op types)))
+     (if proc ; is this already doable?
+         (apply proc (map contents args))
+                                        ; if not, try type coercion
+         
+         (let* ((highest-type (apply latest-in-tower types))
+                (map-raise-prime (lambda(item)(map-raise highest-type item)))
+                (raised (map map-raise-prime args)))
+           (if (< (length raised) 3)
+               ;; short args
+               (apply (get op (map type-tag raised))
+                      (map contents raised))
+               ;; long args
+               (reduce (lambda(elem previous)
+                         (apply-generic op previous elem))
+                       "ERROR" raised)))))))
+;; apply-generic-drop ends here
+;; [[[[file:~/SICP-group/Answers.org::generic-arithmetic-complex-parts][generic-arithmetic-complex-parts]]][generic-arithmetic-complex-parts]]
+(define (add x y) (apply-generic 'add x y))
+(define (sub x y) (apply-generic 'sub x y))
+(define (mul x y) (apply-generic 'mul x y))
+(define (div x y) (apply-generic 'div x y))
+(define (real-part z) (apply-generic 'real-part z))
+(define (imag-part z) (apply-generic 'imag-part z))
+(define (magnitude z) (apply-generic 'magnitude z))
+(define (angle z) (apply-generic 'angle z))
+;; Now we begin to change code for support
+;; These will be named slightly different so the primitive
+;; functions aren't shadowed
+(define (square x) (mul x 2))
+(define (sine x) (apply-generic 'sine x)) ;; (sin)
+(define (cosine x) (apply-generic 'cosine x)); (cos)
+(define (square-root x) (apply-generic 'square-root x));(sqrt)
+(define (arctan x y) (apply-generic 'arctan x y));(atan)
+
+(define (make-scheme-number n)
+  ((get 'make 'scheme-number) n))
+(define (install-scheme-number-package)
+  (define (tag x) (attach-tag 'scheme-number x))
+  (put 'add '(scheme-number scheme-number)
+       (lambda (x y) (tag (+ x y))))
+  (put 'sub '(scheme-number scheme-number)
+       (lambda (x y) (tag (- x y))))
+  (put 'mul '(scheme-number scheme-number)
+       (lambda (x y) (tag (* x y))))
+  (put 'div '(scheme-number scheme-number)
+       (lambda (x y) (tag (/ x y))))
+  (put 'sine '(scheme-number)
+       (lambda (x) (tag (sin x))))
+  (put 'cosine '(scheme-number)
+       (lambda (x) (tag (cos x))))
+  (put 'square-root '(scheme-number)
+       (lambda (x) (tag (sqrt x))))
+  (put 'arctan '(scheme-number scheme-number)
+       (lambda (x y) (tag (atan x y))))
+  (put 'make 'scheme-number (lambda (x) (tag x)))
+  'done)
+
+(define (install-rational-package)
+  ;; internal procedures
+  (define (numer x) (car x))
+  (define (denom x) (cdr x))
+  (define (make-rat n d)
+    (if (or (inexact? n)
+            (inexact? d))
+        (cons n d)
+        (let ((g (gcd n d)))
+          (cons (/ n g) (/ d g)))))
+  (define (add-rat x y)
+    (make-rat (+ (* (numer x) (denom y))
+                 (* (numer y) (denom x)))
+              (* (denom x) (denom y))))
+  (define (sub-rat x y)
+    (make-rat (- (* (numer x) (denom y))
+                 (* (numer y) (denom x)))
+              (* (denom x) (denom y))))
+  (define (mul-rat x y)
+    (make-rat (* (numer x) (numer y))
+              (* (denom x) (denom y))))
+  (define (div-rat x y)
+    (make-rat (* (numer x) (denom y))
+              (* (denom x) (numer y))))
+  ;; interface to rest of the system
+  (define (tag x) (attach-tag 'rational x))
+  (put 'add '(rational rational)
+       (lambda (x y) (tag (add-rat x y))))
+  (put 'sub '(rational rational)
+       (lambda (x y) (tag (sub-rat x y))))
+  (put 'mul '(rational rational)
+       (lambda (x y) (tag (mul-rat x y))))
+  (put 'div '(rational rational)
+       (lambda (x y) (tag (div-rat x y))))
+  (put 'make 'rational
+       (lambda (n d) (tag (make-rat n d))))
+  (put 'numer '(rational) numer)
+  (put 'denom '(rational) denom)
+  (put 'sine '(rational)
+       (lambda(r) ((get 'sine '(scheme-number))
+                   (/ (numer r) (denom r)))))
+  (put 'cosine '(rational)
+       (lambda(r) ((get 'cosine '(scheme-number))
+                   (/ (numer r) (denom r)))))
+  (put 'square-root '(rational)
+       (lambda(r) ((get 'square-root '(scheme-number))
+                   (/ (numer r) (denom r)))))
+  (put 'arctan '(rational)
+       (lambda(r s) ((get 'arctan '(scheme-number))
+                     (/ (numer r) (denom r)) (/ (numer s) (denom s)))))
+  'done)
+
+;; for future use
+(define (numer r)
+  ((get 'numer '(rational))
+   (contents r)))
+(define (denom r)
+  ((get 'denom '(rational))
+   (contents r)))
+
+(define (make-rational n d)
+  ((get 'make 'rational) n d))
+
+(define (install-rectangular-package)
+  ;; internal procedures
+  (define (real-part z) (car z))
+  (define (imag-part z) (cdr z))
+  (define (make-from-real-imag x y) (cons x y))
+  (define (magnitude z)
+    (square-root (add (square (real-part z))
+                      (square (imag-part z)))))
+  (define (angle z)
+    (arctan (imag-part z) (real-part z)))
+  (define (make-from-mag-ang r a)
+    (cons (mul r (cosine a)) (mul r (sine a))))
+  ;; interface to the rest of the system
+  (define (tag x) (attach-tag 'rectangular x))
+  (put 'real-part '(rectangular) real-part)
+  (put 'imag-part '(rectangular) imag-part)
+  (put 'magnitude '(rectangular) magnitude)
+  (put 'angle '(rectangular) angle)
+  (put 'make-from-real-imag 'rectangular
+       (lambda (x y) (tag (make-from-real-imag x y))))
+  (put 'make-from-mag-ang 'rectangular
+       (lambda (r a) (tag (make-from-mag-ang r a))))
+  'done)
+
+(define (install-polar-package)
+  ;; internal procedures
+  (define (magnitude z) (car z))
+  (define (angle z) (cdr z))
+  (define (make-from-mag-ang r a) (cons r a))
+  (define (real-part z) (mul (magnitude z) (cosine (angle z))))
+  (define (imag-part z) (mul (magnitude z) (sine (angle z))))
+  (define (make-from-real-imag x y)
+    (cons (sqrt (+ (square x) (square y)))
+          (atan y x)))
+  ;; interface to the rest of the system
+  (define (tag x) (attach-tag 'polar x))
+  (put 'real-part '(polar) real-part)
+  (put 'imag-part '(polar) imag-part)
+  (put 'magnitude '(polar) magnitude)
+  (put 'angle '(polar) angle)
+  (put 'make-from-real-imag 'polar
+       (lambda (x y) (tag (make-from-real-imag x y))))
+  (put 'make-from-mag-ang 'polar
+       (lambda (r a) (tag (make-from-mag-ang r a))))
+  'done)
+
+(define (install-complex-package)
+  (define (make-from-real-imag x y)
+    ((get 'make-from-real-imag 'rectangular) x y))
+  (define (make-from-mag-ang r a)
+    ((get 'make-from-mag-ang 'polar) r a))
+  ;; let's make these generic
+  (define (add-complex z1 z2)
+    (make-from-real-imag (add (real-part z1) (real-part z2))
+                         (add (imag-part z1) (imag-part z2))))
+  (define (sub-complex z1 z2)
+    (make-from-real-imag (sub (real-part z1) (real-part z2))
+                         (sub (imag-part z1) (imag-part z2))))
+  (define (mul-complex z1 z2)
+    (make-from-mag-ang (mul (magnitude z1) (magnitude z2))
+                       (add (angle z1) (angle z2))))
+  (define (div-complex z1 z2)
+    (make-from-mag-ang (div (magnitude z1) (magnitude z2))
+                       (sub (angle z1) (angle z2))))
+  ;; interface to rest of the system
+  (define (tag z) (attach-tag 'complex z))
+  (put 'add '(complex complex)
+       (lambda (z1 z2) (tag (add-complex z1 z2))))
+  (put 'sub '(complex complex)
+       (lambda (z1 z2) (tag (sub-complex z1 z2))))
+  (put 'mul '(complex complex)
+       (lambda (z1 z2) (tag (mul-complex z1 z2))))
+  (put 'div '(complex complex)
+       (lambda (z1 z2) (tag (div-complex z1 z2))))
+  (put 'make-from-real-imag 'complex
+       (lambda (x y) (tag (make-from-real-imag x y))))
+  (put 'make-from-mag-ang 'complex
+       (lambda (r a) (tag (make-from-mag-ang r a))))
+  (put 'real-part '(complex) real-part)
+  (put 'imag-part '(complex) imag-part)
+  (put 'magnitude '(complex) magnitude)
+  (put 'angle '(complex) angle))
+
+(define (make-complex-from-real-imag x y)
+  ((get 'make-from-real-imag 'complex) x y))
+(define (make-complex-from-mag-ang r a)
+  ((get 'make-from-mag-ang 'complex) r a))
+
+(define (project x)
+  (let ((t1 (type-tag x)))
+    (let ((p (get 'project t1)))
+      (if p
+          (p (contents x))
+          #f))))
+
+(define (drop x)
+  (if (not (pair? x))
+      x
+      (let ((projected (project x)))
+        (cond ((eqv? projected #f)
+               x)
+              ((equ? x projected)
+               (drop projected))
+              (else x)))))
+
+(put 'project 'rational
+     (lambda(num)
+       ((get 'numer '(rational))
+        num)))
+(put 'project 'real
+     (lambda(num)
+       (round num)))
+;; projecting a complex number may return something other than a single number
+(put 'project 'complex
+     (lambda(num)
+       (let ((r ((get 'real-part '(complex)) num)))
+         (if (number? (contents r))
+             (make-real (contents r))
+             r))))
+
+;; equality testing with complex numbers also changes
+(define (equ? x y) (apply-generic 'equ? x y))
+(define (install-equ?)
+  (put 'equ? '(scheme-number scheme-number)
+       (lambda(x y) (= x y)))
+  (put 'equ? '(complex complex)
+       (lambda(x y)
+         (let ((t1 (type-tag x))
+               (t2 (type-tag y)))
+           (cond ((and (eqv? t1 'polar)
+                       (eqv? t2 'polar))
+                  (and (equ? (apply-generic 'magnitude x)
+                             (apply-generic 'magnitude y))
+                       (equ? (apply-generic 'angle x)
+                             (apply-generic 'angle y))))
+                 (else
+                  (and (equ? (apply-generic 'real-part x)
+                             (apply-generic 'real-part y))
+                       (equ? (apply-generic 'imag-part x)
+                             (apply-generic 'imag-part y))))))))
+  (put 'equ? '(rational rational)
+       (lambda(x y)
+         (and (= ((get 'numer '(rational)) x)
+                 ((get 'numer '(rational)) y))
+              (= ((get 'denom '(rational)) x)
+                 ((get 'denom '(rational)) y)))))
+  (put 'equ? '(real real)
+       (lambda(x y) (= x y))))
+;; generic-arithmetic-complex-parts ends here
+;; [[[[file:~/SICP-group/Answers.org::real-package][real-package]]][real-package]]
+(define (install-real-package)
+  ;; interface to rest of the system
+  (define (tag x) (attach-tag 'real x))
+  (put 'add '(real real)
+       (lambda (x y) (tag (add x y))))
+  (put 'sub '(real real)
+       (lambda (x y) (tag (sub x y))))
+  (put 'mul '(real real)
+       (lambda (x y) (tag (mul x y))))
+  (put 'div '(real real)
+       (lambda (x y) (tag (div x y))))
+  (put 'make 'real
+       (lambda (r) (tag r)))
+  'done)
+
+(define (make-real r)
+  ((get 'make 'real) r))
+;; real-package ends here
+;; [[[[file:~/SICP-group/Answers.org::eqzero?][eqzero?]]][eqzero?]]
+(define (=zero? x) (apply-generic '=zero? x))
+(define (install-=zero?)
+  (put '=zero? '(scheme-number)
+       (lambda(x) (= x 0)))
+  (put '=zero? '(complex)
+       (lambda(x)
+         (apply-generic '=zero? x)))
+  (let ((magnitude (get 'magnitude '(polar))))
+    (put '=zero? '(polar)
+         (lambda(x)
+           (= 0 (magnitude x)))))
+  (let ((real-part (get 'real-part '(rectangular)))
+        (imag-part (get 'imag-part '(rectangular))))
+    (put '=zero? '(rectangular)
+         (lambda(x)
+           (and (= 0 (real-part x))
+                (= 0 (imag-part x))))))
+  (put '=zero? '(rational)
+       (lambda(x)
+         (or (= 0 ((get 'numer '(rational)) x))
+             (= 0 ((get 'denom '(rational)) x))))))
+;; eqzero? ends here
+;; [[[[file:~/SICP-group/Answers.org::real-package][real-package]]][real-package]]
+(define (install-real-package)
+  ;; interface to rest of the system
+  (define (tag x) (attach-tag 'real x))
+  (put 'add '(real real)
+       (lambda (x y) (tag (add x y))))
+  (put 'sub '(real real)
+       (lambda (x y) (tag (sub x y))))
+  (put 'mul '(real real)
+       (lambda (x y) (tag (mul x y))))
+  (put 'div '(real real)
+       (lambda (x y) (tag (div x y))))
+  (put 'make 'real
+       (lambda (r) (tag r)))
+  'done)
+
+(define (make-real r)
+  ((get 'make 'real) r))
+;; real-package ends here
+;; [[[[file:~/SICP-group/Answers.org::basic-tower-coercions][basic-tower-coercions]]][basic-tower-coercions]]
+(define tower
+  '(scheme-number rational real complex))
+
+(define (raise x)
+  (let ((t1 (type-tag x)))
+    (let recurse ((ll tower))
+      (let ((t2 (car ll)))
+        (cond ((null? (cdr ll)) #f)
+              ((equal? t1 t2)
+               ((get-coercion t1 (cadr ll)) (contents x)))
+              (else (recurse (cdr ll))))))))
+
+(put-coercion 'scheme-number 'rational
+              (lambda(num)
+                (make-rational num 1)))
+;; [[[[file:~/SICP-group/Answers.org::eqnumber][eqnumber]]][eqnumber]]
+(define (=number? x y)
+  (and (number? x)
+       (number? y)
+       (= x y)))
+(define (=int? x y)
+  (and (number? x)
+       (number? y)
+       (integer? x)
+       (integer? y)
+       (= x y)))
+;; eqnumber ends here
+(put-coercion 'rational 'real
+              (lambda(num)
+                (make-real
+                 (exact->inexact (/ ((get 'numer '(rational)) num)
+                                    ((get 'denom '(rational)) num))))))
+(put-coercion 'real 'complex
+              (lambda(num)
+                (make-complex-from-real-imag
+                 num 0)))
+;; basic-tower-coercions ends here
+
+;; [[[[file:~/SICP-group/Answers.org::polynomials-package-top][polynomials-package-top]]][polynomials-package-top]]
+(define (install-polynomial-package)
+  ;; internal procedures
+  ;; representation of poly
+  (define (make-poly variable term-list) (cons variable term-list))
+  (define (variable p) (car p))
+  (define (term-list p) (cdr p))
+  (define (variable? x) (symbol? x))
+  (define (same-variable? v1 v2)
+    (and (variable? v1) (variable? v2) (eq? v1 v2)))
+  ;; representation of terms and term lists
+  (define (adjoin-term term term-list)
+    (if (=zero? (coeff term))
+        term-list
+        (cons term term-list)))
+  (define (the-empty-termlist) '())
+  (define (first-term term-list) (car term-list))
+  (define (rest-terms term-list) (cdr term-list))
+  (define (empty-termlist? term-list) (null? term-list))
+  (define (make-term order coeff) (list order coeff))
+  (define (order term) (car term))
+  (define (coeff term) (cadr term))
+  (define (add-poly p1 p2)
+    (if (same-variable? (variable p1) (variable p2))
+        (make-poly (variable p1)
+                   (add-terms (term-list p1) (term-list p2)))
+        (error "Polys not in same var: ADD-POLY" (list p1 p2))))
+  (define (mul-poly p1 p2)
+    (if (same-variable? (variable p1) (variable p2))
+        (make-poly (variable p1)
+                   (mul-terms (term-list p1) (term-list p2)))
+        (error "Polys not in same var: MUL-POLY" (list p1 p2))))
+  (define (add-terms L1 L2)
+    (cond ((empty-termlist? L1) L2)
+          ((empty-termlist? L2) L1)
+          (else
+           (let ((t1 (first-term L1))
+                 (t2 (first-term L2)))
+             (cond ((> (order t1) (order t2))
+                    (adjoin-term
+                     t1 (add-terms (rest-terms L1) L2)))
+                   ((< (order t1) (order t2))
+                    (adjoin-term
+                     t2 (add-terms L1 (rest-terms L2))))
+                   (else
+                    (adjoin-term
+                     (make-term (order t1)
+                                (add (coeff t1) (coeff t2)))
+                     (add-terms (rest-terms L1)
+                                (rest-terms L2)))))))))
+  (define (mul-terms L1 L2)
+    (if (empty-termlist? L1)
+        (the-empty-termlist)
+        (add-terms (mul-term-by-all-terms (first-term L1) L2)
+                   (mul-terms (rest-terms L1) L2))))
+  (define (mul-term-by-all-terms t1 L)
+    (if (empty-termlist? L)
+        (the-empty-termlist)
+        (let ((t2 (first-term L)))
+          (adjoin-term
+           (make-term (+ (order t1) (order t2))
+                      (mul (coeff t1) (coeff t2)))
+           (mul-term-by-all-terms t1 (rest-terms L))))))
+  ;; interface to rest of the system
+  (define (tag p) (attach-tag 'polynomial p))
+  (put 'add '(polynomial polynomial)
+       (lambda (p1 p2) (tag (add-poly p1 p2))))
+  (put 'mul '(polynomial polynomial)
+       (lambda (p1 p2) (tag (mul-poly p1 p2))))
+  (put 'make 'polynomial
+       (lambda (var terms) (tag (make-poly var terms))))
+  
+;; polynomials-package-top ends here
+;; [[[[file:~/SICP-group/Answers.org::poly-terms-eqzero][poly-terms-eqzero]]][poly-terms-eqzero]]
+  (define (terms-=zero? L)
+    (or (empty-termlist? L)
+        (and (=zero? (coeff (first-term L)))
+             (terms-=zero? (rest-term L)))))
+  (define (poly-=zero? p)
+    (terms-=zero? (term-list p)))
+  (put '=zero? '(polynomial) poly-=zero?)
+;; poly-terms-eqzero ends here
+;; [[[[file:~/SICP-group/Answers.org::polynomials-package-bottom][polynomials-package-bottom]]][polynomials-package-bottom]]
+  'done)
+
+(define (make-polynomial var terms)
+  ((get 'make 'polynomial) var terms))
+;; polynomials-package-bottom ends here
+
+(install-rational-package)
+(install-rectangular-package)
+(install-polar-package)
+(install-complex-package)
+(install-scheme-number-package)
+(install-real-package)
+(install-equ?)
+(install-=zero?)
+(install-polynomial-package)
+;; [[[[file:~/SICP-group/Answers.org::gen-math-tests][gen-math-tests]]][gen-math-tests]]
+(define msn make-scheme-number)
+(echo "5+5 =" (add (msn 5) (msn 5)))
+(echo "5-5 =" (sub (msn 5) (msn 5)))
+(echo "5*5 =" (mul (msn 5) (msn 5)))
+(echo "5/5 =" (div (msn 5) (msn 5)))
+(echo "1/2 + 1/2 =" (add (make-rational 1 2)
+                         (make-rational 1 2)))
+(echo "1/2 - 1/2 =" (sub (make-rational 1 2)
+                         (make-rational 1 2)))
+(echo "1/2 * 1/2 =" (mul (make-rational 1 2)
+                         (make-rational 1 2)))
+(echo "1/2 / 1/2 =" (div (make-rational 1 2)
+                         (make-rational 1 2)))
+(let ((r (make-complex-from-real-imag 3 4))
+      (p (make-complex-from-mag-ang 3 4)))
+  (echo "3+4i + 3+4i =" (add r r))
+  (echo "3+4i - 3+4i =" (sub r r))
+  (echo "3+4i * 3+4i =" (mul r r))
+  (echo "3+4i / 3+4i =" (div r r))
+  (echo "3m+4deg + 3m+4deg =" (add p p))
+  (echo "3m+4deg - 3m+4deg =" (sub p p))
+  (echo "3m+4deg * 3m+4deg =" (mul p p))
+  (echo "3m+4deg / 3m+4deg =" (div p p)))
+;; gen-math-tests ends here
+
+(mattcheck "raise success"
+           (raise 78)
+           (make-rational 78 1))
+(mattcheck "raise fail"
+           (raise (make-complex-from-mag-ang 78 64))
+           #f)
+(mattcheck "apply-generic 1"
+           (add 1 (make-rational 3 5))
+           (make-rational 8 5))
+(mattcheck "apply-generic 2"
+           (add (make-real 2)
+                (make-complex-from-mag-ang 3 5))
+           (make-complex-from-real-imag 2.850986556389679 -2.8767728239894153))
+(mattcheck "drop 1"
+           (drop (make-complex-from-real-imag 5 0))
+           5)
+(mattcheck "drop 2"
+           (drop (make-real 5))
+           5)
+(mattcheck "drop 3"
+           (drop (make-rational 5 1))
+           5)
+(mattcheck "complex with nested rational"
+           (make-complex-from-real-imag 2 (make-rational 3 5))
+           (cons 'complex (cons 'rectangular (cons 2 (cons 'rational (cons 3 5))))))
+(mattcheck "math on complex with nested rational"
+           (add (make-complex-from-real-imag 2 (make-rational 3 5))
+                (make-complex-from-mag-ang (make-rational 3 5) 2))
+           (cons 'complex (cons 'rectangular
+                                (cons (cons 'rational (cons 8.751559490358574 5))
+                                      (cons 'rational (cons 28.639461402385223 25))))))
+(let ((p1 '((100 1)(2 2)(0 1)))
+      (p2 (list (list 7 (make-polynomial 'x '((3 2)))))))
+  (mattcheck "polynomial addition"
+             (add (make-polynomial 'x p1)
+                  (make-polynomial 'x p1))
+             '(polynomial x (100 2)(2 4)(0 2)))
+  (mattcheck "polynomial multiplication"
+             (mul (make-polynomial 'x p1)
+                  (make-polynomial 'x p1))
+             '(polynomial x (200 1) (102 4) (100 2) (4 4) (2 4) (0 1)))
+  (mattcheck "nested polynomial addition"
+             (add (make-polynomial 'x p2)
+                  (make-polynomial 'x p1))
+             '(polynomial x (100 1) (7 (polynomial x (3 2))) (2 2) (0 1)))
+  (mattcheck "nested polynomial mult"
+             (mul (make-polynomial 'x p2)
+                  (make-polynomial 'x p1))
+             '(polynomial x (100 1) (7 (polynomial x (3 2))) (2 2) (0 1))))
+;; Answer:2 ends here
