@@ -15949,16 +15949,16 @@ coefficients that are themselves polynomials.
 
 *** Answer
 
-After testing, I see a problem. Adding these nested polynomials works fine.
-However, when a coefficient is a polynomial, src_scheme{mul-term-by-all-terms}
-will call src_scheme{mul} with the types src_scheme{'(polynomial
-scheme-number)}. If I added polynomials to the type tower and used
-src_scheme{raise} to make it into a src_scheme{'(polynomial polynomial)} call, I
-need to specify a matching variable for the raised number, which is not
-available in src_scheme{raise}. It seems like I'll need to modify the
-multiplication procedures to detect when one item is a polynomial and the other
-isn't, and turn the non-polynomial entry into a polynomial before calling
-src_scheme{mul}.
+After testing, I see a problem. src_scheme{add}ing nested polynomials works
+fine. However, when a coefficient is a polynomial,
+src_scheme{mul-term-by-all-terms} will call src_scheme{mul} with the types
+src_scheme{'(polynomial scheme-number)}. If I added polynomials to the type
+tower and used src_scheme{raise} to make it into a src_scheme{'(polynomial
+polynomial)} call, I then need to specify a matching variable for the raised
+number, which is not available in src_scheme{raise}. It seems like I'll need to
+modify the src_scheme{mul-term-by-all-terms} procedure to detect when one item
+is a polynomial and the other isn't, and turn the non-polynomial entry into a
+polynomial before calling src_scheme{mul}.
 
 #+NAME: poly-terms-eqzero
 #+BEGIN_SRC scheme -n :eval no-export :results silent
