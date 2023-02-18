@@ -15912,14 +15912,6 @@ inside without needing to copy the whole block again.
         (the-empty-termlist)
         (add-terms (mul-term-by-all-terms (first-term L1) L2)
                    (mul-terms (rest-terms L1) L2))))
-  (define (mul-term-by-all-terms t1 L)
-    (if (empty-termlist? L)
-        (the-empty-termlist)
-        (let ((t2 (first-term L)))
-          (adjoin-term
-           (make-term (+ (order t1) (order t2))
-                      (mul (coeff t1) (coeff t2)))
-           (mul-term-by-all-terms t1 (rest-terms L))))))
   ;; interface to rest of the system
   (define (tag p) (attach-tag 'polynomial p))
   (put 'add '(polynomial polynomial)
@@ -15931,6 +15923,17 @@ inside without needing to copy the whole block again.
   
 #+END_SRC
 
+#+NAME: mul-term-by-all-terms
+#+BEGIN_SRC scheme -n :eval no-export :results silent
+  (define (mul-term-by-all-terms t1 L)
+    (if (empty-termlist? L)
+        (the-empty-termlist)
+        (let ((t2 (first-term L)))
+          (adjoin-term
+           (make-term (+ (order t1) (order t2))
+                      (mul (coeff t1) (coeff t2)))
+           (mul-term-by-all-terms t1 (rest-terms L))))))
+#+END_SRC
 #+NAME: polynomials-package-bottom
 #+BEGIN_SRC scheme -n :eval no-export :results silent
   'done)
@@ -15960,19 +15963,39 @@ modify the src_scheme{mul-term-by-all-terms} procedure to detect when one item
 is a polynomial and the other isn't, and turn the non-polynomial entry into a
 polynomial before calling src_scheme{mul}.
 
+#+NAME: mul-term-by-all-terms-mine
+#+BEGIN_SRC scheme -n :eval no-export :results silent
+(define (if-1st-poly-make-2nd-poly t1 t2)
+  (if (and (eqv? 'polynomial (type-tag t1))
+           (not (eqv? 'polynomial (type-tag t2))))
+      (tag (make-poly (variable (contents t1)) (list (make-term 0 t2))))
+      t2))
+(define (mul-term-by-all-terms t1 L)
+  (if (empty-termlist? L)
+      (the-empty-termlist)
+      (let* ((t2 (first-term L)) ;; If one coeff is a poly, make the other a poly
+             (t1-coeff (if-1st-poly-make-2nd-poly (coeff t2) (coeff t1)))
+             (t2-coeff (if-1st-poly-make-2nd-poly (coeff t1) (coeff t2))))
+        
+        (adjoin-term
+         (make-term (+ (order t1) (order t2))
+                    (mul t1-coeff t2-coeff))
+         (mul-term-by-all-terms t1 (rest-terms L))))))
+#+END_SRC
+
 #+NAME: poly-terms-eqzero
 #+BEGIN_SRC scheme -n :eval no-export :results silent
   (define (terms-=zero? L)
     (or (empty-termlist? L)
         (and (=zero? (coeff (first-term L)))
-             (terms-=zero? (rest-term L)))))
+             (terms-=zero? (rest-terms L)))))
   (define (poly-=zero? p)
     (terms-=zero? (term-list p)))
   (put '=zero? '(polynomial) poly-=zero?)
 #+END_SRC
 
 #+BEGIN_SRC scheme -n :eval no-export :results output :tangle 2/Ex87.scheme
-(load "../mattcheck2.scm")
+(load "mattcheck2.scm")
 <<op-table>>
 <<type-table>>
 <<sqrt>>
@@ -15989,6 +16012,7 @@ polynomial before calling src_scheme{mul}.
 <<basic-tower-coercions>>
 
 <<polynomials-package-top>>
+<<mul-term-by-all-terms-mine>>
 <<poly-terms-eqzero>>
 <<polynomials-package-bottom>>
 
@@ -16034,6 +16058,10 @@ polynomial before calling src_scheme{mul}.
            (cons 'complex (cons 'rectangular
                                 (cons (cons 'rational (cons 8.751559490358574 5))
                                       (cons 'rational (cons 28.639461402385223 25))))))
+(mattcheck "polynomial = zero"
+           (=zero? (make-polynomial 'x '((0 0) (0 0)))))
+(mattcheck "polynomial != zero" #f
+           (=zero? (make-polynomial 'x '((0 0) (1 1)))))
 (let ((p1 '((100 1)(2 2)(0 1)))
       (p2 (list (list 7 (make-polynomial 'x '((3 2)))))))
   (mattcheck "polynomial addition"
@@ -16051,14 +16079,16 @@ polynomial before calling src_scheme{mul}.
   (mattcheck "nested polynomial mult"
              (mul (make-polynomial 'x p2)
                   (make-polynomial 'x p1))
-             '(polynomial x (100 1) (7 (polynomial x (3 2))) (2 2) (0 1))))
+             '(polynomial x (107 (polynomial x (3 2))) (9 (polynomial x (3 4))) (7 (polynomial x (3 2))))))
 #+END_SRC
 
-#+RESULTS[7ed123073aa2d9ddbd14a134c42d1c5b20471b64]:
+#+RESULTS[7ab70e73da7bf304da6bc176274d9bcfff75c983]:
 #+begin_EXAMPLE
-ice-9/boot-9.scm:1685:16: In procedure raise-exception:
-Wrong type to apply: #f
-
-Entering a new prompt.  Type `,bt' for a backtrace or `,q' to continue.
-scheme@(guile-user) [1]> 
+(etc...)
+SUCCEED at polynomial = zero
+SUCCEED at polynomial != zero
+SUCCEED at polynomial addition
+SUCCEED at polynomial multiplication
+SUCCEED at nested polynomial addition
+SUCCEED at nested polynomial mult
 #+end_EXAMPLE
