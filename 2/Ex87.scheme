@@ -164,8 +164,8 @@
 ;; tower-predicates ends here
 ;; [[[[file:~/SICP-group/Answers.org::apply-generic-drop][apply-generic-drop]]][apply-generic-drop]]
 (use-srfis '(1))
-;; Version of apply-generic that tries raising
-;; its arguments.
+;; Version of apply-generic that tries to drop its type
+;; when returning
 (define (apply-generic op . args)
   (define types (map type-tag args))
   (define (map-raise highest-type item)
@@ -173,7 +173,7 @@
         item
         (let ((raised (raise item)))
           (if (not raised)
-              (error "map-raise: could not raise:" item highest-type)
+              (error "MAP-RAISE: could not raise" item highest-type)
               (map-raise highest-type raised)))))
   
   (drop
@@ -187,8 +187,10 @@
                 (raised (map map-raise-prime args)))
            (if (< (length raised) 3)
                ;; short args
-               (apply (get op (map type-tag raised))
-                      (map contents raised))
+               (let ((f (get op (map type-tag raised))))
+                 (if (eqv? #f f)
+                     (error "APPLY-GENERIC: could not find procedure for types" (map type-tag raised) raised)
+                     (apply f (map contents raised))))
                ;; long args
                (reduce (lambda(elem previous)
                          (apply-generic op previous elem))
