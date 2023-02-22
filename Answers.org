@@ -16326,171 +16326,185 @@ Although I was debating using tags to distinguish the two types, it occurs to me
 they can be told apart just by checking whether the term list is made of
 integers, or lists of two integers.
 
-#+NAME: polynomial-sparse-dense
+#+NAME: polynomial-sparse-dense-top
 #+BEGIN_SRC scheme -n :eval no-export :results silent
-(define (install-polynomial-package) 'nothing)
-;; internal procedures
-;; representation of poly
-(define (make-poly variable term-list) (cons variable term-list))
-(define (variable p) (car p))
-(define (term-list p) (cdr p))
-(define (variable? x) (symbol? x))
-(define (same-variable? v1 v2)
-  (and (variable? v1) (variable? v2) (eq? v1 v2)))
-;; representation of terms and term lists
-(define (sparse-termlist? term-list)
-  (let ((t (car term-list)))
-    (cond ((and (list? t)
-                (number? (first t))
-                (or (list? (second t))
-                    (number? (second t)))) #t)
-          ((number? t) #f)
-          (else (error "badly formed term: SPARSE-TERMLIST?" t term-list)))))
-(define (make-sparse-term order coeff)
-  (list order coeff))
-(define (dense-termlist-order term-list)
-  (1- (length term-list)))
-(define (dense-first-term term-list)
-  (make-sparse-term (dense-termlist-order term-list)
-                    (car term-list)))
-(define (sparse-first-term term-list)
-  (car term-list))
-(define (first-term term-list)
-  (if (sparse-termlist? term-list)
-      (sparse-first-term term-list)
-      (dense-first-term term-list)))
-(define (adjoin-term-sparse term term-list)
-  (cons term term-list))
-(define (adjoin-term-dense term term-list)
-  ;; if term is exactly 1 order above top of list, adjoin
-  ;; if term is more than 1 order above, adjoin 0 and recurse
-  (let ((top-order (dense-termlist-order term-list)))
-    (cond ((= (1+ top-order) (order term))
-           (cons (coeff term) term-list))
-          ((<= top-order (order term))
-           (adjoin-term-dense term (cons 0 term-list)))
-          (else (error "term is lower order than top of list: ADJOIN-TERM-DENSE" term term-list top-order)))))
+(define (install-polynomial-package)
+  ;; internal procedures
+  ;; representation of poly
+  (define (make-poly variable term-list) (cons variable term-list))
+  (define (variable p) (car p))
+  (define (term-list p) (cdr p))
+  (define (variable? x) (symbol? x))
+  (define (same-variable? v1 v2)
+    (and (variable? v1) (variable? v2) (eq? v1 v2)))
+  ;; representation of terms and term lists
+  (define (sparse-termlist? term-list)
+    (let ((t (car term-list)))
+      (cond ((and (list? t)
+                  (number? (first t))
+                  (or (list? (second t))
+                      (number? (second t)))) #t)
+            ((number? t) #f)
+            (else (error "badly formed term: SPARSE-TERMLIST?" t term-list)))))
+  (define (make-sparse-term order coeff)
+    (list order coeff))
+  (define (dense-termlist-order term-list)
+    (1- (length term-list)))
+  (define (dense-first-term term-list)
+    (make-sparse-term (dense-termlist-order term-list)
+                      (car term-list)))
+  (define (sparse-first-term term-list)
+    (car term-list))
+  (define (first-term term-list)
+    (if (sparse-termlist? term-list)
+        (sparse-first-term term-list)
+        (dense-first-term term-list)))
+  (define (adjoin-term-sparse term term-list)
+    (cons term term-list))
+  (define (adjoin-term-dense term term-list)
+    ;; if term is exactly 1 order above top of list, adjoin
+    ;; if term is more than 1 order above, adjoin 0 and recurse
+    (let ((top-order (dense-termlist-order term-list)))
+      (cond ((= (1+ top-order) (order term))
+             (cons (coeff term) term-list))
+            ((<= top-order (order term))
+             (adjoin-term-dense term (cons 0 term-list)))
+            (else (error "term is lower order than top of list: ADJOIN-TERM-DENSE" term term-list top-order)))))
 
-;; ;; I wrote the versions below which can insert into the middle of the list,
-;; ;; before remembering that a footnote in the text excuses this.
-;;
-;; (define (adjoin-term-sparse term term-list)
-;;   ;; if term is higher order, cons to list
-;;   ;; if term is lower order than top of list, try to insert in the middle
-;;   (let ((top-order (order (sparse-first-term term-list))))
-;;     (cond ((<= (1+ top-order) (order term))
-;;            (cons term term-list))
-;;           (else (adjoin-term-sparse (sparse-first-term term-list)
-;;                                     (adjoin-term-sparse term
-;;                                                         (rest-terms term-list)))))))
-;; (define (adjoin-term-dense term term-list)
-;;   ;; if term is 1 order above top of list, adjoin
-;;   ;; if term is more than 1 order above, adjoin 0 and recurse
-;;   ;; if term is lower order than top of list, try to insert in the middle
-;;   (let ((top-order (dense-termlist-order term-list)))
-;;     (cond ((= (1+ top-order) (order term))
-;;            (cons (coeff term) term-list))
-;;           ((<= top-order (order term))
-;;            (adjoin-term-dense term (cons 0 term-list)))
-;;           (else (adjoin-term-dense (dense-first-term term-list)
-;;                                    (adjoin-term-dense term
-;;                                                       (rest-terms term-list)))))))
+  ;; ;; I wrote the versions below which can insert into the middle of the list,
+  ;; ;; before remembering that a footnote in the text excuses this.
+  ;;
+  ;; (define (adjoin-term-sparse term term-list)
+  ;;   ;; if term is higher order, cons to list
+  ;;   ;; if term is lower order than top of list, try to insert in the middle
+  ;;   (let ((top-order (order (sparse-first-term term-list))))
+  ;;     (cond ((<= (1+ top-order) (order term))
+  ;;            (cons term term-list))
+  ;;           (else (adjoin-term-sparse (sparse-first-term term-list)
+  ;;                                     (adjoin-term-sparse term
+  ;;                                                         (rest-terms term-list)))))))
+  ;; (define (adjoin-term-dense term term-list)
+  ;;   ;; if term is 1 order above top of list, adjoin
+  ;;   ;; if term is more than 1 order above, adjoin 0 and recurse
+  ;;   ;; if term is lower order than top of list, try to insert in the middle
+  ;;   (let ((top-order (dense-termlist-order term-list)))
+  ;;     (cond ((= (1+ top-order) (order term))
+  ;;            (cons (coeff term) term-list))
+  ;;           ((<= top-order (order term))
+  ;;            (adjoin-term-dense term (cons 0 term-list)))
+  ;;           (else (adjoin-term-dense (dense-first-term term-list)
+  ;;                                    (adjoin-term-dense term
+  ;;                                                       (rest-terms term-list)))))))
 
-(define (adjoin-term term term-list)
-  (if (=zero? (coeff term))
-      term-list
-      (if (or (empty-termlist? term-list)
-              (sparse-termlist? term-list))
-          (adjoin-term-sparse term term-list)
-          (adjoin-term-dense term term-list))))
-(define (the-empty-termlist) '())
-(define (rest-terms term-list) (cdr term-list))
-(define (empty-termlist? term-list) (null? term-list))
-(define (order term) (car term))
-(define (coeff term) (cadr term))
-(define (add-poly p1 p2)
-  (if (same-variable? (variable p1) (variable p2))
-      (make-poly (variable p1)
-                 (add-terms (term-list p1) (term-list p2)))
-      (error "Polys not in same var: ADD-POLY" (list p1 p2))))
-(define (mul-poly p1 p2)
-  (if (same-variable? (variable p1) (variable p2))
-      (make-poly (variable p1)
-                 (mul-terms (term-list p1) (term-list p2)))
-      (error "Polys not in same var: MUL-POLY" (list p1 p2))))
-(define (add-terms L1 L2)
-  (cond ((empty-termlist? L1) L2)
-        ((empty-termlist? L2) L1)
-        (else
-         (let ((t1 (first-term L1))
-               (t2 (first-term L2)))
-           (cond ((> (order t1) (order t2))
-                  (adjoin-term
-                   t1 (add-terms (rest-terms L1) L2)))
-                 ((< (order t1) (order t2))
-                  (adjoin-term
-                   t2 (add-terms L1 (rest-terms L2))))
-                 (else
-                  (adjoin-term
-                   (make-sparse-term (order t1)
-                                     (add (coeff t1) (coeff t2)))
-                   (add-terms (rest-terms L1)
-                              (rest-terms L2)))))))))
-(define (mul-terms L1 L2)
-  (if (empty-termlist? L1)
-      (the-empty-termlist)
-      (add-terms (mul-term-by-all-terms (first-term L1) L2)
-                 (mul-terms (rest-terms L1) L2))))
-;; interface to rest of the system
-(define (tag p) (attach-tag 'polynomial p))
-(put 'add '(polynomial polynomial)
-     (lambda (p1 p2) (tag (add-poly p1 p2))))
-(put 'mul '(polynomial polynomial)
-     (lambda (p1 p2) (tag (mul-poly p1 p2))))
-(put 'make 'polynomial
-     (lambda (var terms) (tag (make-poly var terms))))
-(define (if-1st-poly-make-2nd-poly t1 t2)
-  (if (and (eqv? 'polynomial (type-tag t1))
-           (not (eqv? 'polynomial (type-tag t2))))
-      (tag (make-poly (variable (contents t1)) (list t2)))
-      t2))
-(define (mul-term-by-all-terms t1 L)
-  (if (empty-termlist? L)
-      (the-empty-termlist)
-      (let* ((t2 (first-term L)) ;; If one coeff is a poly, make the other a poly
-             (t1-coeff (if-1st-poly-make-2nd-poly (coeff t2) (coeff t1)))
-             (t2-coeff (if-1st-poly-make-2nd-poly (coeff t1) (coeff t2))))
-        
-        (adjoin-term
-         (make-sparse-term (+ (order t1) (order t2))
-                           (mul t1-coeff t2-coeff))
-         (mul-term-by-all-terms t1 (rest-terms L))))))
-(define (terms-=zero? L)
-  (or (empty-termlist? L)
-      (and (=zero? (coeff (first-term L)))
-           (terms-=zero? (rest-terms L)))))
-(define (poly-=zero? p)
-  (terms-=zero? (term-list p)))
-(put '=zero? '(polynomial) poly-=zero?)
-(define (neg-poly p)
-  (let ((f (if (sparse-termlist? (term-list p))
-               (lambda(t)
-                 (make-sparse-term (order t) (neg (coeff t))))
-               (lambda(t)
-                 (neg (coeff t))))))
+  (define (adjoin-term term term-list)
+    (if (=zero? (coeff term))
+        term-list
+        (if (or (empty-termlist? term-list)
+                (sparse-termlist? term-list))
+            (adjoin-term-sparse term term-list)
+            (adjoin-term-dense term term-list))))
+  (define (the-empty-termlist) '())
+  (define (rest-terms term-list) (cdr term-list))
+  (define (empty-termlist? term-list) (null? term-list))
+  (define (order term) (car term))
+  (define (coeff term) (cadr term))
+  (define (add-poly p1 p2)
+    (if (same-variable? (variable p1) (variable p2))
+        (make-poly (variable p1)
+                   (add-terms (term-list p1) (term-list p2)))
+        (error "Polys not in same var: ADD-POLY" (list p1 p2))))
+  (define (mul-poly p1 p2)
+    (if (same-variable? (variable p1) (variable p2))
+        (make-poly (variable p1)
+                   (mul-terms (term-list p1) (term-list p2)))
+        (error "Polys not in same var: MUL-POLY" (list p1 p2))))
+  (define (add-terms L1 L2)
+    (cond ((empty-termlist? L1) L2)
+          ((empty-termlist? L2) L1)
+          (else
+           (let ((t1 (first-term L1))
+                 (t2 (first-term L2)))
+             (cond ((> (order t1) (order t2))
+                    (adjoin-term
+                     t1 (add-terms (rest-terms L1) L2)))
+                   ((< (order t1) (order t2))
+                    (adjoin-term
+                     t2 (add-terms L1 (rest-terms L2))))
+                   (else
+                    (adjoin-term
+                     (make-sparse-term (order t1)
+                                       (add (coeff t1) (coeff t2)))
+                     (add-terms (rest-terms L1)
+                                (rest-terms L2)))))))))
+  (define (mul-terms L1 L2)
+    (if (empty-termlist? L1)
+        (the-empty-termlist)
+        (add-terms (mul-term-by-all-terms (first-term L1) L2)
+                   (mul-terms (rest-terms L1) L2))))
+  ;; interface to rest of the system
+  (define (tag p) (attach-tag 'polynomial p))
+  (put 'add '(polynomial polynomial)
+       (lambda (p1 p2) (tag (add-poly p1 p2))))
+  (put 'mul '(polynomial polynomial)
+       (lambda (p1 p2) (tag (mul-poly p1 p2))))
+  ;;(define (should-be-dense? term-list)
+  ;;  ;; if more than half of term-list is zeroes
+  ;;  ;; return true
+  ;;  (let iter ((count 0)
+  ;;             (zeroes 0))
+  ;;    (if (empty-termlist? term-list)
+  ;;        (> (/ 1 2) (/ count zeroes))
+  ;;        (iter (1+ count)
+  ;;              (if (= 0 (coeff (first-term term-list)))
+  ;;                  (1+ zeroes)
+  ;;                  zeroes)))))
+  (put 'make 'polynomial
+       (lambda (var terms) (tag (make-poly var terms))))
+  (define (if-1st-poly-make-2nd-poly t1 t2)
+    (if (and (eqv? 'polynomial (type-tag t1))
+             (not (eqv? 'polynomial (type-tag t2))))
+        (tag (make-poly (variable (contents t1)) (list t2)))
+        t2))
+  (define (mul-term-by-all-terms t1 L)
+    (if (empty-termlist? L)
+        (the-empty-termlist)
+        (let* ((t2 (first-term L)) ;; If one coeff is a poly, make the other a poly
+               (t1-coeff (if-1st-poly-make-2nd-poly (coeff t2) (coeff t1)))
+               (t2-coeff (if-1st-poly-make-2nd-poly (coeff t1) (coeff t2))))
+          
+          (adjoin-term
+           (make-sparse-term (+ (order t1) (order t2))
+                             (mul t1-coeff t2-coeff))
+           (mul-term-by-all-terms t1 (rest-terms L))))))
+  (define (terms-=zero? L)
+    (or (empty-termlist? L)
+        (and (=zero? (coeff (first-term L)))
+             (terms-=zero? (rest-terms L)))))
+  (define (poly-=zero? p)
+    (terms-=zero? (term-list p)))
+  (put '=zero? '(polynomial) poly-=zero?)
+  (define (neg-terms TL)
+    (let ((negterm (if (sparse-termlist? TL)
+                       (lambda(t)
+                         (make-sparse-term (order t) (neg (coeff t))))
+                       (lambda(t)
+                         (neg (coeff t))))))
+      (map negterm TL)))
+  (define (sub-terms T1 T2)
+    (add-terms T1 (neg-terms T2)))
+  (define (neg-poly p)
     (make-poly (variable p)
-               (map f (term-list p)))))
-(put 'neg '(polynomial)
-     (lambda (p1) (tag (neg-poly p1))))
-(define (sub-poly p1 p2)
-  (if (same-variable? (variable p1) (variable p2))
-      (add-poly p1 (neg-poly p2))
-      (error "Polys not in same var: SUB-POLY" (list p1 p2))))
-(put 'sub '(polynomial polynomial)
-     (lambda (p1 p2) (tag (sub-poly p1 p2))))
-'done
-                                        ;)
-
+               (neg-terms (term-list p))))
+  (put 'neg '(polynomial)
+       (lambda (p1) (tag (neg-poly p1))))
+  (define (sub-poly p1 p2)
+    (add-poly p1 (neg-poly p2)))
+  (put 'sub '(polynomial polynomial)
+       (lambda (p1 p2) (tag (sub-poly p1 p2))))
+#+END_SRC
+#+NAME: polynomial-sparse-dense-bottom
+#+BEGIN_SRC scheme -n :eval no-export :results silent
+  'done)
 (define (make-polynomial var terms)
   ((get 'make 'polynomial) var terms))
 #+END_SRC
@@ -16512,7 +16526,8 @@ integers, or lists of two integers.
 <<real-package>>
 <<basic-tower-coercions>>
 
-<<polynomial-sparse-dense>>
+<<polynomial-sparse-dense-top>>
+<<polynomial-sparse-dense-bottom>>
 
 <<generic-negation>>
 
@@ -16607,9 +16622,242 @@ integers, or lists of two integers.
              '(polynomial x (2 1) (0 -2))))
 #+END_SRC
 
-#+RESULTS[12edb7b2b3a11bc4ecd59c25b3869c685f0ffeaa]:
+#+RESULTS[1b6ec0dfb9ae5d73e105b557ae5971af5fa84480]:
 #+begin_EXAMPLE
 (etc...)
 SUCCEED at negation polynomials
 SUCCEED at polynomial subtraction
+#+end_EXAMPLE
+
+** Exercise 2.91
+
+*** Question
+
+A univariate polynomial can be divided by another one to produce a polynomial
+quotient and a polynomial remainder. For example,
+
+\(\frac{x^5 - 1}{x^2 - 1} = x^3 + x, \hbox{  remainder  } x - 1\)
+
+Division can be performed via long division.  That is, divide the highest-order
+term of the dividend by the highest-order term of the divisor.  The result is
+the first term of the quotient.  Next, multiply the result by the divisor,
+subtract that from the dividend, and produce the rest of the answer by
+recursively dividing the difference by the divisor.  Stop when the order of the
+divisor exceeds the order of the dividend and declare the dividend to be the
+remainder.  Also, if the dividend ever becomes zero, return zero as both
+quotient and remainder.
+
+We can design a src_scheme{div-poly} procedure on the model of
+src_scheme{add-poly} and src_scheme{mul-poly}. The procedure checks to see if
+the two polys have the same variable. If so, src_scheme{div-poly} strips off the
+variable and passes the problem to src_scheme{div-terms}, which performs the
+division operation on term lists. src_scheme{div-poly} finally reattaches the
+variable to the result supplied by src_scheme{div-terms}. It is convenient to
+design src_scheme{div-terms} to compute both the quotient and the remainder of a
+division. src_scheme{div-terms} can take two term lists as arguments and return
+a list of the quotient term list and the remainder term list.
+
+Complete the following definition of src_scheme{div-terms} by filling in the
+missing expressions. Use this to implement src_scheme{div-poly}, which takes two
+polys as arguments and returns a list of the quotient and remainder polys.
+
+#+BEGIN_SRC scheme -n
+(define (div-terms L1 L2)
+  (if (empty-termlist? L1)
+      (list (the-empty-termlist) (the-empty-termlist))
+      (let ((t1 (first-term L1))
+            (t2 (first-term L2)))
+        (if (> (order t2) (order t1))
+            (list (the-empty-termlist) L1)
+            (let ((new-c (div (coeff t1) (coeff t2)))
+                  (new-o (- (order t1) (order t2))))
+              (let ((rest-of-result
+                     ;;<compute rest of result recursively>
+                     ))
+                ;;<form complete result>
+                ))))))
+#+END_SRC
+
+
+*** Answer
+
+#+NAME: polynomial-division
+#+BEGIN_SRC scheme -n :eval no-export :results silent
+(define (div-terms L1 L2)
+  ;; termlist, termlist -> list of two termlists
+  ;; returns quotient terms and remainder terms
+  (if (empty-termlist? L1)
+      (list (the-empty-termlist) (the-empty-termlist))
+      (let ((t1 (first-term L1))
+            (t2 (first-term L2)))
+        (if (> (order t2) (order t1))
+            (list (the-empty-termlist) L1)
+            (let* ((new-term (make-sparse-term (- (order t1) (order t2))
+                                               (div (coeff t1) (coeff t2))))
+                   (rest-of-result
+                    (div-terms (sub-terms L1
+                                          (mul-terms (list new-term)
+                                                     L2))
+                               L2)))
+              (list (adjoin-term new-term
+                                 (car rest-of-result))
+                    (cadr rest-of-result)))))))
+(define (div-poly p1 p2)
+  ;; poly, poly -> list of 2 polys
+  ;; returns quotient poly and remainder poly
+  (if (same-variable? (variable p1) (variable p2))
+      (let* ((result (div-terms (term-list p1) (term-list p2)))
+             (quotient (car result))
+             (remainder (cadr result)))
+        (list (make-poly (variable p1) quotient)
+              (make-poly (variable p1) remainder)))
+      (error "Polys not in same var: DIV-POLY" (list p1 p2))))
+(put 'div '(polynomial polynomial)
+     (lambda (p1 p2)
+       (let* ((result (div-poly p1 p2))
+              (quotient (car result))
+              (remainder (cadr result)))
+         (list (tag quotient)
+               (tag remainder)))))
+#+END_SRC
+
+#+BEGIN_SRC scheme -n :eval no-export :results output :tangle 2/Ex91.scheme
+(load "mattcheck2.scm")
+<<op-table>>
+<<type-table>>
+<<sqrt>>
+<<echo>>
+<<smarter-type-tagging>>
+<<attach-tag-fixed>>
+<<list-indices>>
+<<tower-predicates>>
+<<apply-generic-drop>>
+<<generic-arithmetic-complex-parts>>
+<<real-package>>
+<<eqzero?>>
+<<real-package>>
+<<basic-tower-coercions>>
+
+<<polynomial-sparse-dense-top>>
+<<polynomial-division>>
+<<polynomial-sparse-dense-bottom>>
+
+<<generic-negation>>
+
+(install-rational-package)
+(install-rectangular-package)
+(install-polar-package)
+(install-complex-package)
+(install-scheme-number-package)
+(install-real-package)
+(install-equ?)
+(install-=zero?)
+(install-polynomial-package)
+(install-negation)
+
+<<gen-math-tests>>
+
+(mattcheck "raise success"
+           (raise 78)
+           (make-rational 78 1))
+(mattcheck "raise fail"
+           (raise (make-complex-from-mag-ang 78 64))
+           #f)
+(mattcheck "apply-generic 1"
+           (add 1 (make-rational 3 5))
+           (make-rational 8 5))
+(mattcheck "apply-generic 2"
+           (add (make-real 2)
+                (make-complex-from-mag-ang 3 5))
+           (make-complex-from-real-imag 2.850986556389679 -2.8767728239894153))
+(mattcheck "drop 1"
+           (drop (make-complex-from-real-imag 5 0))
+           5)
+(mattcheck "drop 2"
+           (drop (make-real 5))
+           5)
+(mattcheck "drop 3"
+           (drop (make-rational 5 1))
+           5)
+(mattcheck "complex with nested rational"
+           (make-complex-from-real-imag 2 (make-rational 3 5))
+           (cons 'complex (cons 'rectangular (cons 2 (cons 'rational (cons 3 5))))))
+(mattcheck "math on complex with nested rational"
+           (add (make-complex-from-real-imag 2 (make-rational 3 5))
+                (make-complex-from-mag-ang (make-rational 3 5) 2))
+           (cons 'complex (cons 'rectangular
+                                (cons (cons 'rational (cons 8.751559490358574 5))
+                                      (cons 'rational (cons 28.639461402385223 25))))))
+(mattcheck "polynomial = zero"
+           (=zero? (make-polynomial 'x '((0 0) (0 0)))))
+(mattcheck "polynomial != zero" #f
+           (=zero? (make-polynomial 'x '((0 0) (1 1)))))
+
+(let ((p1 '((100 1)(2 2)(0 1)))
+      (p2 (list (list 7 (make-polynomial 'x '((3 2))))))
+      (p3 '((100 1)(2 1)(0 3)))
+      (p4 '((100 -1)(2 -2)(0 -1)))
+      (p5 '(8 2 5 -3 -7))
+      (p7 '((1 1)(0 1)))
+      (p6 '((3 1)(0 1)))
+      (p66 '(1 0 0 1))
+      (p77 '(1 1)))
+  (mattcheck "polynomial addition"
+             (add (make-polynomial 'x p1)
+                  (make-polynomial 'x p1))
+             '(polynomial x (100 2)(2 4)(0 2)))
+  (mattcheck "polynomial multiplication"
+             (mul (make-polynomial 'x p1)
+                  (make-polynomial 'x p1))
+             '(polynomial x (200 1) (102 4) (100 2) (4 4) (2 4) (0 1)))
+  (mattcheck "nested polynomial addition"
+             (add (make-polynomial 'x p2)
+                  (make-polynomial 'x p1))
+             '(polynomial x (100 1) (7 (polynomial x (3 2))) (2 2) (0 1)))
+  (mattcheck "nested polynomial mult"
+             (mul (make-polynomial 'x p2)
+                  (make-polynomial 'x p1))
+             '(polynomial x (107 (polynomial x (3 2))) (9 (polynomial x (3 4))) (7 (polynomial x (3 2)))))
+  (mattcheck "negation scheme-number"
+             (neg 5) -5)
+  (mattcheck "negation rational"
+             (neg (make-rational 1 5))
+             (make-rational -1 5))
+  (mattcheck "negation rectangular complex"
+             (neg (make-complex-from-real-imag 3 7))
+             (make-complex-from-real-imag -3 -7))
+  (mattcheck "negation polar complex"
+             (neg (make-complex-from-mag-ang 3 7))
+             (make-complex-from-mag-ang -3 7))
+
+  (mattcheck "negation polynomials"
+             (neg (make-polynomial 'x p1))
+             (make-polynomial 'x p4))
+  (mattcheck "polynomial subtraction"
+             (sub (make-polynomial 'x p1)
+                  (make-polynomial 'x p3))
+             '(polynomial x (2 1) (0 -2)))
+  (mattcheck "polynomial division 1"
+             (div (make-polynomial 'x p6)
+                  (make-polynomial 'x p7))
+             '((polynomial x (2 1) (1 -1) (0 1))
+               (polynomial x)))
+  (mattcheck "polynomial division 2"
+             (div (make-polynomial 'x p7)
+                  (make-polynomial 'x p6))
+             '((polynomial x)
+               (polynomial x (1 1) (0 1))))
+  (mattcheck "polynomial division 3"
+             (div (make-polynomial 'x p66)
+                  (make-polynomial 'x p77))
+             '((polynomial x (2 1) (1 -1) (0 1))
+               (polynomial x))))
+#+END_SRC
+
+#+RESULTS[5a0fb8ef36fe1553d895397f8ad3869623fb44e5]:
+#+begin_EXAMPLE
+(etc...)
+SUCCEED at polynomial division 1
+SUCCEED at polynomial division 2
+SUCCEED at polynomial division 3
 #+end_EXAMPLE

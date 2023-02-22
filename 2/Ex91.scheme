@@ -1,4 +1,4 @@
-;; [[file:../Answers.org::*Answer][Answer:3]]
+;; [[file:../Answers.org::*Answer][Answer:2]]
 (load "mattcheck2.scm")
 ;; [[[[file:~/SICP-group/Answers.org::op-table][op-table]]][op-table]]
 (define op-table (make-hash-table))
@@ -724,6 +724,44 @@
   (put 'sub '(polynomial polynomial)
        (lambda (p1 p2) (tag (sub-poly p1 p2))))
 ;; polynomial-sparse-dense-top ends here
+;; [[[[file:~/SICP-group/Answers.org::polynomial-division][polynomial-division]]][polynomial-division]]
+(define (div-terms L1 L2)
+  ;; termlist, termlist -> list of two termlists
+  ;; returns quotient terms and remainder terms
+  (if (empty-termlist? L1)
+      (list (the-empty-termlist) (the-empty-termlist))
+      (let ((t1 (first-term L1))
+            (t2 (first-term L2)))
+        (if (> (order t2) (order t1))
+            (list (the-empty-termlist) L1)
+            (let* ((new-term (make-sparse-term (- (order t1) (order t2))
+                                               (div (coeff t1) (coeff t2))))
+                   (rest-of-result
+                    (div-terms (sub-terms L1
+                                          (mul-terms (list new-term)
+                                                     L2))
+                               L2)))
+              (list (adjoin-term new-term
+                                 (car rest-of-result))
+                    (cadr rest-of-result)))))))
+(define (div-poly p1 p2)
+  ;; poly, poly -> list of 2 polys
+  ;; returns quotient poly and remainder poly
+  (if (same-variable? (variable p1) (variable p2))
+      (let* ((result (div-terms (term-list p1) (term-list p2)))
+             (quotient (car result))
+             (remainder (cadr result)))
+        (list (make-poly (variable p1) quotient)
+              (make-poly (variable p1) remainder)))
+      (error "Polys not in same var: DIV-POLY" (list p1 p2))))
+(put 'div '(polynomial polynomial)
+     (lambda (p1 p2)
+       (let* ((result (div-poly p1 p2))
+              (quotient (car result))
+              (remainder (cadr result)))
+         (list (tag quotient)
+               (tag remainder)))))
+;; polynomial-division ends here
 ;; [[[[file:~/SICP-group/Answers.org::polynomial-sparse-dense-bottom][polynomial-sparse-dense-bottom]]][polynomial-sparse-dense-bottom]]
   'done)
 (define (make-polynomial var terms)
@@ -829,7 +867,11 @@
       (p2 (list (list 7 (make-polynomial 'x '((3 2))))))
       (p3 '((100 1)(2 1)(0 3)))
       (p4 '((100 -1)(2 -2)(0 -1)))
-      (p5 '(8 2 5 -3 -7)))
+      (p5 '(8 2 5 -3 -7))
+      (p7 '((1 1)(0 1)))
+      (p6 '((3 1)(0 1)))
+      (p66 '(1 0 0 1))
+      (p77 '(1 1)))
   (mattcheck "polynomial addition"
              (add (make-polynomial 'x p1)
                   (make-polynomial 'x p1))
@@ -864,5 +906,20 @@
   (mattcheck "polynomial subtraction"
              (sub (make-polynomial 'x p1)
                   (make-polynomial 'x p3))
-             '(polynomial x (2 1) (0 -2))))
-;; Answer:3 ends here
+             '(polynomial x (2 1) (0 -2)))
+  (mattcheck "polynomial division 1"
+             (div (make-polynomial 'x p6)
+                  (make-polynomial 'x p7))
+             '((polynomial x (2 1) (1 -1) (0 1))
+               (polynomial x)))
+  (mattcheck "polynomial division 2"
+             (div (make-polynomial 'x p7)
+                  (make-polynomial 'x p6))
+             '((polynomial x)
+               (polynomial x (1 1) (0 1))))
+  (mattcheck "polynomial division 3"
+             (div (make-polynomial 'x p66)
+                  (make-polynomial 'x p77))
+             '((polynomial x (2 1) (1 -1) (0 1))
+               (polynomial x))))
+;; Answer:2 ends here
