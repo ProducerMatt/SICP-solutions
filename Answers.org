@@ -16323,29 +16323,107 @@ effort, not a local change.
 *** Answer
 
 Although I was debating using tags to distinguish the two types, it occurs to me
-they can be told apart just by checking whether the term list is made of
-integers, or lists of two integers.
+they can be told apart just by checking the contents. A valid coefficient is
+either a number or a list for a nested type. If the first item of the list is a
+list whose ~car~ is a number and whose ~cadr~ is a number or list, assume it's
+sparse. On the other hand, if the first item is a number, or list that doesn't
+match that previous description, assume it's dense. This format would /not/ be
+adequate if we had any potential nested types that happened to look similar, and
+especially not if the term-lists were meant for external use.
+
+The new implementations are abstracted such that average procedures using
+src_scheme{first-term}, src_scheme{rest-term} and src_scheme{adjoin-term} are
+totally unaffected.
+
+Whenever a procedure requests a ~first-term~, a sparse representation is
+returned (pair of src_scheme{(order coeff)}). Then, when ~adjoin-term~ is run,
+the list is appended-to appropriately whether it is sparse or dense. When
+src_scheme{make-poly} is run, the statistics of the term list are measured to
+decide which implementation should be used. If there are more zero-terms than
+\(\frac{1}{2}\) of the highest order in the term, the sparse implementation is
+used.
 
 #+NAME: polynomial-sparse-dense-top
 #+BEGIN_SRC scheme -n :eval no-export :results silent
+(use-srfis '(1))
 (define (install-polynomial-package)
   ;; internal procedures
   ;; representation of poly
-  (define (make-poly variable term-list) (cons variable term-list))
+  (define (make-poly variable term-list)
+    (cons variable
+          (if (empty-termlist? term-list)
+              term-list
+              (cond ((and (sparse-termlist? term-list)
+                          (not (should-be-sparse? term-list)))
+                     (sparse-to-dense term-list))
+                    ((and (not (sparse-termlist? term-list))
+                          (should-be-sparse? term-list))
+                     (dense-to-sparse term-list))
+                    (else term-list)))))
   (define (variable p) (car p))
   (define (term-list p) (cdr p))
   (define (variable? x) (symbol? x))
   (define (same-variable? v1 v2)
     (and (variable? v1) (variable? v2) (eq? v1 v2)))
+  
   ;; representation of terms and term lists
   (define (sparse-termlist? term-list)
     (let ((t (car term-list)))
-      (cond ((and (list? t)
+      (cond ((and (list? t) ;; looks like a sparse list
                   (number? (first t))
-                  (or (list? (second t))
+                  (or (list? (second t)) ;; or sparse with nested poly
                       (number? (second t)))) #t)
-            ((number? t) #f)
+            ((or (number? t) ;; looks dense
+                 (list? t)) #f) ;; or dense with a nested poly
             (else (error "badly formed term: SPARSE-TERMLIST?" t term-list)))))
+  (define (should-be-sparse? term-list)
+    ;; sparse or dense term-list -> bool
+    ;; if more than half of term-list is zeroes, return true
+    ;; reasoning:
+    ;; - number of elements used for sparse list is (non-zero elements * 2)
+    ;; - number of elements used for dense list is (highest order)
+    (define (count-zeroes term-list)
+      ;; term-list -> (highest order, zeroes)
+      (let iter ((length 0)
+                 (zeroes 0)
+                 (TL (if (sparse-termlist? term-list)
+                         (sparse-to-dense term-list)
+                         term-list)))
+        (if (empty-termlist? TL)
+            (list zeroes length)
+            (iter (1+ length)
+                  (if (=zero? (car TL))
+                      (1+ zeroes)
+                      zeroes)
+                  (cdr TL)))))
+    (let ((stats (if (sparse-termlist? term-list) ;; do appropriate measurement
+                     (list (- (1+ (order (sparse-first-term term-list)))
+                              (length term-list))
+                           (1+ (order (sparse-first-term term-list))))
+                     (count-zeroes term-list))))
+      (let ((zero-elements (first stats))
+            (highest-order (second stats)))
+        (> (/ zero-elements highest-order)
+           (/ 1 2)))))
+  (define (sparse-to-dense term-list)
+    (let iter ((old-list (reverse term-list))
+               (new-list (the-empty-termlist)))
+      (if (empty-termlist? old-list)
+          new-list
+          (iter (rest-terms old-list)
+                (adjoin-term-dense (sparse-first-term old-list)
+                                   new-list)))))
+  (define (dense-to-sparse term-list)
+    (let iter ((old-list (reverse term-list))
+               (old-order 0)
+               (new-list (the-empty-termlist)))
+      (if (empty-termlist? old-list)
+          new-list
+          (iter (rest-terms old-list)
+                (1+ old-order)
+                (adjoin-term-sparse (make-sparse-term old-order
+                                                      (coeff (dense-first-term old-list)))
+                                    new-list)))))
   (define (make-sparse-term order coeff)
     (list order coeff))
   (define (dense-termlist-order term-list)
@@ -16406,8 +16484,8 @@ integers, or lists of two integers.
   (define (the-empty-termlist) '())
   (define (rest-terms term-list) (cdr term-list))
   (define (empty-termlist? term-list) (null? term-list))
-  (define (order term) (car term))
-  (define (coeff term) (cadr term))
+  (define (order term) (first term))
+  (define (coeff term) (second term))
   (define (add-poly p1 p2)
     (if (same-variable? (variable p1) (variable p2))
         (make-poly (variable p1)
@@ -16441,23 +16519,13 @@ integers, or lists of two integers.
         (the-empty-termlist)
         (add-terms (mul-term-by-all-terms (first-term L1) L2)
                    (mul-terms (rest-terms L1) L2))))
+  
   ;; interface to rest of the system
   (define (tag p) (attach-tag 'polynomial p))
   (put 'add '(polynomial polynomial)
        (lambda (p1 p2) (tag (add-poly p1 p2))))
   (put 'mul '(polynomial polynomial)
        (lambda (p1 p2) (tag (mul-poly p1 p2))))
-  ;;(define (should-be-dense? term-list)
-  ;;  ;; if more than half of term-list is zeroes
-  ;;  ;; return true
-  ;;  (let iter ((count 0)
-  ;;             (zeroes 0))
-  ;;    (if (empty-termlist? term-list)
-  ;;        (> (/ 1 2) (/ count zeroes))
-  ;;        (iter (1+ count)
-  ;;              (if (= 0 (coeff (first-term term-list)))
-  ;;                  (1+ zeroes)
-  ;;                  zeroes)))))
   (put 'make 'polynomial
        (lambda (var terms) (tag (make-poly var terms))))
   (define (if-1st-poly-make-2nd-poly t1 t2)
@@ -16576,9 +16644,9 @@ integers, or lists of two integers.
                                 (cons (cons 'rational (cons 8.751559490358574 5))
                                       (cons 'rational (cons 28.639461402385223 25))))))
 (mattcheck "polynomial = zero"
-           (=zero? (make-polynomial 'x '((0 0) (0 0)))))
+           (=zero? (make-polynomial 'x '((0 0)))))
 (mattcheck "polynomial != zero" #f
-           (=zero? (make-polynomial 'x '((0 0) (1 1)))))
+           (=zero? (make-polynomial 'x '((1 1) (0 1)))))
 
 (let ((p1 '((100 1)(2 2)(0 1)))
       (p2 (list (list 7 (make-polynomial 'x '((3 2))))))
@@ -16619,10 +16687,10 @@ integers, or lists of two integers.
   (mattcheck "polynomial subtraction"
              (sub (make-polynomial 'x p1)
                   (make-polynomial 'x p3))
-             '(polynomial x (2 1) (0 -2))))
+             '(polynomial x 1 0 -2)))
 #+END_SRC
 
-#+RESULTS[1b6ec0dfb9ae5d73e105b557ae5971af5fa84480]:
+#+RESULTS[0813252c3fa267e516271075870241ced06c4560]:
 #+begin_EXAMPLE
 (etc...)
 SUCCEED at negation polynomials
@@ -16789,9 +16857,9 @@ polys as arguments and returns a list of the quotient and remainder polys.
                                 (cons (cons 'rational (cons 8.751559490358574 5))
                                       (cons 'rational (cons 28.639461402385223 25))))))
 (mattcheck "polynomial = zero"
-           (=zero? (make-polynomial 'x '((0 0) (0 0)))))
+           (=zero? (make-polynomial 'x '((0 0)))))
 (mattcheck "polynomial != zero" #f
-           (=zero? (make-polynomial 'x '((0 0) (1 1)))))
+           (=zero? (make-polynomial 'x '((1 1)(0 1)))))
 
 (let ((p1 '((100 1)(2 2)(0 1)))
       (p2 (list (list 7 (make-polynomial 'x '((3 2))))))
@@ -16836,25 +16904,22 @@ polys as arguments and returns a list of the quotient and remainder polys.
   (mattcheck "polynomial subtraction"
              (sub (make-polynomial 'x p1)
                   (make-polynomial 'x p3))
-             '(polynomial x (2 1) (0 -2)))
+             '(polynomial x 1 0 -2))
   (mattcheck "polynomial division 1"
              (div (make-polynomial 'x p6)
                   (make-polynomial 'x p7))
-             '((polynomial x (2 1) (1 -1) (0 1))
-               (polynomial x)))
+             '((polynomial x 1 -1 1) (polynomial x)))
   (mattcheck "polynomial division 2"
              (div (make-polynomial 'x p7)
                   (make-polynomial 'x p6))
-             '((polynomial x)
-               (polynomial x (1 1) (0 1))))
+             '((polynomial x) (polynomial x 1 1)))
   (mattcheck "polynomial division 3"
              (div (make-polynomial 'x p66)
                   (make-polynomial 'x p77))
-             '((polynomial x (2 1) (1 -1) (0 1))
-               (polynomial x))))
+             '((polynomial x 1 -1 1) (polynomial x))))
 #+END_SRC
 
-#+RESULTS[5a0fb8ef36fe1553d895397f8ad3869623fb44e5]:
+#+RESULTS[a05233f0035edf345086d3c751b80c5106e23d30]:
 #+begin_EXAMPLE
 (etc...)
 SUCCEED at polynomial division 1
