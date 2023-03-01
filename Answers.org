@@ -9729,7 +9729,13 @@ plot data using 2:xticlabels(1) with linespoints, \
 So that's 40 times worse at 5x5, 159 times worse at 6x6, 568 times worse at 7x7,
 and 3146 times at 8x8.
 
-
+after checking online with posts like this one [fn::
+https://wernerdegroot.wordpress.com/2015/08/01/sicp-exercise-2-43/] It looks
+like the big-O notation could be considered \(\Theta((N^N)*T)\) at its simplest.
+I don't have a good grasp on how to reason out the time complexity of a
+non-trivial algorithm. I aim to eventually do "How to Solve It" and "How to
+Prove It" and possibly that will fill in the missing gaps before trying more
+serious comp-sci literature.
 
 ** 2.2.4: Example: A Picture Language
 
