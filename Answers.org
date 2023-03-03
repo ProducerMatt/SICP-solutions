@@ -11111,7 +11111,7 @@ SUCCEED at deriv: exponentiation 1
 SUCCEED at deriv: exponentiation 2
 #+end_EXAMPLE
 
-** Exercise 2.57
+** Exercise 2.57: Differentiating arbitrary-length expressions
 
 *** Question
 
@@ -11201,7 +11201,7 @@ It's taking a bunch of steps that weren't ultimately helping, but it didn't
 occur to me that the solution was to go simpler rather than more complicated.
 I'll have to keep watch for problem-solving dead-ends like this.
 
-** Exercise 2.58
+** Exercise 2.58: Processing expressions with infix notation
 
 *** Question
 
@@ -11384,10 +11384,18 @@ anything.
 (mattcheck "deriv: mult prioritization 3"
            (deriv '((x * y) * (x + 3)) 'x)
            '((x * y) + (y * (x + 3))))
+;; Checks from "future Matt"
+(mattcheck "deriv: mult prioritization 4a"
+           (deriv '(x + 3 + x + y * 2) 'x)
+           2)
+(mattcheck "deriv: mult prioritization 4b"
+           (deriv '(y * 2 + x + 3 + x) 'x)
+           2)
 #+END_SRC
 
-#+RESULTS[b484d747c3dbfebc6e2becbc4cfa9f963118fc25]:
+#+RESULTS[8a2358372e6ee2a367f43b82581da8654df2a646]:
 #+begin_EXAMPLE
+<unknown-location>: warning: possibly unbound variable `mattcheck'
 SUCCEED at deriv: basic addition
 SUCCEED at deriv: basic multiplication
 SUCCEED at deriv: bad simplification
@@ -11396,13 +11404,18 @@ SUCCEED at deriv: longer multiplication
 SUCCEED at deriv: mult prioritization 1
 SUCCEED at deriv: mult prioritization 2
 SUCCEED at deriv: mult prioritization 3
+SUCCEED at deriv: mult prioritization 4a
+FAIL at deriv: mult prioritization 4b
+expected: 2
+returned: (y * 2)
 #+end_EXAMPLE
 
-My solution (which turned out to work) was by modifying src_scheme{make-sum} to
-check the operator /after/ the current one, see if it was a multiplication, and
+Above is my first solution. I modified src_scheme{make-sum} to
+check the operator after the current one, see if it was a multiplication, and
 if so to evaluate it with src_scheme{make-product} before doing the current
 addition. The "immutable variable" ways of problem solving makes this pretty
-easy to solve:
+easy:
+
 #+BEGIN_SRC scheme -n
 ;; I want to do f to the first item of x, unless some-condition? in the second
 ;; item, in which case do g to the 2nd item before x to the first
@@ -11414,10 +11427,117 @@ easy to solve:
 #+END_SRC
 
 If I were doing this with mutable variables, where I needed to perform these
-modifications in one data structure, I'd be concerned.
+modifications in-place in one data structure, I might not have the tools to
+solve that problem.
 
-Still, I was stuck on this problem for a while, only to find my /test cases/ were
-wrong.
+However, I came back to this problem after continuing on ahead so far as [[*Exercise
+2.91][Exercise 2.91]], when someone on the Discord asked for help. Upon
+re-examination I realized that this first solution does /not/ solve the problem
+in an algebraically equivalent way, as you can see by the last two tests I added
+above. I had assumed that because addition and multiplication were commutative,
+that I only needed to account for immediately adjacent operations. This was not
+the case. I must solve the higher-priority operations in a list first before starting any
+of the lower ones.
+
+TODO:
+
+#+NAME: deriv-algebraic-fixed
+#+BEGIN_SRC scheme :eval no-export :results silent
+(define func-list '(product? sum?))
+(define priority-list '(* +))
+(define (solve-in-order exp func-list)
+  (if (< (length exp) 3)
+      '()
+      (cons (list-index (lambda(i)(eqv? i (cadr exp)))
+                        priority-list)
+            (find-solution-order (cddr exp)))))
+(define (variable? x) (symbol? x))
+(define (same-variable? v1 v2)
+  (and (variable? v1) (variable? v2) (eq? v1 v2)))
+(define (sum? x) (and (pair? x) (eq? (cadr x) '+)))
+(define (addend s) (car s))
+(define (augend s)
+  (let ((rest (cddr s)))
+    (if (null? (cdr rest))
+        (car rest)
+        rest)))
+(define (product? x) (and (pair? x) (eq? (cadr x) '*)))
+(define (multiplier p) (car p))
+(define (multiplicand p)
+  (let ((rest (cddr p)))
+    (if (null? (cdr rest))
+        (car rest)
+        rest)))
+(define (make-sum a1 a2)
+  (cond ((=number? a1 0) a2)
+        ((=number? a2 0) a1)
+        ((and (number? a1) (number? a2))
+         (+ a1 a2))
+        ((product? a2)
+         (list a1 '+ ;; cross your fingers!
+               (make-product (multiplier a2)
+                             (multiplicand a2))))
+        (else (list a1 '+ a2))))
+(define (=number? exp num)
+  (and (number? exp) (= exp num)))
+(define (make-product m1 m2)
+  (cond ((or (=number? m1 0) (=number? m2 0)) 0)
+        ((=number? m1 1) m2)
+        ((=number? m2 1) m1)
+        ((and (number? m1) (number? m2)) (* m1 m2))
+        (else (list m1 '* m2))))
+(define (deriv exp var)
+  (cond ((number? exp) 0)
+        ((variable? exp) (if (same-variable? exp var) 1 0))
+        ((sum? exp) (make-sum (deriv (addend exp) var)
+                              (deriv (augend exp) var)))
+        ((product? exp)
+         (make-sum
+          (make-product (multiplier exp)
+                        (deriv (multiplicand exp) var))
+          (make-product (deriv (multiplier exp) var)
+                        (multiplicand exp))))
+        (else
+         (error "unknown expression type: DERIV" exp))))
+#+END_SRC
+#+BEGIN_SRC scheme :eval no-export :results output
+<<deriv-algebraic-fixed>>
+(load "mattcheck2.scm")
+(mattcheck "deriv: basic addition"
+           (deriv '(x + 3) 'x)
+           1)
+(mattcheck "deriv: basic multiplication"
+           (deriv '(x * y) 'x)
+           'y)
+(mattcheck "deriv: bad simplification"
+           (deriv '((x * y) * (x + 3)) 'x)
+           '((x * y) + (y * (x + 3))))
+(mattcheck "deriv: longer addition"
+           (deriv '(x + 3 + 6 + z) 'x)
+           1)
+(mattcheck "deriv: longer multiplication"
+           (deriv '(x * y * (x + 3)) 'x)
+           '((x * y) + (y * (x + 3))))
+
+;; Test cases from:
+;; http://community.schemewiki.org/?sicp-ex-2.58
+(mattcheck "deriv: mult prioritization 1"
+           (deriv '(x + 3 * (x + y + 2)) 'x)
+           4)
+(mattcheck "deriv: mult prioritization 2"
+           (deriv '(x * (y * (x + 3))) 'x)
+           '((x * y) + (y * (x + 3))))
+(mattcheck "deriv: mult prioritization 3"
+           (deriv '((x * y) * (x + 3)) 'x)
+           '((x * y) + (y * (x + 3))))
+;; Checks from "future Matt"
+(mattcheck "deriv: mult prioritization 4a"
+           (deriv '(x + 3 + x + y * 2) 'x)
+           2)
+(mattcheck "deriv: mult prioritization 4b"
+           (deriv '(y * 2 + x + 3 + x) 'x)
+           2)
+#+END_SRC
 
 ** Exercise 2.59: Representing sets
 
