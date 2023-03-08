@@ -17754,8 +17754,12 @@ me, now that I'm nesting items in the coefficients.
   (mattcheck "raise to poly"
              (raise (make-complex-from-mag-ang 78 64))
              '(polynomial DISCARD-ME (polar 78 . 64)))
-  (mattcheck "extract-poly-to-table"
-             (hash-map->list (lambda(x y) (list x y)) (extract-poly-to-table p8)))
+  (mattcheck "extract-poly-to-table" ;; INTERNAL
+             (hash-map->list (lambda(x y) (list x y)) (extract-poly-to-table p8))
+             '((a ((9 (polynomial b (100 1) (2 1) (0 3)))
+                   (8 (polynomial c 8 2 5 -3 -7))
+                   (1 (polynomial d 0 (polynomial f 3 2)))))
+               (e (((1 2))))))
   (mattcheck "polynomials in multiple variables 1"
              (add (make-polynomial 'x p1)
                   (make-polynomial 'y p1))
