@@ -17078,7 +17078,8 @@ polynomials, say a poly of \(w\) with nested coefficients \(x^y^z\) and \(y\)
 with \(w^z^y\).
 
 I've also decided to upgrade my src_scheme{adjoin-terms} procedures so that they
-can adjoin to the middle of lists, or attempt to add two coefficients of the same order.
+can adjoin to the middle of lists, or attempt to add two coefficients of the
+same order.
 
 I've /also/ also decided to add polynomials to the type coercion tower. This
 will require putting a variable on the new polynomial, but it will be a poly of
@@ -17088,6 +17089,8 @@ variable of such a polynomial.
 
 My earlier choice to not tag sparse and dense lists may be coming back to bite
 me, now that I'm nesting items in the coefficients.
+
+In the process of reorganizing polynomials, I'll make a hash table, and find the terms in the poly which are not dependent on the top variable, and split them into their own keys in the table. So for any terms of order 0, if it's a poly it'll get keyed to the variable of the poly, and if it's not it'll be keyed to the symbol src_scheme{'ZEROTH}.
 
 #+NAME: tower-coercions-polynomial
 #+BEGIN_SRC scheme -n :eval no-export :results silent
@@ -17296,11 +17299,13 @@ me, now that I'm nesting items in the coefficients.
                                         ;       (merge-termlists-abstracted (adjoin-term (first-term t2) t1)
                                         ;                                   (rest-terms t2))))
 (define (map-terms f tl)
+  ;; f is called (f order coeff)
   (let iter ((result '())
              (term-list (reverse tl)))
     (if (empty-termlist? term-list)
         (reverse result)
-        (iter (cons (f (first-term term-list))
+        (iter (cons (let ((t (first-term term-list)))
+                      (f (order t) (coeff t)))
                     result)
               (rest-terms term-list)))))
 (define (map2-terms f tl1 tl2)
@@ -17310,8 +17315,10 @@ me, now that I'm nesting items in the coefficients.
     (if (or (empty-termlist? term-list1)
             (empty-termlist? term-list2))
         (reverse result)
-        (iter (cons (f (first-term term-list1)
-                       (first-term term-list2))
+        (iter (cons (let ((t1 (first-term term-list))
+                          (t2 (first-term term-list)))
+                      (f (order t1) (coeff t1)
+                         (order t2) (coeff t2)))
                     result)
               (rest-terms term-list1)
               (rest-terms term-list2)))))
@@ -17437,47 +17444,6 @@ me, now that I'm nesting items in the coefficients.
                (merge-priority-lists l1
                                      (cdr l2)))
               (else (rec (cdr to-check) checking))))))
-                                        ;(define (extract-terms-of-variables poly priorities)
-                                        ;  ;; poly, priority list -> assoc list
-                                        ;  ;; returns an assoc list of terms keyed by their top vars
-                                        ;  ;; if the 0'th term has a nested polynomial, extract these terms in
-                                        ;  ;; their var, otherwise, keep the nesting as needed. 0'th terms with no
-                                        ;  ;; nested poly will be added together under the key 'ZEROTH.
-                                        ;  (define answer '())
-                                        ;  (let iter ((term-list (terms poly)))
-                                        ;    (let ((t (first-term term-list)))
-                                        ;      (if (is-poly? t)
-                                        ;          ))))
-                                        ;(define (invert-poly-strict p)
-                                        ;  ;; poly -> poly
-                                        ;  ;; takes poly (var A) with terms /all/ coeffs of polys of (variable B)
-                                        ;  ;; returns poly (var B) with terms of (var A)
-                                        ;  (let ((top-var (variable p))
-                                        ;        (term-list (terms p)))
-                                        ;    (let ((invalid-terms (filter (lambda(t)
-                                        ;                                   (not (and (is-poly? (coeff t))
-                                        ;                                             (not (eqv? top-var
-                                        ;                                                        (variable (coeff t))))))
-                                        ;                                   term-list))))
-                                        ;      (if invalid-terms ;; TODO: remove when rest of system is in place
-                                        ;          (error "Poly must contain only terms that are coeffs of a different variable : INVERT-POLY" top-var invalid-terms)
-                                        ;          'all-good))
-                                        ;    (append-map (lambda(t)())
-                                        ;                term-list)))
-;; Example:
-;; (poly x (order 3, coeff (poly y (1 2)))
-;;         (order 2, coeff (poly y (2 1))))
-;; (poly y (order 2, coeff (poly x (2 1)))
-;;         (order 1, coeff (poly x (3 2))))
-(define (has-polys term-list)
-  (receive (has-children no-children)
-      (partition (lambda(t)
-                   (is-poly? (coeff (contents t))))
-                 term-list)
-    (let ((filtered-children
-           (map (lambda(t)(has-polys))
-                has-children)))
-      'unfinished)))
 (define (poly-single-var? wantedvar poly)
   (and (same-variable? (variable poly) wantedvar)
        (let rec ((term-list (terms poly)))
@@ -17511,17 +17477,46 @@ me, now that I'm nesting items in the coefficients.
                        (append-one-to-item 'ZEROTH
                                            (make-sparse-term (order t) (coeff t)))
                        (iter (rest-terms tl)))))
-                ;((is-poly? (coeff t))
-                ; (reorganize-poly-if-needed (coeff t)
-                ;                            (order t)
-                ;                            top-var
-                ;                            parent-priorities))
+                                        ;((is-poly? (coeff t))
+                                        ; (reorganize-poly-if-needed (coeff t)
+                                        ;                            (order t)
+                                        ;                            top-var
+                                        ;                            parent-priorities))
                 (else (begin (append-one-to-item top-var t)
                              (iter (rest-terms tl)))))))))
-(define (reorganize-poly-if-needed p parent-order parent-var parent-priorities)
+;; Example of an inverted poly:
+;; (poly x (order 3, coeff (poly y (1 2)))
+;;         (order 4, coeff (poly y (5 6))))
+;; (poly y (order 5, coeff (poly x (4 6)))
+;;         (order 1, coeff (poly x (3 2))))
+(define (invert-poly-table-strict pt)
+  ;; poly table -> poly
+  ;; takes poly (var A) with terms /all/ coeffs of polys of (variable B)
+  ;; returns poly (var B) with terms of (var A)
+  (let ((top-var (variable pt))
+        (term-list (terms pt)))
+    (let ((invalid-terms (filter (lambda(t)
+                                   (not (and (is-poly? (coeff t))
+                                             (not (eqv? top-var
+                                                        (variable (coeff t))))))
+                                   term-list))))
+      (if invalid-terms ;; TODO: remove when rest of system is in place
+          (error "Poly must contain only terms that are coeffs of a different variable : INVERT-POLY" top-var invalid-terms)
+          'all-good))
+    (append-map (lambda(t)(t))
+                term-list)))
+(define (reorganize-poly-table-if-needed pt parent-order parent-var parent-priorities)
   (let ((priorities (merge-priority-lists parent-priorities
                                           (make-variable-priority-list p))))
-    p));; TODO
+    (map (lambda(p)
+           (map-terms (lambda(o c)
+                        );;TODO:
+                      (cadr p)))
+         pt)))
+;(define (reorganize-poly-table-if-needed pt parent-order parent-var parent-priorities)
+;  (let ((priorities (merge-priority-lists parent-priorities
+;                                          (make-variable-priority-list p))))
+;    pt));; STUB
 (define (add-poly p1 p2)
   (define triv
     (cond ((trivial-poly? p1)
