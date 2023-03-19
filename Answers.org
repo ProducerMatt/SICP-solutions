@@ -19146,7 +19146,8 @@ In the process of reorganizing polynomials, I'll make a hash table, and find the
              (let ((c (coeff (first-term term-list))))
                (if (not (is-poly? c))
                    (rec (rest-terms term-list))
-                   (poly-single-var? wantedvar c)))))))
+                   (and (poly-single-var? wantedvar c)
+                        (rec (rest-terms term-list)))))))))
 ;;; Example of an inverted poly:
 ;;; (poly x (order 4, coeff (poly y (5 6)))
 ;;;         (order 3, coeff (poly y (1 2)))
@@ -19170,7 +19171,8 @@ In the process of reorganizing polynomials, I'll make a hash table, and find the
   ;; to thoughtlessly work from. I.e. if your list is '(a b c d e) and
   ;; your term is (5 (poly d (2 1))), we'll return
   ;; '(5 (poly b (poly c (poly d (2 1))))) (nested polys representing dense terms)
-  (let* ((child-var (variable (contents (coeff term))))
+  (let* ((parent-var (car parent-priority-list))
+         (child-var (variable (contents (coeff term))))
          (pri (member parent-var parent-priority-list))
          (difference (mem-index child-var pri)))
     (if (= difference 1)
@@ -19187,54 +19189,56 @@ In the process of reorganizing polynomials, I'll make a hash table, and find the
          (difference (mem-index child-var parent-priority-list)))
     (if (> difference 0)
         (make-poly (car parent-priority-list)
-                   (pad-term-if-needed (make-sparse-term 0 (tag poly))
-                                       parent-priority-list)))))
+                   (list (pad-term-if-needed (make-sparse-term 0 (tag poly))
+                                             parent-priority-list))))))
 (define (reorganize-poly-if-needed poly parent-priority-list)
   ;; untagged poly -> untagged poly
   (let* ((additional-priorities (make-variable-priority-list poly))
          (priorities (merge-priority-lists parent-priority-list
                                            additional-priorities)))
-    (let rec ((var (variable poly))
-              (remaining-terms (terms poly))
-              (done-terms '()))
-      (if (empty-termlist? remaining-terms)
-          (make-poly var done-terms)
-          (let* ((t (first-term remaining-terms))
-                 (c (coeff t))
-                 (o (order t))
-                 (lower-vars (member var priorities)))
-            (if (is-poly? c)
-                ;; if term is poly, recurse and reorder its terms first
-                (let* ((child (rec (variable (contents c))
-                                   (terms (contents c))
-                                   '()))
-                       (child-var (variable child))
-                       (child-terms (terms child)))
-                  (if (member child-var lower-vars) ;; make sure poly is lower priority
-                      ;; if member found, this poly's variable order is not the problem
-                      (rec var 
-                           (rest-terms remaining-terms)
-                           (adjoin-term (make-sparse-term o
-                                                          (tag child))
-                                        done-terms))
-                      ;; if member not found, this ordering needs to be inversed
-                      ;; delay inversion until rest of terms are processed as well
-                      (let* ((rest (rec var 
-                                        (rest-terms remaining-terms)
-                                        (adjoin-term (make-sparse-term o
-                                                                       (tag child))
-                                                     done-terms)))
-                             (all-terms (merge-terms done-terms
-                                                     (adjoin-term t (terms rest))))
-                             (inverted-terms (invert-terms var o
-                                                           all-terms)))
-                        (rec child-var
-                             (the-empty-termlist)
-                             (merge-terms child-terms inverted-terms)))))
-                ;; term is not poly, we have nothing to do here
-                (rec var 
-                     (rest-terms remaining-terms)
-                     (adjoin-term t done-terms))))))))
+    (pad-poly-if-needed
+     (let rec ((var (variable poly))
+               (remaining-terms (terms poly))
+               (done-terms '()))
+       (if (empty-termlist? remaining-terms)
+           (make-poly var done-terms)
+           (let* ((t (first-term remaining-terms))
+                  (c (coeff t))
+                  (o (order t))
+                  (lower-vars (member var priorities)))
+             (if (is-poly? c)
+                 ;; if term is poly, recurse and reorder its terms first
+                 (let* ((child (rec (variable (contents c))
+                                    (terms (contents c))
+                                    '()))
+                        (child-var (variable child))
+                        (child-terms (terms child)))
+                   (if (member child-var lower-vars) ;; make sure poly is lower priority
+                       ;; if member found, this poly's variable order is not the problem
+                       (rec var 
+                            (rest-terms remaining-terms)
+                            (adjoin-term (make-sparse-term o
+                                                           (tag child))
+                                         done-terms))
+                       ;; if member not found, this ordering needs to be inversed
+                       ;; delay inversion until rest of terms are processed as well
+                       (let* ((rest (rec var 
+                                         (rest-terms remaining-terms)
+                                         (adjoin-term (make-sparse-term o
+                                                                        (tag child))
+                                                      done-terms)))
+                              (all-terms (merge-terms done-terms
+                                                      (adjoin-term t (terms rest))))
+                              (inverted-terms (invert-terms var o
+                                                            all-terms)))
+                         (rec child-var
+                              (the-empty-termlist)
+                              (merge-terms child-terms inverted-terms)))))
+                 ;; term is not poly, we have nothing to do here
+                 (rec var 
+                      (rest-terms remaining-terms)
+                      (adjoin-term t done-terms))))))
+     priorities)))
                                         ;(define (reorganize-poly-if-needed poly parent-priority-list)
                                         ;  ;; untagged poly -> untagged poly
                                         ;  (let* ((unsorted-priorities (make-variable-priority-list poly))
@@ -19549,6 +19553,8 @@ In the process of reorganizing polynomials, I'll make a hash table, and find the
   (mattcheck "raise to poly"
              (raise (make-complex-from-mag-ang 78 64))
              '(polynomial DISCARD-ME (complex polar 78 . 64)))
+  (mattcheck "reorganize-poly-if-needed"
+             (reorganize-poly-if-needed p8 '(f e d c b a)))
   (mattcheck "polynomials in multiple variables 1"
              (add (make-polynomial 'x p1)
                   (make-polynomial 'y p1))
