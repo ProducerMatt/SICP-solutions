@@ -12,7 +12,7 @@ I hope to add a Nix file at some point so it's easy for others to load all the
 needed dependencies and mess around with my code.
 
 You are welcome to join our [SICP study Discord
-server](https://discord.gg/pxZjHtef). We like helping people get unstuck and
+server](https://discord.gg/FvyEFsmMcY). We like helping people get unstuck and
 feel the sense of accomplishment this book provides, so you're welcome to ask
 any question for any part of the book.
 
