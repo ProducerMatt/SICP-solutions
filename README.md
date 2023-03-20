@@ -65,7 +65,7 @@ Below I compare several options. TLDR:
 1. Racket + DrRacket + the SICP package has the best beginner experience and
    debugging interface. But I found some incompatiblities even with the SICP
    package and dropped it. Good for beginners though.
-2. Guile Scheme has the best compatibility and it extremely mature, and with
+2. Guile Scheme has the best compatibility and it's extremely mature, and with
    several powerful extensions to the language which you'll really want in later
    projects.
 
@@ -444,8 +444,6 @@ The most important part are the org-mode properties set at the top of the docume
 
 # SICP's Picture Language with `guile-picture-language`
 
-> [!INFO]
->
 > We at the Discord server (primarily [waxcatape](https://github.com/waxcatape))
 > have put the following info together into a Guile file which provides the
 > book's expected functions automatically, and includes reference functions to
