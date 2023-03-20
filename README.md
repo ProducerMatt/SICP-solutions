@@ -2,46 +2,104 @@
 
 This repo contains my solutions to exercises from the legendary textbook
 *Structure and Interpretation of Computer Programming*, or from associated
-problem sets and projects.
+problem sets and projects. It also records as many resources as I could remember
+using in my journey.
 
-I am doing solutions with Guile Scheme. In the past, I used heavily-commented
-Guile files combined with occasional Jupyter notebooks. Now, I'm using org-mode
-with Guile code blocks, plus Gnuplot for drawing plots. I hope to add a Nix file
-at some point so it's easy for others to load all the needed dependencies and
-mess around with my code.
+I am doing solutions with Guile Scheme. In the past (under the folder `./Old/`),
+I used heavily-commented Guile files combined with occasional Jupyter notebooks.
+Now, I'm using org-mode with Guile code blocks, plus Gnuplot for drawing plots.
+I hope to add a Nix file at some point so it's easy for others to load all the
+needed dependencies and mess around with my code.
 
-This infodump does not cover the SICP-descended Harvard courses.
+You are welcome to join our [SICP study Discord
+server](https://discord.gg/pxZjHtef). We like helping people get unstuck and
+feel the sense of accomplishment this book provides, so you're welcome to ask
+any question for any part of the book.
+
+The server was organized for people to work through the book in groups, however
+the server isn't highly active. So, if there isn't anyone working through the
+book at the same time, I encourage you to post your progress as you work. It
+feels like shouting into an empty room, but if someone happens to drop in who'd
+like to collaborate, your posts will let them know that you're there, and they
+can open a dialog about coordinating. If you start working through the book
+together, you can ask for a dedicated chatroom and role to organize between
+yourselves and send pings to your group specifically.
+
+# What's the scope of the Readme below?
+This infodump contains as many resources as I could remember relying upon,
+including links to similar infodumps written by other people. It may be helpful
+to scan what topics and issues these dumps contain, so if you hit some issue,
+you might remember a specific paragraph about that exact issue, rather than
+needing to turn to Google for non-SICP-specific advice.
+
+It does not explicitly cover the SICP-descended [UC Berkley course,
+CS-61A](https://youtube.com/playlist?list=PLhMnuBfGeCDNgVzLPxF9o5UNKG1b-LFY9),
+though you may like it enough to prefer it, or follow both simultaneously as
+some decide to do.
 
 # Source material
-- [Fully-featured HTML edition](http://sarabander.github.io/sicp/html/index.xhtml)
+- [Fully-featured HTML5
+  edition](http://sarabander.github.io/sicp/html/index.xhtml)
 - [Texinfo edition](http://zv.github.io/sicp-in-texinfo)
 - [.info edition](https://github.com/webframp/sicp-info)
-- [SICP in PDF format](https://github.com/DiamondBond/sicp-pdf) with some bug fixes
-- [Structure and Interpretation of Computer Programs OpenCourseWare](https://ocw.mit.edu/courses/electrical-engineering-and-computer-science/6-001-structure-and-interpretation-of-computer-programs-spring-2005/)
-- [Self-hostable mirror of all of the above](https://github.com/ProducerMatt/sicp-psets-mirror)
-- [SICP lectures on Youtube](https://gist.github.com/shmup/d58053ab657f45ec6656241db60d9d40) and which lectures go with what section of the book
-- [Holly Yanco SICP lectures on Youtube](https://youtube.com/playlist?list=PLhrXA-RW-v-u1L7NuEQgNstePyJJuyoHM)
-- [SICP vs SICP JS comparison](https://sicp.sourceacademy.org/)
+- [SICP in PDF format](https://github.com/DiamondBond/sicp-pdf) with some bug
+  fixes
+- [Offline-hostable mirror of all of the
+  above](https://github.com/ProducerMatt/sicp-psets-mirror)
+- [SICP vs SICP JS comparison (colorized diffs)](https://sicp.sourceacademy.org/)
+- [Structure and Interpretation of Computer Programs
+  OpenCourseWare](https://ocw.mit.edu/courses/electrical-engineering-and-computer-science/6-001-structure-and-interpretation-of-computer-programs-spring-2005/)
+  (These lectures are awesome and shouldn't be skipped, but they follow the 1st
+  edition of the book and abridge it to fit the semester)
+- [The OCW lectures on
+  Youtube](https://gist.github.com/shmup/d58053ab657f45ec6656241db60d9d40) and
+  which lectures go with what section of the book
+- [Holly Yanco SICP lectures on
+  Youtube](https://youtube.com/playlist?list=PLhrXA-RW-v-u1L7NuEQgNstePyJJuyoHM),
+  which conveniently follow the orignal material closely while answering more grounded questions
+  (not everyone is an MIT student :smile:).
 
 ## Which Scheme should I use?
 
-You can submit your homework in any way that can be easily followed by others, preferably in a way that they won't need to run your code but can if they want.
+Below I compare several options. TLDR:
+1. Racket + DrRacket + the SICP package has the best beginner experience and
+   debugging interface. But I found some incompatiblities even with the SICP
+   package and dropped it. Good for beginners though.
+2. Guile Scheme has the best compatibility and it extremely mature, and with
+   several powerful extensions to the language which you'll really want in later
+   projects.
 
-You may want to do your homework in an environment that intermixes source code with rich text and LaTeX for math. Some options:
+If you're working in a group, you should submit your homework in any way that
+can be easily followed by others, preferably in a way that they won't need to
+run your code but can if they want.
 
-- Emacs org-mode + org-babel, providing an interactive development environment that can be turned into a Latex document
+You might want to do your homework in an environment that intermixes source code
+with rich text and LaTeX for math. Some options:
+
+- Emacs org-mode + org-babel, providing an interactive development environment
+  that can be turned into a Latex document
 - Jupyter notebooks with the Guile/Racket/Calysto module
-- just keeping your source code in one file and your fancy marked-up answers in another. I.e. static site generators with Latex support.
+- just keeping your source code in one file and your fancy marked-up answers in
+  another. I.e. static site generators with Latex support.
 
-The last may be the ideal path at the moment, I've spent many hours working out the kinks in org-mode + org-babel and it's still not how I want it.
+To be frank, the last path (the 'K.I.S.S.' principle) may be the ideal path at
+the moment. I've spent *many* hours working out the kinks in org-mode +
+org-babel and it's still not how I want it.
 
 ### Guile
 
-I recommend Guile for its high compatibility with SICP and its high quality and availability. A Jupyter kernel is available.
+I recommend Guile for its high compatibility with SICP and its high quality and
+availability. A Jupyter kernel is available.
 
-A couple helpful and important details regarding Guile Scheme, especially how to enable read line support: http://www.starynkevitch.net/Basile/guile-tutorial-1.html
+A couple helpful and important details regarding Guile Scheme, especially how to
+enable read line support:
+http://www.starynkevitch.net/Basile/guile-tutorial-1.html
 
-Here's a small [benchmarking function](https://github.com/ProducerMatt/SICP-solutions/blob/main/mattbench.scm) and a small [unit tester](https://github.com/ProducerMatt/SICP-solutions/blob/main/mattcheck2.scm) that I've found quite helpful.
+Here's a small [benchmarking
+function](https://github.com/ProducerMatt/SICP-solutions/blob/main/mattbench.scm)
+and a small [unit
+tester](https://github.com/ProducerMatt/SICP-solutions/blob/main/mattcheck2.scm)
+that I've found quite helpful.
 
 To run code from SICP, you'll need to change:
 
@@ -50,23 +108,37 @@ To run code from SICP, you'll need to change:
 
 ### Racket
 
-Racket has the best debugger (DrRacket) but it will only have compatibility for extremely basic Scheme expressions. It has an SICP compatibility mode, but I found this broke some other desirable features. However don't be afraid to give it a try for yourself.
+Racket has the best debugger (DrRacket) but it will only have compatibility for
+extremely basic Scheme expressions. It has an SICP compatibility mode, but I
+found this wasn't perfect, and it broke some other desirable features. However
+don't be afraid to give it a try for yourself.
 
 ### Calysto
-Another option which I haven't tried is [Calysto Scheme](https://github.com/Calysto/calysto_scheme), a Scheme interoperable with Python which is well-integrated for Jupyter notebooks. Compatibility with SICP not guaranteed.
+Another option which I haven't tried is [Calysto
+Scheme](https://github.com/Calysto/calysto_scheme), a Scheme interoperable with
+Python which is well-integrated for Jupyter notebooks. Compatibility with SICP
+not guaranteed.
 
 # Various Resources
-- [abrantesasf's study guide](https://github.com/abrantesasf/sicp-abrantes-study-guide)
-- [Notes for following along in the modern day](https://github.com/zv/SICP-guile), and Guile compatibility notes. Warning: contains some solutions
+- [abrantesasf's study
+  guide](https://github.com/abrantesasf/sicp-abrantes-study-guide)
+- [Notes for following along in the modern
+  day](https://github.com/zv/SICP-guile), and Guile compatibility notes.
+  Warning: contains some solutions
 - ["cheatsheet" for key ideas](https://www.physinf.com/sicp)
 - [SchemeWiki solutions list](http://community.schemewiki.org/?sicp-solutions)
-- [Solving SICP](https://lockywolf.wordpress.com/2021/02/08/solving-sicp/) statistical analysis of the author's experience doing the textbook.
+- [Solving SICP](https://lockywolf.wordpress.com/2021/02/08/solving-sicp/)
+  statistical analysis of the author's experience doing the textbook.
 - [Gwern's SICP notes in Haskell](https://www.gwern.net/sicp/Chapter-1-1)
 - [Eli Bendersky's notes in Common Lisp](https://eli.thegreenplace.net/tag/sicp)
 
-Scheme proposals for SICP support libraries (usually not implemented, but hey it's worth knowing about):
-- [SRFI-216](https://srfi.schemers.org/srfi-216/) provides extra support for SICP in Scheme. [SRFI-216 implementations](https://practical-scheme.net/wiliki/schemexref.cgi?SRFI-216)
-- [SRFI-203](https://srfi.schemers.org/srfi-203/): extra support for the graphics drawings segments of the book.
+Scheme proposals for SICP support libraries (usually not implemented, but hey
+it's worth knowing about):
+- [SRFI-216](https://srfi.schemers.org/srfi-216/) provides extra support for
+  SICP in Scheme. [SRFI-216
+  implementations](https://practical-scheme.net/wiliki/schemexref.cgi?SRFI-216)
+- [SRFI-203](https://srfi.schemers.org/srfi-203/): extra support for the
+  graphics drawings segments of the book.
 
 # Tidbits about Scheme
 
@@ -132,10 +204,39 @@ Thanks to [SA](https://stackoverflow.com/a/17719745)
 ;; What about #nil and #f? > #f
 ```
 
-## Visualizing Lists in Scheme
-In the browser: [Lisp code syntax visualizer](https://bagnalla.github.io/sexp-trees/) 
+## Forcing floating points and rationals in Guile
 
-On Linux: install graphviz and add [this function](https://github.com/zv/SICP-guile#script) to your file. Call it with `(display (list->grapviz YourList))`. Then feed that output to `dot` like so:
+Have you encountered little bugs from procedures mixing integers and floats? One
+solution for this problem is making your constructors force a type when they're
+created. You can force integers to floating point with this:
+
+```scheme
+(define (float x)
+  (if (inexact? x)
+      x
+      (exact->inexact x)))
+```
+
+And you can force floats to rational numbers with this:
+
+```scheme
+(define (rat x)
+  (define dx 1/100000)
+  (if (exact? x)
+      x
+      (rationalize
+       (inexact->exact x)
+       dx)))
+
+```
+
+## Visualizing Lists in Scheme
+In the browser: [Lisp code syntax
+visualizer](https://bagnalla.github.io/sexp-trees/)
+
+On Linux: install graphviz and add [this
+function](https://github.com/zv/SICP-guile#script) to your file. Call it with
+`(display (list->grapviz YourList))`. Then feed that output to `dot` like so:
 
 ```bash
 guile box_ptr.scm | dot -o /dev/stdout -Tpng > box_pointer_diagram.png
@@ -147,9 +248,15 @@ guile box_ptr.scm | dot -o /dev/stdout -Tpng > box_pointer_diagram.png
 raco pkg install sicp
 ```
 
-[This pkg](https://docs.racket-lang.org/sicp-manual/SICP_Language.html) gives you a compatible language set when loaded. Load in the REPL with `racket -I sicp`, or in files by putting `#lang sicp` at the top of your file. When using `sicp`, load modules with `#%require` instead of `require`.
+[This pkg](https://docs.racket-lang.org/sicp-manual/SICP_Language.html) gives
+you a compatible language set when loaded. Load in the REPL with `racket -I
+sicp`, or in files by putting `#lang sicp` at the top of your file. When using
+`sicp`, load modules with `#%require` instead of `require`.
 
 # Requirements for org-babel + guile
+
+NOTE: I've worked a lot on this and it's still not how I really want it. If you
+can find a better path, you should go with that.
 
 Be sure to install Guile, and Texlive.
 
@@ -337,6 +444,18 @@ The most important part are the org-mode properties set at the top of the docume
 
 # SICP's Picture Language with `guile-picture-language`
 
+> [!INFO]
+>
+> We at the Discord server (primarily [waxcatape](https://github.com/waxcatape))
+> have put the following info together into a Guile file which provides the
+> book's expected functions automatically, and includes reference functions to
+> compare your answers against without confusion of using the same names.
+> 
+> Check it out here:
+> [https://github.com/waxcatape/guile-sicp-piclang](https://github.com/waxcatape/guile-sicp-piclang)
+> 
+> Below are my original instructions for the section, without the script.
+
 First, you'll need `guile-picture-language` and a Guile install that knows where
 to find it. The easiest way is by installing Guix and executing `guix shell
 guile-picture-language guile`. This will make the Guile module `pict` available
@@ -354,38 +473,42 @@ need the `svg`s in png format, I can recommend ImageMagick.
 Now for the tricky part. The code in the textbooks expects drawing primitives to
 exist in your system (this would have been common in the 80s and 90s school
 mainframes). We do not have these, so we will have to put the drawing procedures
-of `pict` together so that the book's code can work with them.
+of `pict` together so that the book's code can work with them. During this
+process you may encounter integer/float issues, which [this tip may help
+with](#forcing-floating-points-and-rationals-in-guile).
 
-When you start the picture language exercises at 2.44 you won't have enough
-procedures to actually bring it all together, so you'll have to do the first
-couple exercises without running them -- luckily they are very similar (or
+When you start the picture language exercises at 2.44 *you won't have enough
+procedures to actually bring it all together*, so you'll *have to do the first
+couple exercises without running them* -- luckily they are very similar (or
 identical) to some previous exercises, such as the implementation of line
 segments in 2.2 and rectangles in 2.3. Once you have defined them up to 2.49,
 you can make procedures for `pict` that will create SICP's pictures. Here is
 such a system, which modifies some textbook code. It expects:
 
 - [ ] a vector implementation (Exercise 2.46)
-  - [ ] `(make-vect x y)` return a vector
+  - [ ] `(make-vect x y)` construct a vector
   - [ ] `(xcor-vect v)` return the x coordinate
   - [ ] `(ycor-vect v)` return the y coordinate
   - [ ] `(add-vect v w)` add vectors
   - [ ] `(sub-vect v w)` subtract vectors
-  - [ ] `(scale-vect s v)` scale vector `v` by factor `s` (don't get these backwards :smile: )
+  - [ ] `(scale-vect s v)` scale vector `v` by factor `s` (don't get these
+        backwards :smile: )
 - [ ] An implementation of frames (Exercise 2.47)
-  - [ ] `(make-frame origin edge1 edge2)` make a frame object
+  - [ ] `(make-frame origin edge1 edge2)` construct a frame object
   - [ ] `(origin-frame F)` return the origin
   - [ ] `(edge1-frame F)` return the first edge
   - [ ] `(edge2-frame F)` return the second edge
 - [ ] An implementation of line segments
-  - [ ] `(make-segment start end)` make a segment from two vectors
+  - [ ] `(make-segment start end)` construct a segment from two vectors
   - [ ] `(start-segment S)` return the starting vector
   - [ ] `(end-segment S)` return the ending vector
 
 ``` scheme
 (use-modules (pict))
 
+;; \/\/\/
 ;; Here is the place for your frame, segment, and vector code
-
+;; /\/\/\
 (define (frame-coord-map frame)
   ;; Returns a function for adjusting a frame by a vector
   (lambda (v)
@@ -432,7 +555,9 @@ such a system, which modifies some textbook code. It expects:
 ```
 
 A complete version of this with my own answers can be found under
-[../2/pict/linepainter.scheme](2/pict/linepainter.scheme).
+[../2/pict/linepainter.scheme](2/pict/linepainter.scheme). A similar file with
+no spoilers can be found under
+[../2/pict/linepainter_nospoilers.scheme](2/pict/linepainter_nospoilers.scheme)
 
 Try testing it with the diamond painter:
 
