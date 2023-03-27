@@ -18732,7 +18732,7 @@ SUCCEED at polynomial division 2
 SUCCEED at polynomial division 3
 #+end_EXAMPLE
 
-** Exercise 2.92
+** Exercise 2.92: operating on polys in different variables
 :PROPERTIES:
 :ID:       42444d8c-8e71-4d6e-8bb0-b88a65777808
 :END:
@@ -18750,6 +18750,12 @@ variables. (This is not easy!)
 :PROPERTIES:
 :ID:       7b686824-168f-4264-9ee9-d936202ac19f
 :END:
+
+#+begin_center
+//Unfortunately, I've spent a lot of time on this without making progress. For
+some reason it's really screwed with my brain. I'm going to move on to
+[[id:ac394e5f-9b65-4a8e-b1f5-0a65df778f94][Exercise 2.93]]//
+#+end_center
 
 If I understand the previous section correctly, I need to change the polynomial
 procedures so that when given two polys which include similar terms, say \(x\)
@@ -18772,7 +18778,11 @@ variable of such a polynomial.
 My earlier choice to not tag sparse and dense lists may be coming back to bite
 me, now that I'm nesting items in the coefficients.
 
-In the process of reorganizing polynomials, I'll make a hash table, and find the terms in the poly which are not dependent on the top variable, and split them into their own keys in the table. So for any terms of order 0, if it's a poly it'll get keyed to the variable of the poly, and if it's not it'll be keyed to the symbol src_scheme{'ZEROTH}.
+In the process of reorganizing polynomials, I'll make a hash table, and find the
+terms in the poly which are not dependent on the top variable, and split them
+into their own keys in the table. So for any terms of order 0, if it's a poly
+it'll get keyed to the variable of the poly, and if it's not it'll be keyed to
+the symbol src_scheme{'ZEROTH}.
 
 #+NAME: tower-coercions-polynomial
 #+BEGIN_SRC scheme -n :eval no-export :results silent
@@ -18847,9 +18857,11 @@ In the process of reorganizing polynomials, I'll make a hash table, and find the
     (cond ((and (pair? t) ;; looks like a sparse list
                 (number? (first t))
                 (or (pair? (second t)) ;; or sparse with nested poly
-                    (number? (second t)))) #t)
+                    (number? (second t))
+                    (empty-termlist? (second t)))) #t)
           ((or (number? t) ;; looks dense
-               (pair? t)) #f) ;; or dense with a nested poly
+               (pair? t)
+               (empty-termlist? term-list)) #f) ;; or dense with a nested poly
           (else (error "badly formed term: SPARSE-TERMLIST?" t term-list)))))
 ;; term and termlist procedures
 (define (should-be-sparse? term-list)
@@ -18858,6 +18870,7 @@ In the process of reorganizing polynomials, I'll make a hash table, and find the
   ;; reasoning:
   ;; - number of elements used for sparse list is (non-zero elements * 2)
   ;; - number of elements used for dense list is (highest order)
+  ;; also, if term-list is 1 non-number element, make a sparse term for clarity
   (define (count-zeroes term-list)
     ;; term-list -> (highest order, zeroes)
     (let iter ((length 0)
@@ -18879,8 +18892,10 @@ In the process of reorganizing polynomials, I'll make a hash table, and find the
                    (count-zeroes term-list))))
     (let ((zero-elements (first stats))
           (highest-order (second stats)))
-      (> (/ zero-elements highest-order)
-         (/ 1 2)))))
+      (or (and (= 1 (length term-list))
+               (not (number? (first-term term-list))))
+          (> (/ zero-elements highest-order)
+             (/ 1 2))))))
 (define (convert-termlist-if-reasonable term-list)
   (if (empty-termlist? term-list)
       term-list
@@ -18984,12 +18999,12 @@ In the process of reorganizing polynomials, I'll make a hash table, and find the
                       (merge-terms (rest-terms t1) t2)))
         (else (adjoin-term (first-term t2)
                            (merge-terms t1 (rest-terms t2))))))
-                                        ; ;; this second version is way simpler and way slower.
-                                        ; (define (merge-terms-abstracted t1 t2)
-                                        ;   (if (empty-termlist? t2)
-                                        ;       t1
-                                        ;       (merge-terms-abstracted (adjoin-term (first-term t2) t1)
-                                        ;                                   (rest-terms t2))))
+; ;; this second version is way simpler and way slower.
+; (define (merge-terms-abstracted t1 t2)
+;   (if (empty-termlist? t2)
+;       t1
+;       (merge-terms-abstracted (adjoin-term (first-term t2) t1)
+;                                   (rest-terms t2))))
 (define (map-terms f tl)
   ;; f is called (f order coeff)
   (let iter ((result '())
@@ -19162,13 +19177,13 @@ In the process of reorganizing polynomials, I'll make a hash table, and find the
 
 ;; This isn't good enough, it doesn't invert the poly and also it needs to
 ;; produce multiple terms for one term with a poly with multiple terms
-                                        ;(define (invert-term parent-var parent-order term)
-                                        ;  (let* ((child-order (order term))
-                                        ;        (child-coeff (coeff term)))
-                                        ;    (make-sparse-term child-order
-                                        ;                      (make-polynomial parent-var
-                                        ;                                       (list (make-sparse-term parent-order
-                                        ;                                                               child-coeff))))))
+;(define (invert-term parent-var parent-order term)
+;  (let* ((child-order (order term))
+;        (child-coeff (coeff term)))
+;    (make-sparse-term child-order
+;                      (make-polynomial parent-var
+;                                       (list (make-sparse-term parent-order
+;                                                               child-coeff))))))
 (define (pad-term-if-needed term parent-priority-list)
   ;; term with tagged poly, priority list -> term
   ;; parent-priority-list starts with the variable this term's order is in
@@ -19199,7 +19214,14 @@ In the process of reorganizing polynomials, I'll make a hash table, and find the
                    (list (pad-term-if-needed (make-sparse-term 0 (tag poly))
                                              parent-priority-list))))))
 (define (make-empty-poly-in var)
-  (make-poly var (the-empty-termlist)))
+  (if (pair? var)
+      (make-poly (car var)
+                 (list (make-sparse-term
+                        0 (tag (make-empty-poly-in
+                                (if (= 2 (length var))
+                                    (cadr var)
+                                    (cdr var)))))))
+      (make-poly var (the-empty-termlist))))
 (define (priority-depth var priority-list)
   ;; return how far in a list a var is
   ;; 0 is head, 2 means two vars ahead, etc
@@ -19224,6 +19246,12 @@ In the process of reorganizing polynomials, I'll make a hash table, and find the
                                                                            (coeff t))))))
           (iter (rest-terms tl)
                 (adjoin-term new-t done))))))
+(define (poly-has-no-children? p)
+  (let iter ((tl (terms p)))
+    (cond ((empty-termlist? tl) #t)
+          ((and (pair? (coeff (first-term tl)))
+                (equal? 'polynomial (type-tag (coeff (first-term tl))))) #f)
+          (else (iter (rest-terms tl))))))
 ;; BIG PROBLEM: I NEED TO WORK OUT ORDERING OF TERMS VERSUS ORDERING OF POLY NESTING
 ;; i.e.
 ;(poly a (0
@@ -19237,79 +19265,127 @@ In the process of reorganizing polynomials, I'll make a hash table, and find the
   ;; untagged poly, pri list -> untagged poly
   ;; pri list should start with the variable you want the poly in,
   ;; and contain all vars that the poly contains
-  (define (check-terms term-list)
-    (let iter ((remaining term-list)
-               (done (the-empty-termlist)))
-      (if (empty-termlist? remaining)
-          done
-          (let* ((t (first-term remaining))
-                 (c (coeff t))
-                 (o (order t))
-                 (new-t (make-sparse-term o
-                                          (if (is-poly? c)
-                                              (tag (reorganize-poly-if-needed (contents c) parent-priority-list))
-                                              c))))
-            (iter (rest-terms remaining)
-                  (adjoin-term new-t done))))))
-  (define (invert-this-poly poly new-var)
-    (let ((var (variable poly))
-          (term-list (terms poly)))
-      (let iter ((remaining term-list)
-                 (done (the-empty-termlist)))
-        (if (empty-termlist? remaining)
-            (make-poly new-var done)
-            (let* ((t (first-term remaining))
-                   (o (order t))
-                   (c (coeff t)))
-              (if (is-poly? c)
-                  (let ((child-var (variable (contents c)))
-                        (child-terms (terms (contents c))))
-                    (cond ((> o 0) ;; if order is not 0, an inverted poly is needed
-                           (iter (rest-terms remaining)
-                                 (merge-termlists done (invert-nested-poly-terms new-var o child-terms))))
-                          ((same-variable? var child-var)
-                           (error "This shouldn't happen : INVERT-THIS-POLY :" remaining done))
-                                        ;(iter (merge-termlists child-terms (rest-terms remaining))
-                                        ;      done))
-                          ((same-variable? new-var child-var)
-                           (iter (rest-terms remaining)
-                                 (merge-termlists done (check-terms child-terms))))
-                          (else (error "WHAT TO HECK : INVERT-THIS-POLY :" remaining done))))
-                  (let ((new-t (make-sparse-term 0
-                                                 (make-polynomial var
-                                                                  (make-sparse-term o
-                                                                                    c)))))
-                    (iter (rest-terms remaining)
-                          (adjoin-term new-t done)))))))))
-  (let* ((top-var (car parent-priority-list))
-         (var (variable poly))
-         (tl (terms poly))
-         (child-descendants (make-variable-priority-list poly))
-         (diff (priority-diff top-var var parent-priority-list)))
-    (cond ((= 0 diff)
-           ;; if poly and top-var are the same, then keep terms how they are
-           ;; except for terms that have poly coeffs, which need to be checked
-           (make-poly top-var (check-terms tl)))
-          ((< 0 diff)
-           (let ((reorganized-terms (check-terms tl)))
-             (pad-poly-if-needed (make-poly var reorganized-terms)
-                                 parent-priority-list)))
-          ;; if var is 1 step of priority below in the list than top-var, then
-          ;; swap its terms with top-var terms
-          ((= 1 diff)
-           (pad-poly-if-needed (invert-this-poly poly top-var)
-                               parent-priority-list))
-          ;; if var is >1 steps of priority below top-var, and top-var is known
-          ;; to be in the child's children, then reorganize the child poly's
-          ;; terms and try again
-          ((< 1 diff)
-           (if (member top-var child-descendants)
-               (let ((reorganized-terms (check-terms tl)))
-                 (reorganize-poly-if-needed (make-poly var reorganized-terms)
-                                            parent-priority-list))
-               (error "expected child poly not found? : REORGANIZE-POLY-IF-NEEDED :"
-                      parent-priority-list child-descendants)))
-          (else "what the SCALLOP" child-descendants diff))))
+  (define (promote p target-var)
+    (define (p-rec term-list)
+      (map-terms (lambda(t)
+                   ())
+                 term-list)))
+    ;; descend into children until findng desired var, then ascend
+    ;; to bring it back to the parent while rearranging as needed
+    (receive (cool uncool)
+        (partition (lambda(t)
+                     (let ((c (coeff t)))
+                     (and (pair? c)
+                          (equal? 'polynomial (type-tag c))
+                          (same-variable? target-var
+                                          (variable (contents c))))))
+                   (let ((tl (terms p)))
+                     (if (sparse-termlist? tl)
+                         tl
+                         (dense-to-sparse tl))))
+      (cond ((poly-has-no-children? p) p) ;;dead end
+            ((null? cool) ;; var is below but not here yet, keep bubbling
+             )
+            (else (make-poly target-var
+                             (let rec ((tl cool))
+                               (if (empty-termlist? tl)
+                                   (the-empty-termlist)
+                                   (let* ((t (first-term tl))
+                                          (o (order t))
+                                          (c (coeff c))
+                                          (child-poly (contents c)))
+                                     (merge-termlists (invert-nested-poly-terms (variable p) o
+                                                                                (terms child-poly))
+                                                      (rec (rest-terms tl))))))))))
+  (let rec ((p poly)
+            (pri parent-priority-list))
+    (if (null? pri)
+        p ;; give up
+        (let* ((top-var (car pri))
+               (var (variable p))
+               (tl (terms p))
+               (child-descendants (make-variable-priority-list p))
+               (diff (priority-diff top-var var parent-priority-list)))
+          (cond ((equal? child-descendants parent-priority-list)
+                 p) ;; sort done
+                ((not (member top-var child-descendants))
+                 ;; we need to pad for this var
+                 (make-poly top-var (tag (rec p (cdr pri)))))
+                ((= 0 diff)
+                 ('todo)))))))
+;(define (check-terms term-list)
+;  (let iter ((remaining term-list)
+;             (done (the-empty-termlist)))
+;    (if (empty-termlist? remaining)
+;        done
+;        (let* ((t (first-term remaining))
+;               (c (coeff t))
+;               (o (order t))
+;               (new-t (make-sparse-term o
+;                                        (if (is-poly? c)
+;                                            (tag (reorganize-poly-if-needed (contents c) parent-priority-list))
+;                                            c))))
+;          (iter (rest-terms remaining)
+;                (adjoin-term new-t done))))))
+;(define (invert-this-poly poly new-var)
+;  (let ((var (variable poly))
+;        (term-list (terms poly)))
+;    (let iter ((remaining term-list)
+;               (done (the-empty-termlist)))
+;      (if (empty-termlist? remaining)
+;          (make-poly new-var done)
+;          (let* ((t (first-term remaining))
+;                 (o (order t))
+;                 (c (coeff t)))
+;            (if (is-poly? c)
+;                (let ((child-var (variable (contents c)))
+;                      (child-terms (terms (contents c))))
+;                  (cond ((> o 0) ;; if order is not 0, an inverted poly is needed
+;                         (iter (rest-terms remaining)
+;                               (merge-termlists done (invert-nested-poly-terms new-var o child-terms))))
+;                        ((same-variable? var child-var)
+;                         (error "This shouldn't happen : INVERT-THIS-POLY :" remaining done))
+;                                      ;(iter (merge-termlists child-terms (rest-terms remaining))
+;                                      ;      done))
+;                        ((same-variable? new-var child-var)
+;                         (iter (rest-terms remaining)
+;                               (merge-termlists done (check-terms child-terms))))
+;                        (else (error "WHAT TO HECK : INVERT-THIS-POLY :" remaining done))))
+;                (let ((new-t (make-sparse-term 0
+;                                               (make-polynomial var
+;                                                                (make-sparse-term o
+;                                                                                  c)))))
+;                  (iter (rest-terms remaining)
+;                        (adjoin-term new-t done)))))))))
+;(let* ((top-var (car parent-priority-list))
+;       (var (variable poly))
+;       (tl (terms poly))
+;       (child-descendants (make-variable-priority-list poly))
+;       (diff (priority-diff top-var var parent-priority-list)))
+;  (cond ((= 0 diff)
+;         ;; if poly and top-var are the same, then keep terms how they are
+;         ;; except for terms that have poly coeffs, which need to be checked
+;         (make-poly top-var (check-terms tl)))
+;        ((< 0 diff)
+;         (let ((reorganized-terms (check-terms tl)))
+;           (pad-poly-if-needed (make-poly var reorganized-terms)
+;                               parent-priority-list)))
+;        ;; if var is 1 step of priority below in the list than top-var, then
+;        ;; swap its terms with top-var terms
+;        ((= 1 diff)
+;         (pad-poly-if-needed (invert-this-poly poly top-var)
+;                             parent-priority-list))
+;        ;; if var is >1 steps of priority below top-var, and top-var is known
+;        ;; to be in the child's children, then reorganize the child poly's
+;        ;; terms and try again
+;        ((< 1 diff)
+;         (if (member top-var child-descendants)
+;             (let ((reorganized-terms (check-terms tl)))
+;               (reorganize-poly-if-needed (make-poly var reorganized-terms)
+;                                          parent-priority-list))
+;             (error "expected child poly not found? : REORGANIZE-POLY-IF-NEEDED :"
+;                    parent-priority-list child-descendants)))
+;        (else "what the SCALLOP" child-descendants diff))))
 (define (operate-on-polys f p1 p2)
   ;; f is a function to operate on term-lists
   (cond ((same-variable? (variable p1) (variable p2))
@@ -19585,3 +19661,24 @@ In the process of reorganizing polynomials, I'll make a hash table, and find the
                 (make-polynomial 'y p1))
            'unknown)
 #+END_SRC
+
+** Exercise 2.93: extending ~make-rational~ for rational functions
+:PROPERTIES:
+:ID:       ac394e5f-9b65-4a8e-b1f5-0a65df778f94
+:END:
+
+*** Question 1
+
+Modify the rational-arithmetic
+package to use generic operations, but change src_scheme{make-rat} so that it does
+not attempt to reduce fractions to lowest terms.  Test your system by calling
+src_scheme{make-rational} on two polynomials to produce a rational function:
+
+#+BEGIN_SRC scheme
+(define p1 (make-polynomial 'x '((2 1) (0 1))))
+(define p2 (make-polynomial 'x '((3 1) (0 1))))
+(define rf (make-rational p2 p1))
+#+END_SRC
+
+Now add src_scheme{rf} to itself, using src_scheme{add}. You will observe that this
+addition procedure does not reduce fractions to lowest terms.
