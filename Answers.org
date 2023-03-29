@@ -1,6 +1,6 @@
 # -*- org-publish-project-alist: (("SICP-Answers" :base-directory "~/SICP-group" :publishing-directory "~/SICP-group/texpub" :publishing-function org-latex-export-to-pdf :makeindex t)); -*-
 # enable TOC:
-#+OPTIONS: toc:t stat:t prop:t num:20 makeindex:t
+#+OPTIONS: toc:t num:20 makeindex:t
 #+HUGO_BASE_DIR: docs/
 
 # Don't export sections tagged "noexport"
@@ -35,10 +35,10 @@
 #+LATEX_HEADER: \usepackage{calligra}
 #+LATEX_HEADER: \usepackage{lmodern}
 #+LATEX_HEADER: \usepackage[T1]{fontenc}
-#+LATEX_HEADER: \setmonofont[Mapping=tex-text,Ligatures=TeX,Scale=MatchLowercase]{FiraMono-Regular}
+#+LATEX_HEADER: \setmonofont[Mapping=tex-text,Ligatures=TeX,Scale=MatchLowercase]{FiraMono-Regular-sup-lgr}
 
 # SOURCE CODE HIGHLIGHTING
-#+LATEX_HEADER: \usepackage[cache=true]{minted}
+#+LATEX_HEADER: \usepackage[cache=false]{minted}
 #+LATEX_HEADER: \usemintedstyle{colorful}
 #+LATEX_HEADER: \setminted{fontsize=\small}
 # FIXME: keep minted inline code from being automatically wrapped
@@ -70,6 +70,7 @@
 * HOW THIS DOCUMENT IS MADE :UNNUMBERED:noexport:
 :PROPERTIES:
 :ID:       7e00b0e8-2ca8-4d84-984b-ba91a0853599
+:CUSTOM-ID: 7e00b0e8-2ca8-4d84-984b-ba91a0853599
 :END:
 
 **TODO**
@@ -91,6 +92,7 @@
 *** Also consider:
 :PROPERTIES:
 :ID:       5f14502c-30a6-4ac2-8083-750c7d8622ff
+:CUSTOM-ID: 5f14502c-30a6-4ac2-8083-750c7d8622ff
 :END:
 
 - ~:results output~ for what the code prints
@@ -101,6 +103,7 @@
 *** Reduce image size
 :PROPERTIES:
 :ID:       87653754-6e21-4de9-b1f2-e1c3f92d54d6
+:CUSTOM-ID: 87653754-6e21-4de9-b1f2-e1c3f92d54d6
 :END:
 
 #+BEGIN_SRC org
@@ -110,6 +113,7 @@
 *** Convert .svg's to .pngs
 :PROPERTIES:
 :ID:       4b90eb89-8c35-4e6a-b16a-b428010c82f7
+:CUSTOM-ID: 4b90eb89-8c35-4e6a-b16a-b428010c82f7
 :END:
 
 #+BEGIN_SRC shell
@@ -119,11 +123,13 @@ fd . -e svg -tf -E old --exec magick '{}' '{.}'.png
 ** Helpers for org-mode tables
 :PROPERTIES:
 :ID:       dbf5bc39-d0b9-4e3f-a185-8c57142c6180
+:CUSTOM-ID: dbf5bc39-d0b9-4e3f-a185-8c57142c6180
 :END:
 
 *** ~try-these~
 :PROPERTIES:
 :ID:       46134082-020a-4a27-a76f-ab86b9a1f4c0
+:CUSTOM-ID: 46134082-020a-4a27-a76f-ab86b9a1f4c0
 :END:
 
 Takes function src_scheme{f} and list src_scheme{testvals} and applies src_scheme{f} to each item src_scheme{i}. For
@@ -148,6 +154,7 @@ column for input and a column for output.
 *** ~transpose-list~
 :PROPERTIES:
 :ID:       d53be6a4-0023-4c14-8f66-f35a45d1541f
+:CUSTOM-ID: d53be6a4-0023-4c14-8f66-f35a45d1541f
 :END:
 
 "Rotate" a list, for example from src_scheme{'(1 2 3)} to
@@ -161,6 +168,7 @@ src_scheme{'('(1) '(2) '(3))}
 *** ~print-as-rows~
 :PROPERTIES:
 :ID:       74c7dd23-52a1-4fa8-861f-241be493b2fb
+:CUSTOM-ID: 74c7dd23-52a1-4fa8-861f-241be493b2fb
 :END:
 
 For manually printing items in rows to stdout. Can be helpful for gnuplot.
@@ -193,6 +201,7 @@ For manually printing items in rows to stdout. Can be helpful for gnuplot.
 *** ~print-table~
 :PROPERTIES:
 :ID:       6a4a14f2-9b16-4d28-8f49-4fd895510374
+:CUSTOM-ID: 6a4a14f2-9b16-4d28-8f49-4fd895510374
 :END:
 
 Print ~args~ as a table separated by pipes. Optionally print spacer for
@@ -255,6 +264,7 @@ colnames.
 *** ~print-table~ (spaces only)
 :PROPERTIES:
 :ID:       1d6d1d05-b520-4432-8c6b-23fa5e2d834b
+:CUSTOM-ID: 1d6d1d05-b520-4432-8c6b-23fa5e2d834b
 :END:
 
 TODO: Merge these together.
@@ -312,11 +322,13 @@ TODO: Merge these together.
 * Introduction Notes
 :PROPERTIES:
 :ID:       5b3d6f68-7dc5-4e82-841a-922a8194cc64
+:CUSTOM-ID: 5b3d6f68-7dc5-4e82-841a-922a8194cc64
 :END:
 
 ** Text Foreword
 :PROPERTIES:
 :ID:       d7236225-fdc2-4c14-b8cb-773b8d759564
+:CUSTOM-ID: d7236225-fdc2-4c14-b8cb-773b8d759564
 :END:
 
 This book centers on three areas: the human mind, collections of computer
@@ -333,6 +345,7 @@ upon to support larger structures.
 ** Preface, 1e
 :PROPERTIES:
 :ID:       0581ae6a-a955-4b91-838f-b133d8fc9da4
+:CUSTOM-ID: 0581ae6a-a955-4b91-838f-b133d8fc9da4
 :END:
 #+INDEX: procedural epistemology
 #+INDEX: declarative knowledge
@@ -362,6 +375,7 @@ can be called /procedural epistemology/.
 **** Techniques for controlling complexity
 :PROPERTIES:
 :ID:       ed479e27-c80b-4959-89d9-1587b7966343
+:CUSTOM-ID: ed479e27-c80b-4959-89d9-1587b7966343
 :END:
 
 - Black-box abstraction :: Encapsulating an operation so the details of it are
@@ -402,6 +416,7 @@ can be called /procedural epistemology/.
 * Chapter 1: Building Abstractions with Procedures
 :PROPERTIES:
 :ID:       fe3416c7-b95f-41d2-afe3-62c897a454a1
+:CUSTOM-ID: fe3416c7-b95f-41d2-afe3-62c897a454a1
 :END:
 
 *Computational processes* are abstract 'beings' that inhabit computers. Their
@@ -422,6 +437,7 @@ allowing processes to be represented and manipulated as data.
 ** 1.1: The Elements of Programming
 :PROPERTIES:
 :ID:       d38a95d1-239f-4a7b-9aae-0ea369f5db2a
+:CUSTOM-ID: d38a95d1-239f-4a7b-9aae-0ea369f5db2a
 :END:
 
 A programming language isn't just a way to instruct a computer -- it's also a
@@ -457,6 +473,7 @@ take the following code:
 ** 1.1.1: Expressions
 :PROPERTIES:
 :ID:       c0cc921c-fbb2-4a63-a1cc-7c1e477d1e4a
+:CUSTOM-ID: c0cc921c-fbb2-4a63-a1cc-7c1e477d1e4a
 :END:
 
 The general form of Lisp is evaluating *combinations*, denoted by parenthesis,
@@ -472,6 +489,7 @@ provides several advantages.
 ** 1.1.3: Evaluating Combinations
 :PROPERTIES:
 :ID:       dca55c54-5052-4cfe-b20c-e8cfd379c265
+:CUSTOM-ID: dca55c54-5052-4cfe-b20c-e8cfd379c265
 :END:
 
 The evaluator can evaluate nested expressions recursively. *Tree accumulation*
@@ -518,6 +536,7 @@ graph BT;
 ** 1.1.4: Compound Procedures
 :PROPERTIES:
 :ID:       c5a92594-c625-44d2-a8d0-4b7bf869d862
+:CUSTOM-ID: c5a92594-c625-44d2-a8d0-4b7bf869d862
 :END:
 
 We have identified the following in Lisp:
@@ -542,6 +561,7 @@ procedures.
 ** 1.1.5: The Substitution Model for Procedure Application
 :PROPERTIES:
 :ID:       9f525cef-c10f-4cc0-9476-f94c6b5ff33e
+:CUSTOM-ID: 9f525cef-c10f-4cc0-9476-f94c6b5ff33e
 :END:
 
 To understand how the interpreter works, imagine it substituting the procedure
@@ -609,6 +629,7 @@ they're needed by a procedure, which is called lazy evaluation.)
 ** 1.1.6: Conditional Expressions and Predicates
 :PROPERTIES:
 :ID:       af3e45b2-e9d8-4c7e-a068-40042f06fb2e
+:CUSTOM-ID: af3e45b2-e9d8-4c7e-a068-40042f06fb2e
 :END:
 
 An important aspect of programming is testing and branching depending on the
@@ -662,11 +683,13 @@ src_scheme{if} expression ineffective.
 ** Exercise 1.1: Trying expressions
 :PROPERTIES:
 :ID:       dca4ba2c-8ceb-4c65-b8e2-48cc8c9effc8
+:CUSTOM-ID: dca4ba2c-8ceb-4c65-b8e2-48cc8c9effc8
 :END:
 
 *** Question
 :PROPERTIES:
 :ID:       135d49f1-3996-4743-a52b-06a022cbd24f
+:CUSTOM-ID: 135d49f1-3996-4743-a52b-06a022cbd24f
 :END:
 Below is a sequence of expressions. What is the result printed by the
 interpreter in response to each expression? Assume that the sequence is to be
@@ -676,6 +699,7 @@ evaluated in the order in which it is presented.
 *** Answer
 :PROPERTIES:
 :ID:       785eed0d-3e37-4972-8108-12dee80e2c8b
+:CUSTOM-ID: 785eed0d-3e37-4972-8108-12dee80e2c8b
 :END:
 
 #+BEGIN_SRC scheme -n :results none
@@ -704,11 +728,13 @@ evaluated in the order in which it is presented.
 ** Exercise 1.2: Prefix form
 :PROPERTIES:
 :ID:       55f52651-703d-4639-a819-80bd992ecd78
+:CUSTOM-ID: 55f52651-703d-4639-a819-80bd992ecd78
 :END:
 
 *** Question
 :PROPERTIES:
 :ID:       b0c2c693-6ddd-40ea-8497-453f4a82d755
+:CUSTOM-ID: b0c2c693-6ddd-40ea-8497-453f4a82d755
 :END:
 
 Translate the following expression into prefix form:
@@ -721,6 +747,7 @@ Translate the following expression into prefix form:
 *** Answer
 :PROPERTIES:
 :ID:       928b573d-0aab-46ac-a546-9c7111a6be41
+:CUSTOM-ID: 928b573d-0aab-46ac-a546-9c7111a6be41
 :END:
 
 #+NAME: EX1-2
@@ -739,11 +766,13 @@ Translate the following expression into prefix form:
 ** Exercise 1.3: Conditionals
 :PROPERTIES:
 :ID:       c90a49f5-d2bc-474b-a304-f6d95a9c3212
+:CUSTOM-ID: c90a49f5-d2bc-474b-a304-f6d95a9c3212
 :END:
 
 *** Question
 :PROPERTIES:
 :ID:       ee939cbc-44e8-443e-951b-3059f70cb7f7
+:CUSTOM-ID: ee939cbc-44e8-443e-951b-3059f70cb7f7
 :END:
 
 Define a procedure that takes three numbers as arguments and
@@ -752,6 +781,7 @@ returns the sum of the squares of the two larger numbers.
 *** Answer
 :PROPERTIES:
 :ID:       86e3bc6c-6fbd-475e-8ba9-47833c38b27d
+:CUSTOM-ID: 86e3bc6c-6fbd-475e-8ba9-47833c38b27d
 :END:
 
 #+NAME: EX1-3
@@ -782,11 +812,13 @@ returns the sum of the squares of the two larger numbers.
 ** Exercise 1.4: Compound expressions
 :PROPERTIES:
 :ID:       1e9dc01f-759b-4522-be54-be32e408da8b
+:CUSTOM-ID: 1e9dc01f-759b-4522-be54-be32e408da8b
 :END:
 
 *** Question
 :PROPERTIES:
 :ID:       6ba4dc16-42e6-4080-b95a-08d526a82c96
+:CUSTOM-ID: 6ba4dc16-42e6-4080-b95a-08d526a82c96
 :END:
 
 Observe that our model of evaluation allows for combinations whose operators are
@@ -802,6 +834,7 @@ following procedure:
 *** Answer
 :PROPERTIES:
 :ID:       97f32793-fbf2-4443-a2d9-47ab5efef06c
+:CUSTOM-ID: 97f32793-fbf2-4443-a2d9-47ab5efef06c
 :END:
 
 This code accepts the variables src_scheme{a} and src_scheme{b}, and if
@@ -820,11 +853,13 @@ else: a - b
 ** Exercise 1.5: Applicative vs normal-order evaluation
 :PROPERTIES:
 :ID:       ef89d2ff-0e45-4660-8fe8-269c3fff0e96
+:CUSTOM-ID: ef89d2ff-0e45-4660-8fe8-269c3fff0e96
 :END:
 
 *** Question
 :PROPERTIES:
 :ID:       819c1a91-f83b-4053-88e5-78ab625cdcc0
+:CUSTOM-ID: 819c1a91-f83b-4053-88e5-78ab625cdcc0
 :END:
 
 Ben Bitdiddle has invented a test to determine whether the interpreter he is
@@ -857,6 +892,7 @@ expression.)
 *** Answer
 :PROPERTIES:
 :ID:       72b34184-067b-430e-ab31-825180d74688
+:CUSTOM-ID: 72b34184-067b-430e-ab31-825180d74688
 :END:
 
 In either type of language, src_scheme{(define (p) (p))} is an infinite loop.
@@ -868,6 +904,7 @@ infinite loop.
 ** 1.1.7: Example: Square Roots by Newton's Method
 :PROPERTIES:
 :ID:       f3a31fde-4354-4081-a760-94b87d1d41aa
+:CUSTOM-ID: f3a31fde-4354-4081-a760-94b87d1d41aa
 :END:
 
 Functions in the formal mathematical sense are *declarative knowledge*, while
@@ -880,6 +917,7 @@ introduced any looping constructs like ~FOR~ loops.
 ** 1.1.8: Procedures as Black-Box Abstractions
 :PROPERTIES:
 :ID:       4dfd094a-1fb5-4055-b3f6-8d225441e319
+:CUSTOM-ID: 4dfd094a-1fb5-4055-b3f6-8d225441e319
 :END:
 
 Notice how the src_scheme{sqrt} procedure is divided into other procedures,
@@ -903,11 +941,13 @@ Suppressing these details are particularly helpful:
 ** Exercise 1.6: Special form evaluation
 :PROPERTIES:
 :ID:       8b07ccff-3309-4b6b-8520-f035fa4432dd
+:CUSTOM-ID: 8b07ccff-3309-4b6b-8520-f035fa4432dd
 :END:
 
 *** Text code
 :PROPERTIES:
 :ID:       b5f0b37c-be66-419e-8aa9-caf3cbdeb95a
+:CUSTOM-ID: b5f0b37c-be66-419e-8aa9-caf3cbdeb95a
 :END:
 #+NAME: abs
 #+BEGIN_SRC scheme -n :eval no-export :results silent
@@ -944,6 +984,7 @@ Suppressing these details are particularly helpful:
 *** Question
 :PROPERTIES:
 :ID:       27358532-0098-4ded-a4d7-7b99caa3583c
+:CUSTOM-ID: 27358532-0098-4ded-a4d7-7b99caa3583c
 :END:
 
 Alyssa P. Hacker doesn't see why src_scheme{if} needs to be provided as a
@@ -983,6 +1024,7 @@ What happens when Alyssa attempts to use this to compute square roots? Explain.
 *** Answer
 :PROPERTIES:
 :ID:       2c44ee8d-f83f-4661-acfb-fe4aefdf131e
+:CUSTOM-ID: 2c44ee8d-f83f-4661-acfb-fe4aefdf131e
 :END:
 
 Using Alyssa's src_scheme{new-if} leads to an infinite loop because the
@@ -994,11 +1036,13 @@ chosen leaves the other branches unevaluated.
 ** Exercise 1.7: ~sqrt~ with small and large numbers
 :PROPERTIES:
 :ID:       c4373841-8cfd-4076-86ea-13573c4dd3a6
+:CUSTOM-ID: c4373841-8cfd-4076-86ea-13573c4dd3a6
 :END:
 
 *** Text
 :PROPERTIES:
 :ID:       6e332fab-d501-42c7-84bc-890691a874f3
+:CUSTOM-ID: 6e332fab-d501-42c7-84bc-890691a874f3
 :END:
 
 #+NAME: mean-square
@@ -1010,6 +1054,7 @@ chosen leaves the other branches unevaluated.
 *** Question
 :PROPERTIES:
 :ID:       9d4e65f6-d90c-4537-afda-e353aa7c12ef
+:CUSTOM-ID: 9d4e65f6-d90c-4537-afda-e353aa7c12ef
 :END:
 
 The src_scheme{good-enough?} test used in computing square roots will not be
@@ -1026,11 +1071,13 @@ large numbers?
 *** Diary
 :PROPERTIES:
 :ID:       f30865d0-5173-4023-b351-d0d717176095
+:CUSTOM-ID: f30865d0-5173-4023-b351-d0d717176095
 :END:
 
 **** Solving
 :PROPERTIES:
 :ID:       da63b98b-b46c-489f-819d-2968f9bc9b73
+:CUSTOM-ID: da63b98b-b46c-489f-819d-2968f9bc9b73
 :END:
 
 My original answer was this, which compares the previous iteration until the new
@@ -1096,11 +1143,13 @@ reaches the precision limit of the system:
 **** Imroving ~sqrt~ by avoiding extra ~improve~ call
 :PROPERTIES:
 :ID:       f1a65fe8-2916-47bf-89be-c75ee52e1396
+:CUSTOM-ID: f1a65fe8-2916-47bf-89be-c75ee52e1396
 :END:
 
 ***** Non-optimized
 :PROPERTIES:
 :ID:       44e1b894-10f0-43b0-b64c-973a6bcfc97f
+:CUSTOM-ID: 44e1b894-10f0-43b0-b64c-973a6bcfc97f
 :END:
 
 #+BEGIN_SRC scheme -n :eval no-export :tangle 1/sqrt-bench.scheme :exports both :results output
@@ -1127,6 +1176,7 @@ reaches the precision limit of the system:
 ***** Optimized
 :PROPERTIES:
 :ID:       751f42a4-9c27-4818-b937-5962aaee583f
+:CUSTOM-ID: 751f42a4-9c27-4818-b937-5962aaee583f
 :END:
 
 #+BEGIN_SRC scheme -n :noeval :tangle 1/sqrt-bench2.scheme :exports both :results output
@@ -1153,6 +1203,7 @@ reaches the precision limit of the system:
 ***** Benchmark results
 :PROPERTIES:
 :ID:       c434d4dd-1028-4700-9e8b-5eeeaa1af075
+:CUSTOM-ID: c434d4dd-1028-4700-9e8b-5eeeaa1af075
 :END:
 
 | Unoptimized | 4731.30 |
@@ -1161,6 +1212,7 @@ reaches the precision limit of the system:
 *** Answer
 :PROPERTIES:
 :ID:       202b4dfb-6578-4789-8dbf-b3546e92d8d4
+:CUSTOM-ID: 202b4dfb-6578-4789-8dbf-b3546e92d8d4
 :END:
 
 The current method has decreasing accuracy with smaller numbers. Notice the
@@ -1231,11 +1283,13 @@ So, my definition of src_scheme{sqrt}:
 ** Exercise 1.8: Cube roots
 :PROPERTIES:
 :ID:       cce3647f-9b12-46b7-a3e6-6ec0b2270926
+:CUSTOM-ID: cce3647f-9b12-46b7-a3e6-6ec0b2270926
 :END:
 
 *** Question
 :PROPERTIES:
 :ID:       be02c000-aed9-4970-bc59-e83a7ae76954
+:CUSTOM-ID: be02c000-aed9-4970-bc59-e83a7ae76954
 :END:
 
 Newton's method for cube roots is based on the fact that if \(y\) is an
@@ -1254,6 +1308,7 @@ square-root and cube-root procedures.)
 *** Diary
 :PROPERTIES:
 :ID:       fbaf843c-8346-4874-aa17-4df1034b90d3
+:CUSTOM-ID: fbaf843c-8346-4874-aa17-4df1034b90d3
 :END:
 
 My first attempt works, but needs an arbitrary limit to stop infinite loops:
@@ -1299,6 +1354,7 @@ let's do 1.1 instead.
 *** Answer
 :PROPERTIES:
 :ID:       eb13ebca-b39b-4bc9-ba08-9aff7c409bf3
+:CUSTOM-ID: eb13ebca-b39b-4bc9-ba08-9aff7c409bf3
 :END:
 
 #+NAME: cbrt
@@ -1339,6 +1395,7 @@ let's do 1.1 instead.
 ** 1.2: Procedures and the Processes They Generate
 :PROPERTIES:
 :ID:       2cc79564-8fc0-4812-a36d-f40f1b832e5e
+:CUSTOM-ID: 2cc79564-8fc0-4812-a36d-f40f1b832e5e
 :END:
 
 Procedures define the *local evolution* of processes. We would like to be able
@@ -1347,6 +1404,7 @@ to make statements about the *global* behavior of a process.
 ** 1.2.1: Linear Recursion and Iteration
 :PROPERTIES:
 :ID:       403491c2-9bea-494a-9bdc-404d686ce7c5
+:CUSTOM-ID: 403491c2-9bea-494a-9bdc-404d686ce7c5
 :END:
 
 Consider these two procedures for obtaining factorials:
@@ -1397,11 +1455,13 @@ procedure is recursive, are *tail-recursive*.
 ** Exercise 1.9: Peano counting and recursion
 :PROPERTIES:
 :ID:       7bb613b7-a623-42ff-976c-8eff787e6715
+:CUSTOM-ID: 7bb613b7-a623-42ff-976c-8eff787e6715
 :END:
 
 *** Question
 :PROPERTIES:
 :ID:       ca839677-0e8b-4473-8561-e207eab0d5f5
+:CUSTOM-ID: ca839677-0e8b-4473-8561-e207eab0d5f5
 :END:
 
 Each of the following two procedures defines a method for adding two positive
@@ -1426,6 +1486,7 @@ in evaluating src_scheme{(+ 4 5)}. Are these processes iterative or recursive?
 *** Answer
 :PROPERTIES:
 :ID:       c3f9d60e-bdcd-41c2-ab4f-6ca83f0febfb
+:CUSTOM-ID: c3f9d60e-bdcd-41c2-ab4f-6ca83f0febfb
 :END:
 
 The first procedure is recursive, while the second is iterative though
@@ -1434,6 +1495,7 @@ tail-recursion.
 **** recursive procedure
 :PROPERTIES:
 :ID:       27210485-cc31-40d1-a1cc-3c40f2ef6136
+:CUSTOM-ID: 27210485-cc31-40d1-a1cc-3c40f2ef6136
 :END:
 
 #+BEGIN_SRC scheme -n :noeval 
@@ -1452,6 +1514,7 @@ tail-recursion.
 **** iterative procedure
 :PROPERTIES:
 :ID:       2246a200-6a61-41f5-803f-480bb8b0cb9c
+:CUSTOM-ID: 2246a200-6a61-41f5-803f-480bb8b0cb9c
 :END:
 
 #+BEGIN_SRC scheme -n :noeval 
@@ -1466,11 +1529,13 @@ tail-recursion.
 ** Exercise 1.10: Ackermann's Function
 :PROPERTIES:
 :ID:       af2058ad-5dbe-413e-9d4e-a249d2b38144
+:CUSTOM-ID: af2058ad-5dbe-413e-9d4e-a249d2b38144
 :END:
 
 *** Question
 :PROPERTIES:
 :ID:       1b9d1110-1af6-4b61-9163-b022c50d0c62
+:CUSTOM-ID: 1b9d1110-1af6-4b61-9163-b022c50d0c62
 :END:
 
 The following procedure computes a mathematical function called Ackermann's
@@ -1522,11 +1587,13 @@ values of \(n\). For example, src_scheme{(k n)} computes \(5n^2\).
 *** Answer
 :PROPERTIES:
 :ID:       cd179b56-55a7-4736-a088-33fa0e69e82b
+:CUSTOM-ID: cd179b56-55a7-4736-a088-33fa0e69e82b
 :END:
 
 **** ~f~
 :PROPERTIES:
 :ID:       e0e7550f-5456-4f85-9864-a7597599193b
+:CUSTOM-ID: e0e7550f-5456-4f85-9864-a7597599193b
 :END:
 
 #+BEGIN_SRC scheme -n :eval no-export  :exports both :results value table
@@ -1552,6 +1619,7 @@ f(n)=2n
 **** ~g~
 :PROPERTIES:
 :ID:       a780ab66-bc4a-4202-a82c-f8e1e8c03fe3
+:CUSTOM-ID: a780ab66-bc4a-4202-a82c-f8e1e8c03fe3
 :END:
 
 #+BEGIN_SRC scheme -n :eval no-export  :exports both :results value table
@@ -1579,6 +1647,7 @@ g(n)=2^n
 **** ~h~
 :PROPERTIES:
 :ID:       6ff1602a-22c8-44c4-8fd1-2356f20b2139
+:CUSTOM-ID: 6ff1602a-22c8-44c4-8fd1-2356f20b2139
 :END:
 
 #+BEGIN_SRC scheme -n :eval no-export  :exports both :results value table
@@ -1610,6 +1679,7 @@ h(n)={}^{n}2
 ** 1.2.2: Tree Recursion
 :PROPERTIES:
 :ID:       be51794e-b3a2-46aa-ae80-dce13c7ab463
+:CUSTOM-ID: be51794e-b3a2-46aa-ae80-dce13c7ab463
 :END:
 
 Consider a recursive procedure for computing Fibonacci numbers:
@@ -1647,6 +1717,7 @@ variables.
 *** Example: Counting change
 :PROPERTIES:
 :ID:       3648fbfb-8c63-41f0-8270-dac38494344d
+:CUSTOM-ID: 3648fbfb-8c63-41f0-8270-dac38494344d
 :END:
 
 I should come back and try to make the "better algorithm" suggested.
@@ -1654,11 +1725,13 @@ I should come back and try to make the "better algorithm" suggested.
 ** Exercise 1.11: More recursion vs iteration
 :PROPERTIES:
 :ID:       5c14394e-0ea2-4493-8022-4aab7d08eca6
+:CUSTOM-ID: 5c14394e-0ea2-4493-8022-4aab7d08eca6
 :END:
 
 *** Question
 :PROPERTIES:
 :ID:       ea7ae35a-d493-460b-ad6b-85adf126de61
+:CUSTOM-ID: ea7ae35a-d493-460b-ad6b-85adf126de61
 :END:
 
 A function \(f\) is defined by the rule that:
@@ -1678,11 +1751,13 @@ procedure that computes \(f\) by means of an iterative process.
 *** Answer
 :PROPERTIES:
 :ID:       3856f3ba-fb92-4b5a-b473-ae5f77dee9a8
+:CUSTOM-ID: 3856f3ba-fb92-4b5a-b473-ae5f77dee9a8
 :END:
 
 **** Recursive
 :PROPERTIES:
 :ID:       45307adf-a628-466f-8df4-9d3c4c393a4c
+:CUSTOM-ID: 45307adf-a628-466f-8df4-9d3c4c393a4c
 :END:
 #+NAME: EX1-11-fr
 #+BEGIN_SRC scheme -n :eval no-export  :exports code :results silent
@@ -1711,11 +1786,13 @@ procedure that computes \(f\) by means of an iterative process.
 **** Iterative
 :PROPERTIES:
 :ID:       f7c306c6-9592-4083-98a6-8558ea7b3d1c
+:CUSTOM-ID: f7c306c6-9592-4083-98a6-8558ea7b3d1c
 :END:
 
 ***** Attempt 1
 :PROPERTIES:
 :ID:       ffe5bb01-bd41-4857-9e1d-48ffa444e353
+:CUSTOM-ID: ffe5bb01-bd41-4857-9e1d-48ffa444e353
 :END:
 
 #+NAME: EX1-11-fi
@@ -1758,6 +1835,7 @@ It works but it seems wasteful.
 ***** Attempt 2
 :PROPERTIES:
 :ID:       5ba7b6ff-175e-4658-8878-b6d0fd1bf836
+:CUSTOM-ID: 5ba7b6ff-175e-4658-8878-b6d0fd1bf836
 :END:
 
 #+NAME: EX1-11-fi2
@@ -1798,11 +1876,13 @@ I like that better.
 ** Exercise 1.12: Pascal's Triangle
 :PROPERTIES:
 :ID:       4f9bba42-afcc-49ba-b8e7-27b3252bf624
+:CUSTOM-ID: 4f9bba42-afcc-49ba-b8e7-27b3252bf624
 :END:
 
 *** Question
 :PROPERTIES:
 :ID:       d2603acf-c8a3-42c9-89a1-84d27863f691
+:CUSTOM-ID: d2603acf-c8a3-42c9-89a1-84d27863f691
 :END:
 
 The following pattern of numbers is called Pascal's triangle.
@@ -1823,6 +1903,7 @@ computes elements of Pascal's triangle by means of a recursive process.
 *** Answer
 :PROPERTIES:
 :ID:       c0e2770f-ab64-4e99-b61b-731f6ec7aab6
+:CUSTOM-ID: c0e2770f-ab64-4e99-b61b-731f6ec7aab6
 :END:
 
 I guess I'll rotate the triangle 45 degrees to make it the corner of an
@@ -1870,11 +1951,13 @@ The test code was much harder to write than the actual solution.
 ** Exercise 1.13: Proving Fibonacci approximation :optional:
 :PROPERTIES:
 :ID:       26d1bc65-18ae-442f-b2af-43d42ca7dd45
+:CUSTOM-ID: 26d1bc65-18ae-442f-b2af-43d42ca7dd45
 :END:
 
 *** Question
 :PROPERTIES:
 :ID:       b9ffa2a8-2527-47e4-b08b-6fae0106eeeb
+:CUSTOM-ID: b9ffa2a8-2527-47e4-b08b-6fae0106eeeb
 :END:
 
 Prove that \(\text{Fib}(n)\) is the closest integer to
@@ -1889,6 +1972,7 @@ Fibonacci numbers to prove that
 *** Answer
 :PROPERTIES:
 :ID:       60ba8877-b1b5-4aea-8913-e46ccdf76e64
+:CUSTOM-ID: 60ba8877-b1b5-4aea-8913-e46ccdf76e64
 :END:
 
 I don't know how to write a proof yet, but I can make functions to
@@ -1897,6 +1981,7 @@ demonstrate it.
 **** Fibonacci number generator
 :PROPERTIES:
 :ID:       0a00f599-21ef-4f95-b6ea-c1f4e857556d
+:CUSTOM-ID: 0a00f599-21ef-4f95-b6ea-c1f4e857556d
 :END:
 
 #+NAME: fib-iter
@@ -1916,6 +2001,7 @@ demonstrate it.
 **** Various algorithms relating to the question
 :PROPERTIES:
 :ID:       4b86e2cf-cc10-4e98-9789-bf744444cc02
+:CUSTOM-ID: 4b86e2cf-cc10-4e98-9789-bf744444cc02
 :END:
 
 #+NAME: fib-phi
@@ -1995,6 +2081,7 @@ plot data using 1:2 with lines title 'Fib(n) minus Fib-phi(n)'
 ** 1.2.3: Orders of Growth
 :PROPERTIES:
 :ID:       788f4aad-14d6-40ae-a32f-acd744b9f700
+:CUSTOM-ID: 788f4aad-14d6-40ae-a32f-acd744b9f700
 :END:
 
 An *order of growth* gives you a gross measure of the resources required by a
@@ -2022,11 +2109,13 @@ useful in indicating how a process will change with the size of the problem.
 ** Exercise 1.14: ~count-change~
 :PROPERTIES:
 :ID:       18db98a1-8e67-4829-939b-44700d20e344
+:CUSTOM-ID: 18db98a1-8e67-4829-939b-44700d20e344
 :END:
 
 *** Text
 :PROPERTIES:
 :ID:       36ba5b4b-ce22-4840-9ecf-dce9c858c4b3
+:CUSTOM-ID: 36ba5b4b-ce22-4840-9ecf-dce9c858c4b3
 :END:
 Below is the default version of the src_scheme{count-change} function. I'll be
 aggressively modifying it in order to get a graph out of it.
@@ -2057,6 +2146,7 @@ aggressively modifying it in order to get a graph out of it.
 *** Question A: Draw the tree
 :PROPERTIES:
 :ID:       4f0d0db2-8d42-4ef4-8a96-c6304fc82d12
+:CUSTOM-ID: 4f0d0db2-8d42-4ef4-8a96-c6304fc82d12
 :END:
 
 Draw the tree illustrating the process generated by the src_scheme{count-change}
@@ -2065,6 +2155,7 @@ procedure of [[id:be51794e-b3a2-46aa-ae80-dce13c7ab463][1.2.2: Tree Recursion]] 
 *** Answer
 :PROPERTIES:
 :ID:       3b4d300a-acee-4aab-b2de-f40f38948b7a
+:CUSTOM-ID: 3b4d300a-acee-4aab-b2de-f40f38948b7a
 :END:
 
 I want to generate this graph algorithmically.
@@ -2162,6 +2253,7 @@ $data
 *** Question B: Analyzing process growth
 :PROPERTIES:
 :ID:       4ec9fbdf-5b5b-46f3-8e62-592695c8df74
+:CUSTOM-ID: 4ec9fbdf-5b5b-46f3-8e62-592695c8df74
 :END:
 
 What are the orders of growth of the space and number of steps used by this
@@ -2170,6 +2262,7 @@ process as the amount to be changed increases?
 *** Answer B
 :PROPERTIES:
 :ID:       3c61bcd3-dff2-4fed-a623-f277463c4588
+:CUSTOM-ID: 3c61bcd3-dff2-4fed-a623-f277463c4588
 :END:
 
 Let's look at this via the number of function calls needed for value
@@ -2319,11 +2412,13 @@ now.
 ** Exercise 1.15: Sine approximation
 :PROPERTIES:
 :ID:       c409b511-104c-472d-b3ea-645ea1db242b
+:CUSTOM-ID: c409b511-104c-472d-b3ea-645ea1db242b
 :END:
 
 *** Question A
 :PROPERTIES:
 :ID:       debe19ef-e946-469a-8549-986110233a82
+:CUSTOM-ID: debe19ef-e946-469a-8549-986110233a82
 :END:
 
 The sine of an angle (specified in radians) can be computed by making use of the
@@ -2349,6 +2444,7 @@ How many times is the procedure src_scheme{p} applied when src_scheme{(sine
 *** Answer A
 :PROPERTIES:
 :ID:       eacd5136-a598-487c-a19a-02dbd45a4032
+:CUSTOM-ID: eacd5136-a598-487c-a19a-02dbd45a4032
 :END:
 
 Let's find out!
@@ -2380,6 +2476,7 @@ src_scheme{p} is evaluated 5 times.
 *** Question B
 :PROPERTIES:
 :ID:       0c3e1c9a-6435-47bf-b813-c585df53031d
+:CUSTOM-ID: 0c3e1c9a-6435-47bf-b813-c585df53031d
 :END:
 
 What is the order of growth in space and number of steps (as a function of
@@ -2389,6 +2486,7 @@ src_scheme{(sine a)} is evaluated?
 *** Answer B
 :PROPERTIES:
 :ID:       f3d8e891-8aa0-4169-89d4-5026cd2fdf7d
+:CUSTOM-ID: f3d8e891-8aa0-4169-89d4-5026cd2fdf7d
 :END:
 
 #+NAME: 1-15-tab1
@@ -2517,6 +2615,7 @@ plot 'Ex15/sine-bench.dat' using 1:2 with fillsteps title 'time to execute', \
 **** 1.2.4 Exponentiation
 :PROPERTIES:
 :ID:       76b874e6-9f56-4167-ba08-573242c66afc
+:CUSTOM-ID: 76b874e6-9f56-4167-ba08-573242c66afc
 :END:
 
 Considering a few ways to compute the exponential of a given number.
@@ -2543,11 +2642,13 @@ b^8 &= b^4 \cdot b^4\end{aligned}\]
 ** Exercise 1.16: Making ~fast-expt~ iterative
 :PROPERTIES:
 :ID:       a98c0259-b567-46bf-b587-12d2e2e4a498
+:CUSTOM-ID: a98c0259-b567-46bf-b587-12d2e2e4a498
 :END:
 
 *** Text
 :PROPERTIES:
 :ID:       4b90504b-2032-4417-88fc-49e91ef55ef1
+:CUSTOM-ID: 4b90504b-2032-4417-88fc-49e91ef55ef1
 :END:
 
 #+NAME: txt-expt
@@ -2577,6 +2678,7 @@ b^8 &= b^4 \cdot b^4\end{aligned}\]
 *** Question
 :PROPERTIES:
 :ID:       c804b444-1f14-4dd8-8913-b91b0504f32c
+:CUSTOM-ID: c804b444-1f14-4dd8-8913-b91b0504f32c
 :END:
 
 Design a procedure that evolves an iterative exponentiation process that uses
@@ -2593,6 +2695,7 @@ iterative algorithms.)
 *** Diary
 :PROPERTIES:
 :ID:       59c3a6be-0747-4c53-b4cc-a980cf9c8ef0
+:CUSTOM-ID: 59c3a6be-0747-4c53-b4cc-a980cf9c8ef0
 :END:
 
 First I made this program which tries to use a false equivalence:
@@ -2635,6 +2738,7 @@ Here's what the internal state looks like during \(2^6\) (correct answer is 64):
 *** Answer
 :PROPERTIES:
 :ID:       0bf21b5e-eba3-4d78-9e73-e4fd5edbf6ca
+:CUSTOM-ID: 0bf21b5e-eba3-4d78-9e73-e4fd5edbf6ca
 :END:
 
 There are two key transforms to a faster algorithm. The first was already shown
@@ -2692,11 +2796,13 @@ The solution essentially follows this logic:
 ** Exercise 1.17: Logarithmic multiplication (recursive)
 :PROPERTIES:
 :ID:       08bb5d53-cd18-4b75-91ca-8561197f87dc
+:CUSTOM-ID: 08bb5d53-cd18-4b75-91ca-8561197f87dc
 :END:
 
 *** Question
 :PROPERTIES:
 :ID:       c65fcf41-d9f1-46f9-91ef-85e07dd3cf90
+:CUSTOM-ID: c65fcf41-d9f1-46f9-91ef-85e07dd3cf90
 :END:
 
 The exponentiation algorithms in this section are based on performing
@@ -2721,6 +2827,7 @@ of steps.
 *** Answer
 :PROPERTIES:
 :ID:       3bc6b3b7-0ee3-43c5-975d-f75061cc764b
+:CUSTOM-ID: 3bc6b3b7-0ee3-43c5-975d-f75061cc764b
 :END:
 
 #+NAME: fast-mult-rec
@@ -2762,11 +2869,13 @@ Proof it works:
 ** Exercise 1.18: Logarithmic multiplication (iterative)
 :PROPERTIES:
 :ID:       86fcd94b-a1c7-4e54-9bb1-6deb45c950d7
+:CUSTOM-ID: 86fcd94b-a1c7-4e54-9bb1-6deb45c950d7
 :END:
 
 *** Question
 :PROPERTIES:
 :ID:       67942470-3b36-48f7-a4e5-02b6046edd75
+:CUSTOM-ID: 67942470-3b36-48f7-a4e5-02b6046edd75
 :END:
 
 Using the results of Exercise 1.16 and Exercise 1.17, devise a procedure that
@@ -2776,11 +2885,13 @@ doubling, and halving and uses a logarithmic number of steps.
 *** Diary
 :PROPERTIES:
 :ID:       17bfdba8-d5a1-4619-b49f-a2a0d5b1bb57
+:CUSTOM-ID: 17bfdba8-d5a1-4619-b49f-a2a0d5b1bb57
 :END:
 
 **** Comparison benchmarks:
 :PROPERTIES:
 :ID:       a0b7ff19-6c6a-40f1-87fd-6564d1ecf3ef
+:CUSTOM-ID: a0b7ff19-6c6a-40f1-87fd-6564d1ecf3ef
 :END:
 
 #+BEGIN_SRC scheme -n :tangle 1/Ex1-18bench.scheme :exports code :results silent
@@ -2803,6 +2914,7 @@ So the iterative version takes 0.84 times less to do \(32 \times 32\).
 **** Hall of shame
 :PROPERTIES:
 :ID:       90b78921-b998-46d2-8dcd-a2d296a6667b
+:CUSTOM-ID: 90b78921-b998-46d2-8dcd-a2d296a6667b
 :END:
 
 Some of my /very/ incorrect ideas:
@@ -2813,6 +2925,7 @@ Some of my /very/ incorrect ideas:
 *** Answer
 :PROPERTIES:
 :ID:       8bd3b472-2415-480c-aad3-4de9011ccaec
+:CUSTOM-ID: 8bd3b472-2415-480c-aad3-4de9011ccaec
 :END:
 
 #+NAME: fast-mult-iter
@@ -2853,11 +2966,13 @@ Some of my /very/ incorrect ideas:
 ** Exercise 1.19: Logarithmic fibonacci computing with \(T\)
 :PROPERTIES:
 :ID:       407ca562-9da1-48a7-b6eb-5d356fd39b7e
+:CUSTOM-ID: 407ca562-9da1-48a7-b6eb-5d356fd39b7e
 :END:
 
 *** Question
 :PROPERTIES:
 :ID:       dee62f7c-3d69-4510-b1a7-f08b7b8ec7ae
+:CUSTOM-ID: dee62f7c-3d69-4510-b1a7-f08b7b8ec7ae
 :END:
 
 There is a clever algorithm for computing the Fibonacci numbers in a logarithmic
@@ -2901,6 +3016,7 @@ in a logarithmic number of steps:
 *** Diary
 :PROPERTIES:
 :ID:       2ac06644-ae7a-4025-ac53-436cecff5d7f
+:CUSTOM-ID: 2ac06644-ae7a-4025-ac53-436cecff5d7f
 :END:
 
 More succinctly put:
@@ -2970,6 +3086,7 @@ the attached list. so src_scheme{(T 0 1)} returns a fib function.
 *** Answer
 :PROPERTIES:
 :ID:       bd7688c6-c72b-4739-8109-2332a912a672
+:CUSTOM-ID: bd7688c6-c72b-4739-8109-2332a912a672
 :END:
 
 #+NAME: fib-iter-T
@@ -3031,6 +3148,7 @@ the attached list. so src_scheme{(T 0 1)} returns a fib function.
 ** 1.2.5: Greatest Common Divisor
 :PROPERTIES:
 :ID:       830b140a-2c99-4c28-8197-b5a5d761c624
+:CUSTOM-ID: 830b140a-2c99-4c28-8197-b5a5d761c624
 :END:
 
 A greatest common divisor (or GCD) for two integers is the largest integer that
@@ -3055,11 +3173,13 @@ the other number in the pair. This is Euclid's Algorithm.
 ** Exercise 1.20: Inefficiency of normal-order evaluation
 :PROPERTIES:
 :ID:       663150d8-1c0b-468f-8db4-018423b53fc0
+:CUSTOM-ID: 663150d8-1c0b-468f-8db4-018423b53fc0
 :END:
 
 *** Text
 :PROPERTIES:
 :ID:       ae5a7fe3-5ff5-4a85-a964-10dec6869216
+:CUSTOM-ID: ae5a7fe3-5ff5-4a85-a964-10dec6869216
 :END:
 
 #+NAME: gcd
@@ -3073,6 +3193,7 @@ the other number in the pair. This is Euclid's Algorithm.
 *** Question
 :PROPERTIES:
 :ID:       716fdfd6-be01-4639-a23e-e77713a2b719
+:CUSTOM-ID: 716fdfd6-be01-4639-a23e-e77713a2b719
 :END:
 
 The process that a procedure generates is of course dependent on the rules used
@@ -3089,6 +3210,7 @@ applicative-order evaluation?
 *** Answer
 :PROPERTIES:
 :ID:       fad2aa9c-9dab-464f-97ab-0f2d21da4608
+:CUSTOM-ID: fad2aa9c-9dab-464f-97ab-0f2d21da4608
 :END:
 
 I struggled to understand this, but the key here is that normal-order evaluation
@@ -3098,6 +3220,7 @@ multiple times.
 **** Applicative order
 :PROPERTIES:
 :ID:       f613f599-bada-4fe3-ba42-db9641359d4d
+:CUSTOM-ID: f613f599-bada-4fe3-ba42-db9641359d4d
 :END:
 
 #+begin_src scheme
@@ -3199,6 +3322,7 @@ it's called 5 times.
 ** 1.2.6: Example: Testing for Primality
 :PROPERTIES:
 :ID:       e493130a-61e6-4e34-ba26-12317d664402
+:CUSTOM-ID: e493130a-61e6-4e34-ba26-12317d664402
 :END:
 
 Two algorithms for testing primality of numbers.
@@ -3229,11 +3353,13 @@ likelihood of a correct answer.
 ** Exercise 1.21
 :PROPERTIES:
 :ID:       2da88cf0-4a59-4288-88f3-f9d7394720b6
+:CUSTOM-ID: 2da88cf0-4a59-4288-88f3-f9d7394720b6
 :END:
 
 *** Text
 :PROPERTIES:
 :ID:       919355bd-d6f7-4df8-b80d-f2691ea0b4d8
+:CUSTOM-ID: 919355bd-d6f7-4df8-b80d-f2691ea0b4d8
 :END:
 
 #+NAME: find-divisor-txt
@@ -3258,6 +3384,7 @@ likelihood of a correct answer.
 *** Question
 :PROPERTIES:
 :ID:       7f5e1e80-6aae-485e-ada9-858fc47dbeae
+:CUSTOM-ID: 7f5e1e80-6aae-485e-ada9-858fc47dbeae
 :END:
 
 Use the smallest-divisor procedure to find the smallest divisor of each of the
@@ -3266,6 +3393,7 @@ following numbers: 199, 1999, 19999.
 *** Answer
 :PROPERTIES:
 :ID:       88b6dc2a-a533-4942-92be-bf16f41cb3f6
+:CUSTOM-ID: 88b6dc2a-a533-4942-92be-bf16f41cb3f6
 :END:
 
 #+BEGIN_SRC scheme -n :eval no-export  :exports both :results value table
@@ -3281,11 +3409,13 @@ following numbers: 199, 1999, 19999.
 ** Exercise 1.22
 :PROPERTIES:
 :ID:       f3a9bc52-9915-4be3-9dba-718019f3fa6d
+:CUSTOM-ID: f3a9bc52-9915-4be3-9dba-718019f3fa6d
 :END:
 
 *** Question
 :PROPERTIES:
 :ID:       85a19748-38ef-422c-9940-2aada7ed308f
+:CUSTOM-ID: 85a19748-38ef-422c-9940-2aada7ed308f
 :END:
 
 Most Lisp implementations include a primitive called src_scheme{runtime} that
@@ -3335,11 +3465,13 @@ number of steps required for the computation?
 *** Answer
 :PROPERTIES:
 :ID:       e13b44f5-69de-4948-a857-a1c4530ce998
+:CUSTOM-ID: e13b44f5-69de-4948-a857-a1c4530ce998
 :END:
 
 **** Part 1
 :PROPERTIES:
 :ID:       0f4b2e49-36bd-466e-9bb7-48f6b327f55f
+:CUSTOM-ID: 0f4b2e49-36bd-466e-9bb7-48f6b327f55f
 :END:
 
 So this question is a little funky, because modern machines are so fast that the
@@ -3409,6 +3541,7 @@ There's proof it works. And here are the answers to the question:
 **** Part 2
 :PROPERTIES:
 :ID:       98cc6660-fe76-4b19-a036-afb4dace8757
+:CUSTOM-ID: 98cc6660-fe76-4b19-a036-afb4dace8757
 :END:
 
 Repeatedly re-running, it I see it occasionally jump to twice the time. I'm not
@@ -3526,11 +3659,13 @@ algorithm is slower than this other one," but when asked to find or prove the
 ** Exercise 1.23
 :PROPERTIES:
 :ID:       9e3a40e2-3c5d-45ba-af3c-969651c94297
+:CUSTOM-ID: 9e3a40e2-3c5d-45ba-af3c-969651c94297
 :END:
 
 *** Question
 :PROPERTIES:
 :ID:       6c0c0cec-b4be-4739-8bae-14fe069e22cd
+:CUSTOM-ID: 6c0c0cec-b4be-4739-8bae-14fe069e22cd
 :END:
 
 The src_scheme{smallest-divisor} procedure shown at the start of this section
@@ -3551,6 +3686,7 @@ you explain the fact that it is different from 2?
 *** A Comedy of Error (just the one)
 :PROPERTIES:
 :ID:       6d687d6f-1b84-474f-89e8-194462e90b88
+:CUSTOM-ID: 6d687d6f-1b84-474f-89e8-194462e90b88
 :END:
 
 #+NAME: find-divisor-faster
@@ -3648,6 +3784,7 @@ Oh, that's why.
 *** Answer
 :PROPERTIES:
 :ID:       b68121ea-e528-442f-8046-09eee174ef97
+:CUSTOM-ID: b68121ea-e528-442f-8046-09eee174ef97
 :END:
 
 Ok, let's try that again.
@@ -3889,11 +4026,13 @@ file:1/fig/1-22-4.png
 ** Exercise 1.24
 :PROPERTIES:
 :ID:       24f2cec1-17bd-456c-84e9-fe5c685301d5
+:CUSTOM-ID: 24f2cec1-17bd-456c-84e9-fe5c685301d5
 :END:
 
 *** Text
 :PROPERTIES:
 :ID:       9259fc75-fc98-4f03-b755-6fab60dc38f6
+:CUSTOM-ID: 9259fc75-fc98-4f03-b755-6fab60dc38f6
 :END:
 
 #+NAME: expmod
@@ -3929,6 +4068,7 @@ file:1/fig/1-22-4.png
 *** Question
 :PROPERTIES:
 :ID:       d1464d89-e40f-4220-83a2-07bd83cdba29
+:CUSTOM-ID: d1464d89-e40f-4220-83a2-07bd83cdba29
 :END:
 
 Modify the src_scheme{timed-prime-test} procedure of [[Exercise 1.22]] to use
@@ -3941,6 +4081,7 @@ you explain any discrepancy you find?
 *** Answer
 :PROPERTIES:
 :ID:       32df4fe3-ba2b-4580-b6fc-ac2d683d69a4
+:CUSTOM-ID: 32df4fe3-ba2b-4580-b6fc-ac2d683d69a4
 :END:
 
 #+NAME: fermat-bench
@@ -4116,11 +4257,13 @@ aggressive bignum processing there?
 ** Exercise 1.25
 :PROPERTIES:
 :ID:       ed832d1f-dde0-45db-8891-014b0c9daff9
+:CUSTOM-ID: ed832d1f-dde0-45db-8891-014b0c9daff9
 :END:
 
 *** Question
 :PROPERTIES:
 :ID:       76148d28-d72e-4be4-ab2a-d96c2f100dea
+:CUSTOM-ID: 76148d28-d72e-4be4-ab2a-d96c2f100dea
 :END:
 
 Alyssa P. Hacker complains that we went to a lot of extra work in writing
@@ -4138,6 +4281,7 @@ Explain.
 *** Answer
 :PROPERTIES:
 :ID:       f4e6ce08-2adb-4c3f-a565-096aea235bfc
+:CUSTOM-ID: f4e6ce08-2adb-4c3f-a565-096aea235bfc
 :END:
 
 In Alyssa's version of src_scheme{expmod}, the result of the
@@ -4192,11 +4336,13 @@ taking these extra steps actually leads to an algorithm that performs better.
 ** Exercise 1.26
 :PROPERTIES:
 :ID:       77720381-e1ba-460a-aef5-08292daa3384
+:CUSTOM-ID: 77720381-e1ba-460a-aef5-08292daa3384
 :END:
 
 *** Question
 :PROPERTIES:
 :ID:       eee5142a-175d-4ae0-b9cb-6c1fd079ba0a
+:CUSTOM-ID: eee5142a-175d-4ae0-b9cb-6c1fd079ba0a
 :END:
 
 Louis Reasoner is having great difficulty doing Exercise 1.24. His
@@ -4228,6 +4374,7 @@ process into a \(\Theta(n)\) process." Explain.
 *** Answer
 :PROPERTIES:
 :ID:       9e8c8cdc-7517-4422-939d-f22026d6aa91
+:CUSTOM-ID: 9e8c8cdc-7517-4422-939d-f22026d6aa91
 :END:
 
 Making the same function call twice isn't the same as using a variable twice --
@@ -4238,11 +4385,13 @@ problem. Since the number of processes used increases exponentially, this turns
 ** Exercise 1.27
 :PROPERTIES:
 :ID:       6a54e493-0e3d-4bb1-84ff-88196dda3f15
+:CUSTOM-ID: 6a54e493-0e3d-4bb1-84ff-88196dda3f15
 :END:
 
 *** Question
 :PROPERTIES:
 :ID:       9efef8fb-5bcf-45bb-96b0-76902a307f51
+:CUSTOM-ID: 9efef8fb-5bcf-45bb-96b0-76902a307f51
 :END:
 
 Demonstrate that the Carmichael numbers listed in Footnote 1.47 really do fool
@@ -4255,6 +4404,7 @@ and try your procedure on the given Carmichael numbers.
 *** Answer
 :PROPERTIES:
 :ID:       c7e064e7-5ace-4ef2-9e29-469b2573cb7b
+:CUSTOM-ID: c7e064e7-5ace-4ef2-9e29-469b2573cb7b
 :END:
 
 #+NAME: car-test
@@ -4280,11 +4430,13 @@ and try your procedure on the given Carmichael numbers.
 ** Exercise 1.28
 :PROPERTIES:
 :ID:       99be304b-3e68-4500-8c6d-f4300fbcdf36
+:CUSTOM-ID: 99be304b-3e68-4500-8c6d-f4300fbcdf36
 :END:
 
 *** Question
 :PROPERTIES:
 :ID:       dbc95aaa-41b7-44ff-b563-8d87e448682d
+:CUSTOM-ID: dbc95aaa-41b7-44ff-b563-8d87e448682d
 :END:
 
 One variant of the Fermat test that cannot be fooled is called the
@@ -4311,6 +4463,7 @@ way to make src_scheme{expmod} signal is to have it return 0.
 *** Analysis
 :PROPERTIES:
 :ID:       1a682537-2536-4aca-afcf-bd46ea38d862
+:CUSTOM-ID: 1a682537-2536-4aca-afcf-bd46ea38d862
 :END:
 
 For the sake of verifying this, I want to get a bigger list of primes and
@@ -4397,6 +4550,7 @@ This will be useful in various future functions:
 *** Answer
 :PROPERTIES:
 :ID:       cd30d1cc-10c2-4e3c-a97e-2154b2ea4bf2
+:CUSTOM-ID: cd30d1cc-10c2-4e3c-a97e-2154b2ea4bf2
 :END:
 
 #+NAME: expmod-mr
@@ -4528,6 +4682,7 @@ mr false-positives Carmichaels: #f
 ** 1.3: Formulating Abstractions with Higher-Order Procedures
 :PROPERTIES:
 :ID:       27250639-d875-4ff2-9a74-1274c57310e1
+:CUSTOM-ID: 27250639-d875-4ff2-9a74-1274c57310e1
 :END:
 
 Procedures that manipulate procedures are called /higher-order procedures/.
@@ -4535,6 +4690,7 @@ Procedures that manipulate procedures are called /higher-order procedures/.
 ** 1.3.1: Procedures as Arguments
 :PROPERTIES:
 :ID:       5fa080a9-ceb5-41c8-81b7-d98b449b0287
+:CUSTOM-ID: 5fa080a9-ceb5-41c8-81b7-d98b449b0287
 :END:
 
 Let's say we have several different types of series that we want to sum.
@@ -4564,11 +4720,13 @@ integers, we'd need to define and pass an identity function to src_scheme{term}.
 ** Exercise 1.29
 :PROPERTIES:
 :ID:       22b91a3d-9eb1-4d5f-9f28-0c085c98d58f
+:CUSTOM-ID: 22b91a3d-9eb1-4d5f-9f28-0c085c98d58f
 :END:
 
 *** Text
 :PROPERTIES:
 :ID:       c323c9f4-932d-4d36-865e-a18e76f566b4
+:CUSTOM-ID: c323c9f4-932d-4d36-865e-a18e76f566b4
 :END:
 #+NAME: sum
 #+BEGIN_SRC scheme -n :eval no-export :results output silent :exports code
@@ -4590,6 +4748,7 @@ integers, we'd need to define and pass an identity function to src_scheme{term}.
 *** Question
 :PROPERTIES:
 :ID:       8b97d855-2b4f-4c1c-aec3-815efe988cc3
+:CUSTOM-ID: 8b97d855-2b4f-4c1c-aec3-815efe988cc3
 :END:
 
 Simpson's Rule is a more accurate method of numerical integration than the
@@ -4611,6 +4770,7 @@ above.
 *** Answer
 :PROPERTIES:
 :ID:       6d0c9bfa-5b69-4994-b5aa-ed531a2ecae8
+:CUSTOM-ID: 6d0c9bfa-5b69-4994-b5aa-ed531a2ecae8
 :END:
 
 #+NAME: int-simp
@@ -4668,11 +4828,13 @@ So, more accurate for roughly the same effort or less.
 ** Exercise 1.30
 :PROPERTIES:
 :ID:       e54f9c79-9c6e-40e3-8d72-c3b38277249f
+:CUSTOM-ID: e54f9c79-9c6e-40e3-8d72-c3b38277249f
 :END:
 
 *** Question
 :PROPERTIES:
 :ID:       0e7c46b4-644b-4448-b4a4-8a93967ac9b2
+:CUSTOM-ID: 0e7c46b4-644b-4448-b4a4-8a93967ac9b2
 :END:
 
 The src_scheme{sum} procedure above generates a linear recursion. The procedure
@@ -4682,6 +4844,7 @@ by filling in the missing expressions in the following definition:
 *** Answer
 :PROPERTIES:
 :ID:       a6d60e74-2b88-4332-adf2-e8e0a31b856e
+:CUSTOM-ID: a6d60e74-2b88-4332-adf2-e8e0a31b856e
 :END:
 
 #+NAME: sum-iter
@@ -4721,11 +4884,13 @@ Let's check the stats!
 ** Exercise 1.31
 :PROPERTIES:
 :ID:       3b741046-fc06-4a6f-a4f8-dbd1656de562
+:CUSTOM-ID: 3b741046-fc06-4a6f-a4f8-dbd1656de562
 :END:
 
 *** Question A.1
 :PROPERTIES:
 :ID:       b2a6bb77-2e48-4c1e-a8bb-3197667412fb
+:CUSTOM-ID: b2a6bb77-2e48-4c1e-a8bb-3197667412fb
 :END:
 
 The src_scheme{sum} procedure is only the simplest of a vast number of similar
@@ -4736,6 +4901,7 @@ function at points over a given range.
 *** Answer A.1
 :PROPERTIES:
 :ID:       c0d12247-b8ec-4627-beb3-a3ea241588f6
+:CUSTOM-ID: c0d12247-b8ec-4627-beb3-a3ea241588f6
 :END:
 
 #+NAME: product-iter
@@ -4751,6 +4917,7 @@ function at points over a given range.
 *** Question A.2
 :PROPERTIES:
 :ID:       9cdeebe4-d20b-477d-b261-1cf6aebe163c
+:CUSTOM-ID: 9cdeebe4-d20b-477d-b261-1cf6aebe163c
 :END:
 
 Show how to define src_scheme{factorial} in terms of src_scheme{product}.
@@ -4758,6 +4925,7 @@ Show how to define src_scheme{factorial} in terms of src_scheme{product}.
 *** Answer A.2
 :PROPERTIES:
 :ID:       1f80f423-6bcf-4ed0-b339-f51dbe117833
+:CUSTOM-ID: 1f80f423-6bcf-4ed0-b339-f51dbe117833
 :END:
 
 I was briefly stumped because src_scheme{product} only counts upward. Then I
@@ -4788,6 +4956,7 @@ more intuitive sense of numbers.
 *** Question A.3
 :PROPERTIES:
 :ID:       aabc1dbe-2fd6-4569-9dfc-7cbea0f9286f
+:CUSTOM-ID: aabc1dbe-2fd6-4569-9dfc-7cbea0f9286f
 :END:
 
 Also use src_scheme{product} to compute approximations to \(\pi\) using the
@@ -4801,6 +4970,7 @@ formula
 *** Answer A.3
 :PROPERTIES:
 :ID:       8dd42248-4caa-4eba-bea6-92130574a000
+:CUSTOM-ID: 8dd42248-4caa-4eba-bea6-92130574a000
 :END:
 
 Once this equation is encoded, you just need to multiply it by two to get \(\pi\).
@@ -4829,6 +4999,7 @@ Fun fact: the formula is slightly wrong, it should start the series with \(\frac
 *** Question B
 :PROPERTIES:
 :ID:       8e708af0-405b-4500-8c24-a8b2b14add83
+:CUSTOM-ID: 8e708af0-405b-4500-8c24-a8b2b14add83
 :END:
 
 If your product procedure generates a recursive process, write one that
@@ -4838,6 +5009,7 @@ that generates a recursive process.
 *** Answer B
 :PROPERTIES:
 :ID:       ecd3adca-6ab8-4a51-82af-8d45f3f84410
+:CUSTOM-ID: ecd3adca-6ab8-4a51-82af-8d45f3f84410
 :END:
 
 #+NAME: product-rec
@@ -4884,11 +5056,13 @@ that generates a recursive process.
 ** Exercise 1.32
 :PROPERTIES:
 :ID:       f4a4d034-09b6-4ff5-968a-69b74b5ed370
+:CUSTOM-ID: f4a4d034-09b6-4ff5-968a-69b74b5ed370
 :END:
 
 *** Question A
 :PROPERTIES:
 :ID:       acee9589-f807-4d91-acf4-f432887f9269
+:CUSTOM-ID: acee9589-f807-4d91-acf4-f432887f9269
 :END:
 
 Show that src_scheme{sum} and src_scheme{product} are both special cases of a
@@ -4911,6 +5085,7 @@ src_scheme{accumulate}.
 *** Answer A
 :PROPERTIES:
 :ID:       b6e058f3-443d-455d-9b2a-42e6a0726c2c
+:CUSTOM-ID: b6e058f3-443d-455d-9b2a-42e6a0726c2c
 :END:
 
 When I first did this question, I struggled a lot before realizing
@@ -4958,6 +5133,7 @@ than I thought.
 *** Question B
 :PROPERTIES:
 :ID:       5af0317d-e560-4a81-b2ae-dfdc061356e1
+:CUSTOM-ID: 5af0317d-e560-4a81-b2ae-dfdc061356e1
 :END:
 
 If your src_scheme{accumulate} procedure generates a recursive process, write
@@ -4967,6 +5143,7 @@ write one that generates a recursive process.
 *** Answer B
 :PROPERTIES:
 :ID:       89f3a10e-0d2d-42df-8261-c850d9ca0152
+:CUSTOM-ID: 89f3a10e-0d2d-42df-8261-c850d9ca0152
 :END:
 
 #+NAME: accumulate-rec
@@ -4982,11 +5159,13 @@ write one that generates a recursive process.
 ** Exercise 1.33
 :PROPERTIES:
 :ID:       0f988768-6d07-4947-a89d-bc294a2da075
+:CUSTOM-ID: 0f988768-6d07-4947-a89d-bc294a2da075
 :END:
 
 *** Question A
 :PROPERTIES:
 :ID:       cc9235e8-f2a4-4ee0-9ec0-eae8f7c42f19
+:CUSTOM-ID: cc9235e8-f2a4-4ee0-9ec0-eae8f7c42f19
 :END:
 
 #+INDEX: filter
@@ -5001,6 +5180,7 @@ procedure.
 *** Answer A
 :PROPERTIES:
 :ID:       398f19b8-8908-467d-9b84-b921525bab17
+:CUSTOM-ID: 398f19b8-8908-467d-9b84-b921525bab17
 :END:
 
 #+NAME: filtered-accumulate-iter
@@ -5021,6 +5201,7 @@ procedure.
 *** Question B
 :PROPERTIES:
 :ID:       f9acb49a-f3e7-4b81-9a67-fb0c2468d60d
+:CUSTOM-ID: f9acb49a-f3e7-4b81-9a67-fb0c2468d60d
 :END:
 
 Show how to express the following using src_scheme{filtered-accumulate}:
@@ -5028,6 +5209,7 @@ Show how to express the following using src_scheme{filtered-accumulate}:
 **** A
 :PROPERTIES:
 :ID:       d52ed48f-0ada-438c-92a4-81a698b86434
+:CUSTOM-ID: d52ed48f-0ada-438c-92a4-81a698b86434
 :END:
 
 Find the sum of the squares of the prime numbers in the interval \(a\) to \(b\)
@@ -5070,6 +5252,7 @@ SUCCEED at many primes correct
 **** B
 :PROPERTIES:
 :ID:       1c20e096-168c-42d6-a625-14a62757c355
+:CUSTOM-ID: 1c20e096-168c-42d6-a625-14a62757c355
 :END:
 
 #+begin_quote
@@ -5114,6 +5297,7 @@ SUCCEED at Ex_1-33B
 ** 1.3.2: Constructing Procedures Using lambda
 :PROPERTIES:
 :ID:       bebc1b91-d31b-44dd-84af-04b0da3604ba
+:CUSTOM-ID: bebc1b91-d31b-44dd-84af-04b0da3604ba
 :END:
 
 A procedure that's only used once is more conveniently expressed as the special
@@ -5127,11 +5311,13 @@ procedures and src_scheme{let} for variables.
 ** Exercise 1.34
 :PROPERTIES:
 :ID:       a8aa7863-ffd5-49b2-9111-0deba26721fb
+:CUSTOM-ID: a8aa7863-ffd5-49b2-9111-0deba26721fb
 :END:
 
 *** Question
 :PROPERTIES:
 :ID:       9d5702e5-4f3a-4664-8eaa-5fc05ee79095
+:CUSTOM-ID: 9d5702e5-4f3a-4664-8eaa-5fc05ee79095
 :END:
 #+begin_quote
 Suppose we define the procedure
@@ -5160,6 +5346,7 @@ src_scheme{(f f)}? Explain.
 *** Answer
 :PROPERTIES:
 :ID:       572f2214-dd1b-41a3-aab8-1f689eeb18f8
+:CUSTOM-ID: 572f2214-dd1b-41a3-aab8-1f689eeb18f8
 :END:
 
 It ends up trying to execute src_scheme{2} as a function.
@@ -5183,6 +5370,7 @@ Wrong type to apply: 2
 ** 1.3.3 Procedures as General Methods
 :PROPERTIES:
 :ID:       0d57f264-3dde-4357-9bcf-8ae957350f5d
+:CUSTOM-ID: 0d57f264-3dde-4357-9bcf-8ae957350f5d
 :END:
 
 The *half-interval method*: if \(f(a)<0<f(b)\), then \(f\) must have at least
@@ -5207,11 +5395,13 @@ at a certain point? Or maybe that would just be \(~\), ie \(f(x)~etc\)/
 ** Exercise 1.35
 :PROPERTIES:
 :ID:       e31d236d-e1ce-4869-81b0-8b79d34638ca
+:CUSTOM-ID: e31d236d-e1ce-4869-81b0-8b79d34638ca
 :END:
 
 *** Text
 :PROPERTIES:
 :ID:       be2873e9-e336-4dc4-bf2f-bd853e3eaf9e
+:CUSTOM-ID: be2873e9-e336-4dc4-bf2f-bd853e3eaf9e
 :END:
 #+NAME: close-enough-txt
 #+BEGIN_SRC scheme -n :eval no-export :results silent
@@ -5238,6 +5428,7 @@ at a certain point? Or maybe that would just be \(~\), ie \(f(x)~etc\)/
 *** Question
 :PROPERTIES:
 :ID:       34a47af6-9e71-451d-8c6f-0698d43b8e7b
+:CUSTOM-ID: 34a47af6-9e71-451d-8c6f-0698d43b8e7b
 :END:
 
 #+begin_quote
@@ -5249,6 +5440,7 @@ the src_scheme{fixed-point} procedure.
 *** Answer
 :PROPERTIES:
 :ID:       b34d7cd6-a871-4e8c-9988-df80f50af1aa
+:CUSTOM-ID: b34d7cd6-a871-4e8c-9988-df80f50af1aa
 :END:
 
 #+NAME: golden-ratio
@@ -5272,11 +5464,13 @@ the src_scheme{fixed-point} procedure.
 ** Exercise 1.36
 :PROPERTIES:
 :ID:       14a2f8ac-4e60-4c39-8df7-b3c4991e03d0
+:CUSTOM-ID: 14a2f8ac-4e60-4c39-8df7-b3c4991e03d0
 :END:
 
 *** Question
 :PROPERTIES:
 :ID:       b53a92e6-8307-4e5f-823e-2670eb1e7e96
+:CUSTOM-ID: b53a92e6-8307-4e5f-823e-2670eb1e7e96
 :END:
 
 #+begin_quote
@@ -5293,6 +5487,7 @@ division by \(\log(1) = 0\).)
 *** Answer
 :PROPERTIES:
 :ID:       5742a471-6570-4168-8d26-bf7fd9458c84
+:CUSTOM-ID: 5742a471-6570-4168-8d26-bf7fd9458c84
 :END:
 
 Using the src_scheme{display} and src_scheme{newline} functions at any great
@@ -5402,11 +5597,13 @@ Damped, it makes 21.
 ** Exercise 1.37
 :PROPERTIES:
 :ID:       ea7098b0-6504-4aaf-89e1-894f16593e0b
+:CUSTOM-ID: ea7098b0-6504-4aaf-89e1-894f16593e0b
 :END:
 
 *** Question A
 :PROPERTIES:
 :ID:       cd886b09-1c12-4a40-966f-685ccf39cd73
+:CUSTOM-ID: cd886b09-1c12-4a40-966f-685ccf39cd73
 :END:
 
 #+begin_quote
@@ -5433,6 +5630,7 @@ finite continued fraction.
 *** Answer A
 :PROPERTIES:
 :ID:       2ee7e946-ede6-458d-a353-82cc67999c8a
+:CUSTOM-ID: 2ee7e946-ede6-458d-a353-82cc67999c8a
 :END:
 
 A note: the "golden ratio" this code estimates is exactly =1.0= less than the
@@ -5451,6 +5649,7 @@ golden ratio anyone else seems to be talking about.
 *** Question B
 :PROPERTIES:
 :ID:       f58d571e-0643-4f24-8db5-1e1431ee4315
+:CUSTOM-ID: f58d571e-0643-4f24-8db5-1e1431ee4315
 :END:
 
 Check your procedure by approximating \(1 / \varphi\) using
@@ -5467,6 +5666,7 @@ order to get an approximation that is accurate to 4 decimal places?
 *** Answer B
 :PROPERTIES:
 :ID:       169fe6a8-aba3-45c3-8e8e-181a28252426
+:CUSTOM-ID: 169fe6a8-aba3-45c3-8e8e-181a28252426
 :END:
 
 #+NAME: cont-frac-data
@@ -5519,6 +5719,7 @@ plot data using 2:xticlabels(1) with fillsteps fs solid 0.3 noborder lt 1 notitl
 *** Question C
 :PROPERTIES:
 :ID:       8a5386a8-3be8-46b8-b9b0-e04b83df0931
+:CUSTOM-ID: 8a5386a8-3be8-46b8-b9b0-e04b83df0931
 :END:
 
 #+begin_quote
@@ -5530,6 +5731,7 @@ one that generates a recursive process.
 *** Answer C
 :PROPERTIES:
 :ID:       1cb2b491-4ebd-4314-ac47-ac16b1126f97
+:CUSTOM-ID: 1cb2b491-4ebd-4314-ac47-ac16b1126f97
 :END:
 
 #+NAME: cont-frac-rec
@@ -5566,11 +5768,13 @@ SUCCEED at cont-frac iter and recursive equivalence
 ** Exercise 1.38
 :PROPERTIES:
 :ID:       61db36fc-e74e-4fae-984d-648099f51a24
+:CUSTOM-ID: 61db36fc-e74e-4fae-984d-648099f51a24
 :END:
 
 *** Question
 :PROPERTIES:
 :ID:       7343df58-ada0-4c1c-8fb3-43433350140f
+:CUSTOM-ID: 7343df58-ada0-4c1c-8fb3-43433350140f
 :END:
 
 #+begin_quote
@@ -5585,6 +5789,7 @@ from Exercise 1.37 to approximate \(e\), based on Euler's expansion.
 *** Answer
 :PROPERTIES:
 :ID:       eef88f33-1190-4794-b067-44c1cc80c758
+:CUSTOM-ID: eef88f33-1190-4794-b067-44c1cc80c758
 :END:
 
 #+BEGIN_SRC scheme -n :eval no-export :results value :exports both
@@ -5611,11 +5816,13 @@ from Exercise 1.37 to approximate \(e\), based on Euler's expansion.
 ** Exercise 1.39
 :PROPERTIES:
 :ID:       33240ea6-67dd-4e04-a7b1-7df13beb73a2
+:CUSTOM-ID: 33240ea6-67dd-4e04-a7b1-7df13beb73a2
 :END:
 
 *** Question
 :PROPERTIES:
 :ID:       61af3f88-a44f-4bc8-a17f-7ea62b42b555
+:CUSTOM-ID: 61af3f88-a44f-4bc8-a17f-7ea62b42b555
 :END:
 
 #+begin_quote
@@ -5632,6 +5839,7 @@ src_scheme{k} specifies the number of terms to compute, as in Exercise 1.37.
 *** Answer
 :PROPERTIES:
 :ID:       ecd94155-42f3-434b-8c71-a16800fa6486
+:CUSTOM-ID: ecd94155-42f3-434b-8c71-a16800fa6486
 :END:
 
 #+BEGIN_SRC scheme -n :eval no-export :results value :exports both
@@ -5658,6 +5866,7 @@ src_scheme{k} specifies the number of terms to compute, as in Exercise 1.37.
 ** 1.3.4 Procedures as Returned Values
 :PROPERTIES:
  :ID:       1653578d-c9b3-443c-8cc9-2495778dd9b1
+ :CUSTOM-ID: 1653578d-c9b3-443c-8cc9-2495778dd9b1
 :END:
 
 Procedures can return other procedures, which opens up new ways to express
@@ -5674,11 +5883,13 @@ derivative of \(g\) evaluated at \(x\).
 ** Exercise 1.40
 :PROPERTIES:
 :ID:       dc134e55-b99b-4cbe-accc-fd1475f484b5
+:CUSTOM-ID: dc134e55-b99b-4cbe-accc-fd1475f484b5
 :END:
 
 *** Text
 :PROPERTIES:
 :ID:       6fb6395e-367b-4503-965d-76272e2a6f71
+:CUSTOM-ID: 6fb6395e-367b-4503-965d-76272e2a6f71
 :END:
 #+NAME: average-damp
 #+BEGIN_SRC scheme -n :eval no-export :results silent :exports code
@@ -5716,6 +5927,7 @@ derivative of \(g\) evaluated at \(x\).
 *** Question
 :PROPERTIES:
 :ID:       974b89d3-82b5-4c67-b67c-7f7e0341498b
+:CUSTOM-ID: 974b89d3-82b5-4c67-b67c-7f7e0341498b
 :END:
 
 #+begin_quote
@@ -5734,6 +5946,7 @@ to approximate zeros of the cubic \(x^3 + ax^2 + bx + c\).
 *** Answer
 :PROPERTIES:
 :ID:       28acf8cb-95d9-4517-99e1-b5497ec4b602
+:CUSTOM-ID: 28acf8cb-95d9-4517-99e1-b5497ec4b602
 :END:
 
 #+NAME: cubic
@@ -5771,11 +5984,13 @@ to approximate zeros of the cubic \(x^3 + ax^2 + bx + c\).
 ** Exercise 1.41
 :PROPERTIES:
 :ID:       da9d8f81-540b-4e51-922f-446e3340280b
+:CUSTOM-ID: da9d8f81-540b-4e51-922f-446e3340280b
 :END:
 
 *** Question
 :PROPERTIES:
 :ID:       271f8549-974f-4b6f-8c54-314771d7ff51
+:CUSTOM-ID: 271f8549-974f-4b6f-8c54-314771d7ff51
 :END:
 
 #+begin_quote
@@ -5794,6 +6009,7 @@ returned by
 *** Answer
 :PROPERTIES:
 :ID:       71a9dffd-4337-4840-a923-ab857f624063
+:CUSTOM-ID: 71a9dffd-4337-4840-a923-ab857f624063
 :END:
 
 #+NAME: double
@@ -5819,11 +6035,13 @@ returned by
 **  Exercise 1.42
 :PROPERTIES:
 :ID:       9eeccdb7-f70f-4832-bc89-3e6cebfc5b18
+:CUSTOM-ID: 9eeccdb7-f70f-4832-bc89-3e6cebfc5b18
 :END:
 
 *** Question
 :PROPERTIES:
 :ID:       cefb2712-b83b-47bd-b455-62fc04444889
+:CUSTOM-ID: cefb2712-b83b-47bd-b455-62fc04444889
 :END:
 
 #+begin_quote
@@ -5835,6 +6053,7 @@ src_scheme{compose} that implements composition.
 *** Answer
 :PROPERTIES:
 :ID:       ab28db3a-f050-4a37-bd07-a9862022bffb
+:CUSTOM-ID: ab28db3a-f050-4a37-bd07-a9862022bffb
 :END:
 
 #+NAME: compose
@@ -5861,11 +6080,13 @@ src_scheme{compose} that implements composition.
 **  Exercise 1.43
 :PROPERTIES:
 :ID:       0e43bfd1-f2ae-4aa5-8821-50c89f7e72f1
+:CUSTOM-ID: 0e43bfd1-f2ae-4aa5-8821-50c89f7e72f1
 :END:
 
 *** Question
 :PROPERTIES:
 :ID:       29170fd6-15da-4fe7-8a93-968bfefa43b2
+:CUSTOM-ID: 29170fd6-15da-4fe7-8a93-968bfefa43b2
 :END:
 
 #+begin_quote
@@ -5884,6 +6105,7 @@ the procedure that computes the \(n^{\mathrm{th}}\) repeated application of \(f\
 *** Answer
 :PROPERTIES:
 :ID:       71f59a74-b638-4939-b1ac-f61da9a6f79a
+:CUSTOM-ID: 71f59a74-b638-4939-b1ac-f61da9a6f79a
 :END:
 
 #+NAME: repeated
@@ -5914,11 +6136,13 @@ Success
 **  Exercise 1.44
 :PROPERTIES:
 :ID:       1458530a-7fc0-4686-9cc4-3296acae158a
+:CUSTOM-ID: 1458530a-7fc0-4686-9cc4-3296acae158a
 :END:
 
 *** Question
 :PROPERTIES:
 :ID:       30dcfc41-5441-4193-9155-ab38b40430bc
+:CUSTOM-ID: 30dcfc41-5441-4193-9155-ab38b40430bc
 :END:
 
 #+INDEX: smoothing
@@ -5938,6 +6162,7 @@ from Exercise 1.43.
 *** Answer
 :PROPERTIES:
 :ID:       6892b2be-25d8-4769-81ba-e563af89d2c0
+:CUSTOM-ID: 6892b2be-25d8-4769-81ba-e563af89d2c0
 :END:
 
 #+NAME: smooth
@@ -5955,11 +6180,13 @@ from Exercise 1.43.
 **  Exercise 1.45
 :PROPERTIES:
 :ID:       7c8049da-73e4-4748-903c-770016a883f7
+:CUSTOM-ID: 7c8049da-73e4-4748-903c-770016a883f7
 :END:
 
 *** Question
 :PROPERTIES:
 :ID:       632c75bb-272e-4c01-85d7-1c839fcbb813
+:CUSTOM-ID: 632c75bb-272e-4c01-85d7-1c839fcbb813
 :END:
 
 #+begin_quote
@@ -5982,6 +6209,7 @@ operations you need are available as primitives.
 *** Answer
 :PROPERTIES:
 :ID:       1f0e74e2-6ecf-4e38-8836-afa42f2471be
+:CUSTOM-ID: 1f0e74e2-6ecf-4e38-8836-afa42f2471be
 :END:
 
 So this is strange. Back in my original workthrough of this book, I'd decided
@@ -6228,11 +6456,13 @@ making, and instead retains the last three guesses and checks for a loop. (TODO)
 **  Exercise 1.46
 :PROPERTIES:
 :ID:       e4ef33d7-c5f2-4807-9715-3c8535b6fc06
+:CUSTOM-ID: e4ef33d7-c5f2-4807-9715-3c8535b6fc06
 :END:
 
 *** Question
 :PROPERTIES:
 :ID:       e04bcbdd-bec5-4320-81c9-5121bd1e2462
+:CUSTOM-ID: e04bcbdd-bec5-4320-81c9-5121bd1e2462
 :END:
 
 #+begin_quote
@@ -6253,6 +6483,7 @@ src_scheme{iterative-improve}.
 *** Answer
 :PROPERTIES:
 :ID:       f3669b45-83c2-4280-b4d9-c75eab7cbc96
+:CUSTOM-ID: f3669b45-83c2-4280-b4d9-c75eab7cbc96
 :END:
 
 #+NAME: iterative-improve
@@ -6320,6 +6551,7 @@ SUCCEED at sqrt-improve still working
 * Chapter 2: Building Abstractions with Data
 :PROPERTIES:
 :ID:       b89a7dcb-6526-4c26-b10f-ba6e9b63d5c9
+:CUSTOM-ID: b89a7dcb-6526-4c26-b10f-ba6e9b63d5c9
 :END:
 
 The basic representations of data we've used so far aren't enough to deal with
@@ -6332,6 +6564,7 @@ The technique of isolating how data objects are /represented/ from how they are
 ** 2.1.1: Example: Arithmetic Operations for Rational Numbers
 :PROPERTIES:
 :ID:       442cf939-1c57-4db7-8985-5449da80b11f
+:CUSTOM-ID: 442cf939-1c57-4db7-8985-5449da80b11f
 :END:
 
 Lisp gives the procedures src_scheme{cons}, src_scheme{car}, and src_scheme{cdr}
@@ -6349,11 +6582,13 @@ architecture without modifying the programs that depend on it.
 **  Exercise 2.1
 :PROPERTIES:
 :ID:       64654350-d098-47cf-839b-faa92a13906b
+:CUSTOM-ID: 64654350-d098-47cf-839b-faa92a13906b
 :END:
 
 *** Text
 :PROPERTIES:
 :ID:       c88cd22e-f8c7-47a8-9782-178c7d90c8ff
+:CUSTOM-ID: c88cd22e-f8c7-47a8-9782-178c7d90c8ff
 :END:
 
 #+NAME: rat-ops-txt
@@ -6421,6 +6656,7 @@ architecture without modifying the programs that depend on it.
 *** Question
 :PROPERTIES:
 :ID:       de21a7ee-5fcf-4812-a6db-f6b71c82bdfe
+:CUSTOM-ID: de21a7ee-5fcf-4812-a6db-f6b71c82bdfe
 :END:
 
 #+begin_quote
@@ -6434,6 +6670,7 @@ negative.
 *** Answer
 :PROPERTIES:
 :ID:       2d51f2aa-f168-40b8-aea9-e5a4fc158535
+:CUSTOM-ID: 2d51f2aa-f168-40b8-aea9-e5a4fc158535
 :END:
 
 #+NAME: make-rat
@@ -6524,11 +6761,13 @@ optimized make-rat: ((1 . 2) 233.99087033)
 **  Exercise 2.2
 :PROPERTIES:
 :ID:       2feac1a8-049e-4cbd-a100-8774579bc33b
+:CUSTOM-ID: 2feac1a8-049e-4cbd-a100-8774579bc33b
 :END:
 
 *** Question
 :PROPERTIES:
 :ID:       181e49cc-aeec-40f5-9ef3-7ca71b6eb372
+:CUSTOM-ID: 181e49cc-aeec-40f5-9ef3-7ca71b6eb372
 :END:
 
 #+begin_quote
@@ -6560,6 +6799,7 @@ to print points:
 *** Answer
 :PROPERTIES:
 :ID:       11b92346-4c31-419d-8294-45ed6b89f0c7
+:CUSTOM-ID: 11b92346-4c31-419d-8294-45ed6b89f0c7
 :END:
 
 #+NAME: make-point
@@ -6649,11 +6889,13 @@ optimized make-rat: ((0.0 . 0.0) 331.83410742)
 **  Exercise 2.3
 :PROPERTIES:
 :ID:       8d579e83-08b9-4d23-bd86-94ff1ede7ac4
+:CUSTOM-ID: 8d579e83-08b9-4d23-bd86-94ff1ede7ac4
 :END:
 
 *** Question
 :PROPERTIES:
 :ID:       ee93d34f-946b-4ea8-94c3-47762d5253b0
+:CUSTOM-ID: ee93d34f-946b-4ea8-94c3-47762d5253b0
 :END:
 
 #+begin_quote
@@ -6668,6 +6910,7 @@ procedures will work using either representation?
 *** Answer 1
 :PROPERTIES:
 :ID:       b67b681f-b5b8-4672-befd-7cc4cea94df6
+:CUSTOM-ID: b67b681f-b5b8-4672-befd-7cc4cea94df6
 :END:
 
 I don't really like the "wishful thinking" process the book advocates but since
@@ -6854,6 +7097,7 @@ SUCCEED at rect-peri WXYZ
 *** Answer 2
 :PROPERTIES:
 :ID:       3bcac536-608f-460e-8163-63298dd9963c
+:CUSTOM-ID: 3bcac536-608f-460e-8163-63298dd9963c
 :END:
 
 My second implementation will be of a rectangle as an origin, height, width, and
@@ -6985,6 +7229,7 @@ SUCCEED at rect-peri WXYZ
 ** 2.1.3: What Is Meant by Data?
 :PROPERTIES:
 :ID:       81df1f92-08c7-4b58-804a-2eb47620c500
+:CUSTOM-ID: 81df1f92-08c7-4b58-804a-2eb47620c500
 :END:
 
 We can consider data as being a collection of selectors and constructors,
@@ -6997,11 +7242,13 @@ of src_scheme{(denom x)} should be equivalent to dividing \(n\) over \(d\).
 **  Exercise 2.4
 :PROPERTIES:
 :ID:       367b79ac-f582-440c-8964-5df42721011e
+:CUSTOM-ID: 367b79ac-f582-440c-8964-5df42721011e
 :END:
 
 *** Question
 :PROPERTIES:
 :ID:       5205e39b-4083-4cfa-bcdf-964fac03184e
+:CUSTOM-ID: 5205e39b-4083-4cfa-bcdf-964fac03184e
 :END:
 
 #+begin_quote
@@ -7026,6 +7273,7 @@ this works, make use of the substitution model of 1.1.5.)
 *** Answer
 :PROPERTIES:
 :ID:       2a32f8e7-2f72-4780-ad6d-a744d6c52c27
+:CUSTOM-ID: 2a32f8e7-2f72-4780-ad6d-a744d6c52c27
 :END:
 
 First, let's explain with the substitution model.
@@ -7074,11 +7322,13 @@ Now for implementation.
 **  Exercise 2.5 :optional:
 :PROPERTIES:
 :ID:       4410574f-de61-4c0b-a1b0-d4ebdee63e9d
+:CUSTOM-ID: 4410574f-de61-4c0b-a1b0-d4ebdee63e9d
 :END:
 
 *** Question
 :PROPERTIES:
 :ID:       3666d727-4d7a-4519-9a56-88c0bebd4d40
+:CUSTOM-ID: 3666d727-4d7a-4519-9a56-88c0bebd4d40
 :END:
 
 #+begin_quote
@@ -7091,6 +7341,7 @@ procedures src_scheme{cons}, src_scheme{car}, and src_scheme{cdr}.
 *** Answer
 :PROPERTIES:
 :ID:       cd53185c-9159-494d-9955-078b1e8bfde6
+:CUSTOM-ID: cd53185c-9159-494d-9955-078b1e8bfde6
 :END:
 
 This one really blew my mind inside-out when I first did it. Basically, because
@@ -7255,11 +7506,13 @@ src_scheme{cdr} procedures.
 **  Exercise 2.6 :optional:
 :PROPERTIES:
 :ID:       d2faecbf-e622-4e31-aeb7-46b6dcc2fe04
+:CUSTOM-ID: d2faecbf-e622-4e31-aeb7-46b6dcc2fe04
 :END:
 
 *** Question
 :PROPERTIES:
 :ID:       53b69abf-b68d-488c-98e0-b925899f0119
+:CUSTOM-ID: 53b69abf-b68d-488c-98e0-b925899f0119
 :END:
 
 #+begin_quote
@@ -7289,6 +7542,7 @@ src_scheme{+} (not in terms of repeated application of src_scheme{add-1}).
 *** Answer
 :PROPERTIES:
 :ID:       373a5055-5305-4ba5-893e-502848a4dfae
+:CUSTOM-ID: 373a5055-5305-4ba5-893e-502848a4dfae
 :END:
 
 First, let's check out src_scheme{(add-1 zero)}.
@@ -7343,11 +7597,13 @@ SUCCEED at 3 = 1+2 = (1+0) + (1+1+0)
 **  Exercise 2.7
 :PROPERTIES:
 :ID:       25273dbb-b905-4c0f-82d4-019fc389114e
+:CUSTOM-ID: 25273dbb-b905-4c0f-82d4-019fc389114e
 :END:
 
 *** Text
 :PROPERTIES:
 :ID:       860b4109-1280-4883-9562-49f57183f067
+:CUSTOM-ID: 860b4109-1280-4883-9562-49f57183f067
 :END:
 
 #+NAME: interval-txt
@@ -7372,6 +7628,7 @@ SUCCEED at 3 = 1+2 = (1+0) + (1+1+0)
 *** Question
 :PROPERTIES:
 :ID:       77308977-b69d-4fd5-8c1b-cadd954f689c
+:CUSTOM-ID: 77308977-b69d-4fd5-8c1b-cadd954f689c
 :END:
 
 #+begin_quote
@@ -7391,6 +7648,7 @@ the implementation.
 *** Answer
 :PROPERTIES:
 :ID:       6468e6ee-f282-406a-9b12-7c2f767013eb
+:CUSTOM-ID: 6468e6ee-f282-406a-9b12-7c2f767013eb
 :END:
 
 #+NAME: make-interval
@@ -7413,11 +7671,13 @@ the implementation.
 **  Exercise 2.8
 :PROPERTIES:
 :ID:       fc6580f7-1084-45af-be42-d838bc1e7686
+:CUSTOM-ID: fc6580f7-1084-45af-be42-d838bc1e7686
 :END:
 
 *** Question
 :PROPERTIES:
 :ID:       691b6556-635f-4283-bd5e-45a6bc2f005a
+:CUSTOM-ID: 691b6556-635f-4283-bd5e-45a6bc2f005a
 :END:
 
 #+begin_quote
@@ -7429,6 +7689,7 @@ src_scheme{sub-interval}.
 *** Answer
 :PROPERTIES:
 :ID:       58aa4210-0605-4053-a0bd-14246bc47115
+:CUSTOM-ID: 58aa4210-0605-4053-a0bd-14246bc47115
 :END:
 
 I would argue that with one interval subtracted from the other, the lowest
@@ -7445,11 +7706,13 @@ the second.
 **  Exercise 2.9
 :PROPERTIES:
 :ID:       f10d8027-e143-4262-b9e0-0e8607f4e240
+:CUSTOM-ID: f10d8027-e143-4262-b9e0-0e8607f4e240
 :END:
 
 *** Question
 :PROPERTIES:
 :ID:       349cd4e2-bf0d-496a-b7a3-761deeed95e7
+:CUSTOM-ID: 349cd4e2-bf0d-496a-b7a3-761deeed95e7
 :END:
 #+begin_quote
 The /width/ of an interval is half of the difference between its upper and lower
@@ -7466,6 +7729,7 @@ division.
 *** Answer
 :PROPERTIES:
 :ID:       922c3352-632d-4531-915a-7385bd10f1dd
+:CUSTOM-ID: 922c3352-632d-4531-915a-7385bd10f1dd
 :END:
 
 My first interpretation of the question was that it asked whether width
@@ -7596,11 +7860,13 @@ SUCCEED at width(ia-ib) = width(ia) + width(ib)
 **  Exercise 2.10
 :PROPERTIES:
 :ID:       b9af79c4-abc2-473b-9973-bf0ecc5e036f
+:CUSTOM-ID: b9af79c4-abc2-473b-9973-bf0ecc5e036f
 :END:
 
 *** Question
 :PROPERTIES:
 :ID:       c1ab865c-3dfc-4656-a2f6-ffd4e42df260
+:CUSTOM-ID: c1ab865c-3dfc-4656-a2f6-ffd4e42df260
 :END:
 
 #+begin_quote
@@ -7613,6 +7879,7 @@ it occurs.
 *** Answer
 :PROPERTIES:
 :ID:       ec0d39fc-09ca-4311-8742-6ba091b2568d
+:CUSTOM-ID: ec0d39fc-09ca-4311-8742-6ba091b2568d
 :END:
 
 #+BEGIN_SRC scheme -n
@@ -7631,11 +7898,13 @@ it occurs.
 **  Exercise 2.11
 :PROPERTIES:
 :ID:       fe8157f6-0e9b-4048-8f97-837cfb1797bb
+:CUSTOM-ID: fe8157f6-0e9b-4048-8f97-837cfb1797bb
 :END:
 
 *** Question
 :PROPERTIES:
 :ID:       be471a80-4642-4792-ba1e-cdc4cd0ae5e3
+:CUSTOM-ID: be471a80-4642-4792-ba1e-cdc4cd0ae5e3
 :END:
 
 #+begin_quote
@@ -7648,6 +7917,7 @@ Rewrite this procedure using Ben's suggestion.
 *** Answer
 :PROPERTIES:
 :ID:       56419705-45bd-4fdc-8f4c-478f840a1751
+:CUSTOM-ID: 56419705-45bd-4fdc-8f4c-478f840a1751
 :END:
 
 This problem doesn't appear to have a beautiful, elegant answer.
@@ -7873,11 +8143,13 @@ So as expected, about twice as fast!
 **  Exercise 2.12
 :PROPERTIES:
 :ID:       ccd05e64-baed-4c60-8cef-c767e30e471e
+:CUSTOM-ID: ccd05e64-baed-4c60-8cef-c767e30e471e
 :END:
 
 *** Question
 :PROPERTIES:
 :ID:       df7c487f-db1f-4e9a-ac3c-3f4669c0fb96
+:CUSTOM-ID: df7c487f-db1f-4e9a-ac3c-3f4669c0fb96
 :END:
 
 After debugging her program, Alyssa shows it to a potential user, who complains
@@ -7911,6 +8183,7 @@ interval. The src_scheme{center} selector is the same as the one shown above.
 *** Answer
 :PROPERTIES:
 :ID:       5ae1028e-a8e1-4b7c-841b-6e0a963b8587
+:CUSTOM-ID: 5ae1028e-a8e1-4b7c-841b-6e0a963b8587
 :END:
 
 #+NAME: reciprocal
@@ -7979,11 +8252,13 @@ SUCCEED at make-center-percent is consistent
 **  Exercise 2.13 :optional:
 :PROPERTIES:
 :ID:       3280cdb0-2f9f-4ede-9f29-0c46af1e326e
+:CUSTOM-ID: 3280cdb0-2f9f-4ede-9f29-0c46af1e326e
 :END:
 
 *** Question
 :PROPERTIES:
 :ID:       7e2dfdf8-2ad3-4882-b14e-0f2c450bffa2
+:CUSTOM-ID: 7e2dfdf8-2ad3-4882-b14e-0f2c450bffa2
 :END:
 
 #+begin_quote
@@ -7996,6 +8271,7 @@ assuming that all numbers are positive.
 *** Answer
 :PROPERTIES:
 :ID:       54bf6179-da7c-4543-a652-186d01cf3e62
+:CUSTOM-ID: 54bf6179-da7c-4543-a652-186d01cf3e62
 :END:
 
 I should've written this function a while ago.
@@ -8065,11 +8341,13 @@ percent M12: 0.499998000008
 **  Exercise 2.14
 :PROPERTIES:
 :ID:       d1e66abc-2f0f-4cc6-907d-309e34fda663
+:CUSTOM-ID: d1e66abc-2f0f-4cc6-907d-309e34fda663
 :END:
 
 *** Question
 :PROPERTIES:
 :ID:       c49a3157-62af-4e7a-81c1-51b9df4e292e
+:CUSTOM-ID: c49a3157-62af-4e7a-81c1-51b9df4e292e
 :END:
 
 #+begin_quote
@@ -8120,6 +8398,7 @@ Exercise 2.12).
 *** Answer
 :PROPERTIES:
 :ID:       a1f25a4b-7a82-4715-b5bb-c839dc628ac4
+:CUSTOM-ID: a1f25a4b-7a82-4715-b5bb-c839dc628ac4
 :END:
 
 #+NAME: resistor-testing
@@ -8185,11 +8464,13 @@ p2: 1.0018006601460259
 **  Exercise 2.15
 :PROPERTIES:
 :ID:       c7eae4d2-1154-4308-b73d-02a1da53195a
+:CUSTOM-ID: c7eae4d2-1154-4308-b73d-02a1da53195a
 :END:
 
 *** Question
 :PROPERTIES:
 :ID:       2c1f64e2-c811-4ae2-ad5f-94c59005218c
+:CUSTOM-ID: 2c1f64e2-c811-4ae2-ad5f-94c59005218c
 :END:
 
 #+begin_quote
@@ -8204,6 +8485,7 @@ program for parallel resistances than src_scheme{par1}. Is she right? Why?
 *** Answer
 :PROPERTIES:
 :ID:       189f4ab1-0028-46f2-8a06-a33a9b40e08f
+:CUSTOM-ID: 189f4ab1-0028-46f2-8a06-a33a9b40e08f
 :END:
 
 If I am correct in understanding that "uncertain number" means "a number with an
@@ -8242,11 +8524,13 @@ A/A = 1 != (1.02020202020202 . 0.9801980198019803)
 **  Exercise 2.16 :optional:
 :PROPERTIES:
 :ID:       b8b8d432-47ab-4218-8bad-d6fa6a70fde5
+:CUSTOM-ID: b8b8d432-47ab-4218-8bad-d6fa6a70fde5
 :END:
 
 *** Question
 :PROPERTIES:
 :ID:       9ef9c5f1-107f-4e7a-a59a-34074832cdf9
+:CUSTOM-ID: 9ef9c5f1-107f-4e7a-a59a-34074832cdf9
 :END:
 
 #+begin_quote
@@ -8259,6 +8543,7 @@ difficult.)
 *** Answer
 :PROPERTIES:
 :ID:       fa0bb72f-72e1-44bb-a86c-b27774b9f9da
+:CUSTOM-ID: fa0bb72f-72e1-44bb-a86c-b27774b9f9da
 :END:
 
 It is /indeed/ very difficult, because from what I'm seeing online, no interval
@@ -8273,6 +8558,7 @@ GitHub user "=diiq=" has an incredible analysis of this, which can be found here
 ** 2.2: Hierarchical Data and the Closure Property
 :PROPERTIES:
 :ID:       83758def-8586-4f95-a292-e262eeec307c
+:CUSTOM-ID: 83758def-8586-4f95-a292-e262eeec307c
 :END:
 
 src_scheme{cons} pairs can be used to construct more complex data-types.
@@ -8301,6 +8587,7 @@ procedures.
 ** 2.2.1: Representing Sequences
 :PROPERTIES:
 :ID:       a17be458-3194-46f1-9961-2aa4c052f60f
+:CUSTOM-ID: a17be458-3194-46f1-9961-2aa4c052f60f
 :END:
 
 - *sequence* :: An ordered collection of data objects.
@@ -8340,11 +8627,13 @@ function src_scheme{f}:
 ** Exercise 2.17
 :PROPERTIES:
 :ID:       df832283-cdbb-40a3-8536-5e029fd3f4dd
+:CUSTOM-ID: df832283-cdbb-40a3-8536-5e029fd3f4dd
 :END:
 
 *** Question
 :PROPERTIES:
 :ID:       e8fd5c2d-cee3-4178-badf-230243451076
+:CUSTOM-ID: e8fd5c2d-cee3-4178-badf-230243451076
 :END:
 
 #+begin_quote
@@ -8361,6 +8650,7 @@ given (nonempty) list:
 *** Answer
 :PROPERTIES:
 :ID:       0dec0924-7246-4528-98a2-5b137ec500a2
+:CUSTOM-ID: 0dec0924-7246-4528-98a2-5b137ec500a2
 :END:
 
 #+NAME: last-pair
@@ -8385,11 +8675,13 @@ given (nonempty) list:
 ** Exercise 2.18
 :PROPERTIES:
 :ID:       613581ea-f114-42c7-8179-cc85ad288d59
+:CUSTOM-ID: 613581ea-f114-42c7-8179-cc85ad288d59
 :END:
 
 *** Question
 :PROPERTIES:
 :ID:       aac18e73-5930-4ed9-b48a-82aab894bd19
+:CUSTOM-ID: aac18e73-5930-4ed9-b48a-82aab894bd19
 :END:
 #+begin_quote
 Define a procedure src_scheme{reverse} that takes a list as argument and returns
@@ -8404,6 +8696,7 @@ a list of the same elements in reverse order:
 *** Answer
 :PROPERTIES:
 :ID:       ac51a6b8-4121-406d-bc54-f3a394594a56
+:CUSTOM-ID: ac51a6b8-4121-406d-bc54-f3a394594a56
 :END:
 
 #+NAME: reverse
@@ -8429,11 +8722,13 @@ a list of the same elements in reverse order:
 ** Exercise 2.19
 :PROPERTIES:
 :ID:       49dafc3f-cfe8-4bf5-9612-d75c6b7c75c1
+:CUSTOM-ID: 49dafc3f-cfe8-4bf5-9612-d75c6b7c75c1
 :END:
 
 *** Question
 :PROPERTIES:
 :ID:       66168120-ab19-4de4-a7ed-3f66bf6aee39
+:CUSTOM-ID: 66168120-ab19-4de4-a7ed-3f66bf6aee39
 :END:
 
 #+begin_quote
@@ -8497,6 +8792,7 @@ not?
 *** Answer
 :PROPERTIES:
 :ID:       349c968a-5e4d-450f-95da-1e5bccd3ce18
+:CUSTOM-ID: 349c968a-5e4d-450f-95da-1e5bccd3ce18
 :END:
 
 #+NAME: Ex-2-19
@@ -8553,11 +8849,13 @@ increasing values: (823460.64376)
 ** Exercise 2.20
 :PROPERTIES:
 :ID:       3fddccfe-0012-4058-b840-0617fdbe104f
+:CUSTOM-ID: 3fddccfe-0012-4058-b840-0617fdbe104f
 :END:
 
 *** Question
 :PROPERTIES:
 :ID:       28845497-e50d-434b-a37e-f5f8274b8998
+:CUSTOM-ID: 28845497-e50d-434b-a37e-f5f8274b8998
 :END:
 
 #+begin_quote
@@ -8576,6 +8874,7 @@ even-odd parity as the first argument.  For example,
 *** Answer
 :PROPERTIES:
 :ID:       884ab392-ed28-4843-aa00-0eea45c63543
+:CUSTOM-ID: 884ab392-ed28-4843-aa00-0eea45c63543
 :END:
 
 #+NAME: same-parity
@@ -8656,11 +8955,13 @@ problem.
 ** Exercise 2.21
 :PROPERTIES:
 :ID:       6a0ed282-f958-4baa-a0a4-9cf112a72a0d
+:CUSTOM-ID: 6a0ed282-f958-4baa-a0a4-9cf112a72a0d
 :END:
 
 *** Question
 :PROPERTIES:
 :ID:       39acd29c-4385-4244-a4b8-ca659597d5ea
+:CUSTOM-ID: 39acd29c-4385-4244-a4b8-ca659597d5ea
 :END:
 
 #+begin_quote
@@ -8690,6 +8991,7 @@ them by filling in the missing expressions:
 *** Answer
 :PROPERTIES:
 :ID:       39d96109-1859-49c7-8fcd-9dff4d8fc4b0
+:CUSTOM-ID: 39d96109-1859-49c7-8fcd-9dff4d8fc4b0
 :END:
 
 #+NAME: square-list
@@ -8721,11 +9023,13 @@ them by filling in the missing expressions:
 ** Exercise 2.22
 :PROPERTIES:
 :ID:       4757f6ab-7e16-4169-8a77-9f42c2747abe
+:CUSTOM-ID: 4757f6ab-7e16-4169-8a77-9f42c2747abe
 :END:
 
 *** Questions
 :PROPERTIES:
 :ID:       704bb669-f8e9-47db-bab6-0c49bb8c3c77
+:CUSTOM-ID: 704bb669-f8e9-47db-bab6-0c49bb8c3c77
 :END:
 
 #+begin_quote
@@ -8770,6 +9074,7 @@ This doesn't work either.  Explain.
 *** Answer
 :PROPERTIES:
 :ID:       d4f705d9-a46f-4726-8a36-6b161fcf3845
+:CUSTOM-ID: d4f705d9-a46f-4726-8a36-6b161fcf3845
 :END:
 
 I'm positive I've made this exact mistake before, though this is likely not
@@ -8811,11 +9116,13 @@ the procedure.
 ** Exercise 2.23
 :PROPERTIES:
 :ID:       9931dcde-c75d-4277-916d-e26d012aa3cc
+:CUSTOM-ID: 9931dcde-c75d-4277-916d-e26d012aa3cc
 :END:
 
 *** Question
 :PROPERTIES:
 :ID:       3252b8cc-e1ab-4855-808f-a383e27a7396
+:CUSTOM-ID: 3252b8cc-e1ab-4855-808f-a383e27a7396
 :END:
 
 #+begin_quote
@@ -8846,6 +9153,7 @@ src_scheme{for-each}.
 *** Answer
 :PROPERTIES:
 :ID:       d98e6318-8fd5-4c0f-8943-734a0eb6d108
+:CUSTOM-ID: d98e6318-8fd5-4c0f-8943-734a0eb6d108
 :END:
 
 #+NAME: for-each-mine
@@ -8872,11 +9180,13 @@ all your base are belong to us
 ** Exercise 2.24
 :PROPERTIES:
 :ID:       1859958b-e5fe-45e1-9c88-1bd50d0bccfc
+:CUSTOM-ID: 1859958b-e5fe-45e1-9c88-1bd50d0bccfc
 :END:
 
 *** Text Definitions
 :PROPERTIES:
 :ID:       75e2bc99-9250-45c5-bc99-68e9f7435478
+:CUSTOM-ID: 75e2bc99-9250-45c5-bc99-68e9f7435478
 :END:
 
 #+NAME: count-leaves
@@ -8891,6 +9201,7 @@ all your base are belong to us
 *** Question
 :PROPERTIES:
 :ID:       2fc07509-94f8-4057-af0a-57e1975cca88
+:CUSTOM-ID: 2fc07509-94f8-4057-af0a-57e1975cca88
 :END:
 
 #+begin_quote
@@ -8902,6 +9213,7 @@ structure, and the interpretation of this as a tree (as in Figure 2.6).
 *** Answer
 :PROPERTIES:
 :ID:       5053c146-9dbe-470c-bc7b-505bf646f302
+:CUSTOM-ID: 5053c146-9dbe-470c-bc7b-505bf646f302
 :END:
 
 This is sort of a trick question -- on first reading, I read it like a series of
@@ -9052,11 +9364,13 @@ digraph {
 ** Exercise 2.25
 :PROPERTIES:
 :ID:       ee1f06c2-8b9e-45e1-b411-f3d55ed81d4b
+:CUSTOM-ID: ee1f06c2-8b9e-45e1-b411-f3d55ed81d4b
 :END:
 
 *** Question
 :PROPERTIES:
 :ID:       73922dc1-c1cf-4667-a652-be1c4562b1fa
+:CUSTOM-ID: 73922dc1-c1cf-4667-a652-be1c4562b1fa
 :END:
 
 #+begin_quote
@@ -9088,11 +9402,13 @@ each of the following lists:
 ** Exercise 2.26
 :PROPERTIES:
 :ID:       2420a238-983e-45b6-96f8-200c89225ea8
+:CUSTOM-ID: 2420a238-983e-45b6-96f8-200c89225ea8
 :END:
 
 *** Question
 :PROPERTIES:
 :ID:       3e049c8e-7c19-4260-9719-23aff843ee1c
+:CUSTOM-ID: 3e049c8e-7c19-4260-9719-23aff843ee1c
 :END:
 
 #+begin_quote
@@ -9118,6 +9434,7 @@ following expressions:
 *** Answer
 :PROPERTIES:
 :ID:       43f5805e-5b76-43e0-a645-d9d591c4c480
+:CUSTOM-ID: 43f5805e-5b76-43e0-a645-d9d591c4c480
 :END:
 
 #+BEGIN_SRC scheme -n :eval no-export :results output
@@ -9142,11 +9459,13 @@ following expressions:
 ** Exercise 2.27
 :PROPERTIES:
 :ID:       54e96be8-2cea-4976-867d-43dd31887156
+:CUSTOM-ID: 54e96be8-2cea-4976-867d-43dd31887156
 :END:
 
 *** Question
 :PROPERTIES:
 :ID:       3eff3209-704b-42a7-8033-f43e4520f409
+:CUSTOM-ID: 3eff3209-704b-42a7-8033-f43e4520f409
 :END:
 
 Modify your src_scheme{reverse} procedure of Exercise 2.18 to produce a
@@ -9167,6 +9486,7 @@ x
 *** Answer
 :PROPERTIES:
 :ID:       47d43f92-a841-4bb6-84d7-6b13036fddf6
+:CUSTOM-ID: 47d43f92-a841-4bb6-84d7-6b13036fddf6
 :END:
 
 #+NAME: deep-reverse
@@ -9197,11 +9517,13 @@ x
 ** Exercise 2.28
 :PROPERTIES:
 :ID:       e4661795-7d35-4b4c-87c8-4f27e61504e6
+:CUSTOM-ID: e4661795-7d35-4b4c-87c8-4f27e61504e6
 :END:
 
 *** Question
 :PROPERTIES:
 :ID:       1aa047af-6107-444f-9460-4720db3d56b5
+:CUSTOM-ID: 1aa047af-6107-444f-9460-4720db3d56b5
 :END:
 
 Write a procedure src_scheme{fringe} that takes as argument a tree (represented
@@ -9219,6 +9541,7 @@ arranged in left-to-right order. For example,
 *** Answer
 :PROPERTIES:
 :ID:       03543166-fce5-48d5-b81b-447c9a945bcb
+:CUSTOM-ID: 03543166-fce5-48d5-b81b-447c9a945bcb
 :END:
 
 #+NAME: fringe
@@ -9246,11 +9569,13 @@ arranged in left-to-right order. For example,
 ** Exercise 2.29: Binary Mobiles
 :PROPERTIES:
 :ID:       63a9edde-9764-4d9e-8100-baed248c2dcb
+:CUSTOM-ID: 63a9edde-9764-4d9e-8100-baed248c2dcb
 :END:
 
 *** Text Definitions
 :PROPERTIES:
 :ID:       f0163b74-c449-4a13-ad88-1da47321397a
+:CUSTOM-ID: f0163b74-c449-4a13-ad88-1da47321397a
 :END:
 
 #+NAME: mobile-constructors-list
@@ -9265,6 +9590,7 @@ arranged in left-to-right order. For example,
 *** Question A: Selectors
 :PROPERTIES:
 :ID:       20aad58f-3c4f-4fa8-8d27-4a4a5aee09b3
+:CUSTOM-ID: 20aad58f-3c4f-4fa8-8d27-4a4a5aee09b3
 :END:
 
 #+begin_quote
@@ -9277,6 +9603,7 @@ components of a branch.
 *** Answer A
 :PROPERTIES:
 :ID:       9412f002-9e0b-4e44-8bb4-195154f0b0d7
+:CUSTOM-ID: 9412f002-9e0b-4e44-8bb4-195154f0b0d7
 :END:
 
 #+NAME: mobile-selectors-list
@@ -9295,6 +9622,7 @@ components of a branch.
 *** Question B: total-weight
 :PROPERTIES:
 :ID:       41775c86-5d20-49c2-9030-d07fc6174431
+:CUSTOM-ID: 41775c86-5d20-49c2-9030-d07fc6174431
 :END:
 
 #+begin_quote
@@ -9305,6 +9633,7 @@ the total weight of a mobile.
 *** Answer B
 :PROPERTIES:
 :ID:       6b9e8068-4729-464e-b963-f0ddfa5c0f64
+:CUSTOM-ID: 6b9e8068-4729-464e-b963-f0ddfa5c0f64
 :END:
 
 #+NAME: mobile-total-weight
@@ -9351,6 +9680,7 @@ the total weight of a mobile.
 *** Question C: Balancing
 :PROPERTIES:
 :ID:       2137f250-1d72-4cf9-becc-26f1a07c4a61
+:CUSTOM-ID: 2137f250-1d72-4cf9-becc-26f1a07c4a61
 :END:
 
 A mobile is said to be *balanced* if the torque applied by its top-left branch is
@@ -9363,6 +9693,7 @@ mobile is balanced.
 *** Answer C
 :PROPERTIES:
 :ID:       f2cad0b2-6145-4224-8476-9e217f12028f
+:CUSTOM-ID: f2cad0b2-6145-4224-8476-9e217f12028f
 :END:
 
 I can imagine a ton of ways I could shoot myself in the foot by starting with
@@ -9489,6 +9820,7 @@ the same time?
 *** Question D: Implementation shakeup
 :PROPERTIES:
 :ID:       f5a9dc34-2ad7-4c13-944c-d0231cab3e7f
+:CUSTOM-ID: f5a9dc34-2ad7-4c13-944c-d0231cab3e7f
 :END:
 
 #+begin_quote
@@ -9511,6 +9843,7 @@ How much do you need to change your programs to convert to the new representatio
 *** Answer D
 :PROPERTIES:
 :ID:       ff3509a0-b674-4752-9abd-b823d35fed43
+:CUSTOM-ID: ff3509a0-b674-4752-9abd-b823d35fed43
 :END:
 
 Ideally I should only need to change the selectors, like this:
@@ -9594,11 +9927,13 @@ M4 is balanced!
 ** Exercise 2.30
 :PROPERTIES:
 :ID:       8fb7c1b7-31c5-4f08-8cf6-12094e850c3c
+:CUSTOM-ID: 8fb7c1b7-31c5-4f08-8cf6-12094e850c3c
 :END:
 
 *** Question
 :PROPERTIES:
 :ID:       36f8065d-dd3b-4120-851e-89c04ae7ffd4
+:CUSTOM-ID: 36f8065d-dd3b-4120-851e-89c04ae7ffd4
 :END:
 
 Define a procedure
@@ -9619,6 +9954,7 @@ procedures) and also by using src_scheme{map} and recursion.
 *** Answer
 :PROPERTIES:
 :ID:       203d3de0-6067-4723-a81d-bf43e4a3cb64
+:CUSTOM-ID: 203d3de0-6067-4723-a81d-bf43e4a3cb64
 :END:
 
 #+NAME: square-tree
@@ -9693,11 +10029,13 @@ What about #nil and #f? > #f
 ** Exercise 2.31
 :PROPERTIES:
 :ID:       4ddf43c7-fd1b-441d-a599-0a8412646c1f
+:CUSTOM-ID: 4ddf43c7-fd1b-441d-a599-0a8412646c1f
 :END:
 
 *** Question
 :PROPERTIES:
 :ID:       5d38b71c-3887-48f7-b978-e90a17b6fbde
+:CUSTOM-ID: 5d38b71c-3887-48f7-b978-e90a17b6fbde
 :END:
 
 #+begin_quote
@@ -9713,6 +10051,7 @@ defined as
 *** Answer
 :PROPERTIES:
 :ID:       e70b89fa-ced4-4294-bf97-93177b5296bf
+:CUSTOM-ID: e70b89fa-ced4-4294-bf97-93177b5296bf
 :END:
 
 #+NAME: tree-map
@@ -9750,11 +10089,13 @@ SUCCEED at square-tree-tm
 ** Exercise 2.32
 :PROPERTIES:
 :ID:       fb825e93-a665-49dd-b425-5c08f0a176b4
+:CUSTOM-ID: fb825e93-a665-49dd-b425-5c08f0a176b4
 :END:
 
 *** Question
 :PROPERTIES:
 :ID:       d367324d-0a43-4131-87e5-4789a887d8ae
+:CUSTOM-ID: d367324d-0a43-4131-87e5-4789a887d8ae
 :END:
 
 #+begin_quote
@@ -9777,6 +10118,7 @@ works:
 *** Answer
 :PROPERTIES:
 :ID:       1c89de82-54ce-48f2-8ac3-2382391211fc
+:CUSTOM-ID: 1c89de82-54ce-48f2-8ac3-2382391211fc
 :END:
 
 #+NAME: subsets
@@ -9879,6 +10221,7 @@ Enter with () {
 ** 2.2.3: Sequences as Conventional Interfaces
 :PROPERTIES:
 :ID:       ae4c378f-a18e-4988-9dfd-7c5404e78c9e
+:CUSTOM-ID: ae4c378f-a18e-4988-9dfd-7c5404e78c9e
 :END:
 
 Abstractions are an important part of making code clearer and more easy to
@@ -9902,11 +10245,13 @@ graph TD;
 ** Exercise 2.33: The flexibility of ~accumulate~
 :PROPERTIES:
 :ID:       36c3ba68-f680-4525-9dab-23de05e01770
+:CUSTOM-ID: 36c3ba68-f680-4525-9dab-23de05e01770
 :END:
 
 *** Text Definitions
 :PROPERTIES:
 :ID:       3095b036-e7c3-42d7-a386-d352cb3abd2e
+:CUSTOM-ID: 3095b036-e7c3-42d7-a386-d352cb3abd2e
 :END:
 
 #+NAME: accumulate
@@ -9923,6 +10268,7 @@ graph TD;
 *** Question
 :PROPERTIES:
 :ID:       2c3c90cc-d492-470b-b625-372f136c6dff
+:CUSTOM-ID: 2c3c90cc-d492-470b-b625-372f136c6dff
 :END:
 
 #+begin_quote
@@ -9941,6 +10287,7 @@ Fill in the missing expressions to complete the following definitions of some ba
 *** Answer
 :PROPERTIES:
 :ID:       7785a981-acf8-4b1a-8f5b-77ca062c43a0
+:CUSTOM-ID: 7785a981-acf8-4b1a-8f5b-77ca062c43a0
 :END:
 
 #+NAME: accumulate-forms
@@ -9983,11 +10330,13 @@ SUCCEED at length
 ** Exercise 2.34
 :PROPERTIES:
 :ID:       70003a6c-ebeb-4a1a-a29a-c637af29e348
+:CUSTOM-ID: 70003a6c-ebeb-4a1a-a29a-c637af29e348
 :END:
 
 *** Question
 :PROPERTIES:
 :ID:       20b40a17-9a77-43fe-bc32-3cd9a590f447
+:CUSTOM-ID: 20b40a17-9a77-43fe-bc32-3cd9a590f447
 :END:
 
 #+begin_quote
@@ -10028,6 +10377,7 @@ would evaluate
 *** Answer
 :PROPERTIES:
 :ID:       4f30d8db-3295-4190-bf1f-8fbcba81c950
+:CUSTOM-ID: 4f30d8db-3295-4190-bf1f-8fbcba81c950
 :END:
 
 #+NAME: horner-eval
@@ -10065,11 +10415,13 @@ Into this operation, left to right:
 ** Exercise 2.35
 :PROPERTIES:
 :ID:       d2ac02f3-e7d4-41d4-9265-5272695dbd92
+:CUSTOM-ID: d2ac02f3-e7d4-41d4-9265-5272695dbd92
 :END:
 
 *** Question
 :PROPERTIES:
 :ID:       fad0445e-b03b-4996-bf19-be6d81e84afd
+:CUSTOM-ID: fad0445e-b03b-4996-bf19-be6d81e84afd
 :END:
 
 #+begin_quote
@@ -10080,6 +10432,7 @@ Redefine src_scheme{count-leaves} from
 *** Answer
 :PROPERTIES:
 :ID:       12b8a86f-f827-4522-a662-b38513d09b7b
+:CUSTOM-ID: 12b8a86f-f827-4522-a662-b38513d09b7b
 :END:
 
 #+NAME: count-leaves-acc
@@ -10112,11 +10465,13 @@ SUCCEED at count-leaves-acc
 ** Exercise 2.36: Accumulate across multiple lists
 :PROPERTIES:
 :ID:       075ed620-b106-4eca-b1cf-185c181e032e
+:CUSTOM-ID: 075ed620-b106-4eca-b1cf-185c181e032e
 :END:
 
 *** Question
 :PROPERTIES:
 :ID:       fb101d9b-4436-4566-9c20-32ddd0a4bb0c
+:CUSTOM-ID: fb101d9b-4436-4566-9c20-32ddd0a4bb0c
 :END:
 
 #+begin_quote
@@ -10143,6 +10498,7 @@ src_scheme{accumulate-n}:
 *** Answers
 :PROPERTIES:
 :ID:       29bb2475-8f2b-46b0-8cc3-c5f5ea0d98dc
+:CUSTOM-ID: 29bb2475-8f2b-46b0-8cc3-c5f5ea0d98dc
 :END:
 
 #+NAME: accumulate-n
@@ -10173,11 +10529,13 @@ SUCCEED at accumulate-n
 ** Exercise 2.37: Enter the matrices
 :PROPERTIES:
 :ID:       14ee47b2-bdb6-44f1-806e-0ce544f38cae
+:CUSTOM-ID: 14ee47b2-bdb6-44f1-806e-0ce544f38cae
 :END:
 
 *** Question
 :PROPERTIES:
 :ID:       aa6cbc48-348d-485c-8973-8d3151d7ad26
+:CUSTOM-ID: aa6cbc48-348d-485c-8973-8d3151d7ad26
 :END:
 
 /See full quote in book./
@@ -10210,6 +10568,7 @@ Define these operations:
 *** Answer
 :PROPERTIES:
 :ID:       d38d82ff-dd0f-4555-841a-1a66d8fbacf3
+:CUSTOM-ID: d38d82ff-dd0f-4555-841a-1a66d8fbacf3
 :END:
 
 #+NAME: matrix-ops
@@ -10298,11 +10657,13 @@ I must have a mental block in the way I think about map operations.
 ** Exercise 2.38: fold-right
 :PROPERTIES:
 :ID:       e718c293-a8c8-4c16-8ee9-7d108bab3fa0
+:CUSTOM-ID: e718c293-a8c8-4c16-8ee9-7d108bab3fa0
 :END:
 
 *** Question A
 :PROPERTIES:
 :ID:       68e456e3-b545-438a-850f-634035a184e8
+:CUSTOM-ID: 68e456e3-b545-438a-850f-634035a184e8
 :END:
 
 #+begin_quote
@@ -10338,6 +10699,7 @@ What are the values of
 *** Answer A
 :PROPERTIES:
 :ID:       8a5a2b11-b9f7-448d-8690-32b88fea7085
+:CUSTOM-ID: 8a5a2b11-b9f7-448d-8690-32b88fea7085
 :END:
 
 #+BEGIN_SRC scheme -n :eval no-export :results output
@@ -10362,6 +10724,7 @@ What are the values of
 *** Question B
 :PROPERTIES:
 :ID:       aebf1d56-1a8f-4519-8d3d-7bf1854718f2
+:CUSTOM-ID: aebf1d56-1a8f-4519-8d3d-7bf1854718f2
 :END:
 
 #+begin_quote
@@ -10373,6 +10736,7 @@ for any sequence.
 *** Answer B
 :PROPERTIES:
 :ID:       cd5db947-e91d-4200-a5ba-69b708c6ae62
+:CUSTOM-ID: cd5db947-e91d-4200-a5ba-69b708c6ae62
 :END:
 
 They would need to be commutative, like addition and multiplication.
@@ -10407,11 +10771,13 @@ SUCCEED at commutative multiplication
 ** Exercise 2.39: reverse via fold
 :PROPERTIES:
 :ID:       65c7d1f3-bd94-4603-9534-3028979dd321
+:CUSTOM-ID: 65c7d1f3-bd94-4603-9534-3028979dd321
 :END:
 
 *** Question
 :PROPERTIES:
 :ID:       ad8bef77-fb45-4d6b-997a-2263472c20c3
+:CUSTOM-ID: ad8bef77-fb45-4d6b-997a-2263472c20c3
 :END:
 
 #+begin_quote
@@ -10430,6 +10796,7 @@ src_scheme{fold-right} and src_scheme{fold-left} from Exercise 2.38:
 *** Answer
 :PROPERTIES:
 :ID:       3b6f3fc0-a210-4091-b521-93ce82a913ba
+:CUSTOM-ID: 3b6f3fc0-a210-4091-b521-93ce82a913ba
 :END:
 
 First, I'd like to start using the SRFI folds instead. This is my little "compatibility module".
@@ -10478,11 +10845,13 @@ SUCCEED at reverse-fl
 ** Exercise 2.40: ~unique-pairs~
 :PROPERTIES:
 :ID:       8fbcce71-99a3-4265-9e3c-4edee2d0c972
+:CUSTOM-ID: 8fbcce71-99a3-4265-9e3c-4edee2d0c972
 :END:
 
 *** Text Definitions
 :PROPERTIES:
 :ID:       04c72f6b-beb5-4008-8e30-e706e318a5b3
+:CUSTOM-ID: 04c72f6b-beb5-4008-8e30-e706e318a5b3
 :END:
 #+NAME: enumerate-interval
 #+BEGIN_SRC scheme -n :eval no-export :results silent
@@ -10522,6 +10891,7 @@ SUCCEED at reverse-fl
 *** Question
 :PROPERTIES:
 :ID:       5b21dfdd-eb13-4cec-ae85-79eb0d3fbcf3
+:CUSTOM-ID: 5b21dfdd-eb13-4cec-ae85-79eb0d3fbcf3
 :END:
 
 #+begin_quote
@@ -10534,6 +10904,7 @@ src_scheme{prime-sum-pairs} given above.
 *** Answer
 :PROPERTIES:
 :ID:       f5dfcaf8-f191-4701-9807-6962df851c3e
+:CUSTOM-ID: f5dfcaf8-f191-4701-9807-6962df851c3e
 :END:
 
 #+NAME: unique-pairs
@@ -10581,11 +10952,13 @@ SUCCEED at prime-sum-pairs with unique-pairs
 ** Exercise 2.41: Ordered triples of positive integers
 :PROPERTIES:
 :ID:       f29f74e9-e2a6-4af9-b885-4c5ec0b4253f
+:CUSTOM-ID: f29f74e9-e2a6-4af9-b885-4c5ec0b4253f
 :END:
 
 *** Question
 :PROPERTIES:
 :ID:       5c6311c9-709f-4703-b1e4-a225f64e9312
+:CUSTOM-ID: 5c6311c9-709f-4703-b1e4-a225f64e9312
 :END:
 
 #+begin_quote
@@ -10597,6 +10970,7 @@ a given integer \(s\).
 *** Answer
 :PROPERTIES:
 :ID:       865a33a4-b121-43e1-b16f-25de2c1d4897
+:CUSTOM-ID: 865a33a4-b121-43e1-b16f-25de2c1d4897
 :END:
 
 #+NAME: unique-triplets
@@ -10651,11 +11025,13 @@ SUCCEED at triplets-sum
 ** Exercise 2.42: Eight Queens
 :PROPERTIES:
 :ID:       db842530-7a5d-4f0f-af80-0dd4c2e115f7
+:CUSTOM-ID: db842530-7a5d-4f0f-af80-0dd4c2e115f7
 :END:
 
 *** Question
 :PROPERTIES:
 :ID:       67862610-e761-4def-9374-735130432089
+:CUSTOM-ID: 67862610-e761-4def-9374-735130432089
 :END:
 
 #+begin_quote
@@ -10698,6 +11074,7 @@ Complete the program by writing the following:
 *** Answer
 :PROPERTIES:
 :ID:       3de2fa03-7508-4172-b9c3-aba6d64818ac
+:CUSTOM-ID: 3de2fa03-7508-4172-b9c3-aba6d64818ac
 :END:
 
 #+NAME: queens-mine
@@ -10748,11 +11125,13 @@ SUCCEED at queens
 ** Exercise 2.43: Louis' ~queens~
 :PROPERTIES:
 :ID:       994c8401-9a1a-434e-8d78-3742c0c9d522
+:CUSTOM-ID: 994c8401-9a1a-434e-8d78-3742c0c9d522
 :END:
 
 *** Question
 :PROPERTIES:
 :ID:       787321bd-b16a-4c95-a19e-d42b2c8aa1fa
+:CUSTOM-ID: 787321bd-b16a-4c95-a19e-d42b2c8aa1fa
 :END:
 
 #+begin_quote
@@ -10782,6 +11161,7 @@ program in Exercise 2.42 solves the puzzle in time \(T\).
 *** Answer
 :PROPERTIES:
 :ID:       ac70f63f-d952-469a-9127-2d943557b879
+:CUSTOM-ID: ac70f63f-d952-469a-9127-2d943557b879
 :END:
 
 The biggest contributor to the slowdown is likely the location of the
@@ -10880,6 +11260,7 @@ serious comp-sci literature.
 ** 2.2.4: Example: A Picture Language
 :PROPERTIES:
 :ID:       8588fd65-1b81-43b8-855f-4fed731fb88f
+:CUSTOM-ID: 8588fd65-1b81-43b8-855f-4fed731fb88f
 :END:
 
 Authors describe a possible implementation of a "picture language" that tiles,
@@ -10972,11 +11353,13 @@ and simultaneously check my work with Racket.
 ** Exercise 2.44: ~up-split~
 :PROPERTIES:
 :ID:       dde0ab90-49dd-4d62-9e6b-c636959c20c6
+:CUSTOM-ID: dde0ab90-49dd-4d62-9e6b-c636959c20c6
 :END:
 
 *** Text Definitions
 :PROPERTIES:
 :ID:       b0a64d21-e7fc-4ef6-a374-26741e1d5303
+:CUSTOM-ID: b0a64d21-e7fc-4ef6-a374-26741e1d5303
 :END:
 
 #+BEGIN_SRC scheme -n :eval no-export :results silent
@@ -10992,6 +11375,7 @@ and simultaneously check my work with Racket.
 *** Question
 :PROPERTIES:
 :ID:       d54717c6-0e99-42ef-a5db-a2405bb849bf
+:CUSTOM-ID: d54717c6-0e99-42ef-a5db-a2405bb849bf
 :END:
 
 #+begin_quote
@@ -11003,6 +11387,7 @@ src_scheme{below} and src_scheme{beside}.
 *** Answer
 :PROPERTIES:
 :ID:       6bd6c390-e052-420a-9b0e-67389c884b1b
+:CUSTOM-ID: 6bd6c390-e052-420a-9b0e-67389c884b1b
 :END:
 
 #+BEGIN_SRC scheme -n :eval no-export :results silent
@@ -11018,11 +11403,13 @@ src_scheme{below} and src_scheme{beside}.
 ** Exercise 2.45: Generalized splitting
 :PROPERTIES:
 :ID:       1450bd14-52fd-45d6-b249-868093976032
+:CUSTOM-ID: 1450bd14-52fd-45d6-b249-868093976032
 :END:
 
 *** Question
 :PROPERTIES:
 :ID:       3f151d8e-b88e-42cd-a812-c87e13529dd9
+:CUSTOM-ID: 3f151d8e-b88e-42cd-a812-c87e13529dd9
 :END:
 
 #+begin_quote
@@ -11044,6 +11431,7 @@ same behaviors as the ones already defined.
 *** Answer
 :PROPERTIES:
 :ID:       cf4b601e-6eb1-4c46-a2b6-c89279497b13
+:CUSTOM-ID: cf4b601e-6eb1-4c46-a2b6-c89279497b13
 :END:
 
 #+NAME: splits-generalized
@@ -11072,11 +11460,13 @@ same behaviors as the ones already defined.
 ** Exercise 2.46: Defining vectors
 :PROPERTIES:
 :ID:       cfdbca96-f763-4b61-9823-bd3363e0b385
+:CUSTOM-ID: cfdbca96-f763-4b61-9823-bd3363e0b385
 :END:
 
 *** Question
 :PROPERTIES:
 :ID:       eb5879a3-09a1-4819-9fc7-c2acd2c0f9e2
+:CUSTOM-ID: eb5879a3-09a1-4819-9fc7-c2acd2c0f9e2
 :END:
 
 #+begin_quote
@@ -11101,6 +11491,7 @@ subtraction, and multiplying a vector by a scalar:
 *** Answer
 :PROPERTIES:
 :ID:       75604738-82fe-47e9-ac83-889e2fa8bd7d
+:CUSTOM-ID: 75604738-82fe-47e9-ac83-889e2fa8bd7d
 :END:
 
 This is pretty close to the src_scheme{make-point} work done in Exercise 2.2, as well as my 2nd implementation of a rectangle in Exercise 2.3. Let's start there. Also, /aren't these points and not vectors since they don't have direction??/
@@ -11146,11 +11537,13 @@ broke. I realized my mistake once I went to write src_scheme{beside}.
 ** Exercise 2.47: Defining frames
 :PROPERTIES:
 :ID:       eedeb3cf-97f6-4e91-8914-6308ad182504
+:CUSTOM-ID: eedeb3cf-97f6-4e91-8914-6308ad182504
 :END:
 
 *** Question
 :PROPERTIES:
 :ID:       0017b75c-f2c6-411e-94d7-8bdb8c2de92c
+:CUSTOM-ID: 0017b75c-f2c6-411e-94d7-8bdb8c2de92c
 :END:
 
 #+begin_quote
@@ -11173,6 +11566,7 @@ implementation for frames.
 *** Answer
 :PROPERTIES:
 :ID:       2465aa1f-271c-4a42-9b82-d9d838efc061
+:CUSTOM-ID: 2465aa1f-271c-4a42-9b82-d9d838efc061
 :END:
 
 #+BEGIN_SRC scheme -n
@@ -11200,11 +11594,13 @@ implementation for frames.
 ** Exercise 2.48: Line segments
 :PROPERTIES:
 :ID:       d4e49e3e-ec42-470a-a1ca-903715953a43
+:CUSTOM-ID: d4e49e3e-ec42-470a-a1ca-903715953a43
 :END:
 
 *** Question
 :PROPERTIES:
 :ID:       d1775142-e3ba-4227-a2e9-950de381ae0c
+:CUSTOM-ID: d1775142-e3ba-4227-a2e9-950de381ae0c
 :END:
 
 #+begin_quote
@@ -11219,6 +11615,7 @@ selectors src_scheme{start-segment} and src_scheme{end-segment}.
 *** Answer
 :PROPERTIES:
 :ID:       814704f8-5858-4324-ac28-c9b43ed7e86f
+:CUSTOM-ID: 814704f8-5858-4324-ac28-c9b43ed7e86f
 :END:
 
 Again reminding me of Exercise 2.2.
@@ -11236,11 +11633,13 @@ Again reminding me of Exercise 2.2.
 ** Exercise 2.49: Primitive painters
 :PROPERTIES:
 :ID:       7913c8e9-10fa-4d5d-aafc-2c87f83e8ab2
+:CUSTOM-ID: 7913c8e9-10fa-4d5d-aafc-2c87f83e8ab2
 :END:
 
 *** Text Definitions
 :PROPERTIES:
 :ID:       97444370-d19f-4b80-a39f-d707e8721801
+:CUSTOM-ID: 97444370-d19f-4b80-a39f-d707e8721801
 :END:
 
 #+NAME: segments-painter
@@ -11269,6 +11668,7 @@ Again reminding me of Exercise 2.2.
 *** Question
 :PROPERTIES:
 :ID:       32e57911-7ed3-4844-9231-578c641a3afb
+:CUSTOM-ID: 32e57911-7ed3-4844-9231-578c641a3afb
 :END:
 
 #+begin_quote
@@ -11285,6 +11685,7 @@ d. The src_scheme{wave} painter.
 *** Answer
 :PROPERTIES:
 :ID:       be7dd3d7-02fd-437e-9476-d5eb0112c4a7
+:CUSTOM-ID: be7dd3d7-02fd-437e-9476-d5eb0112c4a7
 :END:
 
 In the past I would need to constantly execute my code to "see" what I'm doing.
@@ -11392,11 +11793,13 @@ Holy moly it actually works.
 ** Exercise 2.50: Transforming painters
 :PROPERTIES:
 :ID:       028d6bfc-468d-4ab1-86d3-673f1a1e4e43
+:CUSTOM-ID: 028d6bfc-468d-4ab1-86d3-673f1a1e4e43
 :END:
 
 *** Text Definitions
 :PROPERTIES:
 :ID:       a6debaa2-a28d-42bd-bccc-1dc85cfc6841
+:CUSTOM-ID: a6debaa2-a28d-42bd-bccc-1dc85cfc6841
 :END:
 
 #+NAME: frame-transforms-txt
@@ -11490,6 +11893,7 @@ Holy moly it actually works.
 *** Question
 :PROPERTIES:
 :ID:       1f5a11df-2b2e-49e9-b301-3c84a857aced
+:CUSTOM-ID: 1f5a11df-2b2e-49e9-b301-3c84a857aced
 :END:
 
 #+begin_quote
@@ -11501,6 +11905,7 @@ degrees and 270 degrees.
 *** Answer
 :PROPERTIES:
 :ID:       985538a4-a01a-45c1-b025-68c7845c55c8
+:CUSTOM-ID: 985538a4-a01a-45c1-b025-68c7845c55c8
 :END:
 
 #+NAME: flip-rotate2
@@ -11551,11 +11956,13 @@ degrees and 270 degrees.
 ** Exercise 2.51
 :PROPERTIES:
 :ID:       657b9460-c0c5-4f37-9dcc-8310d828d448
+:CUSTOM-ID: 657b9460-c0c5-4f37-9dcc-8310d828d448
 :END:
 
 *** Question
 :PROPERTIES:
 :ID:       fff4a3e4-e368-4acd-aa67-5d689830761a
+:CUSTOM-ID: fff4a3e4-e368-4acd-aa67-5d689830761a
 :END:
 
 #+begin_quote
@@ -11571,6 +11978,7 @@ rotation operations (from @ref{Exercise 2.50}).
 *** Answer
 :PROPERTIES:
 :ID:       7ceba648-533f-4a5c-9368-37de4e9cc8bf
+:CUSTOM-ID: 7ceba648-533f-4a5c-9368-37de4e9cc8bf
 :END:
 
 #+NAME: below
@@ -11639,6 +12047,7 @@ imperative commands that cause something to happen elsewhere.
 ** 2.2.4 continued
 :PROPERTIES:
 :ID:       35ea15ae-3459-4f78-999e-5d61928c5eb5
+:CUSTOM-ID: 35ea15ae-3459-4f78-999e-5d61928c5eb5
 :END:
 
 - stratified design :: is the notion that complex systems should be structured
@@ -11656,11 +12065,13 @@ src_scheme{up-split}.
 ** Exercise 2.52
 :PROPERTIES:
 :ID:       fcc09b41-5e26-483c-9983-109499a6b031
+:CUSTOM-ID: fcc09b41-5e26-483c-9983-109499a6b031
 :END:
 
 *** Question A
 :PROPERTIES:
 :ID:       45bbf4fd-704e-4124-a54b-34012f42f5a9
+:CUSTOM-ID: 45bbf4fd-704e-4124-a54b-34012f42f5a9
 :END:
 
 Make changes to the square limit of src_scheme{wave} shown in Figure 2.9 by
@@ -11671,6 +12082,7 @@ working at each of the levels described above. In particular:
 *** Answer A
 :PROPERTIES:
 :ID:       7e78cf22-b210-4018-9cc8-a88c3e1f7abb
+:CUSTOM-ID: 7e78cf22-b210-4018-9cc8-a88c3e1f7abb
 :END:
 
 I need to do what I've been slacking off on: actually making the src_scheme{wave} painter.
@@ -11881,6 +12293,7 @@ Now let's (try to) add a smile.
 *** Question B
 :PROPERTIES:
 :ID:       129b6c3e-257f-4e9a-bd96-e8e13f4d5cc5
+:CUSTOM-ID: 129b6c3e-257f-4e9a-bd96-e8e13f4d5cc5
 :END:
 
 Change the pattern constructed by src_scheme{corner-split} (for example, by
@@ -11953,6 +12366,7 @@ causing issues?
 *** Question C
 :PROPERTIES:
 :ID:       3c3aea71-197f-44cc-8ed0-97b464a037ec
+:CUSTOM-ID: 3c3aea71-197f-44cc-8ed0-97b464a037ec
 :END:
 
 #+begin_quote
@@ -11964,6 +12378,7 @@ the big Mr. Rogers look outward from each corner of the square.)
 *** Textbook Definitions
 :PROPERTIES:
 :ID:       b0a6d67f-6886-4a55-92fe-b233944c206a
+:CUSTOM-ID: b0a6d67f-6886-4a55-92fe-b233944c206a
 :END:
 
 #+NAME: square-of-four-txt
@@ -11987,6 +12402,7 @@ the big Mr. Rogers look outward from each corner of the square.)
 *** Answer C
 :PROPERTIES:
 :ID:       91c819a1-d908-4957-9713-ab4c6d282166
+:CUSTOM-ID: 91c819a1-d908-4957-9713-ab4c6d282166
 :END:
 
 #+NAME: square-limit-mine
@@ -12055,6 +12471,7 @@ results.]][fn:: http://pipecode.blogspot.com/2013/04/sicp-exercise-252.html]
 ** 2.3.1: Quotation
 :PROPERTIES:
 :ID:       f1cb5c0f-0137-4642-878c-242ff44b91cb
+:CUSTOM-ID: f1cb5c0f-0137-4642-878c-242ff44b91cb
 :END:
 
 Syntactic vs semantic use in Lisp:
@@ -12069,11 +12486,13 @@ This was introduced by famous LISP scientists, Abbott and Costello.
 ** Exercise 2.53
 :PROPERTIES:
 :ID:       258696d9-05d2-49ec-b35e-3edb680427a2
+:CUSTOM-ID: 258696d9-05d2-49ec-b35e-3edb680427a2
 :END:
 
 *** Question
 :PROPERTIES:
 :ID:       e0034d4c-fbfe-4a87-ae13-ed845db2b81e
+:CUSTOM-ID: e0034d4c-fbfe-4a87-ae13-ed845db2b81e
 :END:
 
 #+begin_quote
@@ -12094,6 +12513,7 @@ in response to evaluating each of the following expressions?
 *** Answer
 :PROPERTIES:
 :ID:       582a441c-1a57-40e9-bb8d-c382dabbaa86
+:CUSTOM-ID: 582a441c-1a57-40e9-bb8d-c382dabbaa86
 :END:
 
 #+BEGIN_SRC scheme -n
@@ -12109,6 +12529,7 @@ in response to evaluating each of the following expressions?
 ** Exercise 2.54
 :PROPERTIES:
 :ID:       29527ad8-cc9f-4d2e-9d8a-6475e783dc85
+:CUSTOM-ID: 29527ad8-cc9f-4d2e-9d8a-6475e783dc85
 :END:
 
 #+begin_quote
@@ -12141,6 +12562,7 @@ idea, implement src_scheme{equal?} as a procedure.
 *** Answer
 :PROPERTIES:
 :ID:       3043a43e-7468-4b14-96e8-49490e3056f2
+:CUSTOM-ID: 3043a43e-7468-4b14-96e8-49490e3056f2
 :END:
 
 #+NAME: my-equal?
@@ -12180,11 +12602,13 @@ SUCCEED at equal? false
 ** Exercise 2.55
 :PROPERTIES:
 :ID:       00be831b-8f4c-425f-bcb1-7ad613ddb06f
+:CUSTOM-ID: 00be831b-8f4c-425f-bcb1-7ad613ddb06f
 :END:
 
 *** Question
 :PROPERTIES:
 :ID:       87cfa7f0-088a-4d47-9203-bb587ca4d503
+:CUSTOM-ID: 87cfa7f0-088a-4d47-9203-bb587ca4d503
 :END:
 
 Eva Lu Ator types to the interpreter the expression
@@ -12198,6 +12622,7 @@ To her surprise, the interpreter prints back src_scheme{quote}. Explain.
 *** Answer
 :PROPERTIES:
 :ID:       567cc140-30bf-40bf-8fff-889862d517cb
+:CUSTOM-ID: 567cc140-30bf-40bf-8fff-889862d517cb
 :END:
 
 You're quoting quote, silly! Who's on first?
@@ -12205,6 +12630,7 @@ You're quoting quote, silly! Who's on first?
 ** 2.3.2: Example: Symbolic differentiator
 :PROPERTIES:
 :ID:       1f159d89-0a02-4726-9872-bbbc527ab559
+:CUSTOM-ID: 1f159d89-0a02-4726-9872-bbbc527ab559
 :END:
 
 I needed to get some help, but I think I have some understanding now.
@@ -12252,11 +12678,13 @@ Later:
 ** Exercise 2.56: Differentiating exponentiation
 :PROPERTIES:
 :ID:       6be5f14d-c225-46d2-a1d4-1864083a8c76
+:CUSTOM-ID: 6be5f14d-c225-46d2-a1d4-1864083a8c76
 :END:
 
 *** Text definitions
 :PROPERTIES:
 :ID:       b0b61dc7-4677-4b9f-8249-edf8beb99189
+:CUSTOM-ID: b0b61dc7-4677-4b9f-8249-edf8beb99189
 :END:
 
 #+NAME: deriv-basic-txt
@@ -12302,6 +12730,7 @@ Later:
 *** Question
 :PROPERTIES:
 :ID:       c2acf981-29fc-4cf7-9afd-56f7764b11d8
+:CUSTOM-ID: c2acf981-29fc-4cf7-9afd-56f7764b11d8
 :END:
 
 #+begin_quote
@@ -12320,6 +12749,7 @@ is 1 and anything raised to the power 1 is the thing itself.
 *** Answer
 :PROPERTIES:
 :ID:       5943cb2c-8dd3-4789-ab52-9d74eee215aa
+:CUSTOM-ID: 5943cb2c-8dd3-4789-ab52-9d74eee215aa
 :END:
 
 #+NAME: deriv-exp
@@ -12404,11 +12834,13 @@ SUCCEED at deriv: exponentiation 2
 ** Exercise 2.57: Differentiating arbitrary-length expressions
 :PROPERTIES:
 :ID:       47f5c525-98f5-403f-9dd1-df43fd4b5155
+:CUSTOM-ID: 47f5c525-98f5-403f-9dd1-df43fd4b5155
 :END:
 
 *** Question
 :PROPERTIES:
 :ID:       a73afb4a-3e3b-4d8a-b908-3e9f2bc051f4
+:CUSTOM-ID: a73afb4a-3e3b-4d8a-b908-3e9f2bc051f4
 :END:
 
 Extend the differentiation program to handle sums and products of arbitrary
@@ -12427,6 +12859,7 @@ would be the sum of the rest of the terms.
 *** Answer
 :PROPERTIES:
 :ID:       e970b43b-d753-43e1-b844-7ee3e342a2dc
+:CUSTOM-ID: e970b43b-d753-43e1-b844-7ee3e342a2dc
 :END:
 
 #+NAME: deriv-longer
@@ -12503,11 +12936,13 @@ I'll have to keep watch for problem-solving dead-ends like this.
 ** Exercise 2.58: Processing expressions with infix notation
 :PROPERTIES:
 :ID:       0c266a88-a666-42f8-8da6-758186f84570
+:CUSTOM-ID: 0c266a88-a666-42f8-8da6-758186f84570
 :END:
 
 *** Question
 :PROPERTIES:
 :ID:       435005e1-fd26-4326-a1ab-827d7f6e9ca8
+:CUSTOM-ID: 435005e1-fd26-4326-a1ab-827d7f6e9ca8
 :END:
 
 Suppose we want to modify the differentiation program so that it works with
@@ -12521,6 +12956,7 @@ which the differentiator is to operate.
 *** Part 1
 :PROPERTIES:
 :ID:       e9680d8c-53f0-4d51-a89e-0ceedb068100
+:CUSTOM-ID: e9680d8c-53f0-4d51-a89e-0ceedb068100
 :END:
 
 Show how to do this in order to differentiate algebraic expressions presented
@@ -12531,6 +12967,7 @@ expressions are fully parenthesized.
 *** Answer 1
 :PROPERTIES:
 :ID:       b54640f3-881c-46d2-977d-ee14cc6f8664
+:CUSTOM-ID: b54640f3-881c-46d2-977d-ee14cc6f8664
 :END:
 
 #+NAME: deriv-infix
@@ -12596,6 +13033,7 @@ SUCCEED at deriv: bad simplification
 *** Part 2
 :PROPERTIES:
 :ID:       e13be4f0-5c38-4da2-9c98-453a90730e1d
+:CUSTOM-ID: e13be4f0-5c38-4da2-9c98-453a90730e1d
 :END:
 
 The problem becomes substantially harder if we allow standard algebraic
@@ -12607,6 +13045,7 @@ such that our derivative program still works?
 *** Answer 2
 :PROPERTIES:
 :ID:       2e7a512e-72a1-4728-bc06-e6a140c70867
+:CUSTOM-ID: 2e7a512e-72a1-4728-bc06-e6a140c70867
 :END:
 
 Ok, I think I can do the long-form list objective, since that would be a
@@ -12858,11 +13297,13 @@ TODO:
 ** Exercise 2.59: Representing sets
 :PROPERTIES:
 :ID:       ecbb093d-99c4-44c1-9891-ab68c5dd3c31
+:CUSTOM-ID: ecbb093d-99c4-44c1-9891-ab68c5dd3c31
 :END:
 
 *** Text definitions
 :PROPERTIES:
 :ID:       9e32f631-f5d6-4528-96fb-9899c3ad835b
+:CUSTOM-ID: 9e32f631-f5d6-4528-96fb-9899c3ad835b
 :END:
 
 #+NAME: sets-txt
@@ -12892,6 +13333,7 @@ TODO:
 *** Question
 :PROPERTIES:
 :ID:       e4853186-1af6-495c-96f7-008add26ce22
+:CUSTOM-ID: e4853186-1af6-495c-96f7-008add26ce22
 :END:
 
 Implement the src_scheme{union-set} operation for the unordered-list representation of sets.
@@ -12899,6 +13341,7 @@ Implement the src_scheme{union-set} operation for the unordered-list representat
 *** Answer
 :PROPERTIES:
 :ID:       8d7e0c34-2dd5-40f9-ac98-4b3abb8c4c58
+:CUSTOM-ID: 8d7e0c34-2dd5-40f9-ac98-4b3abb8c4c58
 :END:
 
 src_scheme{union-set} at a first glance looks like the opposite of
@@ -12983,11 +13426,13 @@ but I'm a new programmer so it's probably a skill issue.
 ** Exercise 2.59: Sets with duplicates
 :PROPERTIES:
 :ID:       56d38582-cfa6-474e-acf8-7788a2e54b9f
+:CUSTOM-ID: 56d38582-cfa6-474e-acf8-7788a2e54b9f
 :END:
 
 *** Question
 :PROPERTIES:
 :ID:       77e25c2d-043a-4ff1-a60e-5201a853288e
+:CUSTOM-ID: 77e25c2d-043a-4ff1-a60e-5201a853288e
 :END:
 
 We specified that a set would be represented as a list with no duplicates. Now
@@ -13002,6 +13447,7 @@ this representation in preference to the non-duplicate one?
 *** Answer
 :PROPERTIES:
 :ID:       49bfc1b6-e8c0-4833-9be1-e535e23b5e1b
+:CUSTOM-ID: 49bfc1b6-e8c0-4833-9be1-e535e23b5e1b
 :END:
 
 src_scheme{element-of-set} can be left unchanged. The others are a matter of
@@ -13111,11 +13557,13 @@ wouldn't be wasting time checking duplicates.
 ** Exercise 2.61: Ordered sets
 :PROPERTIES:
 :ID:       63d00424-b2ae-4c03-ba2d-7211587d0d58
+:CUSTOM-ID: 63d00424-b2ae-4c03-ba2d-7211587d0d58
 :END:
 
 *** Question
 :PROPERTIES:
 :ID:       7835acdf-8bb9-400f-8e74-f74f17a5269c
+:CUSTOM-ID: 7835acdf-8bb9-400f-8e74-f74f17a5269c
 :END:
 
 Give an implementation of src_scheme{adjoin-set} using the ordered
@@ -13126,6 +13574,7 @@ about half as many steps as with the unordered representation.
 *** Answer
 :PROPERTIES:
 :ID:       af210971-9110-42e6-a672-daed9e8c92a6
+:CUSTOM-ID: af210971-9110-42e6-a672-daed9e8c92a6
 :END:
 
 #+NAME: set-ordered
@@ -13170,11 +13619,13 @@ SUCCEED at adjoin-set-ordered
 ** Exercise 2.62: ~union-set~ ordered
 :PROPERTIES:
 :ID:       0f2a00ea-9015-4740-bd3f-dbd5d698b918
+:CUSTOM-ID: 0f2a00ea-9015-4740-bd3f-dbd5d698b918
 :END:
 
 *** Question
 :PROPERTIES:
 :ID:       12c67368-0159-4d19-856e-8f4f9f35f3a3
+:CUSTOM-ID: 12c67368-0159-4d19-856e-8f4f9f35f3a3
 :END:
 
 Give a \(\Theta(n)\) implementation of src_scheme{union-set} for sets
@@ -13183,6 +13634,7 @@ represented as ordered lists.
 *** Answer
 :PROPERTIES:
 :ID:       8bab316a-a45a-4005-8d5d-330b4d1ea2e2
+:CUSTOM-ID: 8bab316a-a45a-4005-8d5d-330b4d1ea2e2
 :END:
 
 #+NAME: union-set-ordered
@@ -13286,11 +13738,13 @@ union-set-alt2: 66262.4295
 ** Exercise 2.63: binary trees
 :PROPERTIES:
 :ID:       ab85e21b-827b-48eb-9ad2-58f6315bfddb
+:CUSTOM-ID: ab85e21b-827b-48eb-9ad2-58f6315bfddb
 :END:
 
 *** Text definitions
 :PROPERTIES:
 :ID:       89e7156c-1d4d-4407-8f5c-376c8612f1fa
+:CUSTOM-ID: 89e7156c-1d4d-4407-8f5c-376c8612f1fa
 :END:
 
 #+NAME: make-tree
@@ -13305,6 +13759,7 @@ union-set-alt2: 66262.4295
 *** Question A
 :PROPERTIES:
 :ID:       175a45f6-69ab-46d4-981b-61dc99016c1e
+:CUSTOM-ID: 175a45f6-69ab-46d4-981b-61dc99016c1e
 :END:
 
 Each of the following two
@@ -13339,6 +13794,7 @@ a. Do the two procedures produce the same result for every tree? If not, how do
 *** Answer A
 :PROPERTIES:
 :ID:       49b808cb-71b0-4866-b1d7-1dda7ab4495a
+:CUSTOM-ID: 49b808cb-71b0-4866-b1d7-1dda7ab4495a
 :END:
 
 First let's check whether the arrangement of the input tree impacts the output
@@ -13423,6 +13879,7 @@ in source code.
 *** Question B
 :PROPERTIES:
 :ID:       6a43ff28-bb10-4e54-b692-59f258015af4
+:CUSTOM-ID: 6a43ff28-bb10-4e54-b692-59f258015af4
 :END:
 
 Do the two procedures have the same order of growth in the number of steps
@@ -13432,6 +13889,7 @@ one grows more slowly?
 *** Answer B
 :PROPERTIES:
 :ID:       dd34d29c-8a86-4455-84ea-5e56510c2dd4
+:CUSTOM-ID: dd34d29c-8a86-4455-84ea-5e56510c2dd4
 :END:
 
 #+BEGIN_SRC scheme -n :eval no-export :results silent
@@ -13507,6 +13965,7 @@ src_scheme{cons} statements. The internet suggests that the first is
 ** Exercise 2.64: Making a balanced binary tree
 :PROPERTIES:
 :ID:       b748b886-879d-465d-87e6-c816cb02c4dd
+:CUSTOM-ID: b748b886-879d-465d-87e6-c816cb02c4dd
 :END:
 
 The following procedure src_scheme{list->tree} converts an ordered list to a
@@ -13548,6 +14007,7 @@ list of elements not included in the tree.
 *** Question A
 :PROPERTIES:
 :ID:       bac079c0-fcdc-4ce9-ba35-22f22f0aeb7c
+:CUSTOM-ID: bac079c0-fcdc-4ce9-ba35-22f22f0aeb7c
 :END:
 
 Write a short paragraph explaining as clearly as you can how
@@ -13557,6 +14017,7 @@ for the list src_scheme{(1 3 5 7 9 11)}.
 *** Answer A
 :PROPERTIES:
 :ID:       47ba4b88-3df4-40f4-ad3c-b7481e660ce1
+:CUSTOM-ID: 47ba4b88-3df4-40f4-ad3c-b7481e660ce1
 :END:
 
 For my own sake, I'll reorganize this with src_scheme{let*}.
@@ -13622,6 +14083,7 @@ digraph {
 *** Question B
 :PROPERTIES:
 :ID:       c1c44972-e7a2-47ef-bd00-8a4ab612e98f
+:CUSTOM-ID: c1c44972-e7a2-47ef-bd00-8a4ab612e98f
 :END:
 
 What is the order of growth in the number of steps required by
@@ -13630,6 +14092,7 @@ src_scheme{list->tree} to convert a list of \(n\) elements?
 *** Answer B
 :PROPERTIES:
 :ID:       2d8751a2-ce68-4f57-adb3-3288009981c9
+:CUSTOM-ID: 2d8751a2-ce68-4f57-adb3-3288009981c9
 :END:
 
 I'm going to estimate that it's \(\Theta(n)\) because of the src_scheme{cons}
@@ -13639,11 +14102,13 @@ in this case.
 ** Exercise 2.65: Sets as binary trees
 :PROPERTIES:
 :ID:       adb5b85a-5b2d-4981-ae2a-ad03df26bbb1
+:CUSTOM-ID: adb5b85a-5b2d-4981-ae2a-ad03df26bbb1
 :END:
 
 *** Textbook Definitions
 :PROPERTIES:
 :ID:       0290682f-9b5f-41e8-8c2a-ca12aefab68d
+:CUSTOM-ID: 0290682f-9b5f-41e8-8c2a-ca12aefab68d
 :END:
 
 #+NAME: tree-sets-txt
@@ -13677,6 +14142,7 @@ in this case.
 *** Question
 :PROPERTIES:
 :ID:       566edfbe-2c03-4fa3-a6bc-df4359dfb663
+:CUSTOM-ID: 566edfbe-2c03-4fa3-a6bc-df4359dfb663
 :END:
 
 Use the results of Exercise 2.63 and Exercise 2.64 to give \(\Theta(n)\)
@@ -13686,6 +14152,7 @@ sets implemented as (balanced) binary trees.
 *** Answer
 :PROPERTIES:
 :ID:       77574b95-ad69-4f55-8216-bc7bb3f30473
+:CUSTOM-ID: 77574b95-ad69-4f55-8216-bc7bb3f30473
 :END:
 
 Ok, now that's stretching my brain for sure. Hmm...
@@ -14031,11 +14498,13 @@ are faster.
 ** Exercise 2.66: binary tree ~lookup~
 :PROPERTIES:
 :ID:       7789edb1-b8d0-4587-b61b-4335abfc9485
+:CUSTOM-ID: 7789edb1-b8d0-4587-b61b-4335abfc9485
 :END:
 
 *** Question
 :PROPERTIES:
 :ID:       28c9b15a-b445-4efd-8a49-bb40f8cba291
+:CUSTOM-ID: 28c9b15a-b445-4efd-8a49-bb40f8cba291
 :END:
 
 Implement the src_scheme{lookup} procedure for the case where the set of records
@@ -14044,6 +14513,7 @@ is structured as a binary tree, ordered by the numerical values of the keys.
 *** Answer
 :PROPERTIES:
 :ID:       5ef7e3f8-f4db-474d-8e9e-5fd60a22a411
+:CUSTOM-ID: 5ef7e3f8-f4db-474d-8e9e-5fd60a22a411
 :END:
 
 First let's define what these records look like.
@@ -14104,11 +14574,13 @@ SUCCEED at lookup retrieves correct record
 ** Exercise 2.67: decoding Huffman tree messages
 :PROPERTIES:
 :ID:       b996c47a-9e4d-4f41-ae7a-ebfd48fa2be4
+:CUSTOM-ID: b996c47a-9e4d-4f41-ae7a-ebfd48fa2be4
 :END:
 
 *** Text definitions
 :PROPERTIES:
 :ID:       798df0ce-bc84-4113-9a95-5d6861590639
+:CUSTOM-ID: 798df0ce-bc84-4113-9a95-5d6861590639
 :END:
 
 #+NAME: huffman-trees-txt
@@ -14176,6 +14648,7 @@ SUCCEED at lookup retrieves correct record
 *** Question
 :PROPERTIES:
 :ID:       de18de6a-5926-4df4-aac7-ef6f625be186
+:CUSTOM-ID: de18de6a-5926-4df4-aac7-ef6f625be186
 :END:
 
 Define an encoding tree and a sample message. Use the src_scheme{decode}
@@ -14184,6 +14657,7 @@ procedure to decode the message, and give the result.
 *** Answer
 :PROPERTIES:
 :ID:       f3e5d321-b4a5-4e10-b4d6-f12b7905ff23
+:CUSTOM-ID: f3e5d321-b4a5-4e10-b4d6-f12b7905ff23
 :END:
 
 #+NAME: test-encoding
@@ -14220,11 +14694,13 @@ procedure to decode the message, and give the result.
 ** Exercise 2.68: encoding Huffman tree messages
 :PROPERTIES:
 :ID:       dad2b9f6-25ac-4de0-8d65-5ae120a639de
+:CUSTOM-ID: dad2b9f6-25ac-4de0-8d65-5ae120a639de
 :END:
 
 *** Question
 :PROPERTIES:
 :ID:       e10cf171-3127-4b9f-b240-0ad0b2db52ee
+:CUSTOM-ID: e10cf171-3127-4b9f-b240-0ad0b2db52ee
 :END:
 
 The src_scheme{encode} procedure takes as arguments a message and a tree and
@@ -14250,6 +14726,7 @@ original sample message.
 *** Answer
 :PROPERTIES:
 :ID:       d20f06fa-24db-44eb-8aa8-7fc4382abbe3
+:CUSTOM-ID: d20f06fa-24db-44eb-8aa8-7fc4382abbe3
 :END:
 
 #+NAME: encode-symbol
@@ -14318,11 +14795,13 @@ SUCCEED at who's on first encoded message
 ** Exercise 2.69: Generating Huffman trees
 :PROPERTIES:
 :ID:       08c0f6d4-2c04-4004-a7a4-6b22abba623a
+:CUSTOM-ID: 08c0f6d4-2c04-4004-a7a4-6b22abba623a
 :END:
 
 *** Question
 :PROPERTIES:
 :ID:       04f74d6f-2e1e-4bb2-925c-43eb2bca5a03
+:CUSTOM-ID: 04f74d6f-2e1e-4bb2-925c-43eb2bca5a03
 :END:
 
 The following procedure takes as its argument a list of symbol-frequency pairs
@@ -14346,6 +14825,7 @@ of the fact that we are using an ordered set representation.)
 *** Answer
 :PROPERTIES:
 :ID:       fcbe5685-f1b4-4e54-a262-7c5378db7985
+:CUSTOM-ID: fcbe5685-f1b4-4e54-a262-7c5378db7985
 :END:
 
 This one took a while. The whole in-place-reorganization of the list seems
@@ -14515,11 +14995,13 @@ src_scheme{adjoin-set}), since this book loves to integrate past exercises.
 ** Exercise 2.70: encoding 1950s rock songs
 :PROPERTIES:
 :ID:       315bef96-b4d4-41b1-ad8a-7d7b90a8fa96
+:CUSTOM-ID: 315bef96-b4d4-41b1-ad8a-7d7b90a8fa96
 :END:
 
 *** Question
 :PROPERTIES:
 :ID:       2a294aed-baaa-4e9c-9dbc-f66ddf33c7bf
+:CUSTOM-ID: 2a294aed-baaa-4e9c-9dbc-f66ddf33c7bf
 :END:
 
 The following eight-symbol alphabet with associated relative frequencies was
@@ -14554,6 +15036,7 @@ eight-symbol alphabet?
 *** Answer
 :PROPERTIES:
 :ID:       180ceb80-51bc-4898-8b9c-bd6f712391e5
+:CUSTOM-ID: 180ceb80-51bc-4898-8b9c-bd6f712391e5
 :END:
 
 #+NAME: hippie-trees
@@ -14674,11 +15157,13 @@ plot data matrix with image
 ** Exercise 2.71
 :PROPERTIES:
 :ID:       b5005366-1d37-4ed6-89a5-bc8634e54d57
+:CUSTOM-ID: b5005366-1d37-4ed6-89a5-bc8634e54d57
 :END:
 
 *** Questions
 :PROPERTIES:
 :ID:       8eb2252c-8049-4cea-bdb5-792718bc1a77
+:CUSTOM-ID: 8eb2252c-8049-4cea-bdb5-792718bc1a77
 :END:
 
 Suppose we have a Huffman tree for an alphabet of \(n\) symbols, and that the
@@ -14689,6 +15174,7 @@ are required to encode the most frequent symbol? The least frequent symbol?
 *** Answers
 :PROPERTIES:
 :ID:       8e12f06c-63c2-4ec4-9616-698443a28b7f
+:CUSTOM-ID: 8e12f06c-63c2-4ec4-9616-698443a28b7f
 :END:
 
 In this type of tree, the most frequent symbol takes 1 bit. The \(n\)th symbol
@@ -14698,6 +15184,7 @@ takes \(n\) bits. If it's the least frequent symbol and \(n\) is even, it takes
 ** Exercise 2.72: order of growth of ~encode~
 :PROPERTIES:
 :ID:       39a59b4b-6baf-4145-ab76-ba936dc46191
+:CUSTOM-ID: 39a59b4b-6baf-4145-ab76-ba936dc46191
 :END:
 
 Let's take a look at src_scheme{encode-symbol}. 
@@ -14747,6 +15234,7 @@ http://community.schemewiki.org/?sicp-ex-2.72
 ** 2.4: Multiple Representations for Abstract Data
 :PROPERTIES:
 :ID:       c3c0cc87-1e03-41c1-995d-4656c2d60e9d
+:CUSTOM-ID: c3c0cc87-1e03-41c1-995d-4656c2d60e9d
 :END:
 
 We have learned how to abstract "higher" and "lower" parts of a system. Now we
@@ -14829,6 +15317,7 @@ One method to distinguish these types of items is called *type tagging*. Take th
 ** Exercise 2.73: Data-driven symbolic differentiator
 :PROPERTIES:
 :ID:       4e21bd2c-be0f-45ed-9721-d185ca6173aa
+:CUSTOM-ID: 4e21bd2c-be0f-45ed-9721-d185ca6173aa
 :END:
 
 [[id:1f159d89-0a02-4726-9872-bbbc527ab559][2.3.2: Example: Symbolic differentiator]] described a program that performs
@@ -14873,6 +15362,7 @@ style by rewriting the basic derivative procedure as
 *** Question A
 :PROPERTIES:
 :ID:       1e6e078f-5590-4b44-b5c0-29ac728a95a3
+:CUSTOM-ID: 1e6e078f-5590-4b44-b5c0-29ac728a95a3
 :END:
 
 Explain what was done above. Why can't we assimilate the predicates
@@ -14881,6 +15371,7 @@ src_scheme{number?} and src_scheme{variable?} into the data-directed dispatch?
 *** Answer A
 :PROPERTIES:
 :ID:       bfd90785-9393-464a-87ac-a742a38b183c
+:CUSTOM-ID: bfd90785-9393-464a-87ac-a742a38b183c
 :END:
 
 This rewrite removes the predicate-based tests for sums, products, etc,
@@ -14893,6 +15384,7 @@ variable checks before calling ~deriv~.
 *** Questions B and C
 :PROPERTIES:
 :ID:       9d2c846d-4a29-4663-a8f0-4d65bd18d3c9
+:CUSTOM-ID: 9d2c846d-4a29-4663-a8f0-4d65bd18d3c9
 :END:
 
 - Write the procedures for derivatives of sums and products, and the auxiliary
@@ -14904,6 +15396,7 @@ variable checks before calling ~deriv~.
 *** Answer B & C version 1
 :PROPERTIES:
 :ID:       c1d2539e-32a5-4253-89dc-a007380a8d0a
+:CUSTOM-ID: c1d2539e-32a5-4253-89dc-a007380a8d0a
 :END:
 
 Here's my first solution, which is functional, but not at all idiomatic like the textbook's examples of such a system.
@@ -15000,6 +15493,7 @@ SUCCEED at deriv: exponentiation 2
 *** Answer B & C version 2
 :PROPERTIES:
 :ID:       816f36f8-f2e3-40e0-b8af-3a0374b47b02
+:CUSTOM-ID: 816f36f8-f2e3-40e0-b8af-3a0374b47b02
 :END:
 
 #+NAME: deriv-datadriven2
@@ -15120,6 +15614,7 @@ src_scheme{,trace foo} system call.
 *** Question D
 :PROPERTIES:
 :ID:       21a3dd2e-03a3-4f11-9602-fa2138d03614
+:CUSTOM-ID: 21a3dd2e-03a3-4f11-9602-fa2138d03614
 :END:
 
 In this simple algebraic manipulator the type of an expression is the algebraic
@@ -15136,6 +15631,7 @@ What corresponding changes to the derivative system are required?
 *** Answer D
 :PROPERTIES:
 :ID:       5e34ebcd-6c84-426b-a4fc-55936d499a1a
+:CUSTOM-ID: 5e34ebcd-6c84-426b-a4fc-55936d499a1a
 :END:
 
 Besides the change given in the example above, all the src_scheme{put} calls would need their arguments switched.
@@ -15143,11 +15639,13 @@ Besides the change given in the example above, all the src_scheme{put} calls wou
 ** Exercise 2.74: Multi-division record storage
 :PROPERTIES:
 :ID:       394db043-6005-497c-aefe-65664c787b0f
+:CUSTOM-ID: 394db043-6005-497c-aefe-65664c787b0f
 :END:
 
 *** Questions ABC
 :PROPERTIES:
 :ID:       0bf46397-0039-4444-9cd5-66e4d57b2993
+:CUSTOM-ID: 0bf46397-0039-4444-9cd5-66e4d57b2993
 :END:
 
 Insatiable Enterprises, Inc., is a highly decentralized conglomerate company
@@ -15190,6 +15688,7 @@ src_scheme{salary}. In particular:
 *** Answers ABC
 :PROPERTIES:
 :ID:       bde07dab-86b0-4f2d-97f8-6ae7f6d69f11
+:CUSTOM-ID: bde07dab-86b0-4f2d-97f8-6ae7f6d69f11
 :END:
 
 Let's talk assumptions:
@@ -15326,6 +15825,7 @@ In retrospect I should have designed it so each file had a type tag for the divi
 *** Question D
 :PROPERTIES:
 :ID:       2aae8544-ff80-43e7-8326-e15c9ae2b4e3
+:CUSTOM-ID: 2aae8544-ff80-43e7-8326-e15c9ae2b4e3
 :END:
 
 When Insatiable takes over a new company, what changes must be made in order to
@@ -15334,6 +15834,7 @@ incorporate the new personnel information into the central system?
 *** Answer D
 :PROPERTIES:
 :ID:       c436ede2-c1b0-4d63-bb88-09dc8e628301
+:CUSTOM-ID: c436ede2-c1b0-4d63-bb88-09dc8e628301
 :END:
 
 The new division must provide appropriate methods for src_scheme{get-record} and
@@ -15342,6 +15843,7 @@ src_scheme{get-salary} to use.
 ** 2.4.3: Data-directed and message-passing programs
 :PROPERTIES:
 :ID:       8d2953ca-9c50-48b9-9fea-f1c4debc5109
+:CUSTOM-ID: 8d2953ca-9c50-48b9-9fea-f1c4debc5109
 :END:
 
 Altogether the book has introduced 3 ways to organize functions and data types:
@@ -15357,11 +15859,13 @@ Altogether the book has introduced 3 ways to organize functions and data types:
 ** Exercise 2.75: Message-passing styled imaginary numbers
 :PROPERTIES:
 :ID:       b20622b4-2811-4ee0-9762-76072a23893c
+:CUSTOM-ID: b20622b4-2811-4ee0-9762-76072a23893c
 :END:
 
 *** Question
 :PROPERTIES:
 :ID:       642c7cfe-cff7-4534-8350-dd8ecff11555
+:CUSTOM-ID: 642c7cfe-cff7-4534-8350-dd8ecff11555
 :END:
 
 Implement the constructor src_scheme{make-from-mag-ang} in message-passing
@@ -15371,6 +15875,7 @@ procedure given above.
 *** Answer
 :PROPERTIES:
 :ID:       d54e5762-74e3-41b4-b389-2c3996b91dd6
+:CUSTOM-ID: d54e5762-74e3-41b4-b389-2c3996b91dd6
 :END:
 
 #+BEGIN_SRC scheme -n :eval no-export :results silent
@@ -15390,11 +15895,13 @@ procedure given above.
 ** Exercise 2.76: comparing generic operation solutions
 :PROPERTIES:
 :ID:       f56af310-38ac-4949-b7cb-b0a0d395ac43
+:CUSTOM-ID: f56af310-38ac-4949-b7cb-b0a0d395ac43
 :END:
 
 *** Question
 :PROPERTIES:
 :ID:       c4940adc-aea1-4c5a-b331-3a25eab26018
+:CUSTOM-ID: c4940adc-aea1-4c5a-b331-3a25eab26018
 :END:
 
 As a large system with generic operations evolves, new types of data objects or
@@ -15408,6 +15915,7 @@ most appropriate for a system in which new operations must often be added?
 *** Answer
 :PROPERTIES:
 :ID:       19f0c03b-522f-423a-a39b-a19e1a91560a
+:CUSTOM-ID: 19f0c03b-522f-423a-a39b-a19e1a91560a
 :END:
 
 The most important part of this is where code /doesn't/ need to be changed.
@@ -15442,11 +15950,13 @@ heads from this time period think about OO as it stands today.
 ** Exercise 2.77: generic arithmetic package
 :PROPERTIES:
 :ID:       1aba7a5c-481a-4903-8ae0-46e0f6c55dd0
+:CUSTOM-ID: 1aba7a5c-481a-4903-8ae0-46e0f6c55dd0
 :END:
 
 *** Question
 :PROPERTIES:
 :ID:       e1caa9bd-b3a1-4713-ad39-68c8e292c703
+:CUSTOM-ID: e1caa9bd-b3a1-4713-ad39-68c8e292c703
 :END:
 
 Louis Reasoner tries to evaluate the expression src_scheme{(magnitude z)} where
@@ -15475,6 +15985,7 @@ case?
 *** Answer
 :PROPERTIES:
 :ID:       48f39e76-e54e-4d18-b482-704d7aaa56db
+:CUSTOM-ID: 48f39e76-e54e-4d18-b482-704d7aaa56db
 :END:
 
 Surprised to find I never actually imported src_scheme{apply-generic}.
@@ -15752,11 +16263,13 @@ should need to know very little about the ~complex~ package.
 ** Exercise 2.78: native scheme numbers
 :PROPERTIES:
 :ID:       b6c4fadc-2d78-4784-8975-91661ee5c2d1
+:CUSTOM-ID: b6c4fadc-2d78-4784-8975-91661ee5c2d1
 :END:
 
 *** Question
 :PROPERTIES:
 :ID:       06442f66-6f3d-490b-9b82-a5f9a2f9fb9f
+:CUSTOM-ID: 06442f66-6f3d-490b-9b82-a5f9a2f9fb9f
 :END:
 
 The internal procedures in the src_scheme{scheme-number} package are essentially
@@ -15776,6 +16289,7 @@ is the symbol src_scheme{scheme-number}.
 *** Answer
 :PROPERTIES:
 :ID:       53716102-7937-4d59-9d2d-3be9a511caa4
+:CUSTOM-ID: 53716102-7937-4d59-9d2d-3be9a511caa4
 :END:
 
 #+NAME: smarter-type-tagging
@@ -15871,11 +16385,13 @@ Confirmed by debugging that these calls aren't adding any tags.
 ** Exercise 2.79: generic equality
 :PROPERTIES:
 :ID:       9f746c37-73b7-4a0b-b5a4-ef7a6c84c573
+:CUSTOM-ID: 9f746c37-73b7-4a0b-b5a4-ef7a6c84c573
 :END:
 
 *** Question
 :PROPERTIES:
 :ID:       fca46553-9125-4444-9397-9ce4f275660a
+:CUSTOM-ID: fca46553-9125-4444-9397-9ce4f275660a
 :END:
 
 Define a generic equality predicate src_scheme{equ?} that tests the equality of
@@ -15885,6 +16401,7 @@ should work for ordinary numbers, rational numbers, and complex numbers.
 *** Answer
 :PROPERTIES:
 :ID:       c7860a27-c8ec-4d8e-9ed7-3d4aeeac3b95
+:CUSTOM-ID: c7860a27-c8ec-4d8e-9ed7-3d4aeeac3b95
 :END:
 
 #+NAME: equ?
@@ -15969,11 +16486,13 @@ SUCCEED at rational equ? false
 ** Exercise 2.80: Generic testing for zero
 :PROPERTIES:
 :ID:       fe2432b6-f0a4-4691-9cf4-456d9542d1ee
+:CUSTOM-ID: fe2432b6-f0a4-4691-9cf4-456d9542d1ee
 :END:
 
 *** Question
 :PROPERTIES:
 :ID:       c2cd7c47-7c6e-43d6-9094-adbb67edb78f
+:CUSTOM-ID: c2cd7c47-7c6e-43d6-9094-adbb67edb78f
 :END:
 
 Define a generic predicate src_scheme{=zero?} that tests if its argument is
@@ -15983,6 +16502,7 @@ work for ordinary numbers, rational numbers, and complex numbers.
 *** Answer
 :PROPERTIES:
 :ID:       69ef5aa7-491e-41e2-9b2c-96b93dfa4594
+:CUSTOM-ID: 69ef5aa7-491e-41e2-9b2c-96b93dfa4594
 :END:
 
 #+NAME: eqzero?
@@ -16057,6 +16577,7 @@ SUCCEED at rational =zero? false
 ** 2.4.3: Combining Data of Different Types
 :PROPERTIES:
 :ID:       a05905d5-b680-4c93-b5fa-00fb5b961efd
+:CUSTOM-ID: a05905d5-b680-4c93-b5fa-00fb5b961efd
 :END:
 
 So far, the generic type system has had all types be completely independent.
@@ -16128,6 +16649,7 @@ can coerce type A to type D by coercion routines A->B, B->C, and C->D.
 ** Exercise 2.81: Louis' ~apply-generic~
 :PROPERTIES:
 :ID:       4f44b71f-1d6d-4776-829e-4475404c5fb3
+:CUSTOM-ID: 4f44b71f-1d6d-4776-829e-4475404c5fb3
 :END:
 
 Louis Reasoner has noticed that src_scheme{apply-generic} may try to coerce the
@@ -16149,6 +16671,7 @@ src_scheme{scheme-number->complex} coercion shown above, he would do:
 *** Question A
 :PROPERTIES:
 :ID:       00de09fa-c220-4daf-a59e-6334cc49d2f6
+:CUSTOM-ID: 00de09fa-c220-4daf-a59e-6334cc49d2f6
 :END:
 With Louis's coercion procedures installed, what happens if
 src_scheme{apply-generic} is called with two arguments of type
@@ -16177,6 +16700,7 @@ What happens if we call src_scheme{exp} with two complex numbers as arguments?
 *** Answer A
 :PROPERTIES:
 :ID:       7102b5d7-b1a0-4348-bb55-9c7e0a193359
+:CUSTOM-ID: 7102b5d7-b1a0-4348-bb55-9c7e0a193359
 :END:
 
 I think it will loop infinitely at the first nested src_scheme{apply-generic}
@@ -16185,6 +16709,7 @@ call, seen in the block after src_scheme{t1->t2}.
 *** Question B
 :PROPERTIES:
 :ID:       72dd7fdb-49d3-46f6-86f4-81faecac354b
+:CUSTOM-ID: 72dd7fdb-49d3-46f6-86f4-81faecac354b
 :END:
 
 
@@ -16194,6 +16719,7 @@ the same type, or does src_scheme{apply-generic} work correctly as is?
 *** Answer B
 :PROPERTIES:
 :ID:       3afc606b-b683-45fd-84dc-beefcb87f989
+:CUSTOM-ID: 3afc606b-b683-45fd-84dc-beefcb87f989
 :END:
 
 He is correct. The predicate which determines whether type coercion is attempted is only a check to if the requested procedure exists. This is a problem if, as seen in the last problem, the data types are compatible but the operation does not exist.
@@ -16201,6 +16727,7 @@ He is correct. The predicate which determines whether type coercion is attempted
 *** Question C
 :PROPERTIES:
 :ID:       e037f8aa-5896-4027-a672-1f2716061497
+:CUSTOM-ID: e037f8aa-5896-4027-a672-1f2716061497
 :END:
 
 Modify src_scheme{apply-generic} so that it doesn't try coercion if the two
@@ -16209,6 +16736,7 @@ arguments have the same type.
 *** Answer C
 :PROPERTIES:
 :ID:       bd571c23-5886-4424-bd91-96fd8b9125c1
+:CUSTOM-ID: bd571c23-5886-4424-bd91-96fd8b9125c1
 :END:
 
 #+NAME: apply-generic-coerce-fixed
@@ -16309,11 +16837,13 @@ SUCCEED at bad coercion test
 ** Exercise 2.82: ~apply-generic~ with multiple coerced arguments
 :PROPERTIES:
 :ID:       eb0495b5-c171-40a9-8934-569e450dc3d8
+:CUSTOM-ID: eb0495b5-c171-40a9-8934-569e450dc3d8
 :END:
 
 *** Question
 :PROPERTIES:
 :ID:       01e6a7c6-23a3-439b-ac95-233a870b2f1d
+:CUSTOM-ID: 01e6a7c6-23a3-439b-ac95-233a870b2f1d
 :END:
 
 Show how to generalize src_scheme{apply-generic} to handle coercion in the
@@ -16327,6 +16857,7 @@ present in the table that will not be tried.)
 *** Answer
 :PROPERTIES:
 :ID:       964bfcf4-d8d5-4acb-942e-b34e11b4c04a
+:CUSTOM-ID: 964bfcf4-d8d5-4acb-942e-b34e11b4c04a
 :END:
 
 These strategies are not sufficient when a path to the correct type will require
@@ -16509,6 +17040,7 @@ returned: "boolean false"
 *** Answer with vararg support
 :PROPERTIES:
 :ID:       b1595a6e-8318-4314-819c-97f62ea09b03
+:CUSTOM-ID: b1595a6e-8318-4314-819c-97f62ea09b03
 :END:
 
 #+NAME: apply-generic-coerce-varargs
@@ -16606,11 +17138,13 @@ So let's move on.
 ** Exercise 2.83: ~raise~
 :PROPERTIES:
 :ID:       26a42618-c607-4abc-a7cc-affbf2779db7
+:CUSTOM-ID: 26a42618-c607-4abc-a7cc-affbf2779db7
 :END:
 
 *** Question
 :PROPERTIES:
 :ID:       3bd63c9b-5ff5-4e04-8d6f-1cfaa936313a
+:CUSTOM-ID: 3bd63c9b-5ff5-4e04-8d6f-1cfaa936313a
 :END:
 
 Suppose you are designing a generic arithmetic system for dealing with the tower
@@ -16622,6 +17156,7 @@ will work for each type (except complex).
 *** Answer
 :PROPERTIES:
 :ID:       63a891c8-a46b-4d71-b238-5050140f737c
+:CUSTOM-ID: 63a891c8-a46b-4d71-b238-5050140f737c
 :END:
 
 I'm again getting the feeling that the authors are asking for a theoretical
@@ -16767,11 +17302,13 @@ Done
 ** Exercise 2.84: ~append-generic~ with ~raise~
 :PROPERTIES:
 :ID:       83cb8c70-5e8d-4462-b9e2-90859e74437e
+:CUSTOM-ID: 83cb8c70-5e8d-4462-b9e2-90859e74437e
 :END:
 
 *** Question
 :PROPERTIES:
 :ID:       f9313bf5-f209-4100-9284-7ef68e4977fc
+:CUSTOM-ID: f9313bf5-f209-4100-9284-7ef68e4977fc
 :END:
 
 Using the src_scheme{raise} operation of Exercise 2.83, modify the
@@ -16784,6 +17321,7 @@ lead to problems in adding new levels to the tower.
 *** Answer
 :PROPERTIES:
 :ID:       d0b5e765-1af3-403e-8209-b05550e178da
+:CUSTOM-ID: d0b5e765-1af3-403e-8209-b05550e178da
 :END:
 
 First some (unnecessarily general) ways to find items in a list.
@@ -17054,11 +17592,13 @@ the book's code as well.
 ** Exercise 2.85: ~append-generic~ with ~drop~
 :PROPERTIES:
 :ID:       88d8ef57-42ba-4e4c-b810-b40cbc67a912
+:CUSTOM-ID: 88d8ef57-42ba-4e4c-b810-b40cbc67a912
 :END:
 
 *** Question
 :PROPERTIES:
 :ID:       c9389dd5-56c5-44d0-8869-dafbd36e54ba
+:CUSTOM-ID: c9389dd5-56c5-44d0-8869-dafbd36e54ba
 :END:
 
 This section mentioned a method for "simplifying" a data object by lowering it
@@ -17086,6 +17626,7 @@ Finally, use src_scheme{drop} to rewrite src_scheme{apply-generic} from Exercise
 *** Answer
 :PROPERTIES:
 :ID:       fc350f55-cb72-435a-a521-5d64f3fa45d6
+:CUSTOM-ID: fc350f55-cb72-435a-a521-5d64f3fa45d6
 :END:
 
 The question asks to install ~project~ as a generic operation in the system, and
@@ -17256,11 +17797,13 @@ time.
 ** Exercise 2.86: complex numbers with flexible types
 :PROPERTIES:
 :ID:       6f4359f5-e417-4d70-b75d-be454205cc69
+:CUSTOM-ID: 6f4359f5-e417-4d70-b75d-be454205cc69
 :END:
 
 *** Question
 :PROPERTIES:
 :ID:       855bd300-42b2-44a7-bbb6-6aae4c0c813e
+:CUSTOM-ID: 855bd300-42b2-44a7-bbb6-6aae4c0c813e
 :END:
 
 Suppose we want to handle complex numbers whose real parts, imaginary parts,
@@ -17273,6 +17816,7 @@ ordinary numbers and rational numbers.
 *** Answer
 :PROPERTIES:
 :ID:       fa40dd78-50ab-4eb3-8637-7f4286dbc7d6
+:CUSTOM-ID: fa40dd78-50ab-4eb3-8637-7f4286dbc7d6
 :END:
 
 We'll need the internal procedures in the complex package to themselves be calls
@@ -17609,6 +18153,7 @@ SUCCEED at math on complex with nested rational
 ** 2.5: Symbolic Algebra
 :PROPERTIES:
 :ID:       29ffdd17-f543-432c-a51c-06d0154dafb5
+:CUSTOM-ID: 29ffdd17-f543-432c-a51c-06d0154dafb5
 :END:
 
 In this section, we implement an addition to the generic math system we have
@@ -17707,11 +18252,13 @@ inside without needing to copy the whole block again.
 ** Exercise 2.87: ~=zero?~ for polynomials
 :PROPERTIES:
 :ID:       d930cb60-1e02-40df-a494-9b3a53d7bf17
+:CUSTOM-ID: d930cb60-1e02-40df-a494-9b3a53d7bf17
 :END:
 
 *** Question
 :PROPERTIES:
 :ID:       32f9ab8e-9e11-416b-97dd-88612f57c7d8
+:CUSTOM-ID: 32f9ab8e-9e11-416b-97dd-88612f57c7d8
 :END:
 
 Install src_scheme{=zero?} for polynomials in the generic arithmetic package.
@@ -17721,6 +18268,7 @@ coefficients that are themselves polynomials.
 *** Answer
 :PROPERTIES:
 :ID:       fd96d044-5030-4dc1-9b7f-d2eb1a80f403
+:CUSTOM-ID: fd96d044-5030-4dc1-9b7f-d2eb1a80f403
 :END:
 
 After testing, I see a problem. src_scheme{add}ing nested polynomials works
@@ -17867,11 +18415,13 @@ SUCCEED at nested polynomial mult
 ** Exercise 2.88: negation, subtracting polynomials
 :PROPERTIES:
 :ID:       4a4f3f20-e863-4637-bbcb-37072d4d0dba
+:CUSTOM-ID: 4a4f3f20-e863-4637-bbcb-37072d4d0dba
 :END:
 
 *** Question
 :PROPERTIES:
 :ID:       7183e9d9-de4c-418b-9810-122eb8ff5bd5
+:CUSTOM-ID: 7183e9d9-de4c-418b-9810-122eb8ff5bd5
 :END:
 
 Extend the polynomial system to include subtraction of polynomials. (Hint: You
@@ -17880,6 +18430,7 @@ may find it helpful to define a generic negation operation.)
 *** Answer
 :PROPERTIES:
 :ID:       4d03f69b-46f7-400b-a40a-e55c14072281
+:CUSTOM-ID: 4d03f69b-46f7-400b-a40a-e55c14072281
 :END:
 
 #+NAME: generic-negation
@@ -18051,11 +18602,13 @@ SUCCEED at polynomial subtraction
 ** Exercise 2.89: an abstraction for dense polynomials
 :PROPERTIES:
 :ID:       2339a4e3-dac4-481c-bc64-02351946664c
+:CUSTOM-ID: 2339a4e3-dac4-481c-bc64-02351946664c
 :END:
 
 *** Question
 :PROPERTIES:
 :ID:       a0d98187-5b82-43d6-b1ee-7b9467e612f3
+:CUSTOM-ID: a0d98187-5b82-43d6-b1ee-7b9467e612f3
 :END:
 
 Define procedures that implement the term-list representation described above as
@@ -18064,6 +18617,7 @@ appropriate for dense polynomials.
 *** Answer
 :PROPERTIES:
 :ID:       5ebf9444-331d-403b-b080-4ad16a6e720b
+:CUSTOM-ID: 5ebf9444-331d-403b-b080-4ad16a6e720b
 :END:
 
 At first I thought I needed to rewrite the ~order~ and ~coeff~ procedures. Then
@@ -18097,11 +18651,13 @@ back when adding to a sparse term list.
 ** Exercise 2.90: dense polynomials integrated into the system
 :PROPERTIES:
 :ID:       d313a504-3248-4855-92b5-e0bfb2461517
+:CUSTOM-ID: d313a504-3248-4855-92b5-e0bfb2461517
 :END:
 
 *** Question
 :PROPERTIES:
 :ID:       fcc174bc-c27a-47a4-abe5-82ef200c1e85
+:CUSTOM-ID: fcc174bc-c27a-47a4-abe5-82ef200c1e85
 :END:
 
 Suppose we want to have a polynomial system that is efficient for both sparse
@@ -18116,6 +18672,7 @@ effort, not a local change.
 *** Answer
 :PROPERTIES:
 :ID:       4a1b260a-bddb-4377-9979-51611ddb83ad
+:CUSTOM-ID: 4a1b260a-bddb-4377-9979-51611ddb83ad
 :END:
 
 Although I was debating using tags to distinguish the two types, it occurs to me
@@ -18496,11 +19053,13 @@ SUCCEED at polynomial subtraction
 ** Exercise 2.91: division of polynomials
 :PROPERTIES:
 :ID:       1b96bdbf-924e-4fd5-a614-b8bde734c694
+:CUSTOM-ID: 1b96bdbf-924e-4fd5-a614-b8bde734c694
 :END:
 
 *** Question
 :PROPERTIES:
 :ID:       affbc03d-488d-457b-8c85-b13bd76bb601
+:CUSTOM-ID: affbc03d-488d-457b-8c85-b13bd76bb601
 :END:
 
 A univariate polynomial can be divided by another one to produce a polynomial
@@ -18552,6 +19111,7 @@ polys as arguments and returns a list of the quotient and remainder polys.
 *** Answer
 :PROPERTIES:
 :ID:       cc69778d-81de-4551-9734-fd0c56437f3a
+:CUSTOM-ID: cc69778d-81de-4551-9734-fd0c56437f3a
 :END:
 
 #+NAME: polynomial-division
@@ -18735,11 +19295,13 @@ SUCCEED at polynomial division 3
 ** Exercise 2.92: operating on polys in different variables
 :PROPERTIES:
 :ID:       42444d8c-8e71-4d6e-8bb0-b88a65777808
+:CUSTOM-ID: 42444d8c-8e71-4d6e-8bb0-b88a65777808
 :END:
 
 *** Question
 :PROPERTIES:
 :ID:       7960a7b0-063b-40b6-b708-bd1c8e209c3b
+:CUSTOM-ID: 7960a7b0-063b-40b6-b708-bd1c8e209c3b
 :END:
 
 By imposing an ordering on variables, extend the polynomial package so that
@@ -18749,6 +19311,7 @@ variables. (This is not easy!)
 *** Answer
 :PROPERTIES:
 :ID:       7b686824-168f-4264-9ee9-d936202ac19f
+:CUSTOM-ID: 7b686824-168f-4264-9ee9-d936202ac19f
 :END:
 
 #+begin_center
@@ -19665,9 +20228,14 @@ the symbol src_scheme{'ZEROTH}.
 ** Exercise 2.93: extending ~make-rational~ for rational functions
 :PROPERTIES:
 :ID:       ac394e5f-9b65-4a8e-b1f5-0a65df778f94
+:CUSTOM-ID: ac394e5f-9b65-4a8e-b1f5-0a65df778f94
 :END:
 
 *** Question 1
+:PROPERTIES:
+:ID:       a947991a-1b17-40f1-9ba8-d1ddedb5a9ad
+:CUSTOM-ID: a947991a-1b17-40f1-9ba8-d1ddedb5a9ad
+:END:
 
 Modify the ~rational-arithmetic~ package to use generic operations, but change
 src_scheme{make-rat} so that it does not attempt to reduce fractions to lowest
@@ -19684,6 +20252,10 @@ Now add src_scheme{rf} to itself, using src_scheme{add}. You will observe that
 this addition procedure does not reduce fractions to lowest terms.
 
 *** Answer 1
+:PROPERTIES:
+:ID:       dbfb8cf0-80c3-478b-ba96-7b44e8b8fa1a
+:CUSTOM-ID: dbfb8cf0-80c3-478b-ba96-7b44e8b8fa1a
+:END:
 
 ~raise~-ing a rational function doesn't work, so I'll need a way around that.
 
