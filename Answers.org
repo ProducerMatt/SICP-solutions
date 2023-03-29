@@ -35,10 +35,10 @@
 #+LATEX_HEADER: \usepackage{calligra}
 #+LATEX_HEADER: \usepackage{lmodern}
 #+LATEX_HEADER: \usepackage[T1]{fontenc}
-#+LATEX_HEADER: \setmonofont[Mapping=tex-text,Ligatures=TeX,Scale=MatchLowercase]{FiraMono-Regular-sup-lgr}
+#+LATEX_HEADER: \setmonofont[Mapping=tex-text,Ligatures=TeX,Scale=MatchLowercase]{Fira Code Regular Nerd Font Complete}
 
 # SOURCE CODE HIGHLIGHTING
-#+LATEX_HEADER: \usepackage[cache=false]{minted}
+#+LATEX_HEADER: \usepackage[cache=true]{minted}
 #+LATEX_HEADER: \usemintedstyle{colorful}
 #+LATEX_HEADER: \setminted{fontsize=\small}
 # FIXME: keep minted inline code from being automatically wrapped
