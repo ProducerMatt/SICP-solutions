@@ -21208,6 +21208,12 @@ I've also had to rescue some "refugees" from [[id:42444d8c-8e71-4d6e-8bb0-b88a65
       (dense-rest-terms term-list)))
 (define (dense-termlist-order term-list)
   (1- (length term-list)))
+(define (sparse-termlist-order term-list)
+  (order (sparse-first-term term-list)))
+(define (termlist-order term-list)
+  (if (sparse-termlist? term-list)
+      (sparse-termlist-order term-list)
+      (dense-termlist-order term-list)))
 ;; always O(n)
 (define (dense-first-term term-list)
   (let ((c (car term-list)))
@@ -21407,15 +21413,15 @@ I've also had to rescue some "refugees" from [[id:42444d8c-8e71-4d6e-8bb0-b88a65
                    (make-poly (variable p) (terms q))))
         (else (error "different vars not supported : GCD-POLY" p q))))
 (put 'greatest-common-divisor '(polynomial polynomial)
-     gcd-poly)
+     (lambda (x y) (tag (gcd-poly x y))))
 #+END_SRC
 #+NAME: generic-gcd
 #+BEGIN_SRC scheme -n :eval no-export :results silent
 (define (install-gcd) 'no)
 (put 'greatest-common-divisor '(scheme-number scheme-number)
-     gcd)
+     (lambda (x y) (attach-tag 'scheme-number (gcd x y))))
 (put 'greatest-common-divisor '(real real)
-     gcd)
+     (lambda (x) (attach-tag 'scheme-number (gcd x y))))
 ;'done)
 (define (greatest-common-divisor a b)
   (apply-generic 'greatest-common-divisor a b))
@@ -21566,7 +21572,7 @@ I've also had to rescue some "refugees" from [[id:42444d8c-8e71-4d6e-8bb0-b88a65
              6)
   (mattcheck "GCD for polys"
              (greatest-common-divisor p10 p11)
-             '(x -1 1 #f))
+             '(polynomial x -1 1 #f))
 #+END_SRC
 
 #+RESULTS[228dfa6c289bf7f3c69b4472439b4bb1e25637cb]:
@@ -21579,4 +21585,333 @@ SUCCEED at polynomial division 3
 SUCCEED at rational functions
 SUCCEED at GCD for integers
 SUCCEED at GCD for polys
+#+end_EXAMPLE
+
+** Exercise 2.95: a quirk in rational functions
+:PROPERTIES:
+:ID:       d3397d5d-5dbf-421c-95ce-f13b4c7cfa5e
+:END:
+
+*** Question
+
+Define \(P_1\), \(P_2\), and
+\(P_3\) to be the polynomials
+
+\[
+\begin{array}{l@{{}:}l}
+	P_1 	& \quad x^2 - 2x + 1, \\
+	P_2 	& \quad 11x^2 + 7, \\
+	P_3 	& \quad 13x + 5.
+\end{array}
+\]
+
+Now define \(Q_1\) to be the product of \(P_1\) and \(P_2\) and \(Q_2\) to be
+the product of \(P_1\) and \(P_3\), and use src_scheme{greatest-common-divisor}
+(@ref{Exercise 2.94}) to compute the GCD of \(Q_1\)
+and \(Q_2\).
+
+Note that the answer is not the same as \(P_1\). This example introduces
+noninteger operations into the computation, causing difficulties with the GCD
+algorithm. [fn::In an implementation like MIT Scheme, this produces a polynomial
+that is indeed a divisor of \(Q_1\) and \(Q_2\), but with rational coefficients.
+In many other Scheme systems, in which division of integers can produce
+limited-precision decimal numbers, we may fail to get a valid divisor.] To
+understand what is happening, try tracing src_scheme{gcd-terms} while computing
+the GCD or try performing the division by hand.
+
+*** Answer
+
+#+BEGIN_SRC scheme -n :eval no-export :results output :tangle 2/Ex95.scheme
+(load "mattcheck2.scm")
+<<op-table>>
+<<type-table>>
+<<sqrt>>
+<<echo>>
+<<smarter-type-tagging>>
+<<attach-tag-fixed>>
+<<list-indices>>
+<<tower-predicates>>
+<<apply-generic-raiseto>>
+<<generic-arithmetic-rational-functions>>
+<<real-package>>
+<<eqzero?-rf>>
+<<real-package>>
+
+<<tower-coercions-rf>>
+
+<<polynomial-densepadding-top>>
+<<polynomial-projection>>
+<<polynomial-division>>
+<<polynomial-gcd>>
+<<polynomial-rf-bottom>>
+
+<<generic-negation>>
+<<generic-gcd>>
+
+(install-rational-package)
+(install-rectangular-package)
+(install-polar-package)
+(install-complex-package)
+(install-scheme-number-package)
+(install-real-package)
+(install-equ?)
+(install-=zero?)
+(install-polynomial-package)
+(install-negation)
+
+(define p1 (make-polynomial 'x '(1 2 1)))
+(define p2 (make-polynomial 'x '((2 11)(0 7))))
+(define p3 (make-polynomial 'x '(13 5)))
+(define q1 (mul p1 p2))
+(define q2 (mul p1 p3))
+(echo "P1: " p1)
+(echo "P2: " p2)
+(echo "P3: " p3)
+(echo "Q1: " q1)
+(echo "Q2: " q2)
+(echo "GCD(Q1, Q2): " (greatest-common-divisor q1 q2))
+#+END_SRC
+
+#+RESULTS[4c990820d69301c4b7adb2711bdbdc92444803c2]:
+#+begin_EXAMPLE
+P1:  (polynomial x 1 2 1) 
+P2:  (polynomial x 11 #f 7) 
+P3:  (polynomial x 13 5) 
+Q1:  (polynomial x 11 22 18 14 7) 
+Q2:  (polynomial x 13 31 23 5) 
+GCD(Q1, Q2):  (polynomial x 1458/169 2916/169 1458/169) 
+#+end_EXAMPLE
+
+** Exercise 2.96:
+
+*** Text formulas
+
+
+More precisely, if \(P\) and \(Q\) are polynomials, let \(O_1\) be the order of
+\(P\) (i.e., the order of the largest term of \(P\)) and let \(O_2\) be the
+order of \(Q\). Let \(c\) be the leading coefficient of \(Q\). Then it can be
+shown that, if we multiply \(P\) by the *integerizing factor* \(c^{1 + O_1 -
+O_2}\), the resulting polynomial can be divided by \(Q\) by using the
+src_scheme{div-terms} algorithm without introducing any fractions. The operation
+of multiplying the dividend by this constant and then dividing is sometimes
+called the *pseudodivision* of \(P\) by \(Q\). The remainder of the division is
+called the *pseudoremainder*.
+
+*** Questions 1 and 2
+
+Implement the procedure src_scheme{pseudoremainder-terms}, which is just like
+src_scheme{remainder-terms} except that it multiplies the dividend by the
+integerizing factor described above before calling src_scheme{div-terms}. Modify
+src_scheme{gcd-terms} to use src_scheme{pseudoremainder-terms}, and verify that
+src_scheme{greatest-common-divisor} now produces an answer with integer
+coefficients on the example in [[id:d3397d5d-5dbf-421c-95ce-f13b4c7cfa5e][Exercise 2.95]].
+
+The GCD now has integer coefficients, but they are larger than those of \(P_1\).
+Modify src_scheme{gcd-terms} so that it removes common factors from the
+coefficients of the answer by dividing all the coefficients by their (integer)
+greatest common divisor.
+
+*** Answers 1 and 2
+
+#+NAME: polynomial-gcd-pseudo
+#+BEGIN_SRC scheme -n :eval no-export :results silent
+(define (remainder-terms tl1 tl2)
+  (second (div-terms tl1 tl2)))
+(define (find-integerizing-factor p q)
+  (let ((o1 (termlist-order p))
+        (o2 (termlist-order q))
+        (c (coeff (first-term q))))
+    (expt c (+ 1 (- o1 o2)))))
+(define (pseudoremainder-terms tl1 tl2)
+  (let* ((intize (find-integerizing-factor tl1 tl2))
+         (tl1-prime (mul-terms tl1
+                               (list (make-sparse-term 0 intize)))))
+    (second (div-terms tl1-prime tl2))))
+(define (gcd-terms a b)
+  (let ((result (if (empty-termlist? b)
+                    a
+                    (gcd-terms b (pseudoremainder-terms a b)))))
+    (if (empty-termlist? result)
+        (the-empty-termlist)
+        (let ((list-gcd (reduce gcd "ERROR"
+                                (map-terms (lambda(o c) c) result))))
+          (map-terms (lambda(o c)
+                       (make-sparse-term o
+                                         (div c list-gcd)))
+                     result)))))
+(define (gcd-poly p q)
+  (cond ((same-variable? (variable p) (variable q))
+         (make-poly (variable p)
+                    (gcd-terms (terms p) (terms q))))
+        ((trivial-poly? p)
+         (gcd-poly (make-poly (variable q) (terms p))
+                   q))
+        ((trivial-poly? q)
+         (gcd-poly p
+                   (make-poly (variable p) (terms q))))
+        (else (error "different vars not supported : GCD-POLY" p q))))
+(put 'greatest-common-divisor '(polynomial polynomial)
+     (lambda (x y) (tag (gcd-poly x y))))
+#+END_SRC
+#+BEGIN_SRC scheme -n :eval no-export :results output :tangle 2/Ex96.scheme
+(load "mattcheck2.scm")
+<<op-table>>
+<<type-table>>
+<<sqrt>>
+<<echo>>
+<<smarter-type-tagging>>
+<<attach-tag-fixed>>
+<<list-indices>>
+<<tower-predicates>>
+<<apply-generic-raiseto>>
+<<generic-arithmetic-rational-functions>>
+<<real-package>>
+<<eqzero?-rf>>
+<<real-package>>
+
+<<tower-coercions-rf>>
+
+<<polynomial-densepadding-top>>
+<<polynomial-projection>>
+<<polynomial-division>>
+<<polynomial-gcd-pseudo>>
+<<polynomial-rf-bottom>>
+
+<<generic-negation>>
+<<generic-gcd>>
+
+(install-rational-package)
+(install-rectangular-package)
+(install-polar-package)
+(install-complex-package)
+(install-scheme-number-package)
+(install-real-package)
+(install-equ?)
+(install-=zero?)
+(install-polynomial-package)
+(install-negation)
+
+<<gen-math-tests>>
+
+(mattcheck "raise success"
+           (raise 78)
+           (make-rational 78 1))
+(mattcheck "raise fail"
+           (raise (make-polynomial 'x '((3 2)(1 1))))
+           #f)
+(mattcheck "apply-generic 1"
+           (add 1 (make-rational 3 5))
+           (make-rational 8 5))
+(mattcheck "apply-generic 2"
+           (add (make-real 2)
+                (make-complex-from-mag-ang 3 5))
+           (make-complex-from-real-imag 2.850986556389679 -2.8767728239894153))
+(mattcheck "drop 1"
+           (drop (make-complex-from-real-imag 5 0))
+           5)
+(mattcheck "drop 2"
+           (drop (make-real 5))
+           5)
+(mattcheck "drop 3"
+           (drop (make-rational 5 1))
+           5)
+(mattcheck "complex with nested rational"
+           (make-complex-from-real-imag 2 (make-rational 3 5))
+           (cons 'complex (cons 'rectangular (cons 2 (list 'rational 3 5)))))
+(mattcheck "math on complex with nested rational"
+           (add (make-complex-from-real-imag 2 (make-rational 3 5))
+                (make-complex-from-mag-ang (make-rational 3 5) 2))
+           (cons 'complex (cons 'rectangular
+                                (cons (list 'rational 8.751559490358574 5)
+                                      (list 'rational 28.639461402385223 25)))))
+(mattcheck "polynomial = zero"
+           (=zero? (make-polynomial 'x '((0 0)))))
+(mattcheck "polynomial != zero" #f
+           (=zero? (make-polynomial 'x '((1 1)(0 1)))))
+
+(define p1 '((100 1)(2 2)(0 1)))
+(define p2 (list (list 7 (make-polynomial 'x '((3 2))))))
+(define p3 '((100 1)(2 1)(0 3)))
+(define p4 '((100 -1)(2 -2)(0 -1)))
+(define p5 '(8 2 5 -3 -7))
+(define p7 '((1 1)(0 1)))
+(define p6 '((3 1)(0 1)))
+(define p66 '(1 0 0 1))
+(define p77 '(1 1))
+(define p8 (make-polynomial 'x '((2 1) (0 1))))
+(define p9 (make-polynomial 'x '((3 1) (0 1))))
+(define p98 (make-rational p9 p8))
+(mattcheck "polynomial addition"
+           (add (make-polynomial 'x p1)
+                (make-polynomial 'x p1))
+           '(polynomial x (100 2)(2 4)(0 2)))
+(mattcheck "polynomial multiplication"
+           (mul (make-polynomial 'x p1)
+                (make-polynomial 'x p1))
+           '(polynomial x (200 1) (102 4) (100 2) (4 4) (2 4) (0 1)))
+(mattcheck "nested polynomial addition"
+           (add (make-polynomial 'x p2)
+                (make-polynomial 'x p1))
+           '(polynomial x (100 1) (7 (polynomial x (3 2))) (2 2) (0 1)))
+(mattcheck "nested polynomial mult"
+           (mul (make-polynomial 'x p2)
+                (make-polynomial 'x p1))
+           '(polynomial x (107 (polynomial x (3 2))) (9 (polynomial x (3 4))) (7 (polynomial x (3 2)))))
+(define p10 (make-polynomial
+             'x '((4 1) (3 -1) (2 -2) (1 2))))
+(define p11 (make-polynomial 'x '((3 1) (1 -1))))
+(mattcheck "negation scheme-number"
+           (neg 5) -5)
+(mattcheck "negation rational"
+           (neg (make-rational 1 5))
+           (make-rational -1 5))
+(mattcheck "negation rectangular complex"
+           (neg (make-complex-from-real-imag 3 7))
+           (make-complex-from-real-imag -3 -7))
+(mattcheck "negation polar complex"
+           (neg (make-complex-from-mag-ang 3 7))
+           (make-complex-from-mag-ang -3 7))
+
+(mattcheck "negation polynomials"
+           (neg (make-polynomial 'x p1))
+           (make-polynomial 'x p4))
+(mattcheck "polynomial subtraction"
+           (sub (make-polynomial 'x p1)
+                (make-polynomial 'x p3))
+           '(polynomial x 1 #f -2))
+(mattcheck "polynomial division 1"
+           (div (make-polynomial 'x p6)
+                (make-polynomial 'x p7))
+           '((polynomial x 1 -1 1) (polynomial x)))
+(mattcheck "polynomial division 2"
+           (div (make-polynomial 'x p7)
+                (make-polynomial 'x p6))
+           '((polynomial x) (polynomial x 1 1)))
+(mattcheck "polynomial division 3"
+           (div (make-polynomial 'x p66)
+                (make-polynomial 'x p77))
+           '((polynomial x 1 -1 1) (polynomial x)))
+(mattcheck "rational functions"
+           (add p98 p98)
+           '(rational (polynomial x 2 #f 2 2 #f 2) (polynomial x 1 #f 2 #f 1)))
+(mattcheck "GCD for integers"
+           (greatest-common-divisor 72 30)
+           6)
+(mattcheck "GCD for polys"
+           (greatest-common-divisor p10 p11)
+           '(polynomial x -1 1 #f))
+(let* ((p1p (make-polynomial 'x '(1 2 1)))
+       (p2p (make-polynomial 'x '((2 11)(0 7))))
+       (p3p (make-polynomial 'x '(13 5)))
+       (q1p (mul p1p p2p))
+       (q2p (mul p1p p3p)))
+  (mattcheck "greatest-common-divisor integerizing for polynomials"
+             (greatest-common-divisor q1p q2p)
+             p1p))
+#+END_SRC
+
+#+RESULTS[c5f60e92ae33c1929c90754a1958ce8109e736d7]:
+#+begin_EXAMPLE
+<...>
+SUCCEED at greatest-common-divisor integerizing for polynomials
 #+end_EXAMPLE
