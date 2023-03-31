@@ -1,5 +1,5 @@
-;; [[file:../Answers.org::*Answer 1][Answer 1:2]]
-(load "../mattcheck2.scm")
+;; [[file:../Answers.org::*Answers 1 and 2][Answers 1 and 2:4]]
+(load "mattcheck2.scm")
 ;; [[[[file:~/SICP-group/Answers.org::op-table][op-table]]][op-table]]
 (define op-table (make-hash-table))
 
@@ -196,7 +196,7 @@
                          (apply-generic op previous elem))
                        "ERROR" raised)))))))
 ;; apply-generic-raiseto ends here
-;; [[[[file:~/SICP-group/Answers.org::generic-arithmetic-rational-functions][generic-arithmetic-rational-functions]]][generic-arithmetic-rational-functions]]
+;; [[[[file:~/SICP-group/Answers.org::generic-arithmetic-rf-reduce][generic-arithmetic-rf-reduce]]][generic-arithmetic-rf-reduce]]
 (define (add x y) (apply-generic 'add x y))
 (define (sub x y) (apply-generic 'sub x y))
 (define (mul x y) (apply-generic 'mul x y))
@@ -242,7 +242,7 @@
   (define (numer x) (first x))
   (define (denom x) (second x))
   (define (make-rat n d)
-    (list n d))
+    (generic-reduce n d))
   (define (add-rat x y)
     (make-rat (add (mul (numer x) (denom y))
                    (mul (numer y) (denom x)))
@@ -444,7 +444,7 @@
                  ((get 'denom '(rational)) y)))))
   (put 'equ? '(real real)
        (lambda(x y) (= x y))))
-;; generic-arithmetic-rational-functions ends here
+;; generic-arithmetic-rf-reduce ends here
 ;; [[[[file:~/SICP-group/Answers.org::real-package][real-package]]][real-package]]
 (define (install-real-package)
   ;; interface to rest of the system
@@ -1017,8 +1017,28 @@
                          d (list (make-sparse-term
                                   0 intize)))
                         nd-gcd)))
-    (list (div-coeffs-by-gcd nn)
-          (div-coeffs-by-gcd dd))))
+    (if (or (not (empty-termlist? (second nn)))
+            (not (empty-termlist? (second dd))))
+        (error "unexpected remainder from term reduction : REDUCE-TERMS" n d)
+        (list (div-coeffs-by-gcd (first nn))
+              (div-coeffs-by-gcd (first dd))))))
+(define (reduce-poly p q)
+  (let ((mp (lambda(target-poly reduced)
+              (let ((v (variable target-poly)))
+                (list (make-poly v (first reduced))
+                      (make-poly v (second reduced)))))))
+    (cond ((same-variable? (variable p) (variable q))
+           (mp p (reduce-terms (terms p) (terms q))))
+          ((trivial-poly? p)
+           (mp q (reduce-terms (terms p) (terms q))))
+          ((trivial-poly? q)
+           (mp p (reduce-terms (terms p) (terms q))))
+          (else (error "different vars not supported : GCD-POLY" p q)))))
+(put 'reduce '(polynomial polynomial)
+     (lambda(p q)
+       (let ((result (reduce-poly p q)))
+         (list (tag (first result))
+               (tag (second result))))))
 ;; polynomial-gcd-reduce ends here
 ;; [[[[file:~/SICP-group/Answers.org::polynomial-rf-bottom][polynomial-rf-bottom]]][polynomial-rf-bottom]]
 ;; polynomial procedures
@@ -1058,6 +1078,18 @@
 (define (greatest-common-divisor a b)
   (apply-generic 'greatest-common-divisor a b))
 ;; generic-gcd ends here
+;; [[[[file:~/SICP-group/Answers.org::generic-reduce-function][generic-reduce-function]]][generic-reduce-function]]
+(define (generic-reduce a b)
+  (apply-generic 'reduce a b))
+(define (reduce-integers n d)
+  (if (and (integer? n)
+           (integer? d))
+      (let ((g (gcd n d)))
+        (list (/ n g) (/ d g)))
+      (list n d)))
+(put 'reduce '(scheme-number scheme-number)
+     reduce-integers)
+;; generic-reduce-function ends here
 
 (install-rational-package)
 (install-rectangular-package)
@@ -1194,7 +1226,7 @@
            (div (make-polynomial 'x p66)
                 (make-polynomial 'x p77))
            '((polynomial x 1 -1 1) (polynomial x)))
-(mattcheck "rational functions"
+(mattcheck "rational functions (unsimplified, should fail)"
            (add p98 p98)
            '(rational (polynomial x 2 #f 2 2 #f 2) (polynomial x 1 #f 2 #f 1)))
 (mattcheck "GCD for integers"
@@ -1211,4 +1243,7 @@
   (mattcheck "greatest-common-divisor integerizing for polynomials"
              (greatest-common-divisor q1p q2p)
              p1p))
-;; Answer 1:2 ends here
+(mattcheck "rational functions (correctly simplified)"
+           (add p98 p98)
+           '(rational (polynomial x 1 #f #f 1) (polynomial x 1 #f 1)))
+;; Answers 1 and 2:4 ends here

@@ -21682,7 +21682,7 @@ Q2:  (polynomial x 13 31 23 5)
 GCD(Q1, Q2):  (polynomial x 1458/169 2916/169 1458/169) 
 #+end_EXAMPLE
 
-** Exercise 2.96:
+** Exercise 2.96: pseudodivision of polynomials
 
 *** Text formulas
 
@@ -21699,17 +21699,17 @@ called the *pseudoremainder*.
 
 *** Questions 1 and 2
 
-Implement the procedure src_scheme{pseudoremainder-terms}, which is just like
-src_scheme{remainder-terms} except that it multiplies the dividend by the
-integerizing factor described above before calling src_scheme{div-terms}. Modify
-src_scheme{gcd-terms} to use src_scheme{pseudoremainder-terms}, and verify that
-src_scheme{greatest-common-divisor} now produces an answer with integer
-coefficients on the example in [[id:d3397d5d-5dbf-421c-95ce-f13b4c7cfa5e][Exercise 2.95]].
-
-The GCD now has integer coefficients, but they are larger than those of \(P_1\).
-Modify src_scheme{gcd-terms} so that it removes common factors from the
-coefficients of the answer by dividing all the coefficients by their (integer)
-greatest common divisor.
+1. Implement the procedure src_scheme{pseudoremainder-terms}, which is just like
+   src_scheme{remainder-terms} except that it multiplies the dividend by the
+   integerizing factor described above before calling src_scheme{div-terms}.
+   Modify src_scheme{gcd-terms} to use src_scheme{pseudoremainder-terms}, and
+   verify that src_scheme{greatest-common-divisor} now produces an answer with
+   integer coefficients on the example in [[id:d3397d5d-5dbf-421c-95ce-f13b4c7cfa5e][Exercise 2.95]].
+   
+2. The GCD now has integer coefficients, but they are larger than those of
+   \(P_1\). Modify src_scheme{gcd-terms} so that it removes common factors from
+   the coefficients of the answer by dividing all the coefficients by their
+   (integer) greatest common divisor.
 
 *** Answers 1 and 2
 
@@ -21918,19 +21918,38 @@ SUCCEED at greatest-common-divisor integerizing for polynomials
 
 ** Exercise 2.97: reducing terms of rational functions
 
-*** Question 1
+*** Questions 1 and 2
 
-Implement this algorithm as a procedure src_scheme{reduce-terms} that takes two
-term lists src_scheme{n} and src_scheme{d} as arguments and returns a list
-src_scheme{nn}, src_scheme{dd}, which are src_scheme{n} and src_scheme{d}
-reduced to lowest terms via the algorithm given above. Also write a procedure
-src_scheme{reduce-poly}, analogous to src_scheme{add-poly}, that checks to see
-if the two polys have the same variable. If so, src_scheme{reduce-poly} strips
-off the variable and passes the problem to src_scheme{reduce-terms}, then
-reattaches the variable to the two term lists supplied by
-src_scheme{reduce-terms}.
+1. Implement this algorithm as a procedure src_scheme{reduce-terms} that takes
+   two term lists src_scheme{n} and src_scheme{d} as arguments and returns a
+   list src_scheme{nn}, src_scheme{dd}, which are src_scheme{n} and
+   src_scheme{d} reduced to lowest terms via the algorithm given above. Also
+   write a procedure src_scheme{reduce-poly}, analogous to src_scheme{add-poly},
+   that checks to see if the two polys have the same variable. If so,
+   src_scheme{reduce-poly} strips off the variable and passes the problem to
+   src_scheme{reduce-terms}, then reattaches the variable to the two term lists
+   supplied by src_scheme{reduce-terms}.
 
-*** Answer 1
+2. Define a procedure analogous to src_scheme{reduce-terms} that does what the
+   original src_scheme{make-rat} did for integers:
+   
+   #+BEGIN_SRC scheme
+   (define (reduce-integers n d)
+     (let ((g (gcd n d)))
+       (list (/ n g) (/ d g))))
+   #+END_SRC
+   
+   and define src_scheme{reduce} as a generic operation that calls
+   src_scheme{apply-generic} to dispatch to either src_scheme{reduce-poly} (for
+   src_scheme{polynomial} arguments) or src_scheme{reduce-integers} (for
+   src_scheme{scheme-number} arguments). You can now easily make the
+   rational-arithmetic package reduce fractions to lowest terms by having
+   src_scheme{make-rat} call src_scheme{reduce} before combining the given
+   numerator and denominator to form a rational number. The system now handles
+   rational expressions in either integers or polynomials. To test your program,
+   try the example at the beginning of this extended exercise:
+
+*** Answers 1 and 2
 
 #+NAME: polynomial-gcd-reduce
 #+BEGIN_SRC scheme -n :eval no-export :results silent
@@ -21991,11 +22010,295 @@ src_scheme{reduce-terms}.
                          d (list (make-sparse-term
                                   0 intize)))
                         nd-gcd)))
-    (list (div-coeffs-by-gcd nn)
-          (div-coeffs-by-gcd dd))))
+    (if (or (not (empty-termlist? (second nn)))
+            (not (empty-termlist? (second dd))))
+        (error "unexpected remainder from term reduction : REDUCE-TERMS" n d)
+        (list (div-coeffs-by-gcd (first nn))
+              (div-coeffs-by-gcd (first dd))))))
+(define (reduce-poly p q)
+  (let ((mp (lambda(target-poly reduced)
+              (let ((v (variable target-poly)))
+                (list (make-poly v (first reduced))
+                      (make-poly v (second reduced)))))))
+    (cond ((same-variable? (variable p) (variable q))
+           (mp p (reduce-terms (terms p) (terms q))))
+          ((trivial-poly? p)
+           (mp q (reduce-terms (terms p) (terms q))))
+          ((trivial-poly? q)
+           (mp p (reduce-terms (terms p) (terms q))))
+          (else (error "different vars not supported : GCD-POLY" p q)))))
+(put 'reduce '(polynomial polynomial)
+     (lambda(p q)
+       (let ((result (reduce-poly p q)))
+         (list (tag (first result))
+               (tag (second result))))))
+#+END_SRC
+
+#+NAME: generic-reduce-function
+#+BEGIN_SRC scheme -n :eval no-export :results silent
+(define (generic-reduce a b)
+  (apply-generic 'reduce a b))
+(define (reduce-integers n d)
+  (if (and (integer? n)
+           (integer? d))
+      (let ((g (gcd n d)))
+        (list (/ n g) (/ d g)))
+      (list n d)))
+(put 'reduce '(scheme-number scheme-number)
+     reduce-integers)
+#+END_SRC
+#+NAME: generic-arithmetic-rf-reduce
+#+BEGIN_SRC scheme -n :eval no-export :results silent
+(define (add x y) (apply-generic 'add x y))
+(define (sub x y) (apply-generic 'sub x y))
+(define (mul x y) (apply-generic 'mul x y))
+(define (div x y) (apply-generic 'div x y))
+(define (real-part z) (apply-generic 'real-part z))
+(define (imag-part z) (apply-generic 'imag-part z))
+(define (magnitude z) (apply-generic 'magnitude z))
+(define (angle z) (apply-generic 'angle z))
+;; Now we begin to change code for support
+;; These will be named slightly different so the primitive
+;; functions aren't shadowed
+(define (square x) (mul x 2))
+(define (sine x) (apply-generic 'sine x)) ;; (sin)
+(define (cosine x) (apply-generic 'cosine x)); (cos)
+(define (square-root x) (apply-generic 'square-root x));(sqrt)
+(define (arctan x y) (apply-generic 'arctan x y));(atan)
+
+(define (make-scheme-number n)
+  ((get 'make 'scheme-number) n))
+(define (install-scheme-number-package)
+  (define (tag x) (attach-tag 'scheme-number x))
+  (put 'add '(scheme-number scheme-number)
+       (lambda (x y) (tag (+ x y))))
+  (put 'sub '(scheme-number scheme-number)
+       (lambda (x y) (tag (- x y))))
+  (put 'mul '(scheme-number scheme-number)
+       (lambda (x y) (tag (* x y))))
+  (put 'div '(scheme-number scheme-number)
+       (lambda (x y) (tag (/ x y))))
+  (put 'sine '(scheme-number)
+       (lambda (x) (tag (sin x))))
+  (put 'cosine '(scheme-number)
+       (lambda (x) (tag (cos x))))
+  (put 'square-root '(scheme-number)
+       (lambda (x) (tag (sqrt x))))
+  (put 'arctan '(scheme-number scheme-number)
+       (lambda (x y) (tag (atan x y))))
+  (put 'make 'scheme-number (lambda (x) (tag x)))
+  'done)
+
+(define (install-rational-package)
+  ;; internal procedures
+  (define (numer x) (first x))
+  (define (denom x) (second x))
+  (define (make-rat n d)
+    (generic-reduce n d))
+  (define (add-rat x y)
+    (make-rat (add (mul (numer x) (denom y))
+                   (mul (numer y) (denom x)))
+              (mul (denom x) (denom y))))
+  (define (sub-rat x y)
+    (make-rat (sub (mul (numer x) (denom y))
+                   (mul (numer y) (denom x)))
+              (mul (denom x) (denom y))))
+  (define (mul-rat x y)
+    (make-rat (mul (numer x) (numer y))
+              (mul (denom x) (denom y))))
+  (define (div-rat x y)
+    (make-rat (mul (numer x) (denom y))
+              (mul (denom x) (numer y))))
+  ;; interface to rest of the system
+  (define (tag x) (attach-tag 'rational x))
+  (put 'add '(rational rational)
+       (lambda (x y) (tag (add-rat x y))))
+  (put 'sub '(rational rational)
+       (lambda (x y) (tag (sub-rat x y))))
+  (put 'mul '(rational rational)
+       (lambda (x y) (tag (mul-rat x y))))
+  (put 'div '(rational rational)
+       (lambda (x y) (tag (div-rat x y))))
+  (put 'make 'rational
+       (lambda (n d) (tag (make-rat n d))))
+  (put 'numer '(rational) numer)
+  (put 'denom '(rational) denom)
+  (put 'sine '(rational)
+       (lambda(r) ((get 'sine '(scheme-number))
+                   (div (numer r) (denom r)))))
+  (put 'cosine '(rational)
+       (lambda(r) ((get 'cosine '(scheme-number))
+                   (div (numer r) (denom r)))))
+  (put 'square-root '(rational)
+       (lambda(r) ((get 'square-root '(scheme-number))
+                   (div (numer r) (denom r)))))
+  (put 'arctan '(rational)
+       (lambda(r s) ((get 'arctan '(scheme-number))
+                     (div (numer r) (denom r)) (div (numer s) (denom s)))))
+  'done)
+
+;; for future use
+(define (numer r)
+  ((get 'numer '(rational))
+   (contents r)))
+(define (denom r)
+  ((get 'denom '(rational))
+   (contents r)))
+
+(define (make-rational n d)
+  ((get 'make 'rational) n d))
+
+(define (install-rectangular-package)
+  ;; internal procedures
+  (define (real-part z) (car z))
+  (define (imag-part z) (cdr z))
+  (define (make-from-real-imag x y) (cons x y))
+  (define (magnitude z)
+    (square-root (add (square (real-part z))
+                      (square (imag-part z)))))
+  (define (angle z)
+    (arctan (imag-part z) (real-part z)))
+  (define (make-from-mag-ang r a)
+    (cons (mul r (cosine a)) (mul r (sine a))))
+  ;; interface to the rest of the system
+  (define (tag x) (attach-tag 'rectangular x))
+  (put 'real-part '(rectangular) real-part)
+  (put 'imag-part '(rectangular) imag-part)
+  (put 'magnitude '(rectangular) magnitude)
+  (put 'angle '(rectangular) angle)
+  (put 'make-from-real-imag 'rectangular
+       (lambda (x y) (tag (make-from-real-imag x y))))
+  (put 'make-from-mag-ang 'rectangular
+       (lambda (r a) (tag (make-from-mag-ang r a))))
+  'done)
+
+(define (install-polar-package)
+  ;; internal procedures
+  (define (magnitude z) (car z))
+  (define (angle z) (cdr z))
+  (define (make-from-mag-ang r a) (cons r a))
+  (define (real-part z) (mul (magnitude z) (cosine (angle z))))
+  (define (imag-part z) (mul (magnitude z) (sine (angle z))))
+  (define (make-from-real-imag x y)
+    (cons (sqrt (+ (square x) (square y)))
+          (atan y x)))
+  ;; interface to the rest of the system
+  (define (tag x) (attach-tag 'polar x))
+  (put 'real-part '(polar) real-part)
+  (put 'imag-part '(polar) imag-part)
+  (put 'magnitude '(polar) magnitude)
+  (put 'angle '(polar) angle)
+  (put 'make-from-real-imag 'polar
+       (lambda (x y) (tag (make-from-real-imag x y))))
+  (put 'make-from-mag-ang 'polar
+       (lambda (r a) (tag (make-from-mag-ang r a))))
+  'done)
+
+(define (install-complex-package)
+  (define (make-from-real-imag x y)
+    ((get 'make-from-real-imag 'rectangular) x y))
+  (define (make-from-mag-ang r a)
+    ((get 'make-from-mag-ang 'polar) r a))
+  ;; let's make these generic
+  (define (add-complex z1 z2)
+    (make-from-real-imag (add (real-part z1) (real-part z2))
+                         (add (imag-part z1) (imag-part z2))))
+  (define (sub-complex z1 z2)
+    (make-from-real-imag (sub (real-part z1) (real-part z2))
+                         (sub (imag-part z1) (imag-part z2))))
+  (define (mul-complex z1 z2)
+    (make-from-mag-ang (mul (magnitude z1) (magnitude z2))
+                       (add (angle z1) (angle z2))))
+  (define (div-complex z1 z2)
+    (make-from-mag-ang (div (magnitude z1) (magnitude z2))
+                       (sub (angle z1) (angle z2))))
+  ;; interface to rest of the system
+  (define (tag z) (attach-tag 'complex z))
+  (put 'add '(complex complex)
+       (lambda (z1 z2) (tag (add-complex z1 z2))))
+  (put 'sub '(complex complex)
+       (lambda (z1 z2) (tag (sub-complex z1 z2))))
+  (put 'mul '(complex complex)
+       (lambda (z1 z2) (tag (mul-complex z1 z2))))
+  (put 'div '(complex complex)
+       (lambda (z1 z2) (tag (div-complex z1 z2))))
+  (put 'make-from-real-imag 'complex
+       (lambda (x y) (tag (make-from-real-imag x y))))
+  (put 'make-from-mag-ang 'complex
+       (lambda (r a) (tag (make-from-mag-ang r a))))
+  (put 'real-part '(complex) real-part)
+  (put 'imag-part '(complex) imag-part)
+  (put 'magnitude '(complex) magnitude)
+  (put 'angle '(complex) angle))
+
+(define (make-complex-from-real-imag x y)
+  ((get 'make-from-real-imag 'complex) x y))
+(define (make-complex-from-mag-ang r a)
+  ((get 'make-from-mag-ang 'complex) r a))
+
+(define (project x)
+  (let ((t1 (type-tag x)))
+    (let ((p (get 'project t1)))
+      (if p
+          (p (contents x))
+          #f))))
+
+(define (drop x)
+  (if (not (pair? x))
+      x
+      (let ((projected (project x)))
+        (cond ((eqv? projected #f)
+               x)
+              ((equ? x projected)
+               (drop projected))
+              (else x)))))
+
+(put 'project 'rational
+     (lambda(num)
+       ((get 'numer '(rational))
+        num)))
+(put 'project 'real
+     (lambda(num)
+       (round num)))
+;; projecting a complex number may return something other than a single number
+(put 'project 'complex
+     (lambda(num)
+       (let ((r ((get 'real-part '(complex)) num)))
+         (if (number? (contents r))
+             (make-real (contents r))
+             r))))
+
+;; equality testing with complex numbers also changes
+(define (equ? x y) (apply-generic 'equ? x y))
+(define (install-equ?)
+  (put 'equ? '(scheme-number scheme-number)
+       (lambda(x y) (= x y)))
+  (put 'equ? '(complex complex)
+       (lambda(x y)
+         (let ((t1 (type-tag x))
+               (t2 (type-tag y)))
+           (cond ((and (eqv? t1 'polar)
+                       (eqv? t2 'polar))
+                  (and (equ? (apply-generic 'magnitude x)
+                             (apply-generic 'magnitude y))
+                       (equ? (apply-generic 'angle x)
+                             (apply-generic 'angle y))))
+                 (else
+                  (and (equ? (apply-generic 'real-part x)
+                             (apply-generic 'real-part y))
+                       (equ? (apply-generic 'imag-part x)
+                             (apply-generic 'imag-part y))))))))
+  (put 'equ? '(rational rational)
+       (lambda(x y)
+         (and (equ? ((get 'numer '(rational)) x)
+                 ((get 'numer '(rational)) y))
+              (equ? ((get 'denom '(rational)) x)
+                 ((get 'denom '(rational)) y)))))
+  (put 'equ? '(real real)
+       (lambda(x y) (= x y))))
 #+END_SRC
 #+BEGIN_SRC scheme -n :eval no-export :results output :tangle 2/Ex97.scheme
-(load "../mattcheck2.scm")
+(load "mattcheck2.scm")
 <<op-table>>
 <<type-table>>
 <<sqrt>>
@@ -22005,7 +22308,7 @@ src_scheme{reduce-terms}.
 <<list-indices>>
 <<tower-predicates>>
 <<apply-generic-raiseto>>
-<<generic-arithmetic-rational-functions>>
+<<generic-arithmetic-rf-reduce>>
 <<real-package>>
 <<eqzero?-rf>>
 <<real-package>>
@@ -22020,6 +22323,7 @@ src_scheme{reduce-terms}.
 
 <<generic-negation>>
 <<generic-gcd>>
+<<generic-reduce-function>>
 
 (install-rational-package)
 (install-rectangular-package)
@@ -22132,7 +22436,7 @@ src_scheme{reduce-terms}.
            (div (make-polynomial 'x p66)
                 (make-polynomial 'x p77))
            '((polynomial x 1 -1 1) (polynomial x)))
-(mattcheck "rational functions"
+(mattcheck "rational functions (unsimplified, should fail)"
            (add p98 p98)
            '(rational (polynomial x 2 #f 2 2 #f 2) (polynomial x 1 #f 2 #f 1)))
 (mattcheck "GCD for integers"
@@ -22149,4 +22453,21 @@ src_scheme{reduce-terms}.
   (mattcheck "greatest-common-divisor integerizing for polynomials"
              (greatest-common-divisor q1p q2p)
              p1p))
+(mattcheck "rational functions (correctly simplified)"
+           (add p98 p98)
+           '(rational (polynomial x 1 #f #f 1) (polynomial x 1 #f 1)))
 #+END_SRC
+
+#+RESULTS[8af3a739316fa29a204e5355ccdb9f55a4e17684]:
+#+begin_EXAMPLE
+<...>
+FAIL at rational functions (unsimplified, should fail)
+expected: (rational (polynomial x 2 #f 2 2 #f 2) (polynomial x 1 #f 2 #f 1))
+returned: (rational (polynomial x 1 #f #f 1) (polynomial x 1 #f 1))
+<...>
+SUCCEED at greatest-common-divisor integerizing for polynomials
+SUCCEED at rational functions (correctly simplified)
+#+end_EXAMPLE
+
+This exercise has been pretty exhausting. I'll likely take a step back here,
+maybe work on other projects a bit, and dive back in for Chapter 3.
