@@ -39,17 +39,15 @@ some decide to do.
 
 # Source material
 - [Fully-featured HTML5
-  edition](http://sarabander.github.io/sicp/html/index.xhtml)
+  Scheme edition](http://sarabander.github.io/sicp/html/index.xhtml)
+- [SourceAcademy JavaScript Edition](https://sourceacademy.org/sicpjs/index), including playgrounds for Scheme/JavaScript/Python. [SICP vs SICP JS vs SICP Python comparison (colorized diffs)](https://sicp.sourceacademy.org/)
+- [SICP in PDF format](https://github.com/DiamondBond/sicp-pdf) with some bug fixes
 - [Texinfo edition](http://zv.github.io/sicp-in-texinfo)
 - [.info edition](https://github.com/webframp/sicp-info)
-- [SICP in PDF format](https://github.com/DiamondBond/sicp-pdf) with some bug
-  fixes
 - [Offline-hostable mirror of all of the
-  above](https://github.com/ProducerMatt/sicp-psets-mirror)
-- [SICP vs SICP JS comparison (colorized diffs)](https://sicp.sourceacademy.org/)
+  Scheme editions](https://github.com/ProducerMatt/sicp-psets-mirror)
 - [Structure and Interpretation of Computer Programs
-  OpenCourseWare](https://ocw.mit.edu/courses/electrical-engineering-and-computer-science/6-001-structure-and-interpretation-of-computer-programs-spring-2005/)
-  (These lectures are awesome and shouldn't be skipped, but they follow the 1st
+  OpenCourseWare](https://ocw.mit.edu/courses/electrical-engineering-and-computer-science/6-001-structure-and-interpretation-of-computer-programs-spring-2005/) (These lectures are awesome and shouldn't be skipped, but they follow the 1st
   edition of the book and abridge it to fit the semester)
 - [The OCW lectures on
   Youtube](https://gist.github.com/shmup/d58053ab657f45ec6656241db60d9d40) and
@@ -59,7 +57,29 @@ some decide to do.
   which conveniently follow the orignal material closely while answering more grounded questions
   (not everyone is an MIT student :smile:).
 
-## Which Scheme should I use?
+## Various Resources
+- [abrantesasf's study
+  guide](https://github.com/abrantesasf/sicp-abrantes-study-guide)
+- [Notes for following along in the modern
+  day](https://github.com/zv/SICP-guile), and Guile compatibility notes.
+  Warning: contains some solutions
+- ["cheatsheet" for key ideas](https://www.physinf.com/sicp)
+- [SchemeWiki solutions list](http://community.schemewiki.org/?sicp-solutions)
+- [Solving SICP](https://lockywolf.wordpress.com/2021/02/08/solving-sicp/)
+  statistical analysis of the author's experience doing the textbook.
+- [Gwern's SICP notes in Haskell](https://www.gwern.net/sicp/Chapter-1-1)
+- [Eli Bendersky's notes in Common Lisp](https://eli.thegreenplace.net/tag/sicp)
+
+Scheme proposals for SICP support libraries (usually not implemented, but hey
+it's worth knowing about):
+- [SRFI-216](https://srfi.schemers.org/srfi-216/) provides extra support for
+  SICP in Scheme. [SRFI-216
+  implementations](https://practical-scheme.net/wiliki/schemexref.cgi?SRFI-216)
+- [SRFI-203](https://srfi.schemers.org/srfi-203/): extra support for the
+  graphics drawings segments of the book.
+
+
+### Which Scheme should I use?
 
 Below I compare several options. TLDR:
 1. Racket + DrRacket + the SICP package has the best beginner experience and
@@ -86,10 +106,10 @@ To be frank, the last path (the 'K.I.S.S.' principle) may be the ideal path at
 the moment. I've spent *many* hours working out the kinks in org-mode +
 org-babel and it's still not how I want it.
 
-### Guile
+#### Guile
 
 I recommend Guile for its high compatibility with SICP and its high quality and
-availability. A Jupyter kernel is available.
+availability. A Jupyter kernel and a [Replit environment](https://replit.com/@replit/Scheme?v=1#main.scm) are available.
 
 A couple helpful and important details regarding Guile Scheme, especially how to
 enable read line support:
@@ -106,39 +126,18 @@ To run code from SICP, you'll need to change:
 - `true` and `false` to `#t` and `#f`
 - `nil` to `'()` (*not* to `#nil`). See later note re: `nil`.
 
-### Racket
+#### Racket
 
 Racket has the best debugger (DrRacket) but it will only have compatibility for
 extremely basic Scheme expressions. It has an SICP compatibility mode, but I
 found this wasn't perfect, and it broke some other desirable features. However
 don't be afraid to give it a try for yourself.
 
-### Calysto
+#### Calysto
 Another option which I haven't tried is [Calysto
 Scheme](https://github.com/Calysto/calysto_scheme), a Scheme interoperable with
 Python which is well-integrated for Jupyter notebooks. Compatibility with SICP
 not guaranteed.
-
-# Various Resources
-- [abrantesasf's study
-  guide](https://github.com/abrantesasf/sicp-abrantes-study-guide)
-- [Notes for following along in the modern
-  day](https://github.com/zv/SICP-guile), and Guile compatibility notes.
-  Warning: contains some solutions
-- ["cheatsheet" for key ideas](https://www.physinf.com/sicp)
-- [SchemeWiki solutions list](http://community.schemewiki.org/?sicp-solutions)
-- [Solving SICP](https://lockywolf.wordpress.com/2021/02/08/solving-sicp/)
-  statistical analysis of the author's experience doing the textbook.
-- [Gwern's SICP notes in Haskell](https://www.gwern.net/sicp/Chapter-1-1)
-- [Eli Bendersky's notes in Common Lisp](https://eli.thegreenplace.net/tag/sicp)
-
-Scheme proposals for SICP support libraries (usually not implemented, but hey
-it's worth knowing about):
-- [SRFI-216](https://srfi.schemers.org/srfi-216/) provides extra support for
-  SICP in Scheme. [SRFI-216
-  implementations](https://practical-scheme.net/wiliki/schemexref.cgi?SRFI-216)
-- [SRFI-203](https://srfi.schemers.org/srfi-203/): extra support for the
-  graphics drawings segments of the book.
 
 # Tidbits about Scheme
 
