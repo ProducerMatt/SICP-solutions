@@ -1,339 +1,567 @@
-# -*- org-publish-project-alist: (("SICP-Answers" :base-directory "~/SICP-group" :publishing-directory "~/SICP-group/texpub" :publishing-function org-latex-export-to-pdf :makeindex t)); -*-
-# enable TOC:
-#+OPTIONS: toc:t num:20 makeindex:t tags:nil
-#+HUGO_BASE_DIR: docs/
-#+hugo_auto_set_lastmod: t
-#+hugo_draft: false
-# FOR PAPERMOD THEME:
-#+EXPORT_HUGO_CUSTOM_FRONT_MATTER: :ShowShareButtons false :disableScrollToTop true :hideMeta true :showReadingTime true
++++
+title = "A Journey Through SICP"
+author = ["ProducerMatt"]
+draft = false
++++
 
-# Don't export sections tagged "noexport"
-#+EXCLUDE_TAGS: noexport
+<div class="ox-hugo-toc toc has-section-numbers">
 
-# Open document folded
-#+STARTUP: overview
+<div class="heading">Table of Contents</div>
 
-# for org agenda, tag items with whether they are math-heavy or optional
-#+TAGS: math optional
+- <span class="section-num">1</span> [Introduction Notes](#introduction-notes)
+    - <span class="section-num">1.1</span> [Text Foreword](#text-foreword)
+    - <span class="section-num">1.2</span> [Preface, 1e](#preface-1e)
+- <span class="section-num">2</span> [Chapter 1: Building Abstractions with Procedures](#chapter-1-building-abstractions-with-procedures)
+    - <span class="section-num">2.1</span> [1.1: The Elements of Programming](#1-dot-1-the-elements-of-programming)
+    - <span class="section-num">2.2</span> [1.1.1: Expressions](#1-dot-1-dot-1-expressions)
+    - <span class="section-num">2.3</span> [1.1.3: Evaluating Combinations](#1-dot-1-dot-3-evaluating-combinations)
+    - <span class="section-num">2.4</span> [1.1.4: Compound Procedures](#1-dot-1-dot-4-compound-procedures)
+    - <span class="section-num">2.5</span> [1.1.5: The Substitution Model for Procedure Application](#1-dot-1-dot-5-the-substitution-model-for-procedure-application)
+    - <span class="section-num">2.6</span> [1.1.6: Conditional Expressions and Predicates](#1-dot-1-dot-6-conditional-expressions-and-predicates)
+    - <span class="section-num">2.7</span> [Exercise 1.1: Trying expressions](#exercise-1-dot-1-trying-expressions)
+        - <span class="section-num">2.7.1</span> [Question](#question)
+        - <span class="section-num">2.7.2</span> [Answer](#answer)
+    - <span class="section-num">2.8</span> [Exercise 1.2: Prefix form](#exercise-1-dot-2-prefix-form)
+        - <span class="section-num">2.8.1</span> [Question](#question)
+        - <span class="section-num">2.8.2</span> [Answer](#answer)
+    - <span class="section-num">2.9</span> [Exercise 1.3: Conditionals](#exercise-1-dot-3-conditionals)
+        - <span class="section-num">2.9.1</span> [Question](#question)
+        - <span class="section-num">2.9.2</span> [Answer](#answer)
+    - <span class="section-num">2.10</span> [Exercise 1.4: Compound expressions](#exercise-1-dot-4-compound-expressions)
+        - <span class="section-num">2.10.1</span> [Question](#question)
+        - <span class="section-num">2.10.2</span> [Answer](#answer)
+    - <span class="section-num">2.11</span> [Exercise 1.5: Applicative vs normal-order evaluation](#exercise-1-dot-5-applicative-vs-normal-order-evaluation)
+        - <span class="section-num">2.11.1</span> [Question](#question)
+        - <span class="section-num">2.11.2</span> [Answer](#answer)
+    - <span class="section-num">2.12</span> [1.1.7: Example: Square Roots by Newton's Method](#1-dot-1-dot-7-example-square-roots-by-newton-s-method)
+    - <span class="section-num">2.13</span> [1.1.8: Procedures as Black-Box Abstractions](#1-dot-1-dot-8-procedures-as-black-box-abstractions)
+    - <span class="section-num">2.14</span> [Exercise 1.6: Special form evaluation](#exercise-1-dot-6-special-form-evaluation)
+        - <span class="section-num">2.14.1</span> [Text code](#text-code)
+        - <span class="section-num">2.14.2</span> [Question](#question)
+        - <span class="section-num">2.14.3</span> [Answer](#answer)
+    - <span class="section-num">2.15</span> [Exercise 1.7: `sqrt` with small and large numbers](#exercise-1-dot-7-sqrt-with-small-and-large-numbers)
+        - <span class="section-num">2.15.1</span> [Text](#text)
+        - <span class="section-num">2.15.2</span> [Question](#question)
+        - <span class="section-num">2.15.3</span> [Diary](#diary)
+        - <span class="section-num">2.15.4</span> [Answer](#answer)
+    - <span class="section-num">2.16</span> [Exercise 1.8: Cube roots](#exercise-1-dot-8-cube-roots)
+        - <span class="section-num">2.16.1</span> [Question](#question)
+        - <span class="section-num">2.16.2</span> [Diary](#diary)
+        - <span class="section-num">2.16.3</span> [Answer](#answer)
+    - <span class="section-num">2.17</span> [1.2: Procedures and the Processes They Generate](#1-dot-2-procedures-and-the-processes-they-generate)
+    - <span class="section-num">2.18</span> [1.2.1: Linear Recursion and Iteration](#1-dot-2-dot-1-linear-recursion-and-iteration)
+    - <span class="section-num">2.19</span> [Exercise 1.9: Peano counting and recursion](#exercise-1-dot-9-peano-counting-and-recursion)
+        - <span class="section-num">2.19.1</span> [Question](#question)
+        - <span class="section-num">2.19.2</span> [Answer](#answer)
+    - <span class="section-num">2.20</span> [Exercise 1.10: Ackermann's Function](#exercise-1-dot-10-ackermann-s-function)
+        - <span class="section-num">2.20.1</span> [Question](#question)
+        - <span class="section-num">2.20.2</span> [Answer](#answer)
+    - <span class="section-num">2.21</span> [1.2.2: Tree Recursion](#1-dot-2-dot-2-tree-recursion)
+        - <span class="section-num">2.21.1</span> [Example: Counting change](#example-counting-change)
+    - <span class="section-num">2.22</span> [Exercise 1.11: More recursion vs iteration](#exercise-1-dot-11-more-recursion-vs-iteration)
+        - <span class="section-num">2.22.1</span> [Question](#question)
+        - <span class="section-num">2.22.2</span> [Answer](#answer)
+    - <span class="section-num">2.23</span> [Exercise 1.12: Pascal's Triangle](#exercise-1-dot-12-pascal-s-triangle)
+        - <span class="section-num">2.23.1</span> [Question](#question)
+        - <span class="section-num">2.23.2</span> [Answer](#answer)
+    - <span class="section-num">2.24</span> [Exercise 1.13: Proving Fibonacci approximation](#exercise-1-dot-13-proving-fibonacci-approximation):optional:
+        - <span class="section-num">2.24.1</span> [Question](#question)
+        - <span class="section-num">2.24.2</span> [Answer](#answer)
+    - <span class="section-num">2.25</span> [1.2.3: Orders of Growth](#1-dot-2-dot-3-orders-of-growth)
+    - <span class="section-num">2.26</span> [Exercise 1.14: `count-change`](#exercise-1-dot-14-count-change)
+        - <span class="section-num">2.26.1</span> [Text](#text)
+        - <span class="section-num">2.26.2</span> [Question A: Draw the tree](#question-a-draw-the-tree)
+        - <span class="section-num">2.26.3</span> [Answer](#answer)
+        - <span class="section-num">2.26.4</span> [Question B: Analyzing process growth](#question-b-analyzing-process-growth)
+        - <span class="section-num">2.26.5</span> [Answer B](#answer-b)
+    - <span class="section-num">2.27</span> [Exercise 1.15: Sine approximation](#exercise-1-dot-15-sine-approximation)
+        - <span class="section-num">2.27.1</span> [Question A](#question-a)
+        - <span class="section-num">2.27.2</span> [Answer A](#answer-a)
+        - <span class="section-num">2.27.3</span> [Question B](#question-b)
+        - <span class="section-num">2.27.4</span> [Answer B](#answer-b)
+    - <span class="section-num">2.28</span> [Exercise 1.16: Making `fast-expt` iterative](#exercise-1-dot-16-making-fast-expt-iterative)
+        - <span class="section-num">2.28.1</span> [Text](#text)
+        - <span class="section-num">2.28.2</span> [Question](#question)
+        - <span class="section-num">2.28.3</span> [Diary](#diary)
+        - <span class="section-num">2.28.4</span> [Answer](#answer)
+    - <span class="section-num">2.29</span> [Exercise 1.17: Logarithmic multiplication (recursive)](#exercise-1-dot-17-logarithmic-multiplication--recursive)
+        - <span class="section-num">2.29.1</span> [Question](#question)
+        - <span class="section-num">2.29.2</span> [Answer](#answer)
+    - <span class="section-num">2.30</span> [Exercise 1.18: Logarithmic multiplication (iterative)](#exercise-1-dot-18-logarithmic-multiplication--iterative)
+        - <span class="section-num">2.30.1</span> [Question](#question)
+        - <span class="section-num">2.30.2</span> [Diary](#diary)
+        - <span class="section-num">2.30.3</span> [Answer](#answer)
+    - <span class="section-num">2.31</span> [Exercise 1.19: Logarithmic fibonacci computing with \\(T\\)](#exercise-1-dot-19-logarithmic-fibonacci-computing-with-t)
+        - <span class="section-num">2.31.1</span> [Question](#question)
+        - <span class="section-num">2.31.2</span> [Diary](#diary)
+        - <span class="section-num">2.31.3</span> [Answer](#answer)
+    - <span class="section-num">2.32</span> [1.2.5: Greatest Common Divisor](#1-dot-2-dot-5-greatest-common-divisor)
+    - <span class="section-num">2.33</span> [Exercise 1.20: Inefficiency of normal-order evaluation](#exercise-1-dot-20-inefficiency-of-normal-order-evaluation)
+        - <span class="section-num">2.33.1</span> [Text](#text)
+        - <span class="section-num">2.33.2</span> [Question](#question)
+        - <span class="section-num">2.33.3</span> [Answer](#answer)
+    - <span class="section-num">2.34</span> [1.2.6: Example: Testing for Primality](#1-dot-2-dot-6-example-testing-for-primality)
+    - <span class="section-num">2.35</span> [Exercise 1.21](#exercise-1-dot-21)
+        - <span class="section-num">2.35.1</span> [Text](#text)
+        - <span class="section-num">2.35.2</span> [Question](#question)
+        - <span class="section-num">2.35.3</span> [Answer](#answer)
+    - <span class="section-num">2.36</span> [Exercise 1.22](#exercise-1-dot-22)
+        - <span class="section-num">2.36.1</span> [Question](#question)
+        - <span class="section-num">2.36.2</span> [Answer](#answer)
+    - <span class="section-num">2.37</span> [Exercise 1.23](#exercise-1-dot-23)
+        - <span class="section-num">2.37.1</span> [Question](#question)
+        - <span class="section-num">2.37.2</span> [A Comedy of Error (just the one)](#a-comedy-of-error--just-the-one)
+        - <span class="section-num">2.37.3</span> [Answer](#answer)
+    - <span class="section-num">2.38</span> [Exercise 1.24](#exercise-1-dot-24)
+        - <span class="section-num">2.38.1</span> [Text](#text)
+        - <span class="section-num">2.38.2</span> [Question](#question)
+        - <span class="section-num">2.38.3</span> [Answer](#answer)
+    - <span class="section-num">2.39</span> [Exercise 1.25](#exercise-1-dot-25)
+        - <span class="section-num">2.39.1</span> [Question](#question)
+        - <span class="section-num">2.39.2</span> [Answer](#answer)
+    - <span class="section-num">2.40</span> [Exercise 1.26](#exercise-1-dot-26)
+        - <span class="section-num">2.40.1</span> [Question](#question)
+        - <span class="section-num">2.40.2</span> [Answer](#answer)
+    - <span class="section-num">2.41</span> [Exercise 1.27](#exercise-1-dot-27)
+        - <span class="section-num">2.41.1</span> [Question](#question)
+        - <span class="section-num">2.41.2</span> [Answer](#answer)
+    - <span class="section-num">2.42</span> [Exercise 1.28](#exercise-1-dot-28)
+        - <span class="section-num">2.42.1</span> [Question](#question)
+        - <span class="section-num">2.42.2</span> [Analysis](#analysis)
+        - <span class="section-num">2.42.3</span> [Answer](#answer)
+    - <span class="section-num">2.43</span> [1.3: Formulating Abstractions with Higher-Order Procedures](#1-dot-3-formulating-abstractions-with-higher-order-procedures)
+    - <span class="section-num">2.44</span> [1.3.1: Procedures as Arguments](#1-dot-3-dot-1-procedures-as-arguments)
+    - <span class="section-num">2.45</span> [Exercise 1.29](#exercise-1-dot-29)
+        - <span class="section-num">2.45.1</span> [Text](#text)
+        - <span class="section-num">2.45.2</span> [Question](#question)
+        - <span class="section-num">2.45.3</span> [Answer](#answer)
+    - <span class="section-num">2.46</span> [Exercise 1.30](#exercise-1-dot-30)
+        - <span class="section-num">2.46.1</span> [Question](#question)
+        - <span class="section-num">2.46.2</span> [Answer](#answer)
+    - <span class="section-num">2.47</span> [Exercise 1.31](#exercise-1-dot-31)
+        - <span class="section-num">2.47.1</span> [Question A.1](#question-a-dot-1)
+        - <span class="section-num">2.47.2</span> [Answer A.1](#answer-a-dot-1)
+        - <span class="section-num">2.47.3</span> [Question A.2](#question-a-dot-2)
+        - <span class="section-num">2.47.4</span> [Answer A.2](#answer-a-dot-2)
+        - <span class="section-num">2.47.5</span> [Question A.3](#question-a-dot-3)
+        - <span class="section-num">2.47.6</span> [Answer A.3](#answer-a-dot-3)
+        - <span class="section-num">2.47.7</span> [Question B](#question-b)
+        - <span class="section-num">2.47.8</span> [Answer B](#answer-b)
+    - <span class="section-num">2.48</span> [Exercise 1.32](#exercise-1-dot-32)
+        - <span class="section-num">2.48.1</span> [Question A](#question-a)
+        - <span class="section-num">2.48.2</span> [Answer A](#answer-a)
+        - <span class="section-num">2.48.3</span> [Question B](#question-b)
+        - <span class="section-num">2.48.4</span> [Answer B](#answer-b)
+    - <span class="section-num">2.49</span> [Exercise 1.33](#exercise-1-dot-33)
+        - <span class="section-num">2.49.1</span> [Question A](#question-a)
+        - <span class="section-num">2.49.2</span> [Answer A](#answer-a)
+        - <span class="section-num">2.49.3</span> [Question B](#question-b)
+    - <span class="section-num">2.50</span> [1.3.2: Constructing Procedures Using lambda](#1-dot-3-dot-2-constructing-procedures-using-lambda)
+    - <span class="section-num">2.51</span> [Exercise 1.34](#exercise-1-dot-34)
+        - <span class="section-num">2.51.1</span> [Question](#question)
+        - <span class="section-num">2.51.2</span> [Answer](#answer)
+    - <span class="section-num">2.52</span> [1.3.3 Procedures as General Methods](#1-dot-3-dot-3-procedures-as-general-methods)
+    - <span class="section-num">2.53</span> [Exercise 1.35](#exercise-1-dot-35)
+        - <span class="section-num">2.53.1</span> [Text](#text)
+        - <span class="section-num">2.53.2</span> [Question](#question)
+        - <span class="section-num">2.53.3</span> [Answer](#answer)
+    - <span class="section-num">2.54</span> [Exercise 1.36](#exercise-1-dot-36)
+        - <span class="section-num">2.54.1</span> [Question](#question)
+        - <span class="section-num">2.54.2</span> [Answer](#answer)
+    - <span class="section-num">2.55</span> [Exercise 1.37](#exercise-1-dot-37)
+        - <span class="section-num">2.55.1</span> [Question A](#question-a)
+        - <span class="section-num">2.55.2</span> [Answer A](#answer-a)
+        - <span class="section-num">2.55.3</span> [Question B](#question-b)
+        - <span class="section-num">2.55.4</span> [Answer B](#answer-b)
+        - <span class="section-num">2.55.5</span> [Question C](#question-c)
+        - <span class="section-num">2.55.6</span> [Answer C](#answer-c)
+    - <span class="section-num">2.56</span> [Exercise 1.38](#exercise-1-dot-38)
+        - <span class="section-num">2.56.1</span> [Question](#question)
+        - <span class="section-num">2.56.2</span> [Answer](#answer)
+    - <span class="section-num">2.57</span> [Exercise 1.39](#exercise-1-dot-39)
+        - <span class="section-num">2.57.1</span> [Question](#question)
+        - <span class="section-num">2.57.2</span> [Answer](#answer)
+    - <span class="section-num">2.58</span> [1.3.4 Procedures as Returned Values](#1-dot-3-dot-4-procedures-as-returned-values)
+    - <span class="section-num">2.59</span> [Exercise 1.40](#exercise-1-dot-40)
+        - <span class="section-num">2.59.1</span> [Text](#text)
+        - <span class="section-num">2.59.2</span> [Question](#question)
+        - <span class="section-num">2.59.3</span> [Answer](#answer)
+    - <span class="section-num">2.60</span> [Exercise 1.41](#exercise-1-dot-41)
+        - <span class="section-num">2.60.1</span> [Question](#question)
+        - <span class="section-num">2.60.2</span> [Answer](#answer)
+    - <span class="section-num">2.61</span> [Exercise 1.42](#exercise-1-dot-42)
+        - <span class="section-num">2.61.1</span> [Question](#question)
+        - <span class="section-num">2.61.2</span> [Answer](#answer)
+    - <span class="section-num">2.62</span> [Exercise 1.43](#exercise-1-dot-43)
+        - <span class="section-num">2.62.1</span> [Question](#question)
+        - <span class="section-num">2.62.2</span> [Answer](#answer)
+    - <span class="section-num">2.63</span> [Exercise 1.44](#exercise-1-dot-44)
+        - <span class="section-num">2.63.1</span> [Question](#question)
+        - <span class="section-num">2.63.2</span> [Answer](#answer)
+    - <span class="section-num">2.64</span> [Exercise 1.45](#exercise-1-dot-45)
+        - <span class="section-num">2.64.1</span> [Question](#question)
+        - <span class="section-num">2.64.2</span> [Answer](#answer)
+    - <span class="section-num">2.65</span> [Exercise 1.46](#exercise-1-dot-46)
+        - <span class="section-num">2.65.1</span> [Question](#question)
+        - <span class="section-num">2.65.2</span> [Answer](#answer)
+- <span class="section-num">3</span> [Chapter 2: Building Abstractions with Data](#chapter-2-building-abstractions-with-data)
+    - <span class="section-num">3.1</span> [2.1.1: Example: Arithmetic Operations for Rational Numbers](#2-dot-1-dot-1-example-arithmetic-operations-for-rational-numbers)
+    - <span class="section-num">3.2</span> [Exercise 2.1](#exercise-2-dot-1)
+        - <span class="section-num">3.2.1</span> [Text](#text)
+        - <span class="section-num">3.2.2</span> [Question](#question)
+        - <span class="section-num">3.2.3</span> [Answer](#answer)
+    - <span class="section-num">3.3</span> [Exercise 2.2](#exercise-2-dot-2)
+        - <span class="section-num">3.3.1</span> [Question](#question)
+        - <span class="section-num">3.3.2</span> [Answer](#answer)
+    - <span class="section-num">3.4</span> [Exercise 2.3](#exercise-2-dot-3)
+        - <span class="section-num">3.4.1</span> [Question](#question)
+        - <span class="section-num">3.4.2</span> [Answer 1](#answer-1)
+        - <span class="section-num">3.4.3</span> [Answer 2](#answer-2)
+    - <span class="section-num">3.5</span> [2.1.3: What Is Meant by Data?](#2-dot-1-dot-3-what-is-meant-by-data)
+    - <span class="section-num">3.6</span> [Exercise 2.4](#exercise-2-dot-4)
+        - <span class="section-num">3.6.1</span> [Question](#question)
+        - <span class="section-num">3.6.2</span> [Answer](#answer)
+    - <span class="section-num">3.7</span> [Exercise 2.5](#exercise-2-dot-5):optional:
+        - <span class="section-num">3.7.1</span> [Question](#question)
+        - <span class="section-num">3.7.2</span> [Answer](#answer)
+    - <span class="section-num">3.8</span> [Exercise 2.6](#exercise-2-dot-6):optional:
+        - <span class="section-num">3.8.1</span> [Question](#question)
+        - <span class="section-num">3.8.2</span> [Answer](#answer)
+    - <span class="section-num">3.9</span> [Exercise 2.7](#exercise-2-dot-7)
+        - <span class="section-num">3.9.1</span> [Text](#text)
+        - <span class="section-num">3.9.2</span> [Question](#question)
+        - <span class="section-num">3.9.3</span> [Answer](#answer)
+    - <span class="section-num">3.10</span> [Exercise 2.8](#exercise-2-dot-8)
+        - <span class="section-num">3.10.1</span> [Question](#question)
+        - <span class="section-num">3.10.2</span> [Answer](#answer)
+    - <span class="section-num">3.11</span> [Exercise 2.9](#exercise-2-dot-9)
+        - <span class="section-num">3.11.1</span> [Question](#question)
+        - <span class="section-num">3.11.2</span> [Answer](#answer)
+    - <span class="section-num">3.12</span> [Exercise 2.10](#exercise-2-dot-10)
+        - <span class="section-num">3.12.1</span> [Question](#question)
+        - <span class="section-num">3.12.2</span> [Answer](#answer)
+    - <span class="section-num">3.13</span> [Exercise 2.11](#exercise-2-dot-11)
+        - <span class="section-num">3.13.1</span> [Question](#question)
+        - <span class="section-num">3.13.2</span> [Answer](#answer)
+    - <span class="section-num">3.14</span> [Exercise 2.12](#exercise-2-dot-12)
+        - <span class="section-num">3.14.1</span> [Question](#question)
+        - <span class="section-num">3.14.2</span> [Answer](#answer)
+    - <span class="section-num">3.15</span> [Exercise 2.13](#exercise-2-dot-13):optional:
+        - <span class="section-num">3.15.1</span> [Question](#question)
+        - <span class="section-num">3.15.2</span> [Answer](#answer)
+    - <span class="section-num">3.16</span> [Exercise 2.14](#exercise-2-dot-14)
+        - <span class="section-num">3.16.1</span> [Question](#question)
+        - <span class="section-num">3.16.2</span> [Answer](#answer)
+    - <span class="section-num">3.17</span> [Exercise 2.15](#exercise-2-dot-15)
+        - <span class="section-num">3.17.1</span> [Question](#question)
+        - <span class="section-num">3.17.2</span> [Answer](#answer)
+    - <span class="section-num">3.18</span> [Exercise 2.16](#exercise-2-dot-16):optional:
+        - <span class="section-num">3.18.1</span> [Question](#question)
+        - <span class="section-num">3.18.2</span> [Answer](#answer)
+    - <span class="section-num">3.19</span> [2.2: Hierarchical Data and the Closure Property](#2-dot-2-hierarchical-data-and-the-closure-property)
+    - <span class="section-num">3.20</span> [2.2.1: Representing Sequences](#2-dot-2-dot-1-representing-sequences)
+    - <span class="section-num">3.21</span> [Exercise 2.17](#exercise-2-dot-17)
+        - <span class="section-num">3.21.1</span> [Question](#question)
+        - <span class="section-num">3.21.2</span> [Answer](#answer)
+    - <span class="section-num">3.22</span> [Exercise 2.18](#exercise-2-dot-18)
+        - <span class="section-num">3.22.1</span> [Question](#question)
+        - <span class="section-num">3.22.2</span> [Answer](#answer)
+    - <span class="section-num">3.23</span> [Exercise 2.19](#exercise-2-dot-19)
+        - <span class="section-num">3.23.1</span> [Question](#question)
+        - <span class="section-num">3.23.2</span> [Answer](#answer)
+    - <span class="section-num">3.24</span> [Exercise 2.20](#exercise-2-dot-20)
+        - <span class="section-num">3.24.1</span> [Question](#question)
+        - <span class="section-num">3.24.2</span> [Answer](#answer)
+    - <span class="section-num">3.25</span> [Exercise 2.21](#exercise-2-dot-21)
+        - <span class="section-num">3.25.1</span> [Question](#question)
+        - <span class="section-num">3.25.2</span> [Answer](#answer)
+    - <span class="section-num">3.26</span> [Exercise 2.22](#exercise-2-dot-22)
+        - <span class="section-num">3.26.1</span> [Questions](#questions)
+        - <span class="section-num">3.26.2</span> [Answer](#answer)
+    - <span class="section-num">3.27</span> [Exercise 2.23](#exercise-2-dot-23)
+        - <span class="section-num">3.27.1</span> [Question](#question)
+        - <span class="section-num">3.27.2</span> [Answer](#answer)
+    - <span class="section-num">3.28</span> [Exercise 2.24](#exercise-2-dot-24)
+        - <span class="section-num">3.28.1</span> [Text Definitions](#text-definitions)
+        - <span class="section-num">3.28.2</span> [Question](#question)
+        - <span class="section-num">3.28.3</span> [Answer](#answer)
+    - <span class="section-num">3.29</span> [Exercise 2.25](#exercise-2-dot-25)
+        - <span class="section-num">3.29.1</span> [Question](#question)
+    - <span class="section-num">3.30</span> [Exercise 2.26](#exercise-2-dot-26)
+        - <span class="section-num">3.30.1</span> [Question](#question)
+        - <span class="section-num">3.30.2</span> [Answer](#answer)
+    - <span class="section-num">3.31</span> [Exercise 2.27](#exercise-2-dot-27)
+        - <span class="section-num">3.31.1</span> [Question](#question)
+        - <span class="section-num">3.31.2</span> [Answer](#answer)
+    - <span class="section-num">3.32</span> [Exercise 2.28](#exercise-2-dot-28)
+        - <span class="section-num">3.32.1</span> [Question](#question)
+        - <span class="section-num">3.32.2</span> [Answer](#answer)
+    - <span class="section-num">3.33</span> [Exercise 2.29: Binary Mobiles](#exercise-2-dot-29-binary-mobiles)
+        - <span class="section-num">3.33.1</span> [Text Definitions](#text-definitions)
+        - <span class="section-num">3.33.2</span> [Question A: Selectors](#question-a-selectors)
+        - <span class="section-num">3.33.3</span> [Answer A](#answer-a)
+        - <span class="section-num">3.33.4</span> [Question B: total-weight](#question-b-total-weight)
+        - <span class="section-num">3.33.5</span> [Answer B](#answer-b)
+        - <span class="section-num">3.33.6</span> [Question C: Balancing](#question-c-balancing)
+        - <span class="section-num">3.33.7</span> [Answer C](#answer-c)
+        - <span class="section-num">3.33.8</span> [Question D: Implementation shakeup](#question-d-implementation-shakeup)
+        - <span class="section-num">3.33.9</span> [Answer D](#answer-d)
+    - <span class="section-num">3.34</span> [Exercise 2.30](#exercise-2-dot-30)
+        - <span class="section-num">3.34.1</span> [Question](#question)
+        - <span class="section-num">3.34.2</span> [Answer](#answer)
+    - <span class="section-num">3.35</span> [Exercise 2.31](#exercise-2-dot-31)
+        - <span class="section-num">3.35.1</span> [Question](#question)
+        - <span class="section-num">3.35.2</span> [Answer](#answer)
+    - <span class="section-num">3.36</span> [Exercise 2.32](#exercise-2-dot-32)
+        - <span class="section-num">3.36.1</span> [Question](#question)
+        - <span class="section-num">3.36.2</span> [Answer](#answer)
+    - <span class="section-num">3.37</span> [2.2.3: Sequences as Conventional Interfaces](#2-dot-2-dot-3-sequences-as-conventional-interfaces)
+    - <span class="section-num">3.38</span> [Exercise 2.33: The flexibility of `accumulate`](#exercise-2-dot-33-the-flexibility-of-accumulate)
+        - <span class="section-num">3.38.1</span> [Text Definitions](#text-definitions)
+        - <span class="section-num">3.38.2</span> [Question](#question)
+        - <span class="section-num">3.38.3</span> [Answer](#answer)
+    - <span class="section-num">3.39</span> [Exercise 2.34](#exercise-2-dot-34)
+        - <span class="section-num">3.39.1</span> [Question](#question)
+        - <span class="section-num">3.39.2</span> [Answer](#answer)
+    - <span class="section-num">3.40</span> [Exercise 2.35](#exercise-2-dot-35)
+        - <span class="section-num">3.40.1</span> [Question](#question)
+        - <span class="section-num">3.40.2</span> [Answer](#answer)
+    - <span class="section-num">3.41</span> [Exercise 2.36: Accumulate across multiple lists](#exercise-2-dot-36-accumulate-across-multiple-lists)
+        - <span class="section-num">3.41.1</span> [Question](#question)
+        - <span class="section-num">3.41.2</span> [Answers](#answers)
+    - <span class="section-num">3.42</span> [Exercise 2.37: Enter the matrices](#exercise-2-dot-37-enter-the-matrices)
+        - <span class="section-num">3.42.1</span> [Question](#question)
+        - <span class="section-num">3.42.2</span> [Answer](#answer)
+    - <span class="section-num">3.43</span> [Exercise 2.38: fold-right](#exercise-2-dot-38-fold-right)
+        - <span class="section-num">3.43.1</span> [Question A](#question-a)
+        - <span class="section-num">3.43.2</span> [Answer A](#answer-a)
+        - <span class="section-num">3.43.3</span> [Question B](#question-b)
+        - <span class="section-num">3.43.4</span> [Answer B](#answer-b)
+    - <span class="section-num">3.44</span> [Exercise 2.39: reverse via fold](#exercise-2-dot-39-reverse-via-fold)
+        - <span class="section-num">3.44.1</span> [Question](#question)
+        - <span class="section-num">3.44.2</span> [Answer](#answer)
+    - <span class="section-num">3.45</span> [Exercise 2.40: `unique-pairs`](#exercise-2-dot-40-unique-pairs)
+        - <span class="section-num">3.45.1</span> [Text Definitions](#text-definitions)
+        - <span class="section-num">3.45.2</span> [Question](#question)
+        - <span class="section-num">3.45.3</span> [Answer](#answer)
+    - <span class="section-num">3.46</span> [Exercise 2.41: Ordered triples of positive integers](#exercise-2-dot-41-ordered-triples-of-positive-integers)
+        - <span class="section-num">3.46.1</span> [Question](#question)
+        - <span class="section-num">3.46.2</span> [Answer](#answer)
+    - <span class="section-num">3.47</span> [Exercise 2.42: Eight Queens](#exercise-2-dot-42-eight-queens)
+        - <span class="section-num">3.47.1</span> [Question](#question)
+        - <span class="section-num">3.47.2</span> [Answer](#answer)
+    - <span class="section-num">3.48</span> [Exercise 2.43: Louis' `queens`](#exercise-2-dot-43-louis-queens)
+        - <span class="section-num">3.48.1</span> [Question](#question)
+        - <span class="section-num">3.48.2</span> [Answer](#answer)
+    - <span class="section-num">3.49</span> [2.2.4: Example: A Picture Language](#2-dot-2-dot-4-example-a-picture-language)
+    - <span class="section-num">3.50</span> [Exercise 2.44: `up-split`](#exercise-2-dot-44-up-split)
+        - <span class="section-num">3.50.1</span> [Text Definitions](#text-definitions)
+        - <span class="section-num">3.50.2</span> [Question](#question)
+        - <span class="section-num">3.50.3</span> [Answer](#answer)
+    - <span class="section-num">3.51</span> [Exercise 2.45: Generalized splitting](#exercise-2-dot-45-generalized-splitting)
+        - <span class="section-num">3.51.1</span> [Question](#question)
+        - <span class="section-num">3.51.2</span> [Answer](#answer)
+    - <span class="section-num">3.52</span> [Exercise 2.46: Defining vectors](#exercise-2-dot-46-defining-vectors)
+        - <span class="section-num">3.52.1</span> [Question](#question)
+        - <span class="section-num">3.52.2</span> [Answer](#answer)
+    - <span class="section-num">3.53</span> [Exercise 2.47: Defining frames](#exercise-2-dot-47-defining-frames)
+        - <span class="section-num">3.53.1</span> [Question](#question)
+        - <span class="section-num">3.53.2</span> [Answer](#answer)
+    - <span class="section-num">3.54</span> [Exercise 2.48: Line segments](#exercise-2-dot-48-line-segments)
+        - <span class="section-num">3.54.1</span> [Question](#question)
+        - <span class="section-num">3.54.2</span> [Answer](#answer)
+    - <span class="section-num">3.55</span> [Exercise 2.49: Primitive painters](#exercise-2-dot-49-primitive-painters)
+        - <span class="section-num">3.55.1</span> [Text Definitions](#text-definitions)
+        - <span class="section-num">3.55.2</span> [Question](#question)
+        - <span class="section-num">3.55.3</span> [Answer](#answer)
+    - <span class="section-num">3.56</span> [Exercise 2.50: Transforming painters](#exercise-2-dot-50-transforming-painters)
+        - <span class="section-num">3.56.1</span> [Text Definitions](#text-definitions)
+        - <span class="section-num">3.56.2</span> [Question](#question)
+        - <span class="section-num">3.56.3</span> [Answer](#answer)
+    - <span class="section-num">3.57</span> [Exercise 2.51](#exercise-2-dot-51)
+        - <span class="section-num">3.57.1</span> [Question](#question)
+        - <span class="section-num">3.57.2</span> [Answer](#answer)
+    - <span class="section-num">3.58</span> [2.2.4 continued](#2-dot-2-dot-4-continued)
+    - <span class="section-num">3.59</span> [Exercise 2.52](#exercise-2-dot-52)
+        - <span class="section-num">3.59.1</span> [Question A](#question-a)
+        - <span class="section-num">3.59.2</span> [Answer A](#answer-a)
+        - <span class="section-num">3.59.3</span> [Question B](#question-b)
+        - <span class="section-num">3.59.4</span> [Question C](#question-c)
+        - <span class="section-num">3.59.5</span> [Textbook Definitions](#textbook-definitions)
+        - <span class="section-num">3.59.6</span> [Answer C](#answer-c)
+    - <span class="section-num">3.60</span> [2.3.1: Quotation](#2-dot-3-dot-1-quotation)
+    - <span class="section-num">3.61</span> [Exercise 2.53](#exercise-2-dot-53)
+        - <span class="section-num">3.61.1</span> [Question](#question)
+        - <span class="section-num">3.61.2</span> [Answer](#answer)
+    - <span class="section-num">3.62</span> [Exercise 2.54](#exercise-2-dot-54)
+        - <span class="section-num">3.62.1</span> [Answer](#answer)
+    - <span class="section-num">3.63</span> [Exercise 2.55](#exercise-2-dot-55)
+        - <span class="section-num">3.63.1</span> [Question](#question)
+        - <span class="section-num">3.63.2</span> [Answer](#answer)
+    - <span class="section-num">3.64</span> [2.3.2: Example: Symbolic differentiator](#2-dot-3-dot-2-example-symbolic-differentiator)
+    - <span class="section-num">3.65</span> [Exercise 2.56: Differentiating exponentiation](#exercise-2-dot-56-differentiating-exponentiation)
+        - <span class="section-num">3.65.1</span> [Text definitions](#text-definitions)
+        - <span class="section-num">3.65.2</span> [Question](#question)
+        - <span class="section-num">3.65.3</span> [Answer](#answer)
+    - <span class="section-num">3.66</span> [Exercise 2.57: Differentiating arbitrary-length expressions](#exercise-2-dot-57-differentiating-arbitrary-length-expressions)
+        - <span class="section-num">3.66.1</span> [Question](#question)
+        - <span class="section-num">3.66.2</span> [Answer](#answer)
+    - <span class="section-num">3.67</span> [Exercise 2.58: Processing expressions with infix notation](#exercise-2-dot-58-processing-expressions-with-infix-notation)
+        - <span class="section-num">3.67.1</span> [Question](#question)
+        - <span class="section-num">3.67.2</span> [Part 1](#part-1)
+        - <span class="section-num">3.67.3</span> [Answer 1](#answer-1)
+        - <span class="section-num">3.67.4</span> [Part 2](#part-2)
+        - <span class="section-num">3.67.5</span> [Answer 2](#answer-2)
+    - <span class="section-num">3.68</span> [Exercise 2.59: Representing sets](#exercise-2-dot-59-representing-sets)
+        - <span class="section-num">3.68.1</span> [Text definitions](#text-definitions)
+        - <span class="section-num">3.68.2</span> [Question](#question)
+        - <span class="section-num">3.68.3</span> [Answer](#answer)
+    - <span class="section-num">3.69</span> [Exercise 2.59: Sets with duplicates](#exercise-2-dot-59-sets-with-duplicates)
+        - <span class="section-num">3.69.1</span> [Question](#question)
+        - <span class="section-num">3.69.2</span> [Answer](#answer)
+    - <span class="section-num">3.70</span> [Exercise 2.61: Ordered sets](#exercise-2-dot-61-ordered-sets)
+        - <span class="section-num">3.70.1</span> [Question](#question)
+        - <span class="section-num">3.70.2</span> [Answer](#answer)
+    - <span class="section-num">3.71</span> [Exercise 2.62: `union-set` ordered](#exercise-2-dot-62-union-set-ordered)
+        - <span class="section-num">3.71.1</span> [Question](#question)
+        - <span class="section-num">3.71.2</span> [Answer](#answer)
+    - <span class="section-num">3.72</span> [Exercise 2.63: binary trees](#exercise-2-dot-63-binary-trees)
+        - <span class="section-num">3.72.1</span> [Text definitions](#text-definitions)
+        - <span class="section-num">3.72.2</span> [Question A](#question-a)
+        - <span class="section-num">3.72.3</span> [Answer A](#answer-a)
+        - <span class="section-num">3.72.4</span> [Question B](#question-b)
+        - <span class="section-num">3.72.5</span> [Answer B](#answer-b)
+    - <span class="section-num">3.73</span> [Exercise 2.64: Making a balanced binary tree](#exercise-2-dot-64-making-a-balanced-binary-tree)
+        - <span class="section-num">3.73.1</span> [Question A](#question-a)
+        - <span class="section-num">3.73.2</span> [Answer A](#answer-a)
+        - <span class="section-num">3.73.3</span> [Question B](#question-b)
+        - <span class="section-num">3.73.4</span> [Answer B](#answer-b)
+    - <span class="section-num">3.74</span> [Exercise 2.65: Sets as binary trees](#exercise-2-dot-65-sets-as-binary-trees)
+        - <span class="section-num">3.74.1</span> [Textbook Definitions](#textbook-definitions)
+        - <span class="section-num">3.74.2</span> [Question](#question)
+        - <span class="section-num">3.74.3</span> [Answer](#answer)
+    - <span class="section-num">3.75</span> [Exercise 2.66: binary tree `lookup`](#exercise-2-dot-66-binary-tree-lookup)
+        - <span class="section-num">3.75.1</span> [Question](#question)
+        - <span class="section-num">3.75.2</span> [Answer](#answer)
+    - <span class="section-num">3.76</span> [Exercise 2.67: decoding Huffman tree messages](#exercise-2-dot-67-decoding-huffman-tree-messages)
+        - <span class="section-num">3.76.1</span> [Text definitions](#text-definitions)
+        - <span class="section-num">3.76.2</span> [Question](#question)
+        - <span class="section-num">3.76.3</span> [Answer](#answer)
+    - <span class="section-num">3.77</span> [Exercise 2.68: encoding Huffman tree messages](#exercise-2-dot-68-encoding-huffman-tree-messages)
+        - <span class="section-num">3.77.1</span> [Question](#question)
+        - <span class="section-num">3.77.2</span> [Answer](#answer)
+    - <span class="section-num">3.78</span> [Exercise 2.69: Generating Huffman trees](#exercise-2-dot-69-generating-huffman-trees)
+        - <span class="section-num">3.78.1</span> [Question](#question)
+        - <span class="section-num">3.78.2</span> [Answer](#answer)
+    - <span class="section-num">3.79</span> [Exercise 2.70: encoding 1950s rock songs](#exercise-2-dot-70-encoding-1950s-rock-songs)
+        - <span class="section-num">3.79.1</span> [Question](#question)
+        - <span class="section-num">3.79.2</span> [Answer](#answer)
+    - <span class="section-num">3.80</span> [Exercise 2.71](#exercise-2-dot-71)
+        - <span class="section-num">3.80.1</span> [Questions](#questions)
+        - <span class="section-num">3.80.2</span> [Answers](#answers)
+    - <span class="section-num">3.81</span> [Exercise 2.72: order of growth of `encode`](#exercise-2-dot-72-order-of-growth-of-encode)
+    - <span class="section-num">3.82</span> [2.4: Multiple Representations for Abstract Data](#2-dot-4-multiple-representations-for-abstract-data)
+    - <span class="section-num">3.83</span> [Exercise 2.73: Data-driven symbolic differentiator](#exercise-2-dot-73-data-driven-symbolic-differentiator)
+        - <span class="section-num">3.83.1</span> [Question A](#question-a)
+        - <span class="section-num">3.83.2</span> [Answer A](#answer-a)
+        - <span class="section-num">3.83.3</span> [Questions B and C](#questions-b-and-c)
+        - <span class="section-num">3.83.4</span> [Answer B &amp; C version 1](#answer-b-and-c-version-1)
+        - <span class="section-num">3.83.5</span> [Answer B &amp; C version 2](#answer-b-and-c-version-2)
+        - <span class="section-num">3.83.6</span> [Question D](#question-d)
+        - <span class="section-num">3.83.7</span> [Answer D](#answer-d)
+    - <span class="section-num">3.84</span> [Exercise 2.74: Multi-division record storage](#exercise-2-dot-74-multi-division-record-storage)
+        - <span class="section-num">3.84.1</span> [Questions ABC](#questions-abc)
+        - <span class="section-num">3.84.2</span> [Answers ABC](#answers-abc)
+        - <span class="section-num">3.84.3</span> [Question D](#question-d)
+        - <span class="section-num">3.84.4</span> [Answer D](#answer-d)
+    - <span class="section-num">3.85</span> [2.4.3: Data-directed and message-passing programs](#2-dot-4-dot-3-data-directed-and-message-passing-programs)
+    - <span class="section-num">3.86</span> [Exercise 2.75: Message-passing styled imaginary numbers](#exercise-2-dot-75-message-passing-styled-imaginary-numbers)
+        - <span class="section-num">3.86.1</span> [Question](#question)
+        - <span class="section-num">3.86.2</span> [Answer](#answer)
+    - <span class="section-num">3.87</span> [Exercise 2.76: comparing generic operation solutions](#exercise-2-dot-76-comparing-generic-operation-solutions)
+        - <span class="section-num">3.87.1</span> [Question](#question)
+        - <span class="section-num">3.87.2</span> [Answer](#answer)
+    - <span class="section-num">3.88</span> [Exercise 2.77: generic arithmetic package](#exercise-2-dot-77-generic-arithmetic-package)
+        - <span class="section-num">3.88.1</span> [Question](#question)
+        - <span class="section-num">3.88.2</span> [Answer](#answer)
+    - <span class="section-num">3.89</span> [Exercise 2.78: native scheme numbers](#exercise-2-dot-78-native-scheme-numbers)
+        - <span class="section-num">3.89.1</span> [Question](#question)
+        - <span class="section-num">3.89.2</span> [Answer](#answer)
+    - <span class="section-num">3.90</span> [Exercise 2.79: generic equality](#exercise-2-dot-79-generic-equality)
+        - <span class="section-num">3.90.1</span> [Question](#question)
+        - <span class="section-num">3.90.2</span> [Answer](#answer)
+    - <span class="section-num">3.91</span> [Exercise 2.80: Generic testing for zero](#exercise-2-dot-80-generic-testing-for-zero)
+        - <span class="section-num">3.91.1</span> [Question](#question)
+        - <span class="section-num">3.91.2</span> [Answer](#answer)
+    - <span class="section-num">3.92</span> [2.4.3: Combining Data of Different Types](#2-dot-4-dot-3-combining-data-of-different-types)
+    - <span class="section-num">3.93</span> [Exercise 2.81: Louis' `apply-generic`](#exercise-2-dot-81-louis-apply-generic)
+        - <span class="section-num">3.93.1</span> [Question A](#question-a)
+        - <span class="section-num">3.93.2</span> [Answer A](#answer-a)
+        - <span class="section-num">3.93.3</span> [Question B](#question-b)
+        - <span class="section-num">3.93.4</span> [Answer B](#answer-b)
+        - <span class="section-num">3.93.5</span> [Question C](#question-c)
+        - <span class="section-num">3.93.6</span> [Answer C](#answer-c)
+    - <span class="section-num">3.94</span> [Exercise 2.82: `apply-generic` with multiple coerced arguments](#exercise-2-dot-82-apply-generic-with-multiple-coerced-arguments)
+        - <span class="section-num">3.94.1</span> [Question](#question)
+        - <span class="section-num">3.94.2</span> [Answer](#answer)
+        - <span class="section-num">3.94.3</span> [Answer with vararg support](#answer-with-vararg-support)
+    - <span class="section-num">3.95</span> [Exercise 2.83: `raise`](#exercise-2-dot-83-raise)
+        - <span class="section-num">3.95.1</span> [Question](#question)
+        - <span class="section-num">3.95.2</span> [Answer](#answer)
+    - <span class="section-num">3.96</span> [Exercise 2.84: `append-generic` with `raise`](#exercise-2-dot-84-append-generic-with-raise)
+        - <span class="section-num">3.96.1</span> [Question](#question)
+        - <span class="section-num">3.96.2</span> [Answer](#answer)
+    - <span class="section-num">3.97</span> [Exercise 2.85: `append-generic` with `drop`](#exercise-2-dot-85-append-generic-with-drop)
+        - <span class="section-num">3.97.1</span> [Question](#question)
+        - <span class="section-num">3.97.2</span> [Answer](#answer)
+    - <span class="section-num">3.98</span> [Exercise 2.86: complex numbers with flexible types](#exercise-2-dot-86-complex-numbers-with-flexible-types)
+        - <span class="section-num">3.98.1</span> [Question](#question)
+        - <span class="section-num">3.98.2</span> [Answer](#answer)
+    - <span class="section-num">3.99</span> [2.5: Symbolic Algebra](#2-dot-5-symbolic-algebra)
+    - <span class="section-num">3.100</span> [Exercise 2.87: `=zero?` for polynomials](#exercise-2-dot-87-zero-for-polynomials)
+        - <span class="section-num">3.100.1</span> [Question](#question)
+        - <span class="section-num">3.100.2</span> [Answer](#answer)
+    - <span class="section-num">3.101</span> [Exercise 2.88: negation, subtracting polynomials](#exercise-2-dot-88-negation-subtracting-polynomials)
+        - <span class="section-num">3.101.1</span> [Question](#question)
+        - <span class="section-num">3.101.2</span> [Answer](#answer)
+    - <span class="section-num">3.102</span> [Exercise 2.89: an abstraction for dense polynomials](#exercise-2-dot-89-an-abstraction-for-dense-polynomials)
+        - <span class="section-num">3.102.1</span> [Question](#question)
+        - <span class="section-num">3.102.2</span> [Answer](#answer)
+    - <span class="section-num">3.103</span> [Exercise 2.90: dense polynomials integrated into the system](#exercise-2-dot-90-dense-polynomials-integrated-into-the-system)
+        - <span class="section-num">3.103.1</span> [Question](#question)
+        - <span class="section-num">3.103.2</span> [Answer](#answer)
+    - <span class="section-num">3.104</span> [Exercise 2.91: division of polynomials](#exercise-2-dot-91-division-of-polynomials)
+        - <span class="section-num">3.104.1</span> [Question](#question)
+        - <span class="section-num">3.104.2</span> [Answer](#answer)
+    - <span class="section-num">3.105</span> [Exercise 2.92: operating on polys in different variables](#exercise-2-dot-92-operating-on-polys-in-different-variables)
+        - <span class="section-num">3.105.1</span> [Question](#question)
+        - <span class="section-num">3.105.2</span> [Answer](#answer)
+    - <span class="section-num">3.106</span> [Exercise 2.93: extending `make-rational` for rational functions](#exercise-2-dot-93-extending-make-rational-for-rational-functions)
+        - <span class="section-num">3.106.1</span> [Question](#question)
+        - <span class="section-num">3.106.2</span> [Answer](#answer)
+    - <span class="section-num">3.107</span> [Exercise 2.94: GCD of polynomials](#exercise-2-dot-94-gcd-of-polynomials)
+        - <span class="section-num">3.107.1</span> [Question](#question)
+        - <span class="section-num">3.107.2</span> [Answer](#answer)
+    - <span class="section-num">3.108</span> [Exercise 2.95: a quirk in rational functions](#exercise-2-dot-95-a-quirk-in-rational-functions)
+        - <span class="section-num">3.108.1</span> [Question](#question)
+        - <span class="section-num">3.108.2</span> [Answer](#answer)
+    - <span class="section-num">3.109</span> [Exercise 2.96: pseudodivision of polynomials](#exercise-2-dot-96-pseudodivision-of-polynomials)
+        - <span class="section-num">3.109.1</span> [Text formulas](#text-formulas)
+        - <span class="section-num">3.109.2</span> [Questions 1 and 2](#questions-1-and-2)
+        - <span class="section-num">3.109.3</span> [Answers 1 and 2](#answers-1-and-2)
+    - <span class="section-num">3.110</span> [Exercise 2.97: reducing terms of rational functions](#exercise-2-dot-97-reducing-terms-of-rational-functions)
+        - <span class="section-num">3.110.1</span> [Questions 1 and 2](#questions-1-and-2)
+        - <span class="section-num">3.110.2</span> [Answers 1 and 2](#answers-1-and-2)
 
-# Tangle when saving
-#+auto_tangle: t
-
-# ORG-BABEL DEFAULTS
-#+PROPERTY: header-args :tangle no :noeval :exports both :cache yes :results output wrap :noweb no-export :comments noweb :colnames no :rownames no
-#+PROPERTY: header-args:scheme :wrap EXAMPLE
-#+PROPERTY: header-args:gnuplot :prelude "reset" :session nil
-#+PROPERTY: header-args:mermaid :exports results
-
-# For the actual answers use a header like this:
-# #+BEGIN_SRC scheme -n :eval no-export :exports both
-# For their dependencies:
-# #+BEGIN_SRC scheme -n :eval no-export :results silent
-
-#+latex_class: article
-#+latex_class_options: [final,fleqn,titlepage,twoside]
-#+latex_engraved_theme:
-
-#+LATEX_COMPILER: xelatex
-#+LATEX_HEADER: \usepackage{fontspec}
-#+LATEX_HEADER: \usepackage{calligra}
-#+LATEX_HEADER: \usepackage{lmodern}
-#+LATEX_HEADER: \usepackage[T1]{fontenc}
-#+LATEX_HEADER: \setmonofont[Mapping=tex-text,Ligatures=TeX,Scale=MatchLowercase]{Fira Code Regular Nerd Font Complete}
-
-# SOURCE CODE HIGHLIGHTING
-#+LATEX_HEADER: \usepackage[cache=true]{minted}
-#+LATEX_HEADER: \usemintedstyle{colorful}
-#+LATEX_HEADER: \setminted{fontsize=\small}
-# FIXME: keep minted inline code from being automatically wrapped
-#+LATEX_HEADER: \setmintedinline{fontsize=\normalsize,breakbytoken=false,breakbytokenanywhere=false,breaklines=false,breakaftergroup=false}
-
-# SOURCE CODE FRAMES
-#+LATEX_HEADER: \usepackage{mdframed}
-#+LATEX_HEADER: \definecolor{my-bg}{rgb}{0.99,0.99,0.99}
-#+LATEX_HEADER: \definecolor{gray}{rgb}{0.60,0.60,0.60}
-
-#+LATEX_HEADER: \mdfdefinestyle{theoremstyle}{%
-#+LATEX_HEADER: linecolor=gray,linewidth=.5pt,%
-#+LATEX_HEADER: backgroundcolor=my-bg
-#+LATEX_HEADER: }
-
-#+LATEX_HEADER: \usepackage{etoolbox}
-#+LATEX_HEADER: \BeforeBeginEnvironment{minted}{\begin{mdframed}[style=theoremstyle]}
-#+LATEX_HEADER: \AfterEndEnvironment{minted}{\end{mdframed}}
-
-# listfiles leaves a list of all files used during processing in the log
-# in-Emacs renders log to a buffer, not a file
-#+LATEX_HEADER: \listfiles
-
-#+title: A Journey Through SICP
-#+subtitle: Notes, exercises and analyses of Abelson and Sussman
-#+AUTHOR: ProducerMatt
-#+date: \today
-
-* HOW THIS DOCUMENT IS MADE :UNNUMBERED:noexport:
-:PROPERTIES:
-:ID:       7e00b0e8-2ca8-4d84-984b-ba91a0853599
-:CUSTOM-ID: 7e00b0e8-2ca8-4d84-984b-ba91a0853599
-:END:
-
-**TODO**
-#+NAME: testing
-#+BEGIN_SRC scheme -n :exports both :eval no-export :results value
-(define (foo a b)
-  (+ a (* 2 b)))
-
-(foo 5 3)
-#+END_SRC
-
-#+RESULTS[57407d275aacd484646294a75251646c910ae5fc]: testing
-:results:
-11
-:end:
-
-^ Dynamically evaluated when you press "enter" on the ~BEGIN_SRC~ block!
-
-*** Also consider:
-:PROPERTIES:
-:ID:       5f14502c-30a6-4ac2-8083-750c7d8622ff
-:CUSTOM-ID: 5f14502c-30a6-4ac2-8083-750c7d8622ff
-:END:
-
-- ~:results output~ for what the code prints
-- ~:exports code~ or ~:exports results~ to just get one or the other
-
-\(a + (\pi \times b)\) <~ inline Latex btw :)
-
-*** Reduce image size
-:PROPERTIES:
-:ID:       87653754-6e21-4de9-b1f2-e1c3f92d54d6
-:CUSTOM-ID: 87653754-6e21-4de9-b1f2-e1c3f92d54d6
-:END:
-
-#+BEGIN_SRC org
-#+ATTR_LATEX: :width 0.6\linewidth
-#+END_SRC
-
-*** Convert .svg's to .pngs
-:PROPERTIES:
-:ID:       4b90eb89-8c35-4e6a-b16a-b428010c82f7
-:CUSTOM-ID: 4b90eb89-8c35-4e6a-b16a-b428010c82f7
-:END:
-
-#+BEGIN_SRC shell
-fd . -e svg -tf -E old --exec magick '{}' '{.}'.png
-#+END_SRC
-
-** Helpers for org-mode tables
-:PROPERTIES:
-:ID:       dbf5bc39-d0b9-4e3f-a185-8c57142c6180
-:CUSTOM-ID: dbf5bc39-d0b9-4e3f-a185-8c57142c6180
-:END:
-
-*** ~try-these~
-:PROPERTIES:
-:ID:       46134082-020a-4a27-a76f-ab86b9a1f4c0
-:CUSTOM-ID: 46134082-020a-4a27-a76f-ab86b9a1f4c0
-:END:
-
-Takes function src_scheme{f} and list src_scheme{testvals} and applies src_scheme{f} to each item src_scheme{i}. For
-each src_scheme{i} returns a list with src_scheme{i} and the result. Useful for making tables with a
-column for input and a column for output.
-#+NAME: try-these
-#+BEGIN_SRC scheme -n :eval no-export :results silent
-;; Surely this could be less nightmarish
-(define (try-these f . testvals)
-  (let ((l (if (and (= 1 (length testvals))
-                    (list? (car testvals)))
-               (car testvals)
-               testvals)))
-    (map (lambda (i) (cons i
-                      (cons (if (list? i)
-                                (apply f i)
-                                (f i))
-                            #nil)))
-         l)))
-#+end_src
-
-*** ~transpose-list~
-:PROPERTIES:
-:ID:       d53be6a4-0023-4c14-8f66-f35a45d1541f
-:CUSTOM-ID: d53be6a4-0023-4c14-8f66-f35a45d1541f
-:END:
-
-"Rotate" a list, for example from src_scheme{'(1 2 3)} to
-src_scheme{'('(1) '(2) '(3))}
-#+NAME: transpose-list
-#+BEGIN_SRC scheme -n :eval no-export :results silent
-(define (transpose-list l)
-  (map list l))
-#+end_src
-
-*** ~print-as-rows~
-:PROPERTIES:
-:ID:       74c7dd23-52a1-4fa8-861f-241be493b2fb
-:CUSTOM-ID: 74c7dd23-52a1-4fa8-861f-241be493b2fb
-:END:
-
-For manually printing items in rows to stdout. Can be helpful for gnuplot.
-#+NAME: print-as-rows
-#+BEGIN_SRC scheme -n :eval no-export :results silent
-(define (p-nl a)
-  (display a)
-  (newline))
-(define (print-spaced args)
-  (let ((a (car args))
-        (d (cdr args)))
-    (if (null? d)
-        (p-nl a)
-        (begin (display a)
-               (display " ")
-               (print-spaced d)))))
-(define (print-as-rows . args)
-  (let ((a (car args))
-        (d (cdr args)))
-    (if (list? a)
-        (if (= 1 (length args))
-            (apply print-as-rows a)
-            (print-spaced a))
-        (p-nl a))
-    (if (null? d)
-        '()
-        (apply print-as-rows d))))
-#+end_src
-
-*** ~print-table~
-:PROPERTIES:
-:ID:       6a4a14f2-9b16-4d28-8f49-4fd895510374
-:CUSTOM-ID: 6a4a14f2-9b16-4d28-8f49-4fd895510374
-:END:
-
-Print ~args~ as a table separated by pipes. Optionally print spacer for
-colnames.
-#+NAME: print-table
-#+BEGIN_SRC scheme -n :eval no-export :results output :exports code
-(use-modules (ice-9 format))
-(define* (print-row ll #:key (mode #f))
-  (let ((fmtstr
-         (cond ((or (eq? mode #f)
-                    (equal? mode "display")
-                    (equal? mode "~a"))
-                " ~a |")    ;; print objects for human viewing
-               ((or (eq? mode #t)
-                    (equal? mode "write")
-                    (equal? mode "~s"))
-                " ~s |") ;; print objects for correctly (read)ing back
-               ((string? mode)
-                mode)))) ;; pass custom format string
-      (format #t "~&|")
-      (map (lambda(x) (format #t fmtstr x)) ll)
-      (format #t "~%")))
-(define* (print-table table #:key (colnames #f) (mode #f))
-    (define (iter t)
-      (print-row (car t) #:mode mode)
-      (if colnames
-          (print-row (car t) #:mode "---|"))
-      (map (lambda(x) (print-row x #:mode mode)) (cdr t)))
-    (cond ((and (= 1 (length table))
-                (list? (car table))) (iter (car table)))
-          ((<= 1 (length table)) (iter table))
-          (else error "Invalid Input??")))
-#+end_src
-
-#+RESULTS[19c84289ba2a3641df209da53bc4715f762f5ca7]: print-table
-:results:
-:end:
-
-#+NAME: print-table-test
-#+BEGIN_SRC scheme -n :eval no-export  :results table output :exports no :rownames yes :colnames yes
-<<print-table>>
-(let* ((l (iota 3))
-      (table (list
-              (list 'column-1 'column-2 'column-3 'column-4)
-              (cons 'row-a l)
-              (cons 'row-b l)
-              (cons 'row-c l))))
-  (print-table table #:colnames #t ))
-#+end_src
-
-#+RESULTS[6c949ef04c9d52908df9234c749648b0b1a3b9e9]: print-table-test
-:results:
-| column-1 | column-2 | column-3 | column-4 |
-|----------+----------+----------+----------|
-| row-a    |        0 |        1 |        2 |
-| row-b    |        0 |        1 |        2 |
-| row-c    |        0 |        1 |        2 |
-:end:
-
-*** ~print-table~ (spaces only)
-:PROPERTIES:
-:ID:       1d6d1d05-b520-4432-8c6b-23fa5e2d834b
-:CUSTOM-ID: 1d6d1d05-b520-4432-8c6b-23fa5e2d834b
-:END:
-
-TODO: Merge these together.
-#+NAME: print-table-spaced
-#+BEGIN_SRC scheme -n :eval no-export  :results output :exports code
-(use-modules (ice-9 format))
-(define* (print-row ll #:key (mode #f))
-  (let ((fmtstr
-         (cond ((or (eq? mode #f)
-                    (equal? mode "display")
-                    (equal? mode "~a"))
-                " ~a")    ;; print objects for human viewing
-               ((or (eq? mode #t)
-                    (equal? mode "write")
-                    (equal? mode "~s"))
-                " ~s") ;; print objects for correctly (read)ing back
-               ((string? mode)
-                mode)))) ;; pass custom format string
-    
-      (format #t "~&") ;; ensure start of new line
-      (map (lambda(x) (format #t fmtstr x)) ll)
-      (format #t "~%")))
-
-(define* (print-table table #:key (colnames #f) (mode #f))
-    (define (iter t)
-      (print-row (car t) #:mode mode)
-      (map (lambda(x) (print-row x #:mode mode)) (cdr t)))
-    (cond ((and (= 1 (length table))
-                (list? (car table))) (iter (car table)))
-          ((<= 1 (length table)) (iter table))
-          (else error "Invalid Input??")))
-#+end_src
-
-#+NAME: print-table-spaced-test
-#+BEGIN_SRC scheme -n :eval no-export  :results table output :exports no :rownames yes :colnames yes
-<<print-table-spaced>>
-(let* ((l (iota 3))
-      (table (list
-              (list 'column-1 'column-2 'column-3 'column-4)
-              (cons 'row-a l)
-              (cons 'row-b l)
-              (cons 'row-c l))))
-  (print-table table))
-#+end_src
-
-#+RESULTS[497a369e75d67018fb5cb6e0beecd5fbddb3468f]: print-table-spaced-test
-:results:
- column-1 column-2 column-3 column-4
- row-a 0 1 2
- row-b 0 1 2
- row-c 0 1 2
-:end:
+</div>
+<!--endtoc-->
 
 
-* Introduction Notes
-:PROPERTIES:
-:ID:       5b3d6f68-7dc5-4e82-841a-922a8194cc64
-:CUSTOM-ID: 5b3d6f68-7dc5-4e82-841a-922a8194cc64
-:END:
 
-** Text Foreword
-:PROPERTIES:
-:ID:       d7236225-fdc2-4c14-b8cb-773b8d759564
-:CUSTOM-ID: d7236225-fdc2-4c14-b8cb-773b8d759564
-:END:
+## <span class="section-num">1</span> Introduction Notes {#introduction-notes}
+
+
+### <span class="section-num">1.1</span> Text Foreword {#text-foreword}
 
 This book centers on three areas: the human mind, collections of computer
 programs, and the computer.
@@ -346,14 +574,8 @@ Ensuring the correctness of programs becomes a Herculean task as complexity
 grows. Because of this, it's important to make fundamentals that can be relied
 upon to support larger structures.
 
-** Preface, 1e
-:PROPERTIES:
-:ID:       0581ae6a-a955-4b91-838f-b133d8fc9da4
-:CUSTOM-ID: 0581ae6a-a955-4b91-838f-b133d8fc9da4
-:END:
-#+INDEX: procedural epistemology
-#+INDEX: declarative knowledge
-#+INDEX: imperative knowledge
+
+### <span class="section-num">1.2</span> Preface, 1e {#preface-1e}
 
 "Computer Science" isn't really about computers or science, in the same way that
 geometry isn't really about measuring the earth ('geometry' translates to
@@ -367,65 +589,68 @@ The essential material for introductory programming is how to control complexity
 when building programs.
 
 Computer Science is about imperative knowledge, as opposed to declarative. This
-can be called /procedural epistemology/.
+can be called _procedural epistemology_.
 
-- *Declarative knowledge* :: /what is true/. For example: \(\sqrt{x}\) is the
-  \(y\) such that \(y^2 = x\) and \(y \geq 0\)
+**Declarative knowledge**
+: _what is true_. For example: \\(\sqrt{x}\\) is the
+    \\(y\\) such that \\(y^2 = x\\) and \\(y \geq 0\\)
 
-- *Imperative knowledge* :: /How to follow a process/. For example: to find an
-  approximation to \(\sqrt{x}\), make a guess \(G\), improve the guess by
-  averaging \(G\) and \(x/G\), keep improving until the guess is good enough.
 
-**** Techniques for controlling complexity
-:PROPERTIES:
-:ID:       ed479e27-c80b-4959-89d9-1587b7966343
-:CUSTOM-ID: ed479e27-c80b-4959-89d9-1587b7966343
-:END:
+**Imperative knowledge**
+: _How to follow a process_. For example: to find an
+    approximation to \\(\sqrt{x}\\), make a guess \\(G\\), improve the guess by
+    averaging \\(G\\) and \\(x/G\\), keep improving until the guess is good enough.
 
-- Black-box abstraction :: Encapsulating an operation so the details of it are
-  irrelevant.
+<!--list-separator-->
 
-  The fixed point of a function \(f()\) is a value \(y\) such that \(f(y) = y\).
-  Method for finding a fixed point: start with a guess for \(y\) and keep applying
-  \(f(y)\) over and over until the result doesn't change very much.
+1.  Techniques for controlling complexity
 
-  Define a box of the method for finding the fixed point of \(f()\).
+    Black-box abstraction
+    : Encapsulating an operation so the details of it are
+        irrelevant.
 
-  One way to find \(\sqrt{x}\) is to take our function for approaching a square
-  root src_scheme{(lambda(guess target) (average guess (divide target guess)))}, applying
-  that to our method for finding a fixed point, and this creates a *procedure* to
-  find a square root.
+        The fixed point of a function \\(f()\\) is a value \\(y\\) such that \\(f(y) = y\\).
+        Method for finding a fixed point: start with a guess for \\(y\\) and keep applying
+        \\(f(y)\\) over and over until the result doesn't change very much.
 
-  Black-box abstraction
-  1. Start with primitive objects of procedures and data.
-  2. Combination: combine procedures with /composition/, combine data with
-     /construction/ of compound data.
-  3. Abstraction: defining procedures and abstracting data. Capture common
-     patterns by making high-order procedures composed of other procedures. Use
-     data as procedures.
+        Define a box of the method for finding the fixed point of \\(f()\\).
 
-- Conventional interfaces :: Agreed-upon ways of connecting things together.
+        One way to find \\(\sqrt{x}\\) is to take our function for approaching a square
+        root <span class="inline-src language-scheme" data-lang="scheme">`(lambda(guess target) (average guess (divide target guess)))`</span>, applying
+        that to our method for finding a fixed point, and this creates a **procedure** to
+        find a square root.
 
-  - How do you make operations generalized?
-  - How do you make large-scale structure and modularity?
-    - Object-oriented programming :: thinking of your structure as a society of
-      discrete but interacting parts.
-    - Operations on aggregates :: thinking of your structure as operating on a
-      stream, comparable to signal processing. /(Needs clarification.)/
+        Black-box abstraction
 
-- Metalinguistic abstractions :: Making new languages. This changes the way you
-  interact with the system by letting you emphasize some parts and deemphasize
-  other parts.
+        1.  Start with primitive objects of procedures and data.
+        2.  Combination: combine procedures with _composition_, combine data with
+            _construction_ of compound data.
+        3.  Abstraction: defining procedures and abstracting data. Capture common
+            patterns by making high-order procedures composed of other procedures. Use
+            data as procedures.
 
-* Chapter 1: Building Abstractions with Procedures
-:PROPERTIES:
-:ID:       fe3416c7-b95f-41d2-afe3-62c897a454a1
-:CUSTOM-ID: fe3416c7-b95f-41d2-afe3-62c897a454a1
-:END:
 
-*Computational processes* are abstract 'beings' that inhabit computers. Their
-evolution is directed by a pattern of rules called a *program*, and processes
-manipulate other abstract things called *data*.
+    Conventional interfaces
+    : Agreed-upon ways of connecting things together.
+        -   How do you make operations generalized?
+        -   How do you make large-scale structure and modularity?
+            -   **Object-oriented programming:** thinking of your structure as a society of
+                discrete but interacting parts.
+            -   **Operations on aggregates:** thinking of your structure as operating on a
+                stream, comparable to signal processing. _(Needs clarification.)_
+
+
+    Metalinguistic abstractions
+    : Making new languages. This changes the way you
+        interact with the system by letting you emphasize some parts and deemphasize
+        other parts.
+
+
+## <span class="section-num">2</span> Chapter 1: Building Abstractions with Procedures {#chapter-1-building-abstractions-with-procedures}
+
+**Computational processes** are abstract 'beings' that inhabit computers. Their
+evolution is directed by a pattern of rules called a **program**, and processes
+manipulate other abstract things called **data**.
 
 Master software engineers are able to organize programs so they can be
 reasonably sure the resulting process performs the task intended, without
@@ -438,118 +663,81 @@ There are powerful program-design techniques which rely on the ability to blur
 the distinction between data and processes. Lisp enables these techniques by
 allowing processes to be represented and manipulated as data.
 
-** 1.1: The Elements of Programming
-:PROPERTIES:
-:ID:       d38a95d1-239f-4a7b-9aae-0ea369f5db2a
-:CUSTOM-ID: d38a95d1-239f-4a7b-9aae-0ea369f5db2a
-:END:
+
+### <span class="section-num">2.1</span> 1.1: The Elements of Programming {#1-dot-1-the-elements-of-programming}
 
 A programming language isn't just a way to instruct a computer -- it's also a
 framework for the programmer to organize their ideas. Thus it's important to
 consider the means the language provides for combining ideas. Every powerful
 language has three mechanisms for this:
 
-- *primitive expressions* :: the simplest entities the language is concerned with
-- *means of combination* :: how compound elements can be built from simpler ones
-- *means of abstraction* :: how which compound elements can be named and
-  manipulated as units
+**primitive expressions**
+: the simplest entities the language is concerned with
 
-In programming, we deal with *data* which is what we want to manipulate, and
-*procedures* which are descriptions of the rules for manipulating the data.
+**means of combination**
+: how compound elements can be built from simpler ones
 
-A procedure has *formal parameters*. When the procedure is applied, the formal
-parameters are replaced by the *arguments* it is being applied to. For example,
+**means of abstraction**
+: how which compound elements can be named and
+    manipulated as units
+
+In programming, we deal with **data** which is what we want to manipulate, and
+**procedures** which are descriptions of the rules for manipulating the data.
+
+A procedure has **formal parameters**. When the procedure is applied, the formal
+parameters are replaced by the **arguments** it is being applied to. For example,
 take the following code:
 
-#+NAME: square
-#+BEGIN_SRC scheme -n :eval no-export :results silent
+<a id="code-snippet--square"></a>
+```scheme { linenos=true, linenostart=1 }
 (define (square x)
   (* x x))
-#+END_SRC
+```
 
-#+begin_src scheme
+```scheme
 <<square>>
 (square 5)
-#+end_src
+```
 
- src_scheme{x} is the formal parameter and  src_scheme{5} is the argument.
+<span class="inline-src language-scheme" data-lang="scheme">`x`</span> is the formal parameter and  <span class="inline-src language-scheme" data-lang="scheme">`5`</span> is the argument.
 
-** 1.1.1: Expressions
-:PROPERTIES:
-:ID:       c0cc921c-fbb2-4a63-a1cc-7c1e477d1e4a
-:CUSTOM-ID: c0cc921c-fbb2-4a63-a1cc-7c1e477d1e4a
-:END:
 
-The general form of Lisp is evaluating *combinations*, denoted by parenthesis,
-in the form src_scheme{(operator operands)}, where /operator/ is a procedure and
-/operands/ are the 0 or more arguments to the operator.
+### <span class="section-num">2.2</span> 1.1.1: Expressions {#1-dot-1-dot-1-expressions}
 
-Lisp uses *prefix notation*, which is not customary mathematical notation, but
+The general form of Lisp is evaluating **combinations**, denoted by parenthesis,
+in the form <span class="inline-src language-scheme" data-lang="scheme">`(operator operands)`</span>, where _operator_ is a procedure and
+_operands_ are the 0 or more arguments to the operator.
+
+Lisp uses **prefix notation**, which is not customary mathematical notation, but
 provides several advantages.
-1. It supports procedures that take arbitrary numbers of arguments,
-   i.e. src_scheme{(+ 1 2 3 4 5)}.
-2. It's straightforward to nest combinations in other combinations.
 
-** 1.1.3: Evaluating Combinations
-:PROPERTIES:
-:ID:       dca55c54-5052-4cfe-b20c-e8cfd379c265
-:CUSTOM-ID: dca55c54-5052-4cfe-b20c-e8cfd379c265
-:END:
+1.  It supports procedures that take arbitrary numbers of arguments,
+    i.e. <span class="inline-src language-scheme" data-lang="scheme">`(+ 1 2 3 4 5)`</span>.
+2.  It's straightforward to nest combinations in other combinations.
 
-The evaluator can evaluate nested expressions recursively. *Tree accumulation*
+
+### <span class="section-num">2.3</span> 1.1.3: Evaluating Combinations {#1-dot-1-dot-3-evaluating-combinations}
+
+The evaluator can evaluate nested expressions recursively. **Tree accumulation**
 is the process of evaluating nested combinations, "percolating" values upward.
 
-The recursive evaluation of src_scheme{(* (+ 2 (* 4 6)) (+ 3 5 7))} breaks down
+The recursive evaluation of <span class="inline-src language-scheme" data-lang="scheme">`(* (+ 2 (* 4 6)) (+ 3 5 7))`</span> breaks down
 into four parts:
 
-#+begin_src mermaid :file 1/fig/t_1-1-3.png
-graph BT;
-  A>"390"];
-  subgraph four;
-  B["*"];
-  C>"26"];
-  D>"15"];
-  end
-  subgraph two;
-  E["+"];
-  F("2");
-  G>"24"];
-  end
-  subgraph three;
-  H["+"];
-  I("3");
-  J("5");
-  K("7");
-  end
-  subgraph one;
-  L["*"];
-  M("4");
-  N("6");
-  end
+{{< figure src="/ox-hugo/t_1-1-3.png" >}}
 
-  B & C & D --> A;
-  E & F & G --> C
-  H & I & J & K --> D;
-  L & M & N --> G
 
-#+end_src
-
-#+RESULTS[eb290cb6a678715b9d35bfe3238eff9c97156ef7]:
-[[file:1/fig/t_1-1-3.png]]
-
-** 1.1.4: Compound Procedures
-:PROPERTIES:
-:ID:       c5a92594-c625-44d2-a8d0-4b7bf869d862
-:CUSTOM-ID: c5a92594-c625-44d2-a8d0-4b7bf869d862
-:END:
+### <span class="section-num">2.4</span> 1.1.4: Compound Procedures {#1-dot-1-dot-4-compound-procedures}
 
 We have identified the following in Lisp:
-- primitive data are numbers, primitive procedures are arithmetic operations
-- Operations can be combined by nesting combinations
-- Data and procedures can be abstracted by variable & procedure definitions
+
+-   primitive data are numbers, primitive procedures are arithmetic operations
+-   Operations can be combined by nesting combinations
+-   Data and procedures can be abstracted by variable &amp; procedure definitions
 
 Procedure definitions give a name to a compound procedure.
-#+begin_src scheme
+
+```scheme
 (define (square x) (* x x)) ; to square something, multiply it by itself
 ; now it can be applied or used in other definitions:
 (square 4) ; => 16
@@ -557,28 +745,25 @@ Procedure definitions give a name to a compound procedure.
 (define (sum-of-squares x y)
   (+ (square x) (square y)))
 (sum-of-squares 3 4) ; => 25
-#+end_src
+```
 
 Note how these compound procedures are used in the same way as primitive
 procedures.
 
-** 1.1.5: The Substitution Model for Procedure Application
-:PROPERTIES:
-:ID:       9f525cef-c10f-4cc0-9476-f94c6b5ff33e
-:CUSTOM-ID: 9f525cef-c10f-4cc0-9476-f94c6b5ff33e
-:END:
+
+### <span class="section-num">2.5</span> 1.1.5: The Substitution Model for Procedure Application {#1-dot-1-dot-5-the-substitution-model-for-procedure-application}
 
 To understand how the interpreter works, imagine it substituting the procedure
 calls with the bodies of the procedure and its arguments.
 
-#+begin_src scheme
+```scheme
 (* (square 3) (square 4))
 ; has the same results as
 (* (* 3 3) (* 3 3))
-#+end_src
+```
 
-This way of understanding procedure application is called the *substitution
-model*. This model is to help you understand procedure substitution, and is
+This way of understanding procedure application is called the **substitution
+model**. This model is to help you understand procedure substitution, and is
 usually not how the interpreter actually works. This book will progress through
 more intricate models of interpreters as it goes. This is the natural
 progression when learning scientific phenomena, starting with a simple model,
@@ -587,11 +772,15 @@ detail.
 
 Evaluations can be done in different orders.
 
-- *Applicative order* :: evaluates the operator and operands, and then applies the
+**Applicative order**
+: evaluates the operator and operands, and then applies the
+
 resulting procedure to the resulting arguments. In other words, reducing, then
 expanding, then reducing.
 
-- *Normal order* :: substitutes expressions until it obtains an expression involving
+**Normal order**
+: substitutes expressions until it obtains an expression involving
+
 only primitive operators, or until it can't substitute any further, and then
 evaluates. This results in expanding the expression completely before doing any
 reduction, which results in some repeated evaluations.
@@ -605,7 +794,7 @@ Lisp uses applicative order evaluation because it helps avoid repeated work and
 other complications. But normal has its own advantages which will be explored in
 Chapter 3 and 4.
 
-#+begin_src scheme
+```scheme
 ; Applicative evaluation
 (f 5)
 (sum-of-squares (+ a 1) (* a 2))
@@ -625,88 +814,76 @@ Chapter 3 and 4.
 (+ (* 6 6) (* 10 10))
 (+ 36 100)
 136
-#+end_src
+```
 
 (Extra-curricular clarification: Normal order delays evaluating arguments until
 they're needed by a procedure, which is called lazy evaluation.)
 
-** 1.1.6: Conditional Expressions and Predicates
-:PROPERTIES:
-:ID:       af3e45b2-e9d8-4c7e-a068-40042f06fb2e
-:CUSTOM-ID: af3e45b2-e9d8-4c7e-a068-40042f06fb2e
-:END:
+
+### <span class="section-num">2.6</span> 1.1.6: Conditional Expressions and Predicates {#1-dot-1-dot-6-conditional-expressions-and-predicates}
 
 An important aspect of programming is testing and branching depending on the
-results of the test. ~cond~ tests *predicates*, and upon encountering one,
-returns a *consequent*.
+results of the test. `cond` tests **predicates**, and upon encountering one,
+returns a **consequent**.
 
-#+begin_src scheme
+```scheme
 (cond
      (predicate1 consequent1)
      ...
      (predicateN consequentN))
-#+end_src
+```
 
 A shorter form of conditional:
 
-#+begin_src scheme
+```scheme
 (if predicate consequent alternative)
-#+end_src
+```
 
-If src_scheme{predicate} is true, src_scheme{consequent} is returned. Else,
-src_scheme{alternative} is returned.
+If <span class="inline-src language-scheme" data-lang="scheme">`predicate`</span> is true, <span class="inline-src language-scheme" data-lang="scheme">`consequent`</span> is returned. Else,
+<span class="inline-src language-scheme" data-lang="scheme">`alternative`</span> is returned.
 
 Combining predicates:
 
-#+begin_src scheme
+```scheme
 (and expression1 ... expressionN)
 ; if encounters false, stop eval and returns false.
 (or expression1 ... expressionN)
 ; if encounters true, stop eval and return true. Else false.
 (not expression)
 ; true is expression is false, false if expression is true.
-#+end_src
+```
 
 A small clarification:
 
-#+begin_src scheme
+```scheme
 (define A (* 5 5))
 (define (D) (* 5 5))
 A ; => 25
 D ; => compound procedure D
 (D) ; => 25 (result of executing procedure D)
-#+end_src
+```
 
 Special forms bring more nuances into the substitution model mentioned
-previously. For example, when evaluating an src_scheme{if} expression, you
+previously. For example, when evaluating an <span class="inline-src language-scheme" data-lang="scheme">`if`</span> expression, you
 evaluate the predicate and, depending on the result, either evaluate the
-*consequent* or the *alternative*. If you were evaluating in a standard manner,
+**consequent** or the **alternative**. If you were evaluating in a standard manner,
 the consequent and alternative would both be evaluated, rendering the
-src_scheme{if} expression ineffective.
+<span class="inline-src language-scheme" data-lang="scheme">`if`</span> expression ineffective.
 
-** Exercise 1.1: Trying expressions
-:PROPERTIES:
-:ID:       dca4ba2c-8ceb-4c65-b8e2-48cc8c9effc8
-:CUSTOM-ID: dca4ba2c-8ceb-4c65-b8e2-48cc8c9effc8
-:END:
 
-*** Question
-:PROPERTIES:
-:ID:       135d49f1-3996-4743-a52b-06a022cbd24f
-:CUSTOM-ID: 135d49f1-3996-4743-a52b-06a022cbd24f
-:END:
+### <span class="section-num">2.7</span> Exercise 1.1: Trying expressions {#exercise-1-dot-1-trying-expressions}
+
+
+#### <span class="section-num">2.7.1</span> Question {#question}
+
 Below is a sequence of expressions. What is the result printed by the
 interpreter in response to each expression? Assume that the sequence is to be
 evaluated in the order in which it is presented.
 
 
-*** Answer
-:PROPERTIES:
-:ID:       785eed0d-3e37-4972-8108-12dee80e2c8b
-:CUSTOM-ID: 785eed0d-3e37-4972-8108-12dee80e2c8b
-:END:
+#### <span class="section-num">2.7.2</span> Answer {#answer}
 
-#+BEGIN_SRC scheme -n :results none
+```scheme { linenos=true, linenostart=1 }
 10 ;; 10
 (+ 5 3 4) ;; 12
 (- 9 1) ;; 8
@@ -727,69 +904,47 @@ evaluated in the order in which it is presented.
          ((< a b) b)
          (else -1))
    (+ a 1)) ;; 16
-#+END_SRC
+```
 
-** Exercise 1.2: Prefix form
-:PROPERTIES:
-:ID:       55f52651-703d-4639-a819-80bd992ecd78
-:CUSTOM-ID: 55f52651-703d-4639-a819-80bd992ecd78
-:END:
 
-*** Question
-:PROPERTIES:
-:ID:       b0c2c693-6ddd-40ea-8497-453f4a82d755
-:CUSTOM-ID: b0c2c693-6ddd-40ea-8497-453f4a82d755
-:END:
+### <span class="section-num">2.8</span> Exercise 1.2: Prefix form {#exercise-1-dot-2-prefix-form}
+
+
+#### <span class="section-num">2.8.1</span> Question {#question}
 
 Translate the following expression into prefix form:
-\[
+$$
   \frac{5 + 2 + (2 - 3 - (6 + \frac{4}{5})))}
             {3(6 - 2)(2 - 7)}
-\]
+$$
 
 
-*** Answer
-:PROPERTIES:
-:ID:       928b573d-0aab-46ac-a546-9c7111a6be41
-:CUSTOM-ID: 928b573d-0aab-46ac-a546-9c7111a6be41
-:END:
+#### <span class="section-num">2.8.2</span> Answer {#answer}
 
-#+NAME: EX1-2
-#+BEGIN_SRC scheme -n :eval no-export :exports both :results value
+<a id="code-snippet--EX1-2"></a>
+```scheme { linenos=true, linenostart=1 }
 (/ (+ 5 2 (- 2 3 (+ 6 (/ 4 5))))
    (* 3 (- 6 2) (- 2 7)))
-#+END_SRC
+```
 
-#+RESULTS[7039c32447725d91001cae297dc9040b72a855ce]: EX1-2
-:results:
-#+begin_example
+```text
 1/75
-#+end_example
-:end:
+```
 
-** Exercise 1.3: Conditionals
-:PROPERTIES:
-:ID:       c90a49f5-d2bc-474b-a304-f6d95a9c3212
-:CUSTOM-ID: c90a49f5-d2bc-474b-a304-f6d95a9c3212
-:END:
 
-*** Question
-:PROPERTIES:
-:ID:       ee939cbc-44e8-443e-951b-3059f70cb7f7
-:CUSTOM-ID: ee939cbc-44e8-443e-951b-3059f70cb7f7
-:END:
+### <span class="section-num">2.9</span> Exercise 1.3: Conditionals {#exercise-1-dot-3-conditionals}
+
+
+#### <span class="section-num">2.9.1</span> Question {#question}
 
 Define a procedure that takes three numbers as arguments and
 returns the sum of the squares of the two larger numbers.
 
-*** Answer
-:PROPERTIES:
-:ID:       86e3bc6c-6fbd-475e-8ba9-47833c38b27d
-:CUSTOM-ID: 86e3bc6c-6fbd-475e-8ba9-47833c38b27d
-:END:
 
-#+NAME: EX1-3
-#+BEGIN_SRC scheme -n :eval no-export :exports both :results value table
+#### <span class="section-num">2.9.2</span> Answer {#answer}
+
+<a id="code-snippet--EX1-3"></a>
+```scheme { linenos=true, linenostart=1 }
 <<square>>
 (define (sum-square x y)
   (+ (square x) (square y)))
@@ -797,134 +952,109 @@ returns the sum of the squares of the two larger numbers.
   (cond ((and (>= a b) (>= b c)) (sum-square a b))
         ((and (>= a b) (> c b)) (sum-square a c))
         (else (sum-square b c))))
-#+END_SRC
-#+BEGIN_SRC scheme -n :eval no-export  :exports both :results value table
+```
+
+```scheme { linenos=true, linenostart=1 }
 <<EX1-3>>
 <<try-these>>
  (try-these square-2of3 '(7 5 3)
                         '(7 3 5)
                         '(3 5 7))
-#+END_SRC
+```
 
-#+RESULTS[0f816cfe3925898754ab7943a28f676135795e6c]:
-:results:
 | (7 5 3) | 74 |
+|---------|----|
 | (7 3 5) | 74 |
 | (3 5 7) | 74 |
-:end:
 
-** Exercise 1.4: Compound expressions
-:PROPERTIES:
-:ID:       1e9dc01f-759b-4522-be54-be32e408da8b
-:CUSTOM-ID: 1e9dc01f-759b-4522-be54-be32e408da8b
-:END:
 
-*** Question
-:PROPERTIES:
-:ID:       6ba4dc16-42e6-4080-b95a-08d526a82c96
-:CUSTOM-ID: 6ba4dc16-42e6-4080-b95a-08d526a82c96
-:END:
+### <span class="section-num">2.10</span> Exercise 1.4: Compound expressions {#exercise-1-dot-4-compound-expressions}
+
+
+#### <span class="section-num">2.10.1</span> Question {#question}
 
 Observe that our model of evaluation allows for combinations whose operators are
 compound expressions. Use this observation to describe the behavior of the
 following procedure:
 
-#+NAME: a-plus-abs-b
-#+BEGIN_SRC scheme -n
+<a id="code-snippet--a-plus-abs-b"></a>
+```scheme { linenos=true, linenostart=1 }
 (define (a-plus-abs-b a b)
   ((if (> b 0) + -) a b))
-#+END_SRC
+```
 
-*** Answer
-:PROPERTIES:
-:ID:       97f32793-fbf2-4443-a2d9-47ab5efef06c
-:CUSTOM-ID: 97f32793-fbf2-4443-a2d9-47ab5efef06c
-:END:
 
-This code accepts the variables src_scheme{a} and src_scheme{b}, and if
-src_scheme{b} is positive, it adds src_scheme{a} and src_scheme{b}. However, if
-src_scheme{b} is zero or negative, it subtracts them. This decision is made by
-using the src_scheme{+} and src_scheme{-} procedures as the results of an if
+#### <span class="section-num">2.10.2</span> Answer {#answer}
+
+This code accepts the variables <span class="inline-src language-scheme" data-lang="scheme">`a`</span> and <span class="inline-src language-scheme" data-lang="scheme">`b`</span>, and if
+<span class="inline-src language-scheme" data-lang="scheme">`b`</span> is positive, it adds <span class="inline-src language-scheme" data-lang="scheme">`a`</span> and <span class="inline-src language-scheme" data-lang="scheme">`b`</span>. However, if
+<span class="inline-src language-scheme" data-lang="scheme">`b`</span> is zero or negative, it subtracts them. This decision is made by
+using the <span class="inline-src language-scheme" data-lang="scheme">`+`</span> and <span class="inline-src language-scheme" data-lang="scheme">`-`</span> procedures as the results of an if
 expression, and then evaluating according to the results of that expression.
 This is in contrast to a language like Python, which would do something like
 this:
 
-#+BEGIN_SRC python :noeval 
+```python
 if b > 0: a + b
 else: a - b
-#+END_SRC
+```
 
-** Exercise 1.5: Applicative vs normal-order evaluation
-:PROPERTIES:
-:ID:       ef89d2ff-0e45-4660-8fe8-269c3fff0e96
-:CUSTOM-ID: ef89d2ff-0e45-4660-8fe8-269c3fff0e96
-:END:
 
-*** Question
-:PROPERTIES:
-:ID:       819c1a91-f83b-4053-88e5-78ab625cdcc0
-:CUSTOM-ID: 819c1a91-f83b-4053-88e5-78ab625cdcc0
-:END:
+### <span class="section-num">2.11</span> Exercise 1.5: Applicative vs normal-order evaluation {#exercise-1-dot-5-applicative-vs-normal-order-evaluation}
+
+
+#### <span class="section-num">2.11.1</span> Question {#question}
 
 Ben Bitdiddle has invented a test to determine whether the interpreter he is
 faced with is using applicative-order evaluation or normal-order evaluation. He
 defines the following two procedures:
 
-#+BEGIN_SRC scheme -n :noeval 
+```scheme { linenos=true, linenostart=1 }
 (define (p) (p))
 
 (define (test x y)
   (if (= x 0)
       0
       y))
-#+END_SRC
+```
 
 Then he evaluates the expression:
 
-#+BEGIN_SRC scheme -n :noeval 
+```scheme { linenos=true, linenostart=1 }
 (test 0 (p))
-#+END_SRC
+```
 
 What behavior will Ben observe with an interpreter that uses applicative-order
 evaluation?  What behavior will he observe with an interpreter that uses
 normal-order evaluation?  Explain your answer.  (Assume that the evaluation
-rule for the special form src_scheme{if} is the same whether the interpreter is
+rule for the special form <span class="inline-src language-scheme" data-lang="scheme">`if`</span> is the same whether the interpreter is
 using normal or applicative order: The predicate expression is evaluated first,
 and the result determines whether to evaluate the consequent or the alternative
 expression.)
 
-*** Answer
-:PROPERTIES:
-:ID:       72b34184-067b-430e-ab31-825180d74688
-:CUSTOM-ID: 72b34184-067b-430e-ab31-825180d74688
-:END:
 
-In either type of language, src_scheme{(define (p) (p))} is an infinite loop.
+#### <span class="section-num">2.11.2</span> Answer {#answer}
+
+In either type of language, <span class="inline-src language-scheme" data-lang="scheme">`(define (p) (p))`</span> is an infinite loop.
 However, a normal-order language will encounter the special form, return
-src_scheme{0}, and never evaluate src_scheme{(p)}. An applicative-order language
-evaluates the arguments to src_scheme{(test 0 (p))}, thus triggering the
+<span class="inline-src language-scheme" data-lang="scheme">`0`</span>, and never evaluate <span class="inline-src language-scheme" data-lang="scheme">`(p)`</span>. An applicative-order language
+evaluates the arguments to <span class="inline-src language-scheme" data-lang="scheme">`(test 0 (p))`</span>, thus triggering the
 infinite loop.
 
-** 1.1.7: Example: Square Roots by Newton's Method
-:PROPERTIES:
-:ID:       f3a31fde-4354-4081-a760-94b87d1d41aa
-:CUSTOM-ID: f3a31fde-4354-4081-a760-94b87d1d41aa
-:END:
 
-Functions in the formal mathematical sense are *declarative knowledge*, while
-procedures like in computer science are *imperative knowledge*.
+### <span class="section-num">2.12</span> 1.1.7: Example: Square Roots by Newton's Method {#1-dot-1-dot-7-example-square-roots-by-newton-s-method}
+
+Functions in the formal mathematical sense are **declarative knowledge**, while
+procedures like in computer science are **imperative knowledge**.
 
 Notice that the elements of the language that have been introduced so far are
 sufficient for writing any purely numerical program, despite not having
-introduced any looping constructs like ~FOR~ loops.
+introduced any looping constructs like `FOR` loops.
 
-** 1.1.8: Procedures as Black-Box Abstractions
-:PROPERTIES:
-:ID:       4dfd094a-1fb5-4055-b3f6-8d225441e319
-:CUSTOM-ID: 4dfd094a-1fb5-4055-b3f6-8d225441e319
-:END:
 
-Notice how the src_scheme{sqrt} procedure is divided into other procedures,
+### <span class="section-num">2.13</span> 1.1.8: Procedures as Black-Box Abstractions {#1-dot-1-dot-8-procedures-as-black-box-abstractions}
+
+Notice how the <span class="inline-src language-scheme" data-lang="scheme">`sqrt`</span> procedure is divided into other procedures,
 which mirror the division of the square root problem into sub problems.
 
 A procedure should accomplish an identifiable task, and be ready to be used as a
@@ -932,41 +1062,42 @@ module in defining other procedures. This lets the programmer know how to use
 the procedure while not needing to know the details of how it works.
 
 Suppressing these details are particularly helpful:
-- Local names. :: A procedure user shouldn't need to know a procedure's choices
-  of variable names. A formal parameter of a procedure whose name is irrelevant
-  is called a *bound variable*. A procedure definition *binds* its parameters. A
-  *free variable* isn't bound. The set of expressions in which a binding defines
-  a name is the *scope* of that name.
-- Internal definitions and block structure. :: By nesting relevant definitions
-  inside other procedures, you hide them from the global namespace. This nesting
-  is called *block structure*. Nesting these definitions also allows relevant
-  variables to be shared across procedures, which is called *lexical scoping*.
 
-** Exercise 1.6: Special form evaluation
-:PROPERTIES:
-:ID:       8b07ccff-3309-4b6b-8520-f035fa4432dd
-:CUSTOM-ID: 8b07ccff-3309-4b6b-8520-f035fa4432dd
-:END:
+Local names.
+: A procedure user shouldn't need to know a procedure's choices
+    of variable names. A formal parameter of a procedure whose name is irrelevant
+    is called a **bound variable**. A procedure definition **binds** its parameters. A
+    **free variable** isn't bound. The set of expressions in which a binding defines
+    a name is the **scope** of that name.
 
-*** Text code
-:PROPERTIES:
-:ID:       b5f0b37c-be66-419e-8aa9-caf3cbdeb95a
-:CUSTOM-ID: b5f0b37c-be66-419e-8aa9-caf3cbdeb95a
-:END:
-#+NAME: abs
-#+BEGIN_SRC scheme -n :eval no-export :results silent
+Internal definitions and block structure.
+: By nesting relevant definitions
+    inside other procedures, you hide them from the global namespace. This nesting
+    is called **block structure**. Nesting these definitions also allows relevant
+    variables to be shared across procedures, which is called **lexical scoping**.
+
+
+### <span class="section-num">2.14</span> Exercise 1.6: Special form evaluation {#exercise-1-dot-6-special-form-evaluation}
+
+
+#### <span class="section-num">2.14.1</span> Text code {#text-code}
+
+<a id="code-snippet--abs"></a>
+```scheme { linenos=true, linenostart=1 }
 (define (abs x)
   (if (< x 0)
       (- x)
       x))
-#+END_SRC
-#+NAME: average
-#+BEGIN_SRC scheme -n :eval no-export :results silent
+```
+
+<a id="code-snippet--average"></a>
+```scheme { linenos=true, linenostart=1 }
 (define (average x y)
   (/ (+ x y) 2))
-#+END_SRC
-#+NAME: txt-sqrt
-#+BEGIN_SRC scheme -n :eval no-export  :results silent
+```
+
+<a id="code-snippet--txt-sqrt"></a>
+```scheme { linenos=true, linenostart=1 }
 <<average>>
 (define (improve guess x)
   (average guess (/ x guess)))
@@ -983,279 +1114,241 @@ Suppressing these details are particularly helpful:
 
 (define (sqrt x)
   (sqrt-iter 1.0 x))
-#+END_SRC
+```
 
-*** Question
-:PROPERTIES:
-:ID:       27358532-0098-4ded-a4d7-7b99caa3583c
-:CUSTOM-ID: 27358532-0098-4ded-a4d7-7b99caa3583c
-:END:
 
-Alyssa P. Hacker doesn't see why src_scheme{if} needs to be provided as a
+#### <span class="section-num">2.14.2</span> Question {#question}
+
+Alyssa P. Hacker doesn't see why <span class="inline-src language-scheme" data-lang="scheme">`if`</span> needs to be provided as a
 special form. "Why can't I just define it as an ordinary procedure in terms of
 cond?" she asks. Alyssa's friend Eva Lu Ator claims this can indeed be done, and
-she defines a new version of src_scheme{if}:
+she defines a new version of <span class="inline-src language-scheme" data-lang="scheme">`if`</span>:
 
-#+BEGIN_SRC scheme -n :noeval 
+```scheme { linenos=true, linenostart=1 }
 (define (new-if predicate
                 then-clause
                 else-clause)
   (cond (predicate then-clause)
         (else else-clause)))
-#+END_SRC
+```
 
 Eva demonstrates the program for Alyssa:
 
-#+BEGIN_SRC scheme -n :noeval 
+```scheme { linenos=true, linenostart=1 }
 (new-if (= 2 3) 0 5)
 ;; => 5
 
 (new-if (= 1 1) 0 5)
 ;; => 0
-#+END_SRC
+```
 
-Delighted, Alyssa uses src_scheme{new-if} to rewrite the square-root program:
+Delighted, Alyssa uses <span class="inline-src language-scheme" data-lang="scheme">`new-if`</span> to rewrite the square-root program:
 
-#+BEGIN_SRC scheme -n :noeval 
+```scheme { linenos=true, linenostart=1 }
 (define (sqrt-iter guess x)
   (new-if (good-enough? guess x)
           guess
           (sqrt-iter (improve guess x) x)))
-#+END_SRC
+```
 
 What happens when Alyssa attempts to use this to compute square roots? Explain.
 
-*** Answer
-:PROPERTIES:
-:ID:       2c44ee8d-f83f-4661-acfb-fe4aefdf131e
-:CUSTOM-ID: 2c44ee8d-f83f-4661-acfb-fe4aefdf131e
-:END:
 
-Using Alyssa's src_scheme{new-if} leads to an infinite loop because the
-recursive call to src_scheme{sqrt-iter} is evaluated before the actual call to
-src_scheme{new-if}. This is because src_scheme{if} and src_scheme{cond} are
+#### <span class="section-num">2.14.3</span> Answer {#answer}
+
+Using Alyssa's <span class="inline-src language-scheme" data-lang="scheme">`new-if`</span> leads to an infinite loop because the
+recursive call to <span class="inline-src language-scheme" data-lang="scheme">`sqrt-iter`</span> is evaluated before the actual call to
+<span class="inline-src language-scheme" data-lang="scheme">`new-if`</span>. This is because <span class="inline-src language-scheme" data-lang="scheme">`if`</span> and <span class="inline-src language-scheme" data-lang="scheme">`cond`</span> are
 special forms that change the way evaluation is handled; whichever branch is
 chosen leaves the other branches unevaluated.
 
-** Exercise 1.7: ~sqrt~ with small and large numbers
-:PROPERTIES:
-:ID:       c4373841-8cfd-4076-86ea-13573c4dd3a6
-:CUSTOM-ID: c4373841-8cfd-4076-86ea-13573c4dd3a6
-:END:
 
-*** Text
-:PROPERTIES:
-:ID:       6e332fab-d501-42c7-84bc-890691a874f3
-:CUSTOM-ID: 6e332fab-d501-42c7-84bc-890691a874f3
-:END:
+### <span class="section-num">2.15</span> Exercise 1.7: `sqrt` with small and large numbers {#exercise-1-dot-7-sqrt-with-small-and-large-numbers}
 
-#+NAME: mean-square
-#+BEGIN_SRC scheme -n :eval no-export :results silent
+
+#### <span class="section-num">2.15.1</span> Text {#text}
+
+<a id="code-snippet--mean-square"></a>
+```scheme { linenos=true, linenostart=1 }
 (define (mean-square x y)
   (average (square x) (square y)))
-#+END_SRC
+```
 
-*** Question
-:PROPERTIES:
-:ID:       9d4e65f6-d90c-4537-afda-e353aa7c12ef
-:CUSTOM-ID: 9d4e65f6-d90c-4537-afda-e353aa7c12ef
-:END:
 
-The src_scheme{good-enough?} test used in computing square roots will not be
+#### <span class="section-num">2.15.2</span> Question {#question}
+
+The <span class="inline-src language-scheme" data-lang="scheme">`good-enough?`</span> test used in computing square roots will not be
 very effective for finding the square roots of very small numbers. Also, in real
 computers, arithmetic operations are almost always performed with limited
 precision. This makes our test inadequate for very large numbers. Explain these
 statements, with examples showing how the test fails for small and large
-numbers. An alternative strategy for implementing src_scheme{good-enough?} is to
-watch how src_scheme{guess} changes from one iteration to the next and to stop
+numbers. An alternative strategy for implementing <span class="inline-src language-scheme" data-lang="scheme">`good-enough?`</span> is to
+watch how <span class="inline-src language-scheme" data-lang="scheme">`guess`</span> changes from one iteration to the next and to stop
 when the change is a very small fraction of the guess. Design a square-root
 procedure that uses this kind of end test. Does this work better for small and
 large numbers?
 
-*** Diary
-:PROPERTIES:
-:ID:       f30865d0-5173-4023-b351-d0d717176095
-:CUSTOM-ID: f30865d0-5173-4023-b351-d0d717176095
-:END:
 
-**** Solving
-:PROPERTIES:
-:ID:       da63b98b-b46c-489f-819d-2968f9bc9b73
-:CUSTOM-ID: da63b98b-b46c-489f-819d-2968f9bc9b73
-:END:
+#### <span class="section-num">2.15.3</span> Diary {#diary}
 
-My original answer was this, which compares the previous iteration until the new
-and old are within an arbitrary \(dx\).
+<!--list-separator-->
 
-#+NAME: inferior-good-enough
-#+BEGIN_SRC scheme -n 
-<<txt-sqrt>>
-(define (inferior-good-enough? guess lastguess)
-  (<=
-   (abs (-
-         (/ lastguess guess)
-         1))
-   0.0000000000001)) ; dx
-(define (new-sqrt-iter guess x lastguess) ;; Memory of previous value
-  (if (inferior-good-enough? guess lastguess)
-      guess
-      (new-sqrt-iter (improve guess x) x guess)))
-(define (new-sqrt x)
-  (new-sqrt-iter 1.0 x 0))
-#+end_src
+1.  Solving
 
-This solution can correctly find small and large numbers:
-#+BEGIN_SRC scheme -n :eval no-export  :exports both :results value
-<<inferior-good-enough>>
-(new-sqrt 10000000000000)
-#+END_SRC
+    My original answer was this, which compares the previous iteration until the new
+    and old are within an arbitrary \\(dx\\).
 
-#+RESULTS[68a129e63924b52600a4964626d31b776d79fed2]:
-:results:
-#+begin_example
-3162277.6601683795
-#+end_example
-:end:
+    <a id="code-snippet--inferior-good-enough"></a>
+    ```scheme { linenos=true, linenostart=1 }
+    <<txt-sqrt>>
+    (define (inferior-good-enough? guess lastguess)
+      (<=
+       (abs (-
+             (/ lastguess guess)
+             1))
+       0.0000000000001)) ; dx
+    (define (new-sqrt-iter guess x lastguess) ;; Memory of previous value
+      (if (inferior-good-enough? guess lastguess)
+          guess
+          (new-sqrt-iter (improve guess x) x guess)))
+    (define (new-sqrt x)
+      (new-sqrt-iter 1.0 x 0))
+    ```
 
-#+NAME: EX1-7-t2
-#+BEGIN_SRC scheme -n :eval no-export  :exports both :results value table drawer
-<<try-these>>
-<<inferior-good-enough>>
-(try-these new-sqrt '(0.01 0.0001 0.000001 0.00000001 0.0000000001))
-#+end_src
+    This solution can correctly find small and large numbers:
 
-#+RESULTS[c27aa8604cebcef53580dbfc41f8585b748aacda]: EX1-7-t2
-:results:
-|   0.01 |                   0.1 |
-| 0.0001 |                  0.01 |
-|  1e-06 |                 0.001 |
-|  1e-08 | 9.999999999999999e-05 |
-|  1e-10 | 9.999999999999999e-06 |
-:end:
+    ```scheme { linenos=true, linenostart=1 }
+    <<inferior-good-enough>>
+    (new-sqrt 10000000000000)
+    ```
+
+    ```text
+    3162277.6601683795
+    ```
+
+    <a id="code-snippet--EX1-7-t2"></a>
+    ```scheme { linenos=true, linenostart=1 }
+    <<try-these>>
+    <<inferior-good-enough>>
+    (try-these new-sqrt '(0.01 0.0001 0.000001 0.00000001 0.0000000001))
+    ```
+
+    | 0.01   | 0.1                   |
+    |--------|-----------------------|
+    | 0.0001 | 0.01                  |
+    | 1e-06  | 0.001                 |
+    | 1e-08  | 9.999999999999999e-05 |
+    | 1e-10  | 9.999999999999999e-06 |
+
+    However, I found this solution online that isn't just simpler but automatically
+    reaches the precision limit of the system:
+
+    <a id="code-snippet--new-good-enough"></a>
+    ```scheme { linenos=true, linenostart=1 }
+    <<txt-sqrt>>
+    (define (best-good-enough? guess x)
+       (= (improve guess x) guess))
+    ```
+
+<!--list-separator-->
+
+2.  Imroving `sqrt` by avoiding extra `improve` call
+
+    <!--list-separator-->
+
+    1.  Non-optimized
+
+        ```scheme { linenos=true, linenostart=1 }
+        (use-modules (ice-9 format))
+        (load "../mattbench.scm")
+        (define (average x y)
+          (/ (+ x y) 2))
+        (define (improve guess x)
+          (average guess (/ x guess)))
+        (define (good-enough? guess x)
+           (= (improve guess x) guess)) ;; improve call 1
+        (define (sqrt-iter guess x)
+          (if (good-enough? guess x)
+              guess
+              (sqrt-iter (improve guess x) x))) ;; call 2
+        (define (sqrt x)
+          (sqrt-iter 1.0 x))
+        (newline)
+        (display (mattbench (lambda() (sqrt 69420)) 400000000))
+        (newline)
+        ;; 4731.30 <- Benchmark results
+        ```
+
+    <!--list-separator-->
+
+    2.  Optimized
+
+        ```scheme { linenos=true, linenostart=1 }
+        (use-modules (ice-9 format))
+        (load "../mattbench.scm")
+        (define (average x y)
+          (/ (+ x y) 2))
+        (define (improve guess x)
+          (average guess (/ x guess)))
+        (define (good-enough? guess nextguess x)
+          (= nextguess guess))
+        (define (sqrt-iter guess x)
+          (let ((nextguess (improve guess x)))
+            (if (good-enough? guess nextguess x)
+                guess
+                (sqrt-iter nextguess x))))
+        (define (sqrt x)
+          (sqrt-iter 1.0 x))
+        (newline)
+        (display (mattbench (lambda() (sqrt 69420)) 400000000))
+        (newline)
+        ```
+
+    <!--list-separator-->
+
+    3.  Benchmark results
+
+        | Unoptimized | 4731.30 |
+        |-------------|---------|
+        | Optimized   | 2518.44 |
 
 
-However, I found this solution online that isn't just simpler but automatically
-reaches the precision limit of the system:
-
-#+NAME: new-good-enough
-#+BEGIN_SRC scheme -n :eval no-export :results silent
-<<txt-sqrt>>
-(define (best-good-enough? guess x)
-   (= (improve guess x) guess))
-#+END_SRC
-
-**** Imroving ~sqrt~ by avoiding extra ~improve~ call
-:PROPERTIES:
-:ID:       f1a65fe8-2916-47bf-89be-c75ee52e1396
-:CUSTOM-ID: f1a65fe8-2916-47bf-89be-c75ee52e1396
-:END:
-
-***** Non-optimized
-:PROPERTIES:
-:ID:       44e1b894-10f0-43b0-b64c-973a6bcfc97f
-:CUSTOM-ID: 44e1b894-10f0-43b0-b64c-973a6bcfc97f
-:END:
-
-#+BEGIN_SRC scheme -n :eval no-export :tangle 1/sqrt-bench.scheme :exports both :results output
-(use-modules (ice-9 format))
-(load "../mattbench.scm")
-(define (average x y)
-  (/ (+ x y) 2))
-(define (improve guess x)
-  (average guess (/ x guess)))
-(define (good-enough? guess x)
-   (= (improve guess x) guess)) ;; improve call 1
-(define (sqrt-iter guess x)
-  (if (good-enough? guess x)
-      guess
-      (sqrt-iter (improve guess x) x))) ;; call 2
-(define (sqrt x)
-  (sqrt-iter 1.0 x))
-(newline)
-(display (mattbench (lambda() (sqrt 69420)) 400000000))
-(newline)
-;; 4731.30 <- Benchmark results
-#+end_src
-
-***** Optimized
-:PROPERTIES:
-:ID:       751f42a4-9c27-4818-b937-5962aaee583f
-:CUSTOM-ID: 751f42a4-9c27-4818-b937-5962aaee583f
-:END:
-
-#+BEGIN_SRC scheme -n :noeval :tangle 1/sqrt-bench2.scheme :exports both :results output
-(use-modules (ice-9 format))
-(load "../mattbench.scm")
-(define (average x y)
-  (/ (+ x y) 2))
-(define (improve guess x)
-  (average guess (/ x guess)))
-(define (good-enough? guess nextguess x)
-  (= nextguess guess))
-(define (sqrt-iter guess x)
-  (let ((nextguess (improve guess x)))
-    (if (good-enough? guess nextguess x)
-        guess
-        (sqrt-iter nextguess x))))
-(define (sqrt x)
-  (sqrt-iter 1.0 x))
-(newline)
-(display (mattbench (lambda() (sqrt 69420)) 400000000))
-(newline)
-#+end_src
-
-***** Benchmark results
-:PROPERTIES:
-:ID:       c434d4dd-1028-4700-9e8b-5eeeaa1af075
-:CUSTOM-ID: c434d4dd-1028-4700-9e8b-5eeeaa1af075
-:END:
-
-| Unoptimized | 4731.30 |
-| Optimized   | 2518.44 |
-
-*** Answer
-:PROPERTIES:
-:ID:       202b4dfb-6578-4789-8dbf-b3546e92d8d4
-:CUSTOM-ID: 202b4dfb-6578-4789-8dbf-b3546e92d8d4
-:END:
+#### <span class="section-num">2.15.4</span> Answer {#answer}
 
 The current method has decreasing accuracy with smaller numbers. Notice the
 steady divergence from correct answers here (should be decreasing powers of
 0.1):
-#+NAME: EX1-7-t1
-#+BEGIN_SRC scheme -n :eval no-export  :exports both :results value table
+
+<a id="code-snippet--EX1-7-t1"></a>
+```scheme { linenos=true, linenostart=1 }
 <<txt-sqrt>>
 <<try-these>>
 (try-these sqrt 0.01 0.0001 0.000001 0.00000001 0.0000000001)
-#+END_SRC
+```
 
-#+RESULTS[b2aaaf48d742a7df9331cff3b730a799ad550cfe]: EX1-7-t1
-:results:
-|   0.01 |  0.10032578510960605 |
-| 0.0001 |  0.03230844833048122 |
-|  1e-06 | 0.031260655525445276 |
-|  1e-08 |  0.03125010656242753 |
-|  1e-10 |  0.03125000106562499 |
-:end:
+| 0.01   | 0.10032578510960605  |
+|--------|----------------------|
+| 0.0001 | 0.03230844833048122  |
+| 1e-06  | 0.031260655525445276 |
+| 1e-08  | 0.03125010656242753  |
+| 1e-10  | 0.03125000106562499  |
 
-And for larger numbers, an infinite loop will eventually be reached. \(10^{12}\)
-can resolve, but \(10^{13}\) cannot.
+And for larger numbers, an infinite loop will eventually be reached. \\(10^{12}\\)
+can resolve, but \\(10^{13}\\) cannot.
 
-#+BEGIN_SRC scheme -n :eval no-export  :exports both :results value
+```scheme { linenos=true, linenostart=1 }
 <<txt-sqrt>>
 (sqrt 1000000000000)
-#+END_SRC
+```
 
-#+RESULTS[452bf3da7286d9fc1e3d621aeb715eafef650536]:
-:results:
-#+begin_example
+```text
 1000000.0
-#+end_example
-:end:
+```
 
-So, my definition of src_scheme{sqrt}:
-#+NAME: sqrt
-#+BEGIN_SRC scheme -n :eval no-export :exports both :results value table
+So, my definition of <span class="inline-src language-scheme" data-lang="scheme">`sqrt`</span>:
+
+<a id="code-snippet--sqrt"></a>
+```scheme { linenos=true, linenostart=1 }
 <<average>>
 (define (improve guess x)
   (average guess (/ x guess)))
@@ -1267,57 +1360,48 @@ So, my definition of src_scheme{sqrt}:
       (sqrt-iter (improve guess x) x)))
 (define (sqrt x)
   (sqrt-iter 1.0 x))
-#+end_src
-#+NAME: EX1-7-t3
-#+BEGIN_SRC scheme -n :eval no-export  :exports both :results value table
+```
+
+<a id="code-snippet--EX1-7-t3"></a>
+```scheme { linenos=true, linenostart=1 }
 <<try-these>>
 <<sqrt>>
 (try-these sqrt '(0.01 0.0001 0.000001 0.00000001 0.0000000001))
-#+end_src
+```
 
-#+RESULTS[7cb8301b492f578ac407eef3e3378a8d1552a5a3]: EX1-7-t3
-:results:
-|   0.01 |                   0.1 |
-| 0.0001 |                  0.01 |
-|  1e-06 |                 0.001 |
-|  1e-08 | 9.999999999999999e-05 |
-|  1e-10 | 9.999999999999999e-06 |
-:end:
+| 0.01   | 0.1                   |
+|--------|-----------------------|
+| 0.0001 | 0.01                  |
+| 1e-06  | 0.001                 |
+| 1e-08  | 9.999999999999999e-05 |
+| 1e-10  | 9.999999999999999e-06 |
 
-** Exercise 1.8: Cube roots
-:PROPERTIES:
-:ID:       cce3647f-9b12-46b7-a3e6-6ec0b2270926
-:CUSTOM-ID: cce3647f-9b12-46b7-a3e6-6ec0b2270926
-:END:
 
-*** Question
-:PROPERTIES:
-:ID:       be02c000-aed9-4970-bc59-e83a7ae76954
-:CUSTOM-ID: be02c000-aed9-4970-bc59-e83a7ae76954
-:END:
+### <span class="section-num">2.16</span> Exercise 1.8: Cube roots {#exercise-1-dot-8-cube-roots}
 
-Newton's method for cube roots is based on the fact that if \(y\) is an
-approximation to the cube root of \(x\), then a better approximation is given by
+
+#### <span class="section-num">2.16.1</span> Question {#question}
+
+Newton's method for cube roots is based on the fact that if \\(y\\) is an
+approximation to the cube root of \\(x\\), then a better approximation is given by
 the value
 
-\[
+$$
 \frac{\frac{x}{y^2} + 2y}{3}
-\]
+$$
 
 Use this formula to implement a cube-root procedure analogous to the
-src_scheme{square-root} procedure. (In [[id:1653578d-c9b3-443c-8cc9-2495778dd9b1][1.3.4 Procedures as Returned Values]] we
+<span class="inline-src language-scheme" data-lang="scheme">`square-root`</span> procedure. (In [1.3.4 Procedures as Returned Values](#1-dot-3-dot-4-procedures-as-returned-values) we
 will see how to implement Newton's method in general as an abstraction of these
 square-root and cube-root procedures.)
 
-*** Diary
-:PROPERTIES:
-:ID:       fbaf843c-8346-4874-aa17-4df1034b90d3
-:CUSTOM-ID: fbaf843c-8346-4874-aa17-4df1034b90d3
-:END:
+
+#### <span class="section-num">2.16.2</span> Diary {#diary}
 
 My first attempt works, but needs an arbitrary limit to stop infinite loops:
-#+NAME: EX1-8-A1
-#+BEGIN_SRC scheme -n :eval no-export  :exports both :results value table
+
+<a id="code-snippet--EX1-8-A1"></a>
+```scheme { linenos=true, linenostart=1 }
 <<square>>
 <<try-these>>
 (define (cb-good-enough? guess x)
@@ -1337,32 +1421,26 @@ My first attempt works, but needs an arbitrary limit to stop infinite loops:
   (cbrt-iter 1.0 x 0))
 
 (try-these cbrt 7 32 56 100)
-#+end_src
+```
 
-#+RESULTS[1eb5546cd3e124a63b0cd988f571097371a60813]: EX1-8-A1
-:results:
-|   7 | 1.912931182772389 |
-|  32 | 3.174802103936399 |
-|  56 | 3.825862365544778 |
+| 7   | 1.912931182772389 |
+|-----|-------------------|
+| 32  | 3.174802103936399 |
+| 56  | 3.825862365544778 |
 | 100 | 4.641588833612779 |
-:end:
 
-However, this will hang on an infinite loop when trying to run src_scheme{(cbrt
-100)}. I speculate it's a floating point precision issue with the "improve"
+However, this will hang on an infinite loop when trying to run <span class="inline-src language-scheme" data-lang="scheme">`(cbrt 100)`</span>. I speculate it's a floating point precision issue with the "improve"
 algorithm. So to avoid it I'll just keep track of the last guess and stop
 improving when there's no more change occurring. Also while researching I
-discovered that (again due to floating point) src_scheme{(cbrt -2)} loops
+discovered that (again due to floating point) <span class="inline-src language-scheme" data-lang="scheme">`(cbrt -2)`</span> loops
 forever unless you initialize your guess with a slightly different value, so
 let's do 1.1 instead.
 
-*** Answer
-:PROPERTIES:
-:ID:       eb13ebca-b39b-4bc9-ba08-9aff7c409bf3
-:CUSTOM-ID: eb13ebca-b39b-4bc9-ba08-9aff7c409bf3
-:END:
 
-#+NAME: cbrt
-#+BEGIN_SRC scheme -n :eval no-export :exports code :results silent
+#### <span class="section-num">2.16.3</span> Answer {#answer}
+
+<a id="code-snippet--cbrt"></a>
+```scheme { linenos=true, linenostart=1 }
 <<square>>
 (define (cb-good-enough? nextguess guess lastguess x)
   (or (= nextguess guess)
@@ -1380,44 +1458,37 @@ let's do 1.1 instead.
       (cbrt-iter nextguess guess x)))
 (define (cbrt x)
   (cbrt-iter 1.1 9999 x))
-#+END_SRC
-#+BEGIN_SRC scheme -n :eval no-export  :exports both :results value table
+```
+
+```scheme { linenos=true, linenostart=1 }
 <<cbrt>>
 <<try-these>>
 (try-these cbrt 7 32 56 100 -2)
-#+END_SRC
+```
 
-#+RESULTS[965031d6fc942ec767b94f18bc03219f3a3f93d6]:
-:results:
-|   7 |   1.912931182772389 |
-|  32 |   3.174802103936399 |
-|  56 |   3.825862365544778 |
-| 100 |   4.641588833612779 |
-|  -2 | -1.2599210498948732 |
-:end:
+| 7   | 1.912931182772389   |
+|-----|---------------------|
+| 32  | 3.174802103936399   |
+| 56  | 3.825862365544778   |
+| 100 | 4.641588833612779   |
+| -2  | -1.2599210498948732 |
 
-** 1.2: Procedures and the Processes They Generate
-:PROPERTIES:
-:ID:       2cc79564-8fc0-4812-a36d-f40f1b832e5e
-:CUSTOM-ID: 2cc79564-8fc0-4812-a36d-f40f1b832e5e
-:END:
 
-Procedures define the *local evolution* of processes. We would like to be able
-to make statements about the *global* behavior of a process.
+### <span class="section-num">2.17</span> 1.2: Procedures and the Processes They Generate {#1-dot-2-procedures-and-the-processes-they-generate}
 
-** 1.2.1: Linear Recursion and Iteration
-:PROPERTIES:
-:ID:       403491c2-9bea-494a-9bdc-404d686ce7c5
-:CUSTOM-ID: 403491c2-9bea-494a-9bdc-404d686ce7c5
-:END:
+Procedures define the **local evolution** of processes. We would like to be able
+to make statements about the **global** behavior of a process.
+
+
+### <span class="section-num">2.18</span> 1.2.1: Linear Recursion and Iteration {#1-dot-2-dot-1-linear-recursion-and-iteration}
 
 Consider these two procedures for obtaining factorials:
 
-#+begin_src scheme
+```scheme
 (define (factorial-recursion n)
   (if (= n 1)
       1
-      (* n 
+      (* n
          (factorial-recursion (- n 1)))))
 
 (define (factorial-iteration n)
@@ -1428,51 +1499,48 @@ Consider these two procedures for obtaining factorials:
                     (* counter product)
                     (+ counter 1)
                     max-count)))
-  
+
   (fact-iter 1 1 n))
-#+end_src
+```
 
 These two procedures reach the same answers, but form very different processes.
-The src_scheme{factorial-recursion} version takes more computational *time* and
-*space* to evaluate, by building up a chain of deferred operations. This is a
-*recursive process*. As the number of steps needed to operate, and the amount of
-info needed to keep track of these operations, both grow linearly with \(n\),
-this is a *linear recursive process*.
+The <span class="inline-src language-scheme" data-lang="scheme">`factorial-recursion`</span> version takes more computational **time** and
+**space** to evaluate, by building up a chain of deferred operations. This is a
+**recursive process**. As the number of steps needed to operate, and the amount of
+info needed to keep track of these operations, both grow linearly with \\(n\\),
+this is a **linear recursive process**.
 
-The second version forms an *iterative process*. Its state can be summarized
+The second version forms an **iterative process**. Its state can be summarized
 with a fixed number of state variables. The number of steps required grow
-linearly with \(n\), so this is a *linear iterative process*.
+linearly with \\(n\\), so this is a **linear iterative process**.
 
-- recursive procedure ::  is a procedure whose definition refers to itself.
-- recursive process :: is a process that evolves recursively.
+recursive procedure
+: is a procedure whose definition refers to itself.
 
-So src_scheme{fact-iter} is a recursive /procedure/ that generates an iterative
-/process/.
+recursive process
+: is a process that evolves recursively.
+
+So <span class="inline-src language-scheme" data-lang="scheme">`fact-iter`</span> is a recursive _procedure_ that generates an iterative
+_process_.
 
 Many implementations of programming languages interpret all recursive procedures
 in a way that consume memory that grows with the number of procedure calls, even
 when the process is essentially iterative. These languages instead use looping
-constructs such as src_scheme{do}, src_scheme{repeat}, src_scheme{for}, etc.
+constructs such as <span class="inline-src language-scheme" data-lang="scheme">`do`</span>, <span class="inline-src language-scheme" data-lang="scheme">`repeat`</span>, <span class="inline-src language-scheme" data-lang="scheme">`for`</span>, etc.
 Implementations that execute iterative processes in constant space, even if the
-procedure is recursive, are *tail-recursive*.
+procedure is recursive, are **tail-recursive**.
 
-** Exercise 1.9: Peano counting and recursion
-:PROPERTIES:
-:ID:       7bb613b7-a623-42ff-976c-8eff787e6715
-:CUSTOM-ID: 7bb613b7-a623-42ff-976c-8eff787e6715
-:END:
 
-*** Question
-:PROPERTIES:
-:ID:       ca839677-0e8b-4473-8561-e207eab0d5f5
-:CUSTOM-ID: ca839677-0e8b-4473-8561-e207eab0d5f5
-:END:
+### <span class="section-num">2.19</span> Exercise 1.9: Peano counting and recursion {#exercise-1-dot-9-peano-counting-and-recursion}
+
+
+#### <span class="section-num">2.19.1</span> Question {#question}
 
 Each of the following two procedures defines a method for adding two positive
-integers in terms of the procedures src_scheme{inc}, which increments its
-argument by 1, and src_scheme{dec}, which decrements its argument by 1.
+integers in terms of the procedures <span class="inline-src language-scheme" data-lang="scheme">`inc`</span>, which increments its
+argument by 1, and <span class="inline-src language-scheme" data-lang="scheme">`dec`</span>, which decrements its argument by 1.
 
-#+BEGIN_SRC scheme -n :noeval 
+```scheme { linenos=true, linenostart=1 }
 (define (+ a b)
   (if (= a 0)
       b
@@ -1482,448 +1550,376 @@ argument by 1, and src_scheme{dec}, which decrements its argument by 1.
   (if (= a 0)
       b
       (+ (dec a) (inc b))))
-#+END_SRC
+```
 
 Using the substitution model, illustrate the process generated by each procedure
-in evaluating src_scheme{(+ 4 5)}. Are these processes iterative or recursive?
+in evaluating <span class="inline-src language-scheme" data-lang="scheme">`(+ 4 5)`</span>. Are these processes iterative or recursive?
 
-*** Answer
-:PROPERTIES:
-:ID:       c3f9d60e-bdcd-41c2-ab4f-6ca83f0febfb
-:CUSTOM-ID: c3f9d60e-bdcd-41c2-ab4f-6ca83f0febfb
-:END:
+
+#### <span class="section-num">2.19.2</span> Answer {#answer}
 
 The first procedure is recursive, while the second is iterative though
 tail-recursion.
 
-**** recursive procedure
-:PROPERTIES:
-:ID:       27210485-cc31-40d1-a1cc-3c40f2ef6136
-:CUSTOM-ID: 27210485-cc31-40d1-a1cc-3c40f2ef6136
-:END:
+<!--list-separator-->
 
-#+BEGIN_SRC scheme -n :noeval 
-(+ 4 5)
-(inc (+ 3 5))
-(inc (inc (+ 2 5)))
-(inc (inc (inc (+ 1 5))))
-(inc (inc (inc (inc (+ 0 5)))))
-(inc (inc (inc (inc 5))))
-(inc (inc (inc 6)))
-(inc (inc 7))
-(inc 8)
-9
-#+END_SRC
+1.  recursive procedure
 
-**** iterative procedure
-:PROPERTIES:
-:ID:       2246a200-6a61-41f5-803f-480bb8b0cb9c
-:CUSTOM-ID: 2246a200-6a61-41f5-803f-480bb8b0cb9c
-:END:
+    ```scheme { linenos=true, linenostart=1 }
+    (+ 4 5)
+    (inc (+ 3 5))
+    (inc (inc (+ 2 5)))
+    (inc (inc (inc (+ 1 5))))
+    (inc (inc (inc (inc (+ 0 5)))))
+    (inc (inc (inc (inc 5))))
+    (inc (inc (inc 6)))
+    (inc (inc 7))
+    (inc 8)
+    9
+    ```
 
-#+BEGIN_SRC scheme -n :noeval 
-(+ 4 5)
-(+ 3 6)
-(+ 2 7)
-(+ 1 8)
-(+ 0 9)
-9
-#+END_SRC
+<!--list-separator-->
 
-** Exercise 1.10: Ackermann's Function
-:PROPERTIES:
-:ID:       af2058ad-5dbe-413e-9d4e-a249d2b38144
-:CUSTOM-ID: af2058ad-5dbe-413e-9d4e-a249d2b38144
-:END:
+2.  iterative procedure
 
-*** Question
-:PROPERTIES:
-:ID:       1b9d1110-1af6-4b61-9163-b022c50d0c62
-:CUSTOM-ID: 1b9d1110-1af6-4b61-9163-b022c50d0c62
-:END:
+    ```scheme { linenos=true, linenostart=1 }
+    (+ 4 5)
+    (+ 3 6)
+    (+ 2 7)
+    (+ 1 8)
+    (+ 0 9)
+    9
+    ```
+
+
+### <span class="section-num">2.20</span> Exercise 1.10: Ackermann's Function {#exercise-1-dot-10-ackermann-s-function}
+
+
+#### <span class="section-num">2.20.1</span> Question {#question}
 
 The following procedure computes a mathematical function called Ackermann's
 function.
 
-#+NAME: ackermann
-#+BEGIN_SRC scheme -n :eval no-export :exports code :results silent
+<a id="code-snippet--ackermann"></a>
+```scheme { linenos=true, linenostart=1 }
 (define (A x y)
   (cond ((= y 0) 0)
         ((= x 0) (* 2 y))
         ((= y 1) 2)
         (else (A (- x 1)
                  (A x (- y 1))))))
-#+END_SRC
+```
 
 What are the values of the following expressions?
 
-#+BEGIN_SRC scheme -n :noeval 
+```scheme { linenos=true, linenostart=1 }
 (A 1 10)
 (A 2 4)
 (A 3 3)
-#+END_SRC
-#+BEGIN_SRC scheme -n :eval no-export :exports results  :results value table
-<<try-these>>
-<<ackermann>>
-(try-these A '(1 10) '(2 4) '(3 3))
-#+END_SRC
+```
 
-#+RESULTS[48e58b6029bccdcb0ec0cba4c437572b3b5c2437]:
-:results:
-| (1 10) |  1024 |
+| (1 10) | 1024  |
+|--------|-------|
 | (2 4)  | 65536 |
 | (3 3)  | 65536 |
-:end:
 
-#+NAME: EX1-10-defs
-#+BEGIN_SRC scheme -n :eval no-export :exports code :results silent
+<a id="code-snippet--EX1-10-defs"></a>
+```scheme { linenos=true, linenostart=1 }
 <<ackermann>>
 (define (f n) (A 0 n))
 (define (g n) (A 1 n))
 (define (h n) (A 2 n))
 (define (k n) (* 5 n n))
-#+END_SRC
+```
 
 Give concise mathematical definitions for the functions computed by the
-procedures src_scheme{f}, src_scheme{g}, and src_scheme{h} for positive integer
-values of \(n\). For example, src_scheme{(k n)} computes \(5n^2\).
+procedures <span class="inline-src language-scheme" data-lang="scheme">`f`</span>, <span class="inline-src language-scheme" data-lang="scheme">`g`</span>, and <span class="inline-src language-scheme" data-lang="scheme">`h`</span> for positive integer
+values of \\(n\\). For example, <span class="inline-src language-scheme" data-lang="scheme">`(k n)`</span> computes \\(5n^2\\).
 
-*** Answer
-:PROPERTIES:
-:ID:       cd179b56-55a7-4736-a088-33fa0e69e82b
-:CUSTOM-ID: cd179b56-55a7-4736-a088-33fa0e69e82b
-:END:
 
-**** ~f~
-:PROPERTIES:
-:ID:       e0e7550f-5456-4f85-9864-a7597599193b
-:CUSTOM-ID: e0e7550f-5456-4f85-9864-a7597599193b
-:END:
+#### <span class="section-num">2.20.2</span> Answer {#answer}
 
-#+BEGIN_SRC scheme -n :eval no-export  :exports both :results value table
-<<try-these>>
-<<EX1-10-defs>>
-(try-these f 1 2 3 10 15 20)
-#+END_SRC
+<!--list-separator-->
 
-#+RESULTS[d24f130b3c260d786e4cb6a89fa32c320b8c9216]:
-:results:
-|  1 |  2 |
-|  2 |  4 |
-|  3 |  6 |
-| 10 | 20 |
-| 15 | 30 |
-| 20 | 40 |
-:end:
+1.  `f`
 
-\[
-f(n)=2n
-\]
+    ```scheme { linenos=true, linenostart=1 }
+    <<try-these>>
+    <<EX1-10-defs>>
+    (try-these f 1 2 3 10 15 20)
+    ```
 
-**** ~g~
-:PROPERTIES:
-:ID:       a780ab66-bc4a-4202-a82c-f8e1e8c03fe3
-:CUSTOM-ID: a780ab66-bc4a-4202-a82c-f8e1e8c03fe3
-:END:
+    | 1  | 2  |
+    |----|----|
+    | 2  | 4  |
+    | 3  | 6  |
+    | 10 | 20 |
+    | 15 | 30 |
+    | 20 | 40 |
 
-#+BEGIN_SRC scheme -n :eval no-export  :exports both :results value table
-<<try-these>>
-<<EX1-10-defs>>
-(try-these g 1 2 3 4 5 6 7 8)
-#+END_SRC
+    $$
+    f(n)=2n
+    $$
 
-#+RESULTS[2de64054dc56968afee805dc8757b991e4f74d88]:
-:results:
-| 1 |   2 |
-| 2 |   4 |
-| 3 |   8 |
-| 4 |  16 |
-| 5 |  32 |
-| 6 |  64 |
-| 7 | 128 |
-| 8 | 256 |
-:end:
+<!--list-separator-->
 
-\[
-g(n)=2^n
-\]
+2.  `g`
 
-**** ~h~
-:PROPERTIES:
-:ID:       6ff1602a-22c8-44c4-8fd1-2356f20b2139
-:CUSTOM-ID: 6ff1602a-22c8-44c4-8fd1-2356f20b2139
-:END:
+    ```scheme { linenos=true, linenostart=1 }
+    <<try-these>>
+    <<EX1-10-defs>>
+    (try-these g 1 2 3 4 5 6 7 8)
+    ```
 
-#+BEGIN_SRC scheme -n :eval no-export  :exports both :results value table
-<<try-these>>
-<<EX1-10-defs>>
-(try-these h 1 2 3 4)
-#+END_SRC
+    | 1 | 2   |
+    |---|-----|
+    | 2 | 4   |
+    | 3 | 8   |
+    | 4 | 16  |
+    | 5 | 32  |
+    | 6 | 64  |
+    | 7 | 128 |
+    | 8 | 256 |
 
-#+RESULTS[b80263a28bd5076f3bfa3f4bae09ec511773e7af]:
-:results:
-| 1 |     2 |
-| 2 |     4 |
-| 3 |    16 |
-| 4 | 65536 |
-:end:
+    $$
+    g(n)=2^n
+    $$
 
-It took a while to figure this one out, just because I didn't know the term.
-This is repeated exponentiation. This operation is to exponentiation, what
-exponentiation is to multiplication. It's called either /tetration/ or /hyper-4/
-and has no formal notation, but two common ways would be these:
+<!--list-separator-->
 
-\[
-h(n)=2 \uparrow\uparrow n
-\]
-\[
-h(n)={}^{n}2
-\]
+3.  `h`
 
-** 1.2.2: Tree Recursion
-:PROPERTIES:
-:ID:       be51794e-b3a2-46aa-ae80-dce13c7ab463
-:CUSTOM-ID: be51794e-b3a2-46aa-ae80-dce13c7ab463
-:END:
+    ```scheme { linenos=true, linenostart=1 }
+    <<try-these>>
+    <<EX1-10-defs>>
+    (try-these h 1 2 3 4)
+    ```
+
+    | 1 | 2     |
+    |---|-------|
+    | 2 | 4     |
+    | 3 | 16    |
+    | 4 | 65536 |
+
+    It took a while to figure this one out, just because I didn't know the term.
+    This is repeated exponentiation. This operation is to exponentiation, what
+    exponentiation is to multiplication. It's called either _tetration_ or _hyper-4_
+    and has no formal notation, but two common ways would be these:
+
+    $$
+    h(n)=2 \uparrow\uparrow n
+    $$
+    $$
+    h(n)={}^{n}2
+    $$
+
+
+### <span class="section-num">2.21</span> 1.2.2: Tree Recursion {#1-dot-2-dot-2-tree-recursion}
 
 Consider a recursive procedure for computing Fibonacci numbers:
 
-#+begin_src scheme
+```scheme
 (define (fib n)
   (cond ((= n 0) 0)
         ((= n 1) 1)
         (else (+ (fib (- n 1))
                  (fib (- n 2))))))
-#+end_src
+```
 
 The resulting process splits into two with every iteration, creating a tree of
 computations, many of which are duplicates of previous computations. This kind
-of pattern is called *tree-recursion*. However, this one is quite inefficient.
+of pattern is called **tree-recursion**. However, this one is quite inefficient.
 The time and space required grows exponentially with the number of iterations
 requested.
 
-Instead, it makes much more sense to start from ~Fib(1) ~ 1~ and ~Fib(0) ~ 0~
+Instead, it makes much more sense to start from `Fib(1) ~ 1` and `Fib(0) ~ 0`
 and iterate upwards to the desired value. This only requires a linear number of
 steps relative to the input.
 
-#+begin_src scheme
+```scheme
 (define (fib n)
   (fib-iter 1 0 n))
 (define (fib-iter a b count)
   (if (= count 0) b (fib-iter (+ a b) a (- count 1))))
-#+end_src
+```
 
 However, notice that the inefficient tree-recursive version is a fairly
 straightforward translation of the Fibonacci sequence's definition, while the
 iterative version required redefining the process as an iteration with three
 variables.
 
-*** Example: Counting change
-:PROPERTIES:
-:ID:       3648fbfb-8c63-41f0-8270-dac38494344d
-:CUSTOM-ID: 3648fbfb-8c63-41f0-8270-dac38494344d
-:END:
+
+#### <span class="section-num">2.21.1</span> Example: Counting change {#example-counting-change}
 
 I should come back and try to make the "better algorithm" suggested.
 
-** Exercise 1.11: More recursion vs iteration
-:PROPERTIES:
-:ID:       5c14394e-0ea2-4493-8022-4aab7d08eca6
-:CUSTOM-ID: 5c14394e-0ea2-4493-8022-4aab7d08eca6
-:END:
 
-*** Question
-:PROPERTIES:
-:ID:       ea7ae35a-d493-460b-ad6b-85adf126de61
-:CUSTOM-ID: ea7ae35a-d493-460b-ad6b-85adf126de61
-:END:
+### <span class="section-num">2.22</span> Exercise 1.11: More recursion vs iteration {#exercise-1-dot-11-more-recursion-vs-iteration}
 
-A function \(f\) is defined by the rule that:
-\[
+
+#### <span class="section-num">2.22.1</span> Question {#question}
+
+A function \\(f\\) is defined by the rule that:
+$$
 f(n)=n \text{ if } n<3
-\]
-\[
+$$
+$$
 \text{ and }
-\]
-\[
+$$
+$$
 f(n)=f(n-1)+2f(n-2)+3f(n-3) \text{ if } n \geq 3
-\]
+$$
 
-Write a procedure that computes \(f\) by means of a recursive process. Write a
-procedure that computes \(f\) by means of an iterative process.
+Write a procedure that computes \\(f\\) by means of a recursive process. Write a
+procedure that computes \\(f\\) by means of an iterative process.
 
-*** Answer
-:PROPERTIES:
-:ID:       3856f3ba-fb92-4b5a-b473-ae5f77dee9a8
-:CUSTOM-ID: 3856f3ba-fb92-4b5a-b473-ae5f77dee9a8
-:END:
 
-**** Recursive
-:PROPERTIES:
-:ID:       45307adf-a628-466f-8df4-9d3c4c393a4c
-:CUSTOM-ID: 45307adf-a628-466f-8df4-9d3c4c393a4c
-:END:
-#+NAME: EX1-11-fr
-#+BEGIN_SRC scheme -n :eval no-export  :exports code :results silent
-(define (fr n)
-  (if (< n 3)
-      n
-      (+      (fr (- n 1))
-         (* 2 (fr (- n 2)))
-         (* 3 (fr (- n 3))))))
-#+END_SRC
+#### <span class="section-num">2.22.2</span> Answer {#answer}
 
-#+BEGIN_SRC scheme -n :eval no-export  :exports both :results value table
-<<try-these>>
-<<EX1-11-fr>>
-(try-these fr 1 3 5 10)
-#+END_SRC
+<!--list-separator-->
 
-#+RESULTS[d54b80d2fe7a526473762819190f33a520a19fe4]:
-:results:
-|  1 |    1 |
-|  3 |    4 |
-|  5 |   25 |
-| 10 | 1892 |
-:end:
+1.  Recursive
 
-**** Iterative
-:PROPERTIES:
-:ID:       f7c306c6-9592-4083-98a6-8558ea7b3d1c
-:CUSTOM-ID: f7c306c6-9592-4083-98a6-8558ea7b3d1c
-:END:
+    <a id="code-snippet--EX1-11-fr"></a>
+    ```scheme { linenos=true, linenostart=1 }
+    (define (fr n)
+      (if (< n 3)
+          n
+          (+      (fr (- n 1))
+             (* 2 (fr (- n 2)))
+             (* 3 (fr (- n 3))))))
+    ```
 
-***** Attempt 1
-:PROPERTIES:
-:ID:       ffe5bb01-bd41-4857-9e1d-48ffa444e353
-:CUSTOM-ID: ffe5bb01-bd41-4857-9e1d-48ffa444e353
-:END:
+    ```scheme { linenos=true, linenostart=1 }
+    <<try-these>>
+    <<EX1-11-fr>>
+    (try-these fr 1 3 5 10)
+    ```
 
-#+NAME: EX1-11-fi
-#+BEGIN_SRC scheme -n :eval no-export  :exports code :results silent
-;; This seems like it could be better
-(define (fi n)
-  (define (formula l)
-    (let ((a (car l))
-           (b (cadr l))
-           (c (caddr l)))
-      (+ a
-         (* 2 b)
-         (* 3 c))))
-  (define (iter l i)
-    (if (= i n)
-        (car l)
-        (iter (cons (formula l) l)
-              (+ 1 i))))
-  (if (< n 3)
-      n
-      (iter '(2 1 0) 2)))
-#+END_SRC
+    | 1  | 1    |
+    |----|------|
+    | 3  | 4    |
+    | 5  | 25   |
+    | 10 | 1892 |
 
-#+BEGIN_SRC scheme -n :eval no-export  :exports both :results value table
-<<try-these>>
-<<EX1-11-fi>>
-(try-these fi 1 3 5 10)
-#+END_SRC
+<!--list-separator-->
 
-#+RESULTS[77f33e30f912c03277beeb8092d92c55abfcc936]:
-:results:
-|  1 |    1 |
-|  3 |    4 |
-|  5 |   25 |
-| 10 | 1892 |
-:end:
+2.  Iterative
 
-It works but it seems wasteful.
+    <!--list-separator-->
 
-***** Attempt 2
-:PROPERTIES:
-:ID:       5ba7b6ff-175e-4658-8878-b6d0fd1bf836
-:CUSTOM-ID: 5ba7b6ff-175e-4658-8878-b6d0fd1bf836
-:END:
+    1.  Attempt 1
 
-#+NAME: EX1-11-fi2
-#+BEGIN_SRC scheme -n :eval no-export  :exports code :results silent
-(define (fi2 n)
-  (define (formula a b c)
-      (+ a
-         (* 2 b)
-         (* 3 c)))
-  (define (iter a b c i)
-    (if (= i n)
-        a
-        (iter (formula a b c)
-              a
-              b
-              (+ 1 i))))
-  (if (< n 3)
-      n
-      (iter 2 1 0 2)))
-#+END_SRC
+        <a id="code-snippet--EX1-11-fi"></a>
+        ```scheme { linenos=true, linenostart=1 }
+        ;; This seems like it could be better
+        (define (fi n)
+          (define (formula l)
+            (let ((a (car l))
+                   (b (cadr l))
+                   (c (caddr l)))
+              (+ a
+                 (* 2 b)
+                 (* 3 c))))
+          (define (iter l i)
+            (if (= i n)
+                (car l)
+                (iter (cons (formula l) l)
+                      (+ 1 i))))
+          (if (< n 3)
+              n
+              (iter '(2 1 0) 2)))
+        ```
 
-#+BEGIN_SRC scheme -n :eval no-export  :exports both :results value table
-<<try-these>>
-<<EX1-11-fi2>>
-(try-these fi2 1 3 5 10)
-#+END_SRC
+        ```scheme { linenos=true, linenostart=1 }
+        <<try-these>>
+        <<EX1-11-fi>>
+        (try-these fi 1 3 5 10)
+        ```
 
-#+RESULTS[baa8cd23dfff7b5fa47ae133b0a8b58ef2cb9a61]:
-:results:
-|  1 |    1 |
-|  3 |    4 |
-|  5 |   25 |
-| 10 | 1892 |
-:end:
+        | 1  | 1    |
+        |----|------|
+        | 3  | 4    |
+        | 5  | 25   |
+        | 10 | 1892 |
 
-I like that better.
+        It works but it seems wasteful.
 
-** Exercise 1.12: Pascal's Triangle
-:PROPERTIES:
-:ID:       4f9bba42-afcc-49ba-b8e7-27b3252bf624
-:CUSTOM-ID: 4f9bba42-afcc-49ba-b8e7-27b3252bf624
-:END:
+    <!--list-separator-->
 
-*** Question
-:PROPERTIES:
-:ID:       d2603acf-c8a3-42c9-89a1-84d27863f691
-:CUSTOM-ID: d2603acf-c8a3-42c9-89a1-84d27863f691
-:END:
+    2.  Attempt 2
+
+        <a id="code-snippet--EX1-11-fi2"></a>
+        ```scheme { linenos=true, linenostart=1 }
+        (define (fi2 n)
+          (define (formula a b c)
+              (+ a
+                 (* 2 b)
+                 (* 3 c)))
+          (define (iter a b c i)
+            (if (= i n)
+                a
+                (iter (formula a b c)
+                      a
+                      b
+                      (+ 1 i))))
+          (if (< n 3)
+              n
+              (iter 2 1 0 2)))
+        ```
+
+        ```scheme { linenos=true, linenostart=1 }
+        <<try-these>>
+        <<EX1-11-fi2>>
+        (try-these fi2 1 3 5 10)
+        ```
+
+        | 1  | 1    |
+        |----|------|
+        | 3  | 4    |
+        | 5  | 25   |
+        | 10 | 1892 |
+
+        I like that better.
+
+
+### <span class="section-num">2.23</span> Exercise 1.12: Pascal's Triangle {#exercise-1-dot-12-pascal-s-triangle}
+
+
+#### <span class="section-num">2.23.1</span> Question {#question}
 
 The following pattern of numbers is called Pascal's triangle.
 
-#+BEGIN_EXAMPLE
+```text
         1
       1   1
     1   2   1
   1   3   3   1
 1   4   6   4   1
       . . .
-#+END_EXAMPLE
+```
 
 The numbers at the edge of the triangle are all 1, and each number inside the
 triangle is the sum of the two numbers above it. Write a procedure that
 computes elements of Pascal's triangle by means of a recursive process.
 
-*** Answer
-:PROPERTIES:
-:ID:       c0e2770f-ab64-4e99-b61b-731f6ec7aab6
-:CUSTOM-ID: c0e2770f-ab64-4e99-b61b-731f6ec7aab6
-:END:
+
+#### <span class="section-num">2.23.2</span> Answer {#answer}
 
 I guess I'll rotate the triangle 45 degrees to make it the corner of an
 infinite spreadsheet.
 
-#+NAME: pascal-rec
-#+BEGIN_SRC scheme -n :eval no-export :exports code :results silent
+<a id="code-snippet--pascal-rec"></a>
+```scheme { linenos=true, linenostart=1 }
 (define (pascal x y)
   (if (or (= x 0)
           (= y 0))
       1
       (+ (pascal (- x 1) y)
          (pascal x (- y 1)))))
-#+END_SRC
+```
 
-#+BEGIN_SRC scheme -n :eval no-export  :exports both :results value table
+```scheme { linenos=true, linenostart=1 }
 <<try-these>>
 <<pascal-rec>>
 (let ((l (iota 8)))
@@ -1936,195 +1932,156 @@ infinite spreadsheet.
                      (list x y))
                    l))
             l)))
-#+END_SRC
+```
 
-#+RESULTS[151500842c6cdef9252eaf15c1323fc7bcba0527]:
-:results:
-| 1 | 1 |  1 |   1 |   1 |   1 |    1 |    1 |
-| 1 | 2 |  3 |   4 |   5 |   6 |    7 |    8 |
-| 1 | 3 |  6 |  10 |  15 |  21 |   28 |   36 |
-| 1 | 4 | 10 |  20 |  35 |  56 |   84 |  120 |
-| 1 | 5 | 15 |  35 |  70 | 126 |  210 |  330 |
-| 1 | 6 | 21 |  56 | 126 | 252 |  462 |  792 |
-| 1 | 7 | 28 |  84 | 210 | 462 |  924 | 1716 |
+| 1 | 1 | 1  | 1   | 1   | 1   | 1    | 1    |
+|---|---|----|-----|-----|-----|------|------|
+| 1 | 2 | 3  | 4   | 5   | 6   | 7    | 8    |
+| 1 | 3 | 6  | 10  | 15  | 21  | 28   | 36   |
+| 1 | 4 | 10 | 20  | 35  | 56  | 84   | 120  |
+| 1 | 5 | 15 | 35  | 70  | 126 | 210  | 330  |
+| 1 | 6 | 21 | 56  | 126 | 252 | 462  | 792  |
+| 1 | 7 | 28 | 84  | 210 | 462 | 924  | 1716 |
 | 1 | 8 | 36 | 120 | 330 | 792 | 1716 | 3432 |
-:end:
 
 The test code was much harder to write than the actual solution.
 
-** Exercise 1.13: Proving Fibonacci approximation :optional:
-:PROPERTIES:
-:ID:       26d1bc65-18ae-442f-b2af-43d42ca7dd45
-:CUSTOM-ID: 26d1bc65-18ae-442f-b2af-43d42ca7dd45
-:END:
 
-*** Question
-:PROPERTIES:
-:ID:       b9ffa2a8-2527-47e4-b08b-6fae0106eeeb
-:CUSTOM-ID: b9ffa2a8-2527-47e4-b08b-6fae0106eeeb
-:END:
+### <span class="section-num">2.24</span> Exercise 1.13: Proving Fibonacci approximation <span class="tag"><span class="optional">optional</span></span> {#exercise-1-dot-13-proving-fibonacci-approximation}
 
-Prove that \(\text{Fib}(n)\) is the closest integer to
-\(\frac\Phi^n}{\sqrt{5}}\) where \(\Phi\) is \(\frac{1 + \sqrt{5}}{2}\). Hint: let
-\(\Upsilon = \frac{1 - \sqrt{5}}{2}\). Use induction and the definition of the
+
+#### <span class="section-num">2.24.1</span> Question {#question}
+
+Prove that \\(\text{Fib}(n)\\) is the closest integer to
+\\(\frac\Phi^n}{\sqrt{5}}\\) where \\(\Phi\\) is \\(\frac{1 + \sqrt{5}}{2}\\). Hint: let
+\\(\Upsilon = \frac{1 - \sqrt{5}}{2}\\). Use induction and the definition of the
 Fibonacci numbers to prove that
 
-\[
+$$
  \text{Fib}(n) = \frac{\Phi^n - \Upsilon^n}{\sqrt{5}}
-\]
+$$
 
-*** Answer
-:PROPERTIES:
-:ID:       60ba8877-b1b5-4aea-8913-e46ccdf76e64
-:CUSTOM-ID: 60ba8877-b1b5-4aea-8913-e46ccdf76e64
-:END:
+
+#### <span class="section-num">2.24.2</span> Answer {#answer}
 
 I don't know how to write a proof yet, but I can make functions to
 demonstrate it.
 
-**** Fibonacci number generator
-:PROPERTIES:
-:ID:       0a00f599-21ef-4f95-b6ea-c1f4e857556d
-:CUSTOM-ID: 0a00f599-21ef-4f95-b6ea-c1f4e857556d
-:END:
+<!--list-separator-->
 
-#+NAME: fib-iter
-#+BEGIN_SRC scheme -n :eval no-export :exports code :results silent
-(define (fib-iter n)
-  (define (iter i a b)
-    (if (= i n)
-        b
-    (iter (+ i 1)
-          b
-          (+ a b))))
-  (if (<= n 2)
-      1
-      (iter 2 1 1)))
-#+END_SRC
+1.  Fibonacci number generator
 
-**** Various algorithms relating to the question
-:PROPERTIES:
-:ID:       4b86e2cf-cc10-4e98-9789-bf744444cc02
-:CUSTOM-ID: 4b86e2cf-cc10-4e98-9789-bf744444cc02
-:END:
+    <a id="code-snippet--fib-iter"></a>
+    ```scheme { linenos=true, linenostart=1 }
+    (define (fib-iter n)
+      (define (iter i a b)
+        (if (= i n)
+            b
+        (iter (+ i 1)
+              b
+              (+ a b))))
+      (if (<= n 2)
+          1
+          (iter 2 1 1)))
+    ```
 
-#+NAME: fib-phi
-#+BEGIN_SRC scheme -n :eval no-export :exports code :results silent
-<<sqrt>>
-(define sqrt5
-  (sqrt 5))
-(define phi
-  (/ (+ 1 sqrt5) 2))
-(define upsilon
-  (/ (- 1 sqrt5) 2))
-(define (fib-phi n)
-  (/ (- (expt phi n)
-        (expt upsilon n))
-     sqrt5))
-#+END_SRC
-#+NAME: 1-13-tab
-#+BEGIN_SRC scheme -n :eval no-export  :exports both :results value table
-(use-srfis '(1))
-<<fib-iter>>
-<<fib-phi>>
-<<try-these>>
+<!--list-separator-->
 
-(let* ((vals (drop (iota 21) 10))
-       (fibs (map fib-iter vals))
-       (approx (map fib-phi vals)))
-  (zip vals fibs approx))
-#+END_SRC
+2.  Various algorithms relating to the question
 
-#+RESULTS[732483d41040c13f1e9a125ebe5a0ecdca1f5d18]: 1-13-tab
-:results:
-| 10 |   55 |  54.99999999999999 |
-| 11 |   89 |               89.0 |
-| 12 |  144 | 143.99999999999997 |
-| 13 |  233 | 232.99999999999994 |
-| 14 |  377 | 377.00000000000006 |
-| 15 |  610 |              610.0 |
-| 16 |  987 |  986.9999999999998 |
-| 17 | 1597 | 1596.9999999999998 |
-| 18 | 2584 |             2584.0 |
-| 19 | 4181 |             4181.0 |
-| 20 | 6765 |  6764.999999999999 |
-:end:
+    <a id="code-snippet--fib-phi"></a>
+    ```scheme { linenos=true, linenostart=1 }
+    <<sqrt>>
+    (define sqrt5
+      (sqrt 5))
+    (define phi
+      (/ (+ 1 sqrt5) 2))
+    (define upsilon
+      (/ (- 1 sqrt5) 2))
+    (define (fib-phi n)
+      (/ (- (expt phi n)
+            (expt upsilon n))
+         sqrt5))
+    ```
 
-You can see they follow closely. Graphing the differences, it's just
-an exponential curve at very low values, presumably following the
-exponential increase of the Fibonacci sequence itself.
-#+NAME: 1-13-tab2
-#+BEGIN_SRC scheme -n :eval no-export  :exports none :results value silent
-(use-srfis '(1))
-<<fib-iter>>
-<<fib-phi>>
-<<try-these>>
+    <a id="code-snippet--1-13-tab"></a>
+    ```scheme { linenos=true, linenostart=1 }
+    (use-srfis '(1))
+    <<fib-iter>>
+    <<fib-phi>>
+    <<try-these>>
 
-(let* ((vals (drop (iota 500) 2))
-       (diffs (map (lambda (i)
-                     (- (fib-iter i) (fib-phi i)))
-                   vals)))
-  (zip vals diffs))
-#+END_SRC
+    (let* ((vals (drop (iota 21) 10))
+           (fibs (map fib-iter vals))
+           (approx (map fib-phi vals)))
+      (zip vals fibs approx))
+    ```
+
+    | 10 | 55   | 54.99999999999999  |
+    |----|------|--------------------|
+    | 11 | 89   | 89.0               |
+    | 12 | 144  | 143.99999999999997 |
+    | 13 | 233  | 232.99999999999994 |
+    | 14 | 377  | 377.00000000000006 |
+    | 15 | 610  | 610.0              |
+    | 16 | 987  | 986.9999999999998  |
+    | 17 | 1597 | 1596.9999999999998 |
+    | 18 | 2584 | 2584.0             |
+    | 19 | 4181 | 4181.0             |
+    | 20 | 6765 | 6764.999999999999  |
+
+    You can see they follow closely. Graphing the differences, it's just
+    an exponential curve at very low values, presumably following the
+    exponential increase of the Fibonacci sequence itself.
+
+    {{< figure src="/ox-hugo/1-13.png" >}}
 
 
+### <span class="section-num">2.25</span> 1.2.3: Orders of Growth {#1-dot-2-dot-3-orders-of-growth}
 
-#+begin_src gnuplot :var data=1-13-tab2 :file 1/fig/1-13.png :exports results :eval no-export
-reset # helps with various issues in execution
-set xlabel 'values of n'
-set logscale y
-
-plot data using 1:2 with lines title 'Fib(n) minus Fib-phi(n)'
-#+end_src
-
-#+RESULTS[8c0a67c9f76a9da9c115187192a6c35899c939cb]:
-:results:
-[[file:1/fig/1-13.png]]
-:end:
-
-** 1.2.3: Orders of Growth
-:PROPERTIES:
-:ID:       788f4aad-14d6-40ae-a32f-acd744b9f700
-:CUSTOM-ID: 788f4aad-14d6-40ae-a32f-acd744b9f700
-:END:
-
-An *order of growth* gives you a gross measure of the resources required by a
+An **order of growth** gives you a gross measure of the resources required by a
 process as its inputs grow larger.
 
-Let \(n\) be a parameter for the size of a problem, and \(R(n)\) be the amount
-of resources required for size \(n\). \(R(n)\) has order of growth
-\(\Theta(f(n))\)
+Let \\(n\\) be a parameter for the size of a problem, and \\(R(n)\\) be the amount
+of resources required for size \\(n\\). \\(R(n)\\) has order of growth
+\\(\Theta(f(n))\\)
 
 For example:
-- \(\Theta(1)\) :: is constant, not growing regardless of input size.
-- \(\Theta(n)\) :: is growth 1-to-1 proportional to the input size.
+
+\\(\Theta(1)\\)
+: is constant, not growing regardless of input size.
+
+\\(\Theta(n)\\)
+: is growth 1-to-1 proportional to the input size.
 
 Some algorithms we've already seen:
-- Linear recursive :: is time and space \(\Theta(n)\)
-- Iterative :: is time \(\Theta(n)\) space \(\Theta(1)\)
-- Tree-recursive :: means in general, time is proportional to the number of
-  nodes, space is proportional to the depth of the tree. In the Fibonacci
-  algorithm example, \(\Theta(n)\) and time \(\Theta(\Upsilon^{n})\) where
-  \(\Upsilon\) is the golden ratio \(\frac{1 + \sqrt{5}}{2}\)
+
+Linear recursive
+: is time and space \\(\Theta(n)\\)
+
+Iterative
+: is time \\(\Theta(n)\\) space \\(\Theta(1)\\)
+
+Tree-recursive
+: means in general, time is proportional to the number of
+    nodes, space is proportional to the depth of the tree. In the Fibonacci
+    algorithm example, \\(\Theta(n)\\) and time \\(\Theta(\Upsilon^{n})\\) where
+    \\(\Upsilon\\) is the golden ratio \\(\frac{1 + \sqrt{5}}{2}\\)
 
 Orders of growth are very crude descriptions of process behaviors, but they are
 useful in indicating how a process will change with the size of the problem.
 
-** Exercise 1.14: ~count-change~
-:PROPERTIES:
-:ID:       18db98a1-8e67-4829-939b-44700d20e344
-:CUSTOM-ID: 18db98a1-8e67-4829-939b-44700d20e344
-:END:
 
-*** Text
-:PROPERTIES:
-:ID:       36ba5b4b-ce22-4840-9ecf-dce9c858c4b3
-:CUSTOM-ID: 36ba5b4b-ce22-4840-9ecf-dce9c858c4b3
-:END:
-Below is the default version of the src_scheme{count-change} function. I'll be
+### <span class="section-num">2.26</span> Exercise 1.14: `count-change` {#exercise-1-dot-14-count-change}
+
+
+#### <span class="section-num">2.26.1</span> Text {#text}
+
+Below is the default version of the <span class="inline-src language-scheme" data-lang="scheme">`count-change`</span> function. I'll be
 aggressively modifying it in order to get a graph out of it.
-#+NAME: count-change
-#+BEGIN_SRC scheme -n :eval no-export :exports code :results silent
+
+<a id="code-snippet--count-change"></a>
+```scheme { linenos=true, linenostart=1 }
 (define (count-change amount)
   (cc amount 5))
 
@@ -2145,26 +2102,21 @@ aggressively modifying it in order to get a graph out of it.
         ((= kinds-of-coins 3) 10)
         ((= kinds-of-coins 4) 25)
         ((= kinds-of-coins 5) 50)))
-#+end_src
+```
 
-*** Question A: Draw the tree
-:PROPERTIES:
-:ID:       4f0d0db2-8d42-4ef4-8a96-c6304fc82d12
-:CUSTOM-ID: 4f0d0db2-8d42-4ef4-8a96-c6304fc82d12
-:END:
 
-Draw the tree illustrating the process generated by the src_scheme{count-change}
-procedure of [[id:be51794e-b3a2-46aa-ae80-dce13c7ab463][1.2.2: Tree Recursion]] in making change for 11 cents.
+#### <span class="section-num">2.26.2</span> Question A: Draw the tree {#question-a-draw-the-tree}
 
-*** Answer
-:PROPERTIES:
-:ID:       3b4d300a-acee-4aab-b2de-f40f38948b7a
-:CUSTOM-ID: 3b4d300a-acee-4aab-b2de-f40f38948b7a
-:END:
+Draw the tree illustrating the process generated by the <span class="inline-src language-scheme" data-lang="scheme">`count-change`</span>
+procedure of [1.2.2: Tree Recursion](#1-dot-2-dot-2-tree-recursion) in making change for 11 cents.
+
+
+#### <span class="section-num">2.26.3</span> Answer {#answer}
 
 I want to generate this graph algorithmically.
-#+NAME: count-change-graphviz
-#+BEGIN_SRC scheme -n :eval no-export :exports code :results silent
+
+<a id="code-snippet--count-change-graphviz"></a>
+```scheme { linenos=true, linenostart=1 }
 ;; cursed global
 (define bubblecounter 0)
 ;; Returns # of ways change can be made
@@ -2204,18 +2156,18 @@ I want to generate this graph algorithmically.
         ((= kinds-of-coins 3) 10)
         ((= kinds-of-coins 4) 25)
         ((= kinds-of-coins 5) 50)))
-#+end_src
+```
 
-I'm not going to include the full printout of the src_scheme{(count-change 11)},
-here's an example of what this looks like via src_scheme{1}.
-#+NAME: count-change-test
-#+BEGIN_SRC scheme -n :eval no-export  :exports both :results output code
+I'm not going to include the full printout of the <span class="inline-src language-scheme" data-lang="scheme">`(count-change 11)`</span>,
+here's an example of what this looks like via <span class="inline-src language-scheme" data-lang="scheme">`1`</span>.
+
+<a id="code-snippet--count-change-test"></a>
+```scheme { linenos=true, linenostart=1 }
 <<count-change-graphviz>>
 (count-change 1)
-#+end_src
+```
 
-#+RESULTS[626488f89e622bb93d8813545c83ec8fe4c1254c]: count-change-test
-#+begin_src dot
+```dot
 digraph {
 "(0 1 5)" -> "(1 1 4)"
 "(1 1 4)" -> "(2 1 3)"
@@ -2228,54 +2180,30 @@ digraph {
 "(1 1 4)" -> "(9 -24 4)"
 "(0 1 5)" -> "(10 -49 5)"
 }
-#+end_src
+```
 
-#+BEGIN_SRC dot :file 1/fig/cc-test.png :exports results :var data=count-change-test :eval no-export
-$data
-#+end_src
+{{< figure src="/ox-hugo/cc-test.png" >}}
 
-#+RESULTS[2f9cd2c1031a74ba1f68d4d2a7602c619a798efd]:
-#+ATTR_LATEX: :width 0.6\linewidth
-[[file:1/fig/cc-test.png]]
+So, the graph of <span class="inline-src language-scheme" data-lang="scheme">`(count-change 11)`</span> is:
 
-So, the graph of src_scheme{(count-change 11)} is:
-#+NAME: count-change-11
-#+BEGIN_SRC scheme -n :eval no-export  :exports none :results silent output
-<<count-change-graphviz>>
-(count-change 11)
-#+end_src
+{{< figure src="/ox-hugo/cc-11.png" >}}
 
-#+BEGIN_SRC dot :file 1/fig/cc-11.png :exports results :var data=count-change-11 :eval no-export
-$data
-#+end_src
 
-#+RESULTS[914f8aa869c783656d6a64eb7535f44d22158d20]:
-:results:
-[[file:1/fig/cc-11.png]]
-:end:
-
-*** Question B: Analyzing process growth
-:PROPERTIES:
-:ID:       4ec9fbdf-5b5b-46f3-8e62-592695c8df74
-:CUSTOM-ID: 4ec9fbdf-5b5b-46f3-8e62-592695c8df74
-:END:
+#### <span class="section-num">2.26.4</span> Question B: Analyzing process growth {#question-b-analyzing-process-growth}
 
 What are the orders of growth of the space and number of steps used by this
 process as the amount to be changed increases?
 
-*** Answer B
-:PROPERTIES:
-:ID:       3c61bcd3-dff2-4fed-a623-f277463c4588
-:CUSTOM-ID: 3c61bcd3-dff2-4fed-a623-f277463c4588
-:END:
+
+#### <span class="section-num">2.26.5</span> Answer B {#answer-b}
 
 Let's look at this via the number of function calls needed for value
-src_scheme{n}. Instead of returning an integer, I'll return a pair where
-src_scheme{car} is the number of ways to count change, and src_scheme{cdr} is
+<span class="inline-src language-scheme" data-lang="scheme">`n`</span>. Instead of returning an integer, I'll return a pair where
+<span class="inline-src language-scheme" data-lang="scheme">`car`</span> is the number of ways to count change, and <span class="inline-src language-scheme" data-lang="scheme">`cdr`</span> is
 the number of function calls that have occurred down that branch of the tree.
 
-#+NAME: cc-calls
-#+BEGIN_SRC scheme -n :eval no-export :exports code :results silent
+<a id="code-snippet--cc-calls"></a>
+```scheme { linenos=true, linenostart=1 }
 (define (count-calls amount)
   (cc-calls amount 5))
 
@@ -2301,111 +2229,70 @@ the number of function calls that have occurred down that branch of the tree.
         ((= kinds-of-coins 3) 10)
         ((= kinds-of-coins 4) 25)
         ((= kinds-of-coins 5) 50)))
-#+end_src
+```
 
-
-#+NAME: cc-calls-check
-#+BEGIN_SRC scheme -n :eval no-export  :exports none :results value table
-;; Test to verify that this function is working as expected.
-(use-srfis '(1))
-<<count-change>>
-<<cc-calls>>
-(let* ((vals (drop (iota 11) 1))
-       (textbook (map count-change vals))
-       (mine (map count-calls vals)))
-  (zip vals textbook mine))
-#+end_src
-
-#+RESULTS[b7476dc844e2456ebb48c7e96462fe180d60101b]: cc-calls-check
-:results:
-|  1 | 1 | (1 . 11) |
-|  2 | 1 | (1 . 13) |
-|  3 | 1 | (1 . 15) |
-|  4 | 1 | (1 . 17) |
-|  5 | 2 | (2 . 19) |
-|  6 | 2 | (2 . 25) |
-|  7 | 2 | (2 . 29) |
-|  8 | 2 | (2 . 33) |
-|  9 | 2 | (2 . 37) |
-| 10 | 4 | (4 . 41) |
-:end:
-
-#+NAME: cc-calls-100
-#+BEGIN_SRC scheme -n :eval no-export  :exports code :results silent value table
+<a id="code-snippet--cc-calls-100"></a>
+```scheme { linenos=true, linenostart=1 }
 (use-srfis '(1))
 <<cc-calls>>
 (let* ((vals (drop (iota 101) 1))
        (mine (map count-calls vals)))
   (zip vals (map car mine) (map cdr mine)))
-#+end_src
+```
 
-#+begin_src gnuplot :var data=cc-calls-100 :file 1/fig/cc-100.png :exports results :eval no-export
-reset # helps with various issues in execution
-set key top left
-set logscale y
-set xlabel 'values of n'
+{{< figure src="/ox-hugo/cc-100.png" >}}
 
-plot data using 1:2 with lp title 'Ways to make change for n', \
-     data using 1:3 with lp title 'function calls'
-#+end_src
-
-#+RESULTS[134cbc95d12b4367d5be943722725cd0baca1d87]:
-:results:
-[[file:1/fig/cc-100.png]]
-:end:
-
-I believe the space to be \(\Theta(n+d)\) as the function calls count down the
+I believe the space to be \\(\Theta(n+d)\\) as the function calls count down the
 denominations before counting down the change. However I notice most answers
-describe \(\Theta(n)\) instead, maybe I'm being overly pedantic and getting the
+describe \\(\Theta(n)\\) instead, maybe I'm being overly pedantic and getting the
 wrong answer.
 
 My issues came finding the time. The book describes the meaning and properties
-of \(\Theta\) notation in [[http://sarabander.github.io/sicp/html/1_002e2.xhtml#g_t1_002e2_002e3][Section 1.2.3]]. However, my lack of formal math
+of \\(\Theta\\) notation in [Section 1.2.3](http://sarabander.github.io/sicp/html/1_002e2.xhtml#g_t1_002e2_002e3). However, my lack of formal math
 education made realizing the significance of this passage difficult. For one, I
-didn't understand that \(k_{1}f(n) \leq R(n) \leq k_{2}f(n)\) means "you can
-find the \(\Theta\) by proving that a graph of the algorithm's resource usage is
+didn't understand that \\(k\_{1}f(n) \leq R(n) \leq k\_{2}f(n)\\) means "you can
+find the \\(\Theta\\) by proving that a graph of the algorithm's resource usage is
 bounded by two identical functions multiplied by constants." So, the graph of
-resource usage for an algorithm with \(\Theta(n^{2})\) will by bounded by lines
-of \(n^{2} \times some constant\), the top boundary's constant being larger than
+resource usage for an algorithm with \\(\Theta(n^{2})\\) will by bounded by lines
+of \\(n^{2} \times some constant\\), the top boundary's constant being larger than
 the small boundary. These are arbitrarily chosen constants, you're just proving
 that the function behaves the way you think it does.
 
-Overall, finding the \(\Theta\) and \(\Omega\) and \(O\) notations (they are all
+Overall, finding the \\(\Theta\\) and \\(\Omega\\) and \\(O\\) notations (they are all
 different btw!) is about aggressively simplifying to make a very general
 statement about the behavior of the algorithm.
 
-I could tell that a "correct" way to find the \(\Theta\) would be to make a
+I could tell that a "correct" way to find the \\(\Theta\\) would be to make a
 formula which describes the algorithm's function calls for given input and
 denominations. This is one of the biggest time sinks, although I had a lot of
 fun and learned a lot. In the end, with some help from Jach in a Lisp Discord, I
 had the following formula:
 
-\[
-\sum_{i=1}^{ceil(n / val(d))} T(n - val(d)*i, d)
-\]
+$$
+\sum\_{i=1}^{ceil(n / val(d))} T(n - val(d)\*i, d)
+$$
 
 But I wasn't sure where to go from here. The graphs let me see some interesting
 trends, though I didn't get any closer to an answer in the process.
 
-By reading on other websites, I knew that you could find \(\Theta\) by obtaining
-a formula for \(R(n)\) and removing constants to end up with a term of interest.
-For example, if your algorithm's resource usage is \(\frac{n^{2} + 7n}{5}\),
-this demonstrates \(\Theta(n^{2})\). So I know a formula *without* a \(\sum\)
+By reading on other websites, I knew that you could find \\(\Theta\\) by obtaining
+a formula for \\(R(n)\\) and removing constants to end up with a term of interest.
+For example, if your algorithm's resource usage is \\(\frac{n^{2} + 7n}{5}\\),
+this demonstrates \\(\Theta(n^{2})\\). So I know a formula **without** a \\(\sum\\)
 would give me the answer I wanted. It didn't occur to me that it might be
-possible to use calculus to remove the \(\sum\) from the equation. At this point
+possible to use calculus to remove the \\(\sum\\) from the equation. At this point
 I knew I was stuck and decided to look up a guide.
 
-After seeing a few solutions that I found somewhat confusing, I landed on [[https://codology.net/post/sicp-solution-exercise-1-14/][this
-awesome article from Codology.net]][fn::
-https://codology.net/post/sicp-solution-exercise-1-14/]. They show how you can
+After seeing a few solutions that I found somewhat confusing, I landed on [this
+awesome article from Codology.net](https://codology.net/post/sicp-solution-exercise-1-14/)[^fn:1]. They show how you can
 remove the summation, and proposed this equation for count-change with 5
 denominations:
 
-\[
-T(n,5)=\frac n{50}+1+\sum_{i=0}^{n/50}T(n-50i,1)
-\]
+$$
+T(n,5)=\frac n{50}+1+\sum\_{i=0}^{n/50}T(n-50i,1)
+$$
 
-Which, when expanded and simplified, demonstrates \(\Theta(n^{5})\) for 5
+Which, when expanded and simplified, demonstrates \\(\Theta(n^{5})\\) for 5
 denominations.
 
 Overall I'm relieved that I wasn't entirely off, given I haven't done math work
@@ -2413,47 +2300,38 @@ like this since college. It's inspired me to restart my remedial math courses, I
 don't think I really grasped the nature of math as a tool of empowerment until
 now.
 
-** Exercise 1.15: Sine approximation
-:PROPERTIES:
-:ID:       c409b511-104c-472d-b3ea-645ea1db242b
-:CUSTOM-ID: c409b511-104c-472d-b3ea-645ea1db242b
-:END:
 
-*** Question A
-:PROPERTIES:
-:ID:       debe19ef-e946-469a-8549-986110233a82
-:CUSTOM-ID: debe19ef-e946-469a-8549-986110233a82
-:END:
+### <span class="section-num">2.27</span> Exercise 1.15: Sine approximation {#exercise-1-dot-15-sine-approximation}
+
+
+#### <span class="section-num">2.27.1</span> Question A {#question-a}
 
 The sine of an angle (specified in radians) can be computed by making use of the
-approximation \(\sin x \approx x\) if \(x\) is sufficiently small, and the
-trigonometric identity \(\sin x = 3\sin\frac{x}{3} - 4\sin^3\frac{x}{3}\)
+approximation \\(\sin x \approx x\\) if \\(x\\) is sufficiently small, and the
+trigonometric identity \\(\sin x = 3\sin\frac{x}{3} - 4\sin^3\frac{x}{3}\\)
 to reduce the size of the argument of sin. (For purposes of this exercise an
 angle is considered "sufficiently small" if its magnitude is not greater than
 0.1 radians.) These ideas are incorporated in the following procedures:
 
-#+NAME: 1-15-deps
-#+BEGIN_SRC scheme -n :eval no-export :exports code :results silent
+<a id="code-snippet--1-15-deps"></a>
+```scheme { linenos=true, linenostart=1 }
 (define (cube x) (* x x x))
 (define (p x) (- (* 3 x) (* 4 (cube x))))
 (define (sine angle)
   (if (not (> (abs angle) 0.1))
       angle
       (p (sine (/ angle 3.0)))))
-#+end_src
+```
 
-How many times is the procedure src_scheme{p} applied when src_scheme{(sine
-12.15)} is evaluated?
+How many times is the procedure <span class="inline-src language-scheme" data-lang="scheme">`p`</span> applied when <span class="inline-src language-scheme" data-lang="scheme">`(sine 12.15)`</span> is evaluated?
 
-*** Answer A
-:PROPERTIES:
-:ID:       eacd5136-a598-487c-a19a-02dbd45a4032
-:CUSTOM-ID: eacd5136-a598-487c-a19a-02dbd45a4032
-:END:
+
+#### <span class="section-num">2.27.2</span> Answer A {#answer-a}
 
 Let's find out!
-#+NAME: 1-15-p-measure
-#+BEGIN_SRC scheme -n :eval no-export :exports code :results silent
+
+<a id="code-snippet--1-15-p-measure"></a>
+```scheme { linenos=true, linenostart=1 }
 (define (cube x) (* x x x))
 (define (p x) (- (* 3 x) (* 4 (cube x))))
 (define (sine angle)
@@ -2461,40 +2339,33 @@ Let's find out!
       (cons angle 0)
       (let ((x (sine (/ angle 3.0))))
         (cons (p (car x)) (+ 1 (cdr x))))))
-#+end_src
+```
 
-#+NAME: 1-15-sine1215
-#+BEGIN_SRC scheme -n :eval no-export  :exports both :results value
+<a id="code-snippet--1-15-sine1215"></a>
+```scheme { linenos=true, linenostart=1 }
 <<1-15-p-measure>>
 (let ((xy (sine 12.15)))
   (list (car xy) (cdr xy)))
-#+end_src
+```
 
-#+RESULTS[a951cb0c1f0af6041c8ea65b70c08abec9d7fd95]: 1-15-sine1215
-:results:
+|                   |   |
+|-------------------|---|
 | -0.39980345741334 | 5 |
-:end:
 
-src_scheme{p} is evaluated 5 times.
+<span class="inline-src language-scheme" data-lang="scheme">`p`</span> is evaluated 5 times.
 
-*** Question B
-:PROPERTIES:
-:ID:       0c3e1c9a-6435-47bf-b813-c585df53031d
-:CUSTOM-ID: 0c3e1c9a-6435-47bf-b813-c585df53031d
-:END:
+
+#### <span class="section-num">2.27.3</span> Question B {#question-b}
 
 What is the order of growth in space and number of steps (as a function of
-src_scheme{a}) used by the process generated by the sine procedure when
-src_scheme{(sine a)} is evaluated?
+<span class="inline-src language-scheme" data-lang="scheme">`a`</span>) used by the process generated by the sine procedure when
+<span class="inline-src language-scheme" data-lang="scheme">`(sine a)`</span> is evaluated?
 
-*** Answer B
-:PROPERTIES:
-:ID:       f3d8e891-8aa0-4169-89d4-5026cd2fdf7d
-:CUSTOM-ID: f3d8e891-8aa0-4169-89d4-5026cd2fdf7d
-:END:
 
-#+NAME: 1-15-tab1
-#+BEGIN_SRC scheme -n :eval no-export  :exports both :results silent value table
+#### <span class="section-num">2.27.4</span> Answer B {#answer-b}
+
+<a id="code-snippet--1-15-tab1"></a>
+```scheme { linenos=true, linenostart=1 }
 (use-srfis '(1))
 <<1-15-p-measure>>
 (let* ((vals (iota 300 0.1 0.1))
@@ -2502,9 +2373,10 @@ src_scheme{(sine a)} is evaluated?
                      (cdr (sine i)))
                    vals)))
   (zip vals sines))
-#+end_src
-#+NAME: 1-15-tab1-test
-#+BEGIN_SRC scheme -n :eval no-export  :exports result :results value table
+```
+
+<a id="code-snippet--1-15-tab1-test"></a>
+```scheme { linenos=true, linenostart=1 }
 (use-srfis '(1))
 <<1-15-p-measure>>
 (let* ((vals (iota 10 0.1 0.1))
@@ -2512,52 +2384,36 @@ src_scheme{(sine a)} is evaluated?
                      (cdr (sine i)))
                    vals)))
   (zip vals sines))
-#+end_src
+```
 
 Example output:
-#+RESULTS[fb3135304f5470edbe145abf5ad93ef8829e4e8c]: 1-15-tab1-test
-:results:
-|                 0.1 | 0 |
-|                 0.2 | 1 |
+
+| 0.1                 | 0 |
+|---------------------|---|
+| 0.2                 | 1 |
 | 0.30000000000000004 | 2 |
-|                 0.4 | 2 |
-|                 0.5 | 2 |
-|                 0.6 | 2 |
-|  0.7000000000000001 | 2 |
-|                 0.8 | 2 |
-|                 0.9 | 2 |
-|                 1.0 | 3 |
-:end:
+| 0.4                 | 2 |
+| 0.5                 | 2 |
+| 0.6                 | 2 |
+| 0.7000000000000001  | 2 |
+| 0.8                 | 2 |
+| 0.9                 | 2 |
+| 1.0                 | 3 |
 
-#+begin_src gnuplot :var data=1-15-tab1 :file 1/fig/1-15-step.png :exports results :eval no-export
-reset # helps with various issues in execution
-set xlabel 'values of x'
-set logscale x
-set key top left
-set style fill solid 1.00 border
-set style function fillsteps below
+{{< figure src="/ox-hugo/1-15-step.png" >}}
 
-f(x) = log(x) + 2.3
-
-plot data using 1:2 with fillsteps title 'function calls', \
-     data using 1:(f($1)) with lines title 'log(x) + 2. 3'
-#+end_src
-
-#+RESULTS[460dc2cffdff776bf4e3a46cb26ac66180108b4a]:
-:results:
-file:1/fig/1-15-step.png
-:end:
-
-This graph shows that the number of times src_scheme{sine} will be called is
+This graph shows that the number of times <span class="inline-src language-scheme" data-lang="scheme">`sine`</span> will be called is
 logarithmic.
-- 0.1 to 0.2 are divided once
-- 0.3 to 0.8 are divided twice
-- 0.9 to 2.6 are divided three times
-- 2.7 to 8 are divided four times
-- 8.5 to 23.8 are divided five times
 
-Given that the calls to src_scheme{p} get stacked recursively, like this:
-#+BEGIN_SRC scheme :noeval :exports code
+-   0.1 to 0.2 are divided once
+-   0.3 to 0.8 are divided twice
+-   0.9 to 2.6 are divided three times
+-   2.7 to 8 are divided four times
+-   8.5 to 23.8 are divided five times
+
+Given that the calls to <span class="inline-src language-scheme" data-lang="scheme">`p`</span> get stacked recursively, like this:
+
+```scheme
 (sine 12.15)
 (p (sine 4.05))
 (p (p (sine 1.35)))
@@ -2570,15 +2426,14 @@ Given that the calls to src_scheme{p} get stacked recursively, like this:
 (p (p 0.9758465331678772))
 (p -0.7895631144708228)
 -0.39980345741334
-#+END_SRC
+```
 
-So I argue the space and time is \(\Theta(\log(n))\)
-
+So I argue the space and time is \\(\Theta(\log(n))\\)
 
 We can also prove this for the time by benchmarking the function:
 
-#+NAME: 1-15-sine-bench
-#+BEGIN_SRC scheme -n :noeval :tangle "1/Ex15/sine-bench.scheme" :exports code :results none
+<a id="code-snippet--1-15-sine-bench"></a>
+```scheme { linenos=true, linenostart=1 }
 ;; This execution takes too long for org-mode, so I'm doing it
 ;; externally and importing the results
 (use-srfis '(1))
@@ -2593,9 +2448,9 @@ We can also prove this for the time by benchmarking the function:
      (map (lambda (x y)
            (format #t "~s~/~s~%" x y))
          vals times))))
-#+END_SRC
+```
 
-#+begin_src gnuplot :file 1/fig/1-15-bench.png :exports both :eval no-export
+```gnuplot
 reset # helps with various issues in execution
 set xtics 0.5
 set xlabel 'values of x'
@@ -2609,60 +2464,49 @@ fit f(x) 'Ex15/sine-bench.dat' using 1:2 via a,b
 
 plot 'Ex15/sine-bench.dat' using 1:2 with fillsteps title 'time to execute', \
      'Ex15/sine-bench.dat' using 1:(f($1)) with lines title sprintf('(log(x) * %.2f) + %.2f', a, b)
-#+end_src
+```
 
-#+RESULTS[fb7f0aefd66103c1d2a3d67706e4323de589c4f9]:
-:results:
-[[file:1/fig/1-15-bench.png]]
-:end:
+{{< figure src="/ox-hugo/1-15-bench.png" >}}
 
-**** 1.2.4 Exponentiation
-:PROPERTIES:
-:ID:       76b874e6-9f56-4167-ba08-573242c66afc
-:CUSTOM-ID: 76b874e6-9f56-4167-ba08-573242c66afc
-:END:
+<!--list-separator-->
 
-Considering a few ways to compute the exponential of a given number.
+1.  1.2.4 Exponentiation
 
-#+begin_src scheme
-(define (expt b n)
-  (expt-iter b n 1))
-(define (expt-iter b counter product)
-  (if (= counter 0)
-      product
-      (expt-iter b (- counter 1) (* b product))))
-#+end_src
+    Considering a few ways to compute the exponential of a given number.
 
-This iterative procedure is essentially equivalent to:
+    ```scheme
+    (define (expt b n)
+      (expt-iter b n 1))
+    (define (expt-iter b counter product)
+      (if (= counter 0)
+          product
+          (expt-iter b (- counter 1) (* b product))))
+    ```
 
-\[b^{8} = b \cdot (b \cdot (b \cdot (b \cdot (b \cdot (b \cdot (b \cdot b))))))\]
+    This iterative procedure is essentially equivalent to:
 
-But note it could be approached faster with squaring:
+    $$b^{8} = b \cdot (b \cdot (b \cdot (b \cdot (b \cdot (b \cdot (b \cdot b))))))$$
 
-\[\begin{aligned}b^2 &= b \cdot b\\
-b^4 &= b^2\cdot b^2\\
-b^8 &= b^4 \cdot b^4\end{aligned}\]
+    But note it could be approached faster with squaring:
 
-** Exercise 1.16: Making ~fast-expt~ iterative
-:PROPERTIES:
-:ID:       a98c0259-b567-46bf-b587-12d2e2e4a498
-:CUSTOM-ID: a98c0259-b567-46bf-b587-12d2e2e4a498
-:END:
+    $$\begin{aligned}b^2 &= b \cdot b\\\\
+    b^4 &= b^2\cdot b^2\\\\
+    b^8 &= b^4 \cdot b^4\end{aligned}$$
 
-*** Text
-:PROPERTIES:
-:ID:       4b90504b-2032-4417-88fc-49e91ef55ef1
-:CUSTOM-ID: 4b90504b-2032-4417-88fc-49e91ef55ef1
-:END:
 
-#+NAME: txt-expt
-#+BEGIN_SRC scheme -n :eval no-export :exports code :results silent
+### <span class="section-num">2.28</span> Exercise 1.16: Making `fast-expt` iterative {#exercise-1-dot-16-making-fast-expt-iterative}
+
+
+#### <span class="section-num">2.28.1</span> Text {#text}
+
+<a id="code-snippet--txt-expt"></a>
+```scheme { linenos=true, linenostart=1 }
 (define (expt-rec b n)
-  (if (= n 0) 
-      1 
+  (if (= n 0)
+      1
       (* b (expt-rec b (- n 1)))))
 
-(define (expt-iter b n) 
+(define (expt-iter b n)
   (define (iter counter product)
     (if (= counter 0)
         product
@@ -2671,41 +2515,36 @@ b^8 &= b^4 \cdot b^4\end{aligned}\]
   (iter n 1))
 
 (define (fast-expt b n)
-  (cond ((= n 0) 
+  (cond ((= n 0)
          1)
-        ((even? n) 
+        ((even? n)
          (square (fast-expt b (/ n 2))))
-        (else 
+        (else
          (* b (fast-expt b (- n 1))))))
-#+end_src
+```
 
-*** Question
-:PROPERTIES:
-:ID:       c804b444-1f14-4dd8-8913-b91b0504f32c
-:CUSTOM-ID: c804b444-1f14-4dd8-8913-b91b0504f32c
-:END:
+
+#### <span class="section-num">2.28.2</span> Question {#question}
 
 Design a procedure that evolves an iterative exponentiation process that uses
 successive squaring and uses a logarithmic number of steps, as does fast-expt.
-(Hint: Using the observation that \((b^{n/2})^2=(b^2)^{n/2}\), keep, along with
-the exponent \(n\) and the base \(b\), an additional state variable \(a\) , and
-define the state transformation in such a way that the product \({ab}^n\) is
-unchanged from state to state. At the beginning of the process \(a\) is taken to
-be 1, and the answer is given by the value of \(a\) at the end of the process.
-In general, the technique of defining an /invariant quantity/ that remains
+(Hint: Using the observation that \\((b^{n/2})^2=(b^2)^{n/2}\\), keep, along with
+the exponent \\(n\\) and the base \\(b\\), an additional state variable \\(a\\) , and
+define the state transformation in such a way that the product \\({ab}^n\\) is
+unchanged from state to state. At the beginning of the process \\(a\\) is taken to
+be 1, and the answer is given by the value of \\(a\\) at the end of the process.
+In general, the technique of defining an _invariant quantity_ that remains
 unchanged from state to state is a powerful way to think about the design of
 iterative algorithms.)
 
-*** Diary
-:PROPERTIES:
-:ID:       59c3a6be-0747-4c53-b4cc-a980cf9c8ef0
-:CUSTOM-ID: 59c3a6be-0747-4c53-b4cc-a980cf9c8ef0
-:END:
+
+#### <span class="section-num">2.28.3</span> Diary {#diary}
 
 First I made this program which tries to use a false equivalence:
-\[ab^2 = (a + 1)b^{n - 1}\]
-#+NAME: fast-expt-iter-fail1
-#+BEGIN_SRC scheme -n :eval no-export :exports code :results silent
+$$ab^2 = (a + 1)b^{n - 1}$$
+
+<a id="code-snippet--fast-expt-iter-fail1"></a>
+```scheme { linenos=true, linenostart=1 }
 <<square>>
 (define (fast-expt-iter b n)
   (define (iter b n a)
@@ -2719,53 +2558,51 @@ First I made this program which tries to use a false equivalence:
   (format #t "|~a~/|~a~/|~a|~%" "base" "power" "variable")
   (format #t "~&|--|--|--|~%")
   (iter b n 1))
-#+end_src
+```
 
-#+BEGIN_SRC scheme -n :eval no-export  :exports both :results output table :colnames yes
+```scheme { linenos=true, linenostart=1 }
 <<fast-expt-iter-fail1>>
 <<try-these>>
 (fast-expt-iter 2 6)
-#+end_src
+```
 
-Here's what the internal state looks like during \(2^6\) (correct answer is 64):
-#+RESULTS[314048443b97e46f3f43465460b4f52dc1e4a12c]:
-:results:
+Here's what the internal state looks like during \\(2^6\\) (correct answer is 64):
+
 | base | power | variable |
-|------+-------+----------|
-|    2 |     6 |        1 |
-|    4 |     3 |        1 |
-|    4 |     2 |        2 |
-|   16 |     1 |        2 |
-|   32 |     1 |        1 |
-:end:
+|------|-------|----------|
+| 2    | 6     | 1        |
+| 4    | 3     | 1        |
+| 4    | 2     | 2        |
+| 16   | 1     | 2        |
+| 32   | 1     | 1        |
 
-*** Answer
-:PROPERTIES:
-:ID:       0bf21b5e-eba3-4d78-9e73-e4fd5edbf6ca
-:CUSTOM-ID: 0bf21b5e-eba3-4d78-9e73-e4fd5edbf6ca
-:END:
+
+#### <span class="section-num">2.28.4</span> Answer {#answer}
 
 There are two key transforms to a faster algorithm. The first was already shown
 in the text:
 
-\[
+$$
     ab^n \to a(b^2)^{n/2}
-\]
+$$
 
 The second which I needed to deduce was this:
 
-\[
+$$
     ab^n \to ((a \times b) \times b)^{n - 1}
-\]
+$$
 
 The solution essentially follows this logic:
-- initialize \(a\) to 1
-- If \( n \) is 1, return \(b * a\)
-- else if \(n\) is even, halve \(n\), square \(b\), and iterate
-- else \(n\) is odd, so subtract 1 from \(n\) and \(a \to a \times b\)
 
-#+NAME: fast-expt-iter
-#+BEGIN_SRC scheme -n :eval no-export :exports code :results silent
+-   initialize \\(a\\) to 1
+-   If \\( n \\) is 1, return \\(b \* a\\)
+-   else if \\(n\\) is even, halve \\(n\\), square \\(b\\), and iterate
+-   else \\(n\\) is odd, so subtract 1 from \\(n\\) and \\(a \to a \times b\\)
+
+<!--listend-->
+
+<a id="code-snippet--fast-expt-iter"></a>
+```scheme { linenos=true, linenostart=1 }
 <<square>>
 (define (fast-expt-iter b n)
   (define (iter b n a)
@@ -2775,39 +2612,31 @@ The solution essentially follows this logic:
                          a))
           (else (iter b (- n 1) (* b a)))))
   (iter b n 1))
-#+end_src
+```
 
-#+BEGIN_SRC scheme -n :eval no-export  :exports yes :results value table
+```scheme { linenos=true, linenostart=1 }
 <<fast-expt-iter>>
 <<try-these>>
 (try-these (lambda(x) (fast-expt-iter 3 x)) (cdr (iota 11)))
-#+end_src
+```
 
-#+RESULTS[ae537d78c52d471bef9f5b0951596dc3d4340603]:
-:results:
-|  1 |     3 |
-|  2 |     9 |
-|  3 |    27 |
-|  4 |    81 |
-|  5 |   243 |
-|  6 |   729 |
-|  7 |  2187 |
-|  8 |  6561 |
-|  9 | 19683 |
+| 1  | 3     |
+|----|-------|
+| 2  | 9     |
+| 3  | 27    |
+| 4  | 81    |
+| 5  | 243   |
+| 6  | 729   |
+| 7  | 2187  |
+| 8  | 6561  |
+| 9  | 19683 |
 | 10 | 59049 |
-:end:
 
-** Exercise 1.17: Logarithmic multiplication (recursive)
-:PROPERTIES:
-:ID:       08bb5d53-cd18-4b75-91ca-8561197f87dc
-:CUSTOM-ID: 08bb5d53-cd18-4b75-91ca-8561197f87dc
-:END:
 
-*** Question
-:PROPERTIES:
-:ID:       c65fcf41-d9f1-46f9-91ef-85e07dd3cf90
-:CUSTOM-ID: c65fcf41-d9f1-46f9-91ef-85e07dd3cf90
-:END:
+### <span class="section-num">2.29</span> Exercise 1.17: Logarithmic multiplication (recursive) {#exercise-1-dot-17-logarithmic-multiplication--recursive}
+
+
+#### <span class="section-num">2.29.1</span> Question {#question}
 
 The exponentiation algorithms in this section are based on performing
 exponentiation by means of repeated multiplication. In a similar way, one can
@@ -2815,27 +2644,24 @@ perform integer multiplication by means of repeated addition. The following
 multiplication procedure (in which it is assumed that our language can only add,
 not multiply) is analogous to the expt procedure:
 
-#+BEGIN_SRC scheme -n
+```scheme { linenos=true, linenostart=1 }
 (define (* a b)
   (if (= b 0)
       0
       (+ a (* a (- b 1)))))
-#+end_src
+```
 
-This algorithm takes a number of steps that is linear in \( b \). Now suppose we
+This algorithm takes a number of steps that is linear in \\( b \\). Now suppose we
 include, together with addition, operations double, which doubles an integer,
 and halve, which divides an (even) integer by 2. Using these, design a
 multiplication procedure analogous to fast-expt that uses a logarithmic number
 of steps.
 
-*** Answer
-:PROPERTIES:
-:ID:       3bc6b3b7-0ee3-43c5-975d-f75061cc764b
-:CUSTOM-ID: 3bc6b3b7-0ee3-43c5-975d-f75061cc764b
-:END:
 
-#+NAME: fast-mult-rec
-#+BEGIN_SRC scheme -n :eval no-export :exports code :results silent
+#### <span class="section-num">2.29.2</span> Answer {#answer}
+
+<a id="code-snippet--fast-mult-rec"></a>
+```scheme { linenos=true, linenostart=1 }
 (define (double x)
   (+ x x))
 (define (halve x)
@@ -2846,94 +2672,76 @@ of steps.
          (double (fast-mult-rec a (halve b)))) ; This was kind of a stretch to think of.G
          ;(fast-mult (double a) (halve b))) <== My first instinct is iterative
         (else (+ a (fast-mult-rec a (- b 1))))))
-#+end_src
+```
 
 Proof it works:
 
-#+BEGIN_SRC scheme -n :eval no-export  :exports yes :results value table
+```scheme { linenos=true, linenostart=1 }
 <<fast-mult-rec>>
 <<try-these>>
 (try-these (lambda(x) (fast-mult-rec 3 x)) (cdr (iota 11)))
-#+end_src
+```
 
-#+RESULTS[3ce2cd1f0e04c83aac17e721c2e17a937fc0cb25]:
-:results:
-|  1 |  3 |
-|  2 |  6 |
-|  3 |  9 |
-|  4 | 12 |
-|  5 | 15 |
-|  6 | 18 |
-|  7 | 21 |
-|  8 | 24 |
-|  9 | 27 |
+| 1  | 3  |
+|----|----|
+| 2  | 6  |
+| 3  | 9  |
+| 4  | 12 |
+| 5  | 15 |
+| 6  | 18 |
+| 7  | 21 |
+| 8  | 24 |
+| 9  | 27 |
 | 10 | 30 |
-:end:
 
-** Exercise 1.18: Logarithmic multiplication (iterative)
-:PROPERTIES:
-:ID:       86fcd94b-a1c7-4e54-9bb1-6deb45c950d7
-:CUSTOM-ID: 86fcd94b-a1c7-4e54-9bb1-6deb45c950d7
-:END:
 
-*** Question
-:PROPERTIES:
-:ID:       67942470-3b36-48f7-a4e5-02b6046edd75
-:CUSTOM-ID: 67942470-3b36-48f7-a4e5-02b6046edd75
-:END:
+### <span class="section-num">2.30</span> Exercise 1.18: Logarithmic multiplication (iterative) {#exercise-1-dot-18-logarithmic-multiplication--iterative}
+
+
+#### <span class="section-num">2.30.1</span> Question {#question}
 
 Using the results of Exercise 1.16 and Exercise 1.17, devise a procedure that
 generates an iterative process for multiplying two integers in terms of adding,
 doubling, and halving and uses a logarithmic number of steps.
 
-*** Diary
-:PROPERTIES:
-:ID:       17bfdba8-d5a1-4619-b49f-a2a0d5b1bb57
-:CUSTOM-ID: 17bfdba8-d5a1-4619-b49f-a2a0d5b1bb57
-:END:
 
-**** Comparison benchmarks:
-:PROPERTIES:
-:ID:       a0b7ff19-6c6a-40f1-87fd-6564d1ecf3ef
-:CUSTOM-ID: a0b7ff19-6c6a-40f1-87fd-6564d1ecf3ef
-:END:
+#### <span class="section-num">2.30.2</span> Diary {#diary}
 
-#+BEGIN_SRC scheme -n :tangle 1/Ex1-18bench.scheme :exports code :results silent
-(load "../mattbench.scm")
-<<fast-mult-iter>>
-<<fast-mult-rec>>
-<<print-table>>
-(print-table (list (list "fast-mult-rec" "fast-mult-iter")
-                   (list (mattbench (lambda() (fast-mult-rec 32 32)) 10000000)
-                         (mattbench (lambda() (fast-mult 32 32)) 10000000)))
-             #:colnames #t)
-#+END_SRC
+<!--list-separator-->
 
-| "fast-mult-rec" | "fast-mult-iter" |
-|-----------------+------------------|
-|          196.89 |           166.35 |
+1.  Comparison benchmarks:
 
-So the iterative version takes 0.84 times less to do \(32 \times 32\).
+    ```scheme { linenos=true, linenostart=1 }
+    (load "../mattbench.scm")
+    <<fast-mult-iter>>
+    <<fast-mult-rec>>
+    <<print-table>>
+    (print-table (list (list "fast-mult-rec" "fast-mult-iter")
+                       (list (mattbench (lambda() (fast-mult-rec 32 32)) 10000000)
+                             (mattbench (lambda() (fast-mult 32 32)) 10000000)))
+                 #:colnames #t)
+    ```
 
-**** Hall of shame
-:PROPERTIES:
-:ID:       90b78921-b998-46d2-8dcd-a2d296a6667b
-:CUSTOM-ID: 90b78921-b998-46d2-8dcd-a2d296a6667b
-:END:
+    | "fast-mult-rec" | "fast-mult-iter" |
+    |-----------------|------------------|
+    | 196.89          | 166.35           |
 
-Some of my /very/ incorrect ideas:
-\[ab = (a+1)(b-1)\]
-\[ab = \big(a+\Big(\frac{a}{2}\Big)(b-1)\big)\]
-\[ab+c = \big(a(b-1)+(b+c)\big)\]
+    So the iterative version takes 0.84 times less to do \\(32 \times 32\\).
 
-*** Answer
-:PROPERTIES:
-:ID:       8bd3b472-2415-480c-aad3-4de9011ccaec
-:CUSTOM-ID: 8bd3b472-2415-480c-aad3-4de9011ccaec
-:END:
+<!--list-separator-->
 
-#+NAME: fast-mult-iter
-#+BEGIN_SRC scheme -n :eval no-export :exports code :results silent
+2.  Hall of shame
+
+    Some of my _very_ incorrect ideas:
+    $$ab = (a+1)(b-1)$$
+    $$ab = \big(a+\Big(\frac{a}{2}\Big)(b-1)\big)$$
+    $$ab+c = \big(a(b-1)+(b+c)\big)$$
+
+
+#### <span class="section-num">2.30.3</span> Answer {#answer}
+
+<a id="code-snippet--fast-mult-iter"></a>
+```scheme { linenos=true, linenostart=1 }
 (define (double x)
   (+ x x))
 (define (halve x)
@@ -2946,59 +2754,53 @@ Some of my /very/ incorrect ideas:
            (iter (double a) (halve b) c))
           (else (iter a (- b 1) (+ a c)))))
   (iter a b 0))
-#+end_src
-#+BEGIN_SRC scheme -n :eval no-export  :exports yes :results value table
+```
+
+```scheme { linenos=true, linenostart=1 }
 <<fast-mult-iter>>
 <<try-these>>
 (try-these (lambda(x) (fast-mult 3 x)) (cdr (iota 11)))
-#+end_src
+```
 
-#+RESULTS[900f6cc983a51f9e0902587546cbd7d746845b50]:
-:results:
-|  1 |  3 |
-|  2 |  6 |
-|  3 |  9 |
-|  4 | 12 |
-|  5 | 15 |
-|  6 | 18 |
-|  7 | 21 |
-|  8 | 24 |
-|  9 | 27 |
+| 1  | 3  |
+|----|----|
+| 2  | 6  |
+| 3  | 9  |
+| 4  | 12 |
+| 5  | 15 |
+| 6  | 18 |
+| 7  | 21 |
+| 8  | 24 |
+| 9  | 27 |
 | 10 | 30 |
-:end:
 
-** Exercise 1.19: Logarithmic fibonacci computing with \(T\)
-:PROPERTIES:
-:ID:       407ca562-9da1-48a7-b6eb-5d356fd39b7e
-:CUSTOM-ID: 407ca562-9da1-48a7-b6eb-5d356fd39b7e
-:END:
 
-*** Question
-:PROPERTIES:
-:ID:       dee62f7c-3d69-4510-b1a7-f08b7b8ec7ae
-:CUSTOM-ID: dee62f7c-3d69-4510-b1a7-f08b7b8ec7ae
-:END:
+### <span class="section-num">2.31</span> Exercise 1.19: Logarithmic fibonacci computing with \\(T\\) {#exercise-1-dot-19-logarithmic-fibonacci-computing-with-t}
+
+
+#### <span class="section-num">2.31.1</span> Question {#question}
 
 There is a clever algorithm for computing the Fibonacci numbers in a logarithmic
 number of steps. Recall the transformation of the state variables a and b in the
-src_scheme{fib-iter} process of section 1-2-2:
+<span class="inline-src language-scheme" data-lang="scheme">`fib-iter`</span> process of section 1-2-2:
 
-\[a <- a + b\text{ and }b <- a\]
+$$a <- a + b\text{ and }b <- a$$
 
 Call this transformation T, and observe that applying T over and over again n
-times, starting with 1 and 0, produces the pair Fib\((n + 1)\) and Fib\((n)\). In
-other words, the Fibonacci numbers are produced by applying \( T^n \), the nth
+times, starting with 1 and 0, produces the pair Fib\\((n + 1)\\) and Fib\\((n)\\). In
+other words, the Fibonacci numbers are produced by applying \\( T^n \\), the nth
 power of the transformation T, starting with the pair (1,0). Now consider T to
-be the special case of p = 0 and q = 1 in a family of transformations \(
-T_{(pq)} \), where \( T_{(pq)} \) transforms the pair (a,b) according to \( a <-
-bq + aq + ap \) and \( b <- bp + aq \). Show that if we apply such a
-transformation \( T_{(pq)} \) twice, the effect is the same as using a single
-transformation \( T_{(p'q')} \) of the same form, and compute p' and q' in terms
+be the special case of p = 0 and q = 1 in a family of transformations \\(
+T\_{(pq)} \\), where \\( T\_{(pq)} \\) transforms the pair (a,b) according to \\( a <-
+bq + aq + ap \\) and \\( b <- bp + aq \\). Show that if we apply such a
+transformation \\( T\_{(pq)} \\) twice, the effect is the same as using a single
+transformation \\( T\_{(p'q')} \\) of the same form, and compute p' and q' in terms
 of p and q. This gives us an explicit way to square these transformations, and
-thus we can compute \( T^n \) using successive squaring, as in the `fast-expt'
+thus we can compute \\( T^n \\) using successive squaring, as in the \`fast-expt'
 procedure. Put this all together to complete the following procedure, which runs
 in a logarithmic number of steps:
-#+BEGIN_SRC scheme -n :noeval  :exports code :results silent
+
+```scheme { linenos=true, linenostart=1 }
 (define (fib n)
   (fib-iter 1 0 0 1 n))
 
@@ -3015,34 +2817,31 @@ in a logarithmic number of steps:
                         p
                         q
                         (- count 1)))))
-#+END_SRC
+```
 
-*** Diary
-:PROPERTIES:
-:ID:       2ac06644-ae7a-4025-ac53-436cecff5d7f
-:CUSTOM-ID: 2ac06644-ae7a-4025-ac53-436cecff5d7f
-:END:
+
+#### <span class="section-num">2.31.2</span> Diary {#diary}
 
 More succinctly put:
 
-\[
-    \text{Fib}_n \begin{cases}
-        a \leftarrow a + b\\
+$$
+    \text{Fib}\_n \begin{cases}
+        a \leftarrow a + b\\\\
         b \leftarrow a
     \end{cases}
-\]
-\[
-    \text{Fib-iter}_{abpq} \begin{cases}
-        a \leftarrow bq + aq + ap\\
+$$
+$$
+    \text{Fib-iter}\_{abpq} \begin{cases}
+        a \leftarrow bq + aq + ap\\\\
         b \leftarrow bp + aq
     \end{cases}
-\]
+$$
 
-src_scheme{(T)} returns a transformation function based on the two numbers in
-the attached list. so src_scheme{(T 0 1)} returns a fib function.
+<span class="inline-src language-scheme" data-lang="scheme">`(T)`</span> returns a transformation function based on the two numbers in
+the attached list. so <span class="inline-src language-scheme" data-lang="scheme">`(T 0 1)`</span> returns a fib function.
 
-#+NAME: T-func
-#+BEGIN_SRC scheme -n :eval no-export :exports code :results silent
+<a id="code-snippet--T-func"></a>
+```scheme { linenos=true, linenostart=1 }
 (define (T p q)
   (lambda (a b)
     (cons (+ (* b q) (* a q) (* a p))
@@ -3059,42 +2858,37 @@ the attached list. so src_scheme{(T 0 1)} returns a fib function.
       a
       (let ((l (f a b)))
         (Tr-iter f (- n 1) (car l) (cdr l)))))
-#+END_SRC
+```
 
-\text{T}_{pq}: a,b\mapsto \begin{cases}
-        a \leftarrow bq + aq + ap\\
-        b \leftarrow bp + aq
+\text{T}<sub>pq</sub>: a,b\mapsto \begin{cases}
+        a &larr; bq + aq + ap<br />
+        b &larr; bp + aq
     \end{cases}
 
-#+NAME: T-test
-#+BEGIN_SRC scheme -n :eval no-export  :exports both :results value table
+<a id="code-snippet--T-test"></a>
+```scheme { linenos=true, linenostart=1 }
 <<T-func>>
 <<try-these>>
 (try-these (lambda (x) (Tr (T 0 1) x)) (cdr (iota 11)))
-#+END_SRC
+```
 
-#+RESULTS[b253f74cff9961bd33f160a88f16f5986ecc2d07]: T-test
-:results:
-|  1 |  1 |
-|  2 |  1 |
-|  3 |  2 |
-|  4 |  3 |
-|  5 |  5 |
-|  6 |  8 |
-|  7 | 13 |
-|  8 | 21 |
-|  9 | 34 |
+| 1  | 1  |
+|----|----|
+| 2  | 1  |
+| 3  | 2  |
+| 4  | 3  |
+| 5  | 5  |
+| 6  | 8  |
+| 7  | 13 |
+| 8  | 21 |
+| 9  | 34 |
 | 10 | 55 |
-:end:
 
-*** Answer
-:PROPERTIES:
-:ID:       bd7688c6-c72b-4739-8109-2332a912a672
-:CUSTOM-ID: bd7688c6-c72b-4739-8109-2332a912a672
-:END:
 
-#+NAME: fib-iter-T
-#+BEGIN_SRC scheme -n :eval no-export :exports code :results silent
+#### <span class="section-num">2.31.3</span> Answer {#answer}
+
+<a id="code-snippet--fib-iter-T"></a>
+```scheme { linenos=true, linenostart=1 }
 (define (fib-rec n)
   (cond ((= n 0) 0)
         ((= n 1) 1)
@@ -3119,324 +2913,267 @@ the attached list. so src_scheme{(T 0 1)} returns a fib function.
                         p
                         q
                         (- count 1)))))
-#+END_SRC
+```
 
-#+NAME: fib-iter-test
-#+BEGIN_SRC scheme -n :eval no-export  :exports results :results output table :colnames yes
-(use-srfis '(1))
-<<fib-iter-T>>
-<<print-table>>
-(let* ((l (cdr (iota 11)))
-       (fr (map fib-rec l))
-       (fi (map fib l)))
-  (print-table (cons (list "n" "fib-rec" "fib-iter")
-                     (zip l fr fi))
-               #:colnames #t))
-#+END_SRC
-
-#+RESULTS[30d4713e3cba0984d5cc3e0b400adc130f553a29]: fib-iter-test
-:results:
 | "n" | "fib-rec" | "fib-iter" |
-|-----+-----------+------------|
-|   1 |         1 |          1 |
-|   2 |         1 |          1 |
-|   3 |         2 |          2 |
-|   4 |         3 |          3 |
-|   5 |         5 |          5 |
-|   6 |         8 |          8 |
-|   7 |        13 |         13 |
-|   8 |        21 |         21 |
-|   9 |        34 |         34 |
-:end:
+|-----|-----------|------------|
+| 1   | 1         | 1          |
+| 2   | 1         | 1          |
+| 3   | 2         | 2          |
+| 4   | 3         | 3          |
+| 5   | 5         | 5          |
+| 6   | 8         | 8          |
+| 7   | 13        | 13         |
+| 8   | 21        | 21         |
+| 9   | 34        | 34         |
 
-** 1.2.5: Greatest Common Divisor
-:PROPERTIES:
-:ID:       830b140a-2c99-4c28-8197-b5a5d761c624
-:CUSTOM-ID: 830b140a-2c99-4c28-8197-b5a5d761c624
-:END:
+
+### <span class="section-num">2.32</span> 1.2.5: Greatest Common Divisor {#1-dot-2-dot-5-greatest-common-divisor}
 
 A greatest common divisor (or GCD) for two integers is the largest integer that
 divides both of them. A GCD can be quickly found by transforming the problem
-like so: \[a \% b = r\]
+like so: $$a \\% b = r$$
 
-\[\text{GCD}(a, b) = \text{GCD}(b, r)\]
+$$\text{GCD}(a, b) = \text{GCD}(b, r)$$
 
 This eventually produces a pair where the second number is 0. Then, the GCD is
 the other number in the pair. This is Euclid's Algorithm.
 
-\[\begin{aligned}\text{GCD}(206,40) &= \text{GCD}(40,6)\\ &=
-            \text{GCD}(6,4)\\ &= \text{GCD}(4,2)\\ &~ \text{GCD}(2,0) ~
-            2\end{aligned}\]
+$$\begin{aligned}\text{GCD}(206,40) &= \text{GCD}(40,6)\\\ &=
+            \text{GCD}(6,4)\\\ &= \text{GCD}(4,2)\\\ &~ \text{GCD}(2,0) ~
+            2\end{aligned}$$
 
-#+begin_quote
-  *Lamé's Theorem:* If Euclid's Algorithm requires \(k\) steps to compute the
-   GCD of some pair, then the smaller number in the pair must be greater than or
-   equal to the \(k^{th}\)Fibonacci number.
-#+end_quote
+> **Lamé's Theorem:** If Euclid's Algorithm requires \\(k\\) steps to compute the
+>  GCD of some pair, then the smaller number in the pair must be greater than or
+>  equal to the \\(k^{th}\\)Fibonacci number.
 
-** Exercise 1.20: Inefficiency of normal-order evaluation
-:PROPERTIES:
-:ID:       663150d8-1c0b-468f-8db4-018423b53fc0
-:CUSTOM-ID: 663150d8-1c0b-468f-8db4-018423b53fc0
-:END:
 
-*** Text
-:PROPERTIES:
-:ID:       ae5a7fe3-5ff5-4a85-a964-10dec6869216
-:CUSTOM-ID: ae5a7fe3-5ff5-4a85-a964-10dec6869216
-:END:
+### <span class="section-num">2.33</span> Exercise 1.20: Inefficiency of normal-order evaluation {#exercise-1-dot-20-inefficiency-of-normal-order-evaluation}
 
-#+NAME: gcd
-#+BEGIN_SRC scheme -n :eval no-export :exports code :results silent
+
+#### <span class="section-num">2.33.1</span> Text {#text}
+
+<a id="code-snippet--gcd"></a>
+```scheme { linenos=true, linenostart=1 }
 (define (gcd a b)
   (if (= b 0)
       a
       (gcd b (remainder a b))))
-#+END_SRC
+```
 
-*** Question
-:PROPERTIES:
-:ID:       716fdfd6-be01-4639-a23e-e77713a2b719
-:CUSTOM-ID: 716fdfd6-be01-4639-a23e-e77713a2b719
-:END:
+
+#### <span class="section-num">2.33.2</span> Question {#question}
 
 The process that a procedure generates is of course dependent on the rules used
-by the interpreter. As an example, consider the iterative src_scheme{gcd}
+by the interpreter. As an example, consider the iterative <span class="inline-src language-scheme" data-lang="scheme">`gcd`</span>
 procedure given above. Suppose we were to interpret this procedure using
 normal-order evaluation, as discussed in 1.1.5: The Substitution Model for Procedure Application. (The normal-order-evaluation
-rule for src_scheme{if} is described in Exercise 1.5.) Using the substitution
+rule for <span class="inline-src language-scheme" data-lang="scheme">`if`</span> is described in Exercise 1.5.) Using the substitution
 method (for normal order), illustrate the process generated in evaluating
-src_scheme{(gcd 206 40)} and indicate the src_scheme{remainder} operations that
-are actually performed. How many src_scheme{remainder} operations are actually
-performed in the normal-order evaluation of src_scheme{(gcd 206 40)}? In the
+<span class="inline-src language-scheme" data-lang="scheme">`(gcd 206 40)`</span> and indicate the <span class="inline-src language-scheme" data-lang="scheme">`remainder`</span> operations that
+are actually performed. How many <span class="inline-src language-scheme" data-lang="scheme">`remainder`</span> operations are actually
+performed in the normal-order evaluation of <span class="inline-src language-scheme" data-lang="scheme">`(gcd 206 40)`</span>? In the
 applicative-order evaluation?
 
-*** Answer
-:PROPERTIES:
-:ID:       fad2aa9c-9dab-464f-97ab-0f2d21da4608
-:CUSTOM-ID: fad2aa9c-9dab-464f-97ab-0f2d21da4608
-:END:
+
+#### <span class="section-num">2.33.3</span> Answer {#answer}
 
 I struggled to understand this, but the key here is that normal-order evaluation
 causes the unevaluated expressions to be duplicated, meaning they get evaluated
 multiple times.
 
-**** Applicative order
-:PROPERTIES:
-:ID:       f613f599-bada-4fe3-ba42-db9641359d4d
-:CUSTOM-ID: f613f599-bada-4fe3-ba42-db9641359d4d
-:END:
+<!--list-separator-->
 
-#+begin_src scheme
-call (gcd 206 40)
-(if)
-(gcd 40 (remainder 206 40))
-eval remainder before call
-call (gcd 40 6)
-(if)
-(gcd 6 (remainder 40 6))
-eval remainder before call
-call (gcd 6 4)
-(if)
-(gcd 2 (remainder 4 2))
-eval remainder before call
-call (gcd 2 0)
-(if)
-;; => 2
-#+end_src
+1.  Applicative order
 
-#+begin_src scheme
-;; call gcd
-(gcd 206 40)
+    ```scheme
+    call (gcd 206 40)
+    (if)
+    (gcd 40 (remainder 206 40))
+    eval remainder before call
+    call (gcd 40 6)
+    (if)
+    (gcd 6 (remainder 40 6))
+    eval remainder before call
+    call (gcd 6 4)
+    (if)
+    (gcd 2 (remainder 4 2))
+    eval remainder before call
+    call (gcd 2 0)
+    (if)
+    ;; => 2
+    ```
 
-;; eval conditional
-(if (= 40 0)
-    206
-    (gcd 40 (remainder 206 40)))
+    ```scheme
+    ;; call gcd
+    (gcd 206 40)
 
-;; recurse
-(gcd 40 (remainder 206 40))
+    ;; eval conditional
+    (if (= 40 0)
+        206
+        (gcd 40 (remainder 206 40)))
 
-; encounter conditional
-(if (= (remainder 206 40) 0)
-    40
+    ;; recurse
+    (gcd 40 (remainder 206 40))
+
+    ; encounter conditional
+    (if (= (remainder 206 40) 0)
+        40
+        (gcd (remainder 206 40)
+             (remainder 40 (remainder 206 40))))
+
+    ; evaluate 1 remainder
+    (if (= 6 0)
+        40
+        (gcd (remainder 206 40)
+             (remainder 40 (remainder 206 40))))
+
+    ; recurse
     (gcd (remainder 206 40)
-         (remainder 40 (remainder 206 40))))
+         (remainder 40 (remainder 206 40)))
 
-; evaluate 1 remainder
-(if (= 6 0)
-    40
-    (gcd (remainder 206 40)
-         (remainder 40 (remainder 206 40))))
+    ; encounter conditional
+    (if (= (remainder 40 (remainder 206 40)) 0)
+        (remainder 206 40)
+        (gcd (remainder 40 (remainder 206 40))
+             (remainder (remainder 206 40) (remainder 40 (remainder 206 40)))))
 
-; recurse
-(gcd (remainder 206 40)
-     (remainder 40 (remainder 206 40)))
+    ; eval 2 remainder
+    (if (= 4 0)
+        (remainder 206 40)
+        (gcd (remainder 40 (remainder 206 40))
+             (remainder (remainder 206 40) (remainder 40 (remainder 206 40)))))
 
-; encounter conditional
-(if (= (remainder 40 (remainder 206 40)) 0)
-    (remainder 206 40)
+    ; recurse
     (gcd (remainder 40 (remainder 206 40))
-         (remainder (remainder 206 40) (remainder 40 (remainder 206 40)))))
+         (remainder (remainder 206 40) (remainder 40 (remainder 206 40))))
 
-; eval 2 remainder
-(if (= 4 0)
-    (remainder 206 40)
-    (gcd (remainder 40 (remainder 206 40))
-         (remainder (remainder 206 40) (remainder 40 (remainder 206 40)))))
+    ; encounter conditional
+    (if (= (remainder (remainder 206 40) (remainder 40 (remainder 206 40))) 0)
+        (remainder 40 (remainder 206 40))
+        (gcd (remainder (remainder 206 40) (remainder 40 (remainder 206 40)))
+             (remainder (remainder 40 (remainder 206 40)) (remainder (remainder 206 40) (remainder 40 (remainder 206 40))))))
 
-; recurse
-(gcd (remainder 40 (remainder 206 40))
-     (remainder (remainder 206 40) (remainder 40 (remainder 206 40))))
+    ; eval 4 remainders
+    (if (= 2 0)
+        (remainder 40 (remainder 206 40))
+        (gcd (remainder (remainder 206 40) (remainder 40 (remainder 206 40)))
+             (remainder (remainder 40 (remainder 206 40)) (remainder (remainder 206 40) (remainder 40 (remainder 206 40))))))
 
-; encounter conditional
-(if (= (remainder (remainder 206 40) (remainder 40 (remainder 206 40))) 0)
-    (remainder 40 (remainder 206 40))
+    ; recurse
     (gcd (remainder (remainder 206 40) (remainder 40 (remainder 206 40)))
-         (remainder (remainder 40 (remainder 206 40)) (remainder (remainder 206 40) (remainder 40 (remainder 206 40))))))
+         (remainder (remainder 40 (remainder 206 40)) (remainder (remainder 206 40) (remainder 40 (remainder 206 40)))))
 
-; eval 4 remainders
-(if (= 2 0)
-    (remainder 40 (remainder 206 40))
-    (gcd (remainder (remainder 206 40) (remainder 40 (remainder 206 40)))
-         (remainder (remainder 40 (remainder 206 40)) (remainder (remainder 206 40) (remainder 40 (remainder 206 40))))))
+    ; encounter conditional
+    (if (= (remainder (remainder 40 (remainder 206 40)) (remainder (remainder 206 40) (remainder 40 (remainder 206 40)))) 0)
+        (remainder (remainder 206 40) (remainder 40 (remainder 206 40)))
+        (gcd (remainder (remainder 40 (remainder 206 40)) (remainder (remainder 206 40) (remainder 40 (remainder 206 40)))) (remainder a  (remainder (remainder 40 (remainder 206 40)) (remainder (remainder 206 40) (remainder 40 (remainder 206 40)))))))
 
-; recurse
-(gcd (remainder (remainder 206 40) (remainder 40 (remainder 206 40)))
-     (remainder (remainder 40 (remainder 206 40)) (remainder (remainder 206 40) (remainder 40 (remainder 206 40)))))
+    ; eval 7 remainders
+    (if (= 0 0)
+        (remainder (remainder 206 40) (remainder 40 (remainder 206 40)))
+        (gcd (remainder (remainder 40 (remainder 206 40)) (remainder (remainder 206 40) (remainder 40 (remainder 206 40)))) (remainder a  (remainder (remainder 40 (remainder 206 40)) (remainder (remainder 206 40) (remainder 40 (remainder 206 40)))))))
 
-; encounter conditional
-(if (= (remainder (remainder 40 (remainder 206 40)) (remainder (remainder 206 40) (remainder 40 (remainder 206 40)))) 0)
+    ; eval 4 remainders
     (remainder (remainder 206 40) (remainder 40 (remainder 206 40)))
-    (gcd (remainder (remainder 40 (remainder 206 40)) (remainder (remainder 206 40) (remainder 40 (remainder 206 40)))) (remainder a  (remainder (remainder 40 (remainder 206 40)) (remainder (remainder 206 40) (remainder 40 (remainder 206 40)))))))
+    ; => 2
+    ```
 
-; eval 7 remainders
-(if (= 0 0)
-    (remainder (remainder 206 40) (remainder 40 (remainder 206 40)))
-    (gcd (remainder (remainder 40 (remainder 206 40)) (remainder (remainder 206 40) (remainder 40 (remainder 206 40)))) (remainder a  (remainder (remainder 40 (remainder 206 40)) (remainder (remainder 206 40) (remainder 40 (remainder 206 40)))))))
+    So, in normal-order eval, remainder is called 18 times, while in applicative order
+    it's called 5 times.
 
-; eval 4 remainders
-(remainder (remainder 206 40) (remainder 40 (remainder 206 40)))
-; => 2
-#+end_src
 
-So, in normal-order eval, remainder is called 18 times, while in applicative order
-it's called 5 times.
-
-** 1.2.6: Example: Testing for Primality
-:PROPERTIES:
-:ID:       e493130a-61e6-4e34-ba26-12317d664402
-:CUSTOM-ID: e493130a-61e6-4e34-ba26-12317d664402
-:END:
+### <span class="section-num">2.34</span> 1.2.6: Example: Testing for Primality {#1-dot-2-dot-6-example-testing-for-primality}
 
 Two algorithms for testing primality of numbers.
 
-1. \(\Theta(\sqrt{n})\): Start with \(x = 2\), check for divisibility with
-   \(n\), if not then increment \(x\) by 1 and check again. If \(x^2 > n\) and
-   you haven't found a divisor, \(n\) is prime.
-2. \(\Theta(\log n)\): Given a number \(n\), pick a random number \(a < n\) and
-   compute the remainder of \(a^n\) modulo \(n\). If the result is not equal to
-   \(a\), then \(n\) is certainly not prime. If it is \(a\), then chances are
-   good that \(n\) is prime. Now pick another random number \(a\) and test it
-   with the same method. If it also satisfies the equation, then we can be even
-   more confident that \(n\) is prime. By trying more and more values of \(a\),
-   we can increase our confidence in the result. This algorithm is known as the
-   Fermat test.
+1.  \\(\Theta(\sqrt{n})\\): Start with \\(x = 2\\), check for divisibility with
+    \\(n\\), if not then increment \\(x\\) by 1 and check again. If \\(x^2 > n\\) and
+    you haven't found a divisor, \\(n\\) is prime.
+2.  \\(\Theta(\log n)\\): Given a number \\(n\\), pick a random number \\(a < n\\) and
+    compute the remainder of \\(a^n\\) modulo \\(n\\). If the result is not equal to
+    \\(a\\), then \\(n\\) is certainly not prime. If it is \\(a\\), then chances are
+    good that \\(n\\) is prime. Now pick another random number \\(a\\) and test it
+    with the same method. If it also satisfies the equation, then we can be even
+    more confident that \\(n\\) is prime. By trying more and more values of \\(a\\),
+    we can increase our confidence in the result. This algorithm is known as the
+    Fermat test.
 
-#+begin_quote
-  *Fermat's Little Theorem:* If \(n\) is a prime number and \(a\) is any
-   positive integer less than \(n\), then \(a\) raised to the \(n^{th}\) power
-   is congruent to \(a\) modulo \(n\). [Two numbers are /congruent modulo/ \(n\)
-   if they both have the same remainder when divided by \(n\).]
-#+end_quote
+> **Fermat's Little Theorem:** If \\(n\\) is a prime number and \\(a\\) is any
+>  positive integer less than \\(n\\), then \\(a\\) raised to the \\(n^{th}\\) power
+>  is congruent to \\(a\\) modulo \\(n\\). [Two numbers are _congruent modulo_ \\(n\\)
+>  if they both have the same remainder when divided by \\(n\\).]
 
 The Fermat test is a probabilistic algorithm, meaning its answer is likely to be
 correct rather than guaranteed to be correct. Repeating the test increases the
 likelihood of a correct answer.
 
-** Exercise 1.21
-:PROPERTIES:
-:ID:       2da88cf0-4a59-4288-88f3-f9d7394720b6
-:CUSTOM-ID: 2da88cf0-4a59-4288-88f3-f9d7394720b6
-:END:
 
-*** Text
-:PROPERTIES:
-:ID:       919355bd-d6f7-4df8-b80d-f2691ea0b4d8
-:CUSTOM-ID: 919355bd-d6f7-4df8-b80d-f2691ea0b4d8
-:END:
+### <span class="section-num">2.35</span> Exercise 1.21 {#exercise-1-dot-21}
 
-#+NAME: find-divisor-txt
-#+BEGIN_SRC scheme -n :eval no-export :exports code :results silent
+
+#### <span class="section-num">2.35.1</span> Text {#text}
+
+<a id="code-snippet--find-divisor-txt"></a>
+```scheme { linenos=true, linenostart=1 }
 <<square>>
 (define (smallest-divisor n)
   (find-divisor n 2))
 
 (define (find-divisor n test-divisor)
-  (cond ((> (square test-divisor) n) 
+  (cond ((> (square test-divisor) n)
          n)
-        ((divides? test-divisor n) 
+        ((divides? test-divisor n)
          test-divisor)
-        (else (find-divisor 
-               n 
+        (else (find-divisor
+               n
                (+ test-divisor 1)))))
 
 (define (divides? a b)
   (= (remainder b a) 0))
-#+END_SRC
+```
 
-*** Question
-:PROPERTIES:
-:ID:       7f5e1e80-6aae-485e-ada9-858fc47dbeae
-:CUSTOM-ID: 7f5e1e80-6aae-485e-ada9-858fc47dbeae
-:END:
+
+#### <span class="section-num">2.35.2</span> Question {#question}
 
 Use the smallest-divisor procedure to find the smallest divisor of each of the
 following numbers: 199, 1999, 19999.
 
-*** Answer
-:PROPERTIES:
-:ID:       88b6dc2a-a533-4942-92be-bf16f41cb3f6
-:CUSTOM-ID: 88b6dc2a-a533-4942-92be-bf16f41cb3f6
-:END:
 
-#+BEGIN_SRC scheme -n :eval no-export  :exports both :results value table
+#### <span class="section-num">2.35.3</span> Answer {#answer}
+
+```scheme { linenos=true, linenostart=1 }
 <<find-divisor-txt>>
 (map smallest-divisor '(199 1999 19999))
-#+END_SRC
+```
 
-#+RESULTS[b3eac1941abc1f7ef3cd63a42e5167ad47fcdaf9]:
-:results:
+|     |      |   |
+|-----|------|---|
 | 199 | 1999 | 7 |
-:end:
 
-** Exercise 1.22
-:PROPERTIES:
-:ID:       f3a9bc52-9915-4be3-9dba-718019f3fa6d
-:CUSTOM-ID: f3a9bc52-9915-4be3-9dba-718019f3fa6d
-:END:
 
-*** Question
-:PROPERTIES:
-:ID:       85a19748-38ef-422c-9940-2aada7ed308f
-:CUSTOM-ID: 85a19748-38ef-422c-9940-2aada7ed308f
-:END:
+### <span class="section-num">2.36</span> Exercise 1.22 {#exercise-1-dot-22}
 
-Most Lisp implementations include a primitive called src_scheme{runtime} that
+
+#### <span class="section-num">2.36.1</span> Question {#question}
+
+Most Lisp implementations include a primitive called <span class="inline-src language-scheme" data-lang="scheme">`runtime`</span> that
 returns an integer that specifies the amount of time the system has been running
 (measured, for example, in microseconds). The following
-src_scheme{timed-prime-test} procedure, when called with an integer \(n\),
-prints \(n\) and checks to see if \(n\) is prime. If \(n\) is prime, the
+<span class="inline-src language-scheme" data-lang="scheme">`timed-prime-test`</span> procedure, when called with an integer \\(n\\),
+prints \\(n\\) and checks to see if \\(n\\) is prime. If \\(n\\) is prime, the
 procedure prints three asterisks followed by the amount of time used in
 performing the test.
-#+NAME: prime-smallest-divisor
-#+BEGIN_SRC scheme -n :eval no-export :exports code :results output
+
+<a id="code-snippet--prime-smallest-divisor"></a>
+```scheme { linenos=true, linenostart=1 }
 <<find-divisor-txt>>
 (define (prime? n)
   (= n (smallest-divisor n)))
-#+END_SRC
-#+NAME: timed-prime-test-txt
-#+BEGIN_SRC scheme -n :eval no-export :exports code :results output
+```
+
+<a id="code-snippet--timed-prime-test-txt"></a>
+```scheme { linenos=true, linenostart=1 }
 <<prime-smallest-divisor>>
 (define (timed-prime-test n)
   (newline)
@@ -3445,256 +3182,206 @@ performing the test.
 (define (start-prime-test n start-time)
   (if (prime? n)
       (begin
-        (report-prime (- (get-internal-run-time) 
+        (report-prime (- (get-internal-run-time)
                        start-time))
         n)
       #f))
 (define (report-prime elapsed-time)
   (display " *** ")
   (display elapsed-time))
-#+END_SRC
+```
 
-Using this procedure, write a procedure src_scheme{search-for-primes} that
+Using this procedure, write a procedure <span class="inline-src language-scheme" data-lang="scheme">`search-for-primes`</span> that
 checks the primality of consecutive odd integers in a specified range. Use your
 procedure to find the three smallest primes larger than 1000; larger than
 10,000; larger than 100,000; larger than 1,000,000. Note the time needed to test
 each prime. Since the testing algorithm has order of growth of
-\(\Theta(\sqrt{n})\), you should expect that testing for primes around 10,000
-should take about \(\sqrt{10}\) times as long as testing for primes around 1000.
+\\(\Theta(\sqrt{n})\\), you should expect that testing for primes around 10,000
+should take about \\(\sqrt{10}\\) times as long as testing for primes around 1000.
 Do your timing data bear this out? How well do the data for 100,000 and
-1,000,000 support the \(\Theta(\sqrt{n})\) prediction? Is your result compatible
+1,000,000 support the \\(\Theta(\sqrt{n})\\) prediction? Is your result compatible
 with the notion that programs on your machine run in time proportional to the
 number of steps required for the computation?
 
-*** Answer
-:PROPERTIES:
-:ID:       e13b44f5-69de-4948-a857-a1c4530ce998
-:CUSTOM-ID: e13b44f5-69de-4948-a857-a1c4530ce998
-:END:
 
-**** Part 1
-:PROPERTIES:
-:ID:       0f4b2e49-36bd-466e-9bb7-48f6b327f55f
-:CUSTOM-ID: 0f4b2e49-36bd-466e-9bb7-48f6b327f55f
-:END:
+#### <span class="section-num">2.36.2</span> Answer {#answer}
 
-So this question is a little funky, because modern machines are so fast that the
-single-run times can seriously vary.
+<!--list-separator-->
 
-#+NAME: search-primes-basic
-#+BEGIN_SRC scheme -n :eval no-export  :exports both :results output
-<<timed-prime-test-txt>>
-(define (search-for-primes minimum goal)
-  (define m (if (even? minimum)
-                (+ minimum 1)
-                (minimum)))
-  (search-for-primes-iter m '() goal))
-(define (search-for-primes-iter n lst goal)
-  (if (= goal 0)
-      lst
-      (let ((x (timed-prime-test n)))
-        (if (not (equal? x #f))
-            (search-for-primes-iter (+ n 2) (cons x lst) (- goal 1))
-            (search-for-primes-iter (+ n 2) lst goal)))))
-#+END_SRC
+1.  Part 1
 
-#+BEGIN_SRC scheme -n :eval no-export  :exports both :results output code
-<<search-primes-basic>>
-(let ((lt1000-1 (search-for-primes 1000 3)))
-  (list "Primes > 1000" lt1000-1))
-#+END_SRC
+    So this question is a little funky, because modern machines are so fast that the
+    single-run times can seriously vary.
 
-#+RESULTS[789a768bd75038c772a9f1e759006de07b1106de]:
-#+begin_src scheme
-1001
-1003
-1005
-1007
-1009 *** 1651
-1011
-1013 *** 1425
-1015
-1017
-1019 *** 1375
-#+end_src
+    <a id="code-snippet--search-primes-basic"></a>
+    ```scheme { linenos=true, linenostart=1 }
+    <<timed-prime-test-txt>>
+    (define (search-for-primes minimum goal)
+      (define m (if (even? minimum)
+                    (+ minimum 1)
+                    (minimum)))
+      (search-for-primes-iter m '() goal))
+    (define (search-for-primes-iter n lst goal)
+      (if (= goal 0)
+          lst
+          (let ((x (timed-prime-test n)))
+            (if (not (equal? x #f))
+                (search-for-primes-iter (+ n 2) (cons x lst) (- goal 1))
+                (search-for-primes-iter (+ n 2) lst goal)))))
+    ```
 
-There's proof it works. And here are the answers to the question:
+    ```scheme { linenos=true, linenostart=1 }
+    <<search-primes-basic>>
+    (let ((lt1000-1 (search-for-primes 1000 3)))
+      (list "Primes > 1000" lt1000-1))
+    ```
 
-#+BEGIN_SRC scheme -n :eval no-export  :exports both :results value table :rownames yes
-<<search-primes-basic>>
-(let ((lt1000-1 (search-for-primes 1000 3))
-      (lt10000-1 (search-for-primes 10000 3))
-      (lt100000-1 (search-for-primes 100000 3))
-      (lt100000000-1 (search-for-primes 1000000 3)))
-  (list
-   (list "Primes > 1000" (reverse lt1000-1))
-   (list "Primes > 10000" (reverse lt10000-1))
-   (list "Primes > 100000" (reverse lt100000-1))
-   (list "Primes > 100000000" (reverse lt100000000-1))
-   ))
-#+END_SRC
+    ```scheme
+    1001
+    1003
+    1005
+    1007
+    1009 *** 1651
+    1011
+    1013 *** 1425
+    1015
+    1017
+    1019 *** 1375
+    ```
 
-#+RESULTS[1591ff4ac17eefbd2a343012149c10f419199b20]:
-:results:
-| Primes > 1000      | (1009 1013 1019)          |
-| Primes > 10000     | (10007 10009 10037)       |
-| Primes > 100000    | (100003 100019 100043)    |
-| Primes > 100000000 | (1000003 1000033 1000037) |
-:end:
+    There's proof it works. And here are the answers to the question:
 
-**** Part 2
-:PROPERTIES:
-:ID:       98cc6660-fe76-4b19-a036-afb4dace8757
-:CUSTOM-ID: 98cc6660-fe76-4b19-a036-afb4dace8757
-:END:
+    ```scheme { linenos=true, linenostart=1 }
+    <<search-primes-basic>>
+    (let ((lt1000-1 (search-for-primes 1000 3))
+          (lt10000-1 (search-for-primes 10000 3))
+          (lt100000-1 (search-for-primes 100000 3))
+          (lt100000000-1 (search-for-primes 1000000 3)))
+      (list
+       (list "Primes > 1000" (reverse lt1000-1))
+       (list "Primes > 10000" (reverse lt10000-1))
+       (list "Primes > 100000" (reverse lt100000-1))
+       (list "Primes > 100000000" (reverse lt100000000-1))
+       ))
+    ```
 
-Repeatedly re-running, it I see it occasionally jump to twice the time. I'm not
-happy with this, so I'm going to refactor to use the src_scheme{mattbench2}
-utility from the root of the project folder.
+    | Primes &gt; 1000      | (1009 1013 1019)          |
+    |-----------------------|---------------------------|
+    | Primes &gt; 10000     | (10007 10009 10037)       |
+    | Primes &gt; 100000    | (100003 100019 100043)    |
+    | Primes &gt; 100000000 | (1000003 1000033 1000037) |
 
-#+NAME: mattbench2
-#+begin_src scheme :exports code :eval no-export :results output
-(define (mattbench2 f n)
-  ;; Executes "f" for n times, and returns how long it took.
-  ;; f is a lambda that takes no arguments, a.k.a. a "thunk"
-  
-  ;; Returns a list with car(last execution results) and cadr(time taken divided by iterations n)
+<!--list-separator-->
 
-  (define (time-getter) (get-internal-run-time))
-  (define start-time (time-getter))
-  (define (how-long) (- (time-getter) start-time))
+2.  Part 2
 
-  (define (iter i)
-    (f)
-    (if (<= i 0)
-        (f) ;; return the results of the last function call
-        (iter (- i 1))))
+    Repeatedly re-running, it I see it occasionally jump to twice the time. I'm not
+    happy with this, so I'm going to refactor to use the <span class="inline-src language-scheme" data-lang="scheme">`mattbench2`</span>
+    utility from the root of the project folder.
 
-  (list (iter n) ;; result of last call of f
-        (/ (how-long) (* n 1.0))));; Divide by iterations so changed n has no effect
-#+end_src
+    <a id="code-snippet--mattbench2"></a>
+    ```scheme
+    (define (mattbench2 f n)
+      ;; Executes "f" for n times, and returns how long it took.
+      ;; f is a lambda that takes no arguments, a.k.a. a "thunk"
 
-I'm going to get some more precise times. First, I need a prime searching
-variant that doesn't bother benchmarking. This will call src_scheme{prime?},
-which will be bound later since we'll be trying different methods.
-#+NAME: search-for-primes-untimed
-#+BEGIN_SRC scheme -n :eval no-export :exports code :results silent
-(define (search-for-primes minimum goal)
-  (define m (if (even? minimum)
-                (+ minimum 1)
-                (minimum)))
-  (search-for-primes-iter m '() goal))
-(define (search-for-primes-iter n lst goal)
-  (if (= goal 0)
-      lst
-      (let ((x (prime? n)))
-        (if (not (equal? x #f))
-            (search-for-primes-iter (+ n 2) (cons n lst) (- goal 1))
-            (search-for-primes-iter (+ n 2) lst goal)))))
-#+END_SRC
+      ;; Returns a list with car(last execution results) and cadr(time taken divided by iterations n)
 
-I can benchmark these functions like so:
-#+NAME: smallest-divisor-benchmark
-#+BEGIN_SRC scheme -n :noeval :tangle 1/primebench/smd.scheme :exports both :results output table :colnames yes :rownames :yes
-<<mattbench2>>
-<<prime-smallest-divisor>>
-<<search-for-primes-untimed>>
-<<print-table>>
+      (define (time-getter) (get-internal-run-time))
+      (define start-time (time-getter))
+      (define (how-long) (- (time-getter) start-time))
 
-(define benchmark-iterations 1000000)
-(define (testit f)
-  (list (cadr (mattbench2 (lambda() (f 1000 3)) benchmark-iterations))
-        (cadr (mattbench2 (lambda() (f 10000 3)) benchmark-iterations))
-        (cadr (mattbench2 (lambda() (f 100000 3)) benchmark-iterations))
-        (cadr (mattbench2 (lambda() (f 1000000 3)) benchmark-iterations))))
+      (define (iter i)
+        (f)
+        (if (<= i 0)
+            (f) ;; return the results of the last function call
+            (iter (- i 1))))
 
-(print-row
- (testit search-for-primes))
-#+END_SRC
+      (list (iter n) ;; result of last call of f
+            (/ (how-long) (* n 1.0))));; Divide by iterations so changed n has no effect
+    ```
 
-Here are the results (run externally from Org-Mode):
+    I'm going to get some more precise times. First, I need a prime searching
+    variant that doesn't bother benchmarking. This will call <span class="inline-src language-scheme" data-lang="scheme">`prime?`</span>,
+    which will be bound later since we'll be trying different methods.
 
-#+NAME: 1-22-smd
-| 5425.223086 | 20772.332491 | 53577.240193 | 121986.712395 |
+    <a id="code-snippet--search-for-primes-untimed"></a>
+    ```scheme { linenos=true, linenostart=1 }
+    (define (search-for-primes minimum goal)
+      (define m (if (even? minimum)
+                    (+ minimum 1)
+                    (minimum)))
+      (search-for-primes-iter m '() goal))
+    (define (search-for-primes-iter n lst goal)
+      (if (= goal 0)
+          lst
+          (let ((x (prime? n)))
+            (if (not (equal? x #f))
+                (search-for-primes-iter (+ n 2) (cons n lst) (- goal 1))
+                (search-for-primes-iter (+ n 2) lst goal)))))
+    ```
 
-#+NAME: 1-22-smd-massage
-#+BEGIN_SRC scheme :eval no-export :results value table :var data=1-22-smd :exports none :rownames no :colnames no
-;(map (lambda(x y) (list x y))
-<<transpose-list>>
-(use-srfis '(1))
-(zip
-     '(1000 10000 100000 1000000)
-     (car data))
-#+END_SRC
+    I can benchmark these functions like so:
 
-#+RESULTS[d7791f01b4f72498262d52b8327962e122163a15]: 1-22-smd-massage
-:results:
-|    1000 |   5425.223086 |
-|   10000 |  20772.332491 |
-|  100000 |  53577.240193 |
-| 1000000 | 121986.712395 |
-:end:
+    <a id="code-snippet--smallest-divisor-benchmark"></a>
+    ```scheme { linenos=true, linenostart=1 }
+    <<mattbench2>>
+    <<prime-smallest-divisor>>
+    <<search-for-primes-untimed>>
+    <<print-table>>
 
-#+begin_src gnuplot :var data=1-22-smd-massage :file 1/fig/1-22-1.png :exports results :eval no-export :rownames no :colnames no
-reset
-set logscale x
-set xlabel 'minimum number'
-set xtics rotate by -45
-set title 'time to run prime search (x scaled log)'
+    (define benchmark-iterations 1000000)
+    (define (testit f)
+      (list (cadr (mattbench2 (lambda() (f 1000 3)) benchmark-iterations))
+            (cadr (mattbench2 (lambda() (f 10000 3)) benchmark-iterations))
+            (cadr (mattbench2 (lambda() (f 100000 3)) benchmark-iterations))
+            (cadr (mattbench2 (lambda() (f 1000000 3)) benchmark-iterations))))
 
-f(x) = sqrt((x * a) + b)
-fit f(x) data using 1:2 via a,b
+    (print-row
+     (testit search-for-primes))
+    ```
 
-plot data using 1:2 with linespoints title 'time to find primes', \
-     data using 1:(f($1)) with linespoints title \
-     sprintf('sqrt(x * %.2f + %.2f)', a, b)
-#+end_src
+    Here are the results (run externally from Org-Mode):
 
-#+RESULTS[27d02bff03e8cb41df0bcd04f4c853b65910088d]:
-:results:
-file:1/fig/1-22-1.png
-:end:
+    <a id="table--1-22-smd"></a>
 
-The plot for the square root function doesn't quite fit the real one and I'm not
-sure where the fault lies. I don't struggle to understand things like "this
-algorithm is slower than this other one," but when asked to find or prove the
-\(\Theta\) notation I'm pretty clueless;
+    |             |              |              |               |
+    |-------------|--------------|--------------|---------------|
+    | 5425.223086 | 20772.332491 | 53577.240193 | 121986.712395 |
 
-** Exercise 1.23
-:PROPERTIES:
-:ID:       9e3a40e2-3c5d-45ba-af3c-969651c94297
-:CUSTOM-ID: 9e3a40e2-3c5d-45ba-af3c-969651c94297
-:END:
+    {{< figure src="/ox-hugo/1-22-1.png" >}}
 
-*** Question
-:PROPERTIES:
-:ID:       6c0c0cec-b4be-4739-8bae-14fe069e22cd
-:CUSTOM-ID: 6c0c0cec-b4be-4739-8bae-14fe069e22cd
-:END:
+    The plot for the square root function doesn't quite fit the real one and I'm not
+    sure where the fault lies. I don't struggle to understand things like "this
+    algorithm is slower than this other one," but when asked to find or prove the
+    \\(\Theta\\) notation I'm pretty clueless;
 
-The src_scheme{smallest-divisor} procedure shown at the start of this section
+
+### <span class="section-num">2.37</span> Exercise 1.23 {#exercise-1-dot-23}
+
+
+#### <span class="section-num">2.37.1</span> Question {#question}
+
+The <span class="inline-src language-scheme" data-lang="scheme">`smallest-divisor`</span> procedure shown at the start of this section
 does lots of needless testing: After it checks to see if the number is divisible
 by 2 there is no point in checking to see if it is divisible by any larger even
 numbers. This suggests that the values used for test-divisor should not be 2, 3,
-4, 5, 6, \dots, but rather 2, 3, 5, 7, 9, \dots. To implement this change,
-define a procedure src_scheme{next} that returns 3 if its input is equal to 2
+4, 5, 6, &hellip;, but rather 2, 3, 5, 7, 9, &hellip;. To implement this change,
+define a procedure <span class="inline-src language-scheme" data-lang="scheme">`next`</span> that returns 3 if its input is equal to 2
 and otherwise returns its input plus 2. Modify the smallest-divisor procedure to
-use src_scheme{(next test-divisor)} instead of src_scheme{(+ test-divisor 1)}.
-With src_scheme{timed-prime-test} incorporating this modified version of
-src_scheme{smallest-divisor}, run the test for each of the 12 primes found in
+use <span class="inline-src language-scheme" data-lang="scheme">`(next test-divisor)`</span> instead of <span class="inline-src language-scheme" data-lang="scheme">`(+ test-divisor 1)`</span>.
+With <span class="inline-src language-scheme" data-lang="scheme">`timed-prime-test`</span> incorporating this modified version of
+<span class="inline-src language-scheme" data-lang="scheme">`smallest-divisor`</span>, run the test for each of the 12 primes found in
 Exercise 1.22. Since this modification halves the number of test steps, you
 should expect it to run about twice as fast. Is this expectation confirmed? If
 not, what is the observed ratio of the speeds of the two algorithms, and how do
 you explain the fact that it is different from 2?
 
-*** A Comedy of Error (just the one)
-:PROPERTIES:
-:ID:       6d687d6f-1b84-474f-89e8-194462e90b88
-:CUSTOM-ID: 6d687d6f-1b84-474f-89e8-194462e90b88
-:END:
 
-#+NAME: find-divisor-faster
-#+BEGIN_SRC scheme -n :eval no-export :exports code :results silent
+#### <span class="section-num">2.37.2</span> A Comedy of Error (just the one) {#a-comedy-of-error--just-the-one}
+
+<a id="code-snippet--find-divisor-faster"></a>
+```scheme { linenos=true, linenostart=1 }
 <<square>>
 (define (smallest-divisor n)
   (find-divisor n 2))
@@ -3705,19 +3392,20 @@ you explain the fact that it is different from 2?
       (+ n 1)))
 
 (define (find-divisor n test-divisor)
-  (cond ((> (square test-divisor) n) 
+  (cond ((> (square test-divisor) n)
          n)
-        ((divides? test-divisor n) 
+        ((divides? test-divisor n)
          test-divisor)
-        (else (find-divisor 
-               n 
+        (else (find-divisor
+               n
                (next test-divisor)))))
 
 (define (divides? a b)
   (= (remainder b a) 0))
-#+END_SRC
-#+NAME: smallest-divisor-benchmark
-#+BEGIN_SRC scheme -n :noeval :tangle 1/primebench/smdf.scheme :exports code
+```
+
+<a id="code-snippet--smallest-divisor-benchmark"></a>
+```scheme { linenos=true, linenostart=1 }
 <<mattbench2>>
 <<find-divisor-faster>>
 (define (prime? n)
@@ -3734,67 +3422,41 @@ you explain the fact that it is different from 2?
 
 (print-row
  (testit search-for-primes))
-#+END_SRC
+```
 
-#+NAME: 1-22-smdf
+<a id="table--1-22-smdf"></a>
+
+|             |              |              |               |
+|-------------|--------------|--------------|---------------|
 | 6456.538118 | 25550.757304 | 66746.041644 | 148505.580638 |
 
-
-#+NAME: 1-22-smdf-massage
-#+BEGIN_SRC scheme :eval no-export :results value table :var smd=1-22-smd smdf=1-22-smdf :exports results :rownames no :colnames no
-<<print-table-spaced>>
-(use-srfis '(1))
-(zip '("min" 1000 10000 100000 1000000)
-     (cons "(+1)" (car smd))
-     (cons "(next)" (car smdf)))
-#+END_SRC
-
-#+RESULTS[c27614e8028f15b657e68959798c723a002730b3]: 1-22-smdf-massage
-:results:
-|     min |         (+1) |       (next) |
-|    1000 |   5507.42497 |   6366.99462 |
-|   10000 |  20913.71497 |   24845.9193 |
-|  100000 |  53778.74737 |  64756.73693 |
+| min     | (+1)         | (next)       |
+|---------|--------------|--------------|
+| 1000    | 5507.42497   | 6366.99462   |
+| 10000   | 20913.71497  | 24845.9193   |
+| 100000  | 53778.74737  | 64756.73693  |
 | 1000000 | 122135.60511 | 143869.63561 |
-:end:
 
-#+begin_src gnuplot :var data=1-22-smdf-massage :file 1/fig/1-22-2.png :exports results :eval no-export :rownames no :colnames no :cache no
-reset
-set logscale x
-set xlabel 'minimum number'
-set xtics rotate by -45
-set ylabel 'time'
-set title 'time to run prime search (x scaled log)'
+{{< figure src="/ox-hugo/1-22-2.png" >}}
 
-plot data using 2:xticlabels(1) with linespoints title '(+ 1)', \
-     data using 3:xticlabels(1) with linespoints title '(next)'
-#+end_src
-
-#+RESULTS[a092c209836cb659130fe0ad3bff2d3f23674f1b]:
-:results:
-[[file:1/fig/1-22-2.png]]
-:end:
-
-So it's /slower/ than before. Why?
+So it's _slower_ than before. Why?
 
 Oh, that's why.
-#+BEGIN_SRC scheme
+
+```scheme
 (define (next n)
   (if (= n 2)
       3
       (+ n 1))) ;; <-- D'oh.
-#+END_SRC
+```
 
-*** Answer
-:PROPERTIES:
-:ID:       b68121ea-e528-442f-8046-09eee174ef97
-:CUSTOM-ID: b68121ea-e528-442f-8046-09eee174ef97
-:END:
+
+#### <span class="section-num">2.37.3</span> Answer {#answer}
 
 Ok, let's try that again.
 
-#+NAME: find-divisor-faster-real
-#+BEGIN_SRC scheme -n :eval no-export :exports code :results silent
+<a id="code-snippet--find-divisor-faster-real"></a>
+```scheme { linenos=true, linenostart=1 }
 <<square>>
 (define (smallest-divisor n)
   (find-divisor n 2))
@@ -3805,19 +3467,20 @@ Ok, let's try that again.
       (+ n 2)))
 
 (define (find-divisor n test-divisor)
-  (cond ((> (square test-divisor) n) 
+  (cond ((> (square test-divisor) n)
          n)
-        ((divides? test-divisor n) 
+        ((divides? test-divisor n)
          test-divisor)
-        (else (find-divisor 
-               n 
+        (else (find-divisor
+               n
                (next test-divisor)))))
 
 (define (divides? a b)
   (= (remainder b a) 0))
-#+END_SRC
-#+NAME: smallest-divisor-benchmark-real
-#+BEGIN_SRC scheme -n :noeval :tangle 1/primebench/smdff.scheme :exports code
+```
+
+<a id="code-snippet--smallest-divisor-benchmark-real"></a>
+```scheme { linenos=true, linenostart=1 }
 <<mattbench2>>
 <<find-divisor-faster-real>>
 (define (prime? n)
@@ -3834,49 +3497,23 @@ Ok, let's try that again.
 
 (print-row
  (testit search-for-primes))
-#+END_SRC
+```
 
-#+NAME: 1-22-smdff
+<a id="table--1-22-smdff"></a>
+
+|           |              |              |              |
+|-----------|--------------|--------------|--------------|
 | 3863.7424 | 13519.209814 | 33520.676384 | 73005.539932 |
 
-#+NAME: 1-22-smdff-massage
-#+BEGIN_SRC scheme :eval no-export :results value table :var smd=1-22-smd smdf=1-22-smdf smdff=1-22-smdff :exports results :rownames no :colnames no
-<<print-table-spaced>>
-(use-srfis '(1))
-(zip '("min" "---" 1000 10000 100000 1000000)
-     (append '("(+1)" "---") (car smd))
-     (append '("(next-broken)" "---") (car smdf))
-     (append '("(next-fixed)" "---") (car smdff)))
-#+END_SRC
-
-#+RESULTS[3a23c115d64c3bee2872b55f0746322d1d80471e]: 1-22-smdff-massage
-:results:
-|     min |          (+1) | (next-broken) | (next-fixed) |
-|     --- |           --- |           --- |          --- |
-|    1000 |   5425.223086 |   6456.538118 |    3863.7424 |
-|   10000 |  20772.332491 |  25550.757304 | 13519.209814 |
-|  100000 |  53577.240193 |  66746.041644 | 33520.676384 |
+| min     | (+1)          | (next-broken) | (next-fixed) |
+|---------|---------------|---------------|--------------|
+| ---     | ---           | ---           | ---          |
+| 1000    | 5425.223086   | 6456.538118   | 3863.7424    |
+| 10000   | 20772.332491  | 25550.757304  | 13519.209814 |
+| 100000  | 53577.240193  | 66746.041644  | 33520.676384 |
 | 1000000 | 121986.712395 | 148505.580638 | 73005.539932 |
-:end:
 
-#+begin_src gnuplot :var data=1-22-smdff-massage :file 1/fig/1-22-3.png :exports results :noeval :rownames no :colnames no :hlines no :cache no
-reset
-set key autotitle columnheader
-set logscale x
-set xlabel 'minimum number'
-set xtics rotate by -45
-set ylabel 'time'
-set title 'time to run prime search (x scaled log)'
-
-plot data using 2:xticlabels(1) with linespoints, \
-     data using 3:xticlabels(1) with linespoints, \
-     data using 4:xticlabels(1) with linespoints
-#+end_src
-
-#+RESULTS:
-:results:
-[[file:1/fig/1-22-3.png]]
-:end:
+{{< figure src="/ox-hugo/1-22-3.png" >}}
 
 I had a lot of trouble getting this one to compile, I have to restart Emacs in
 order to get it to render.
@@ -3884,15 +3521,17 @@ order to get it to render.
 Anyways, there's the speedup that was expected. Let's compare the ratios.
 
 Defining a new average that takes arbitrary numbers of arguments:
-#+NAME: average-varargs
-#+BEGIN_SRC scheme :eval no-export :results silent output :var smd=1-22-smd smdf=1-22-smdf smdff=1-22-smdff :exports code :rownames no :colnames no
+
+<a id="code-snippet--average-varargs"></a>
+```scheme
 (define (average . args)
   (let ((len (length args)))
     (/ (apply + args) len)))
-#+END_SRC
+```
 
 Using it for percentage comparisons:
-#+BEGIN_SRC scheme :eval no-export :results value table :var smd=1-22-smd smdf=1-22-smdf smdff=1-22-smdff :exports both :rownames no :colnames no
+
+```scheme
 <<average-varargs>>
 (list (cons "% speedup for broken (next)"
             (cons (format #f "~2$%"
@@ -3906,24 +3545,24 @@ Using it for percentage comparisons:
                                  (map (lambda (x y) (* 100 (/ x y)))
                                       (car smd) (car smdff))))
                   #nil)))
-#+END_SRC
+```
 
-#+RESULTS[6c5b471c24bb1e0fa43ce89ab354a29586b8dc54]:
-:results:
-| % speedup for broken (next) |  81.93% |
+| % speedup for broken (next) | 81.93%  |
+|-----------------------------|---------|
 | % speedup for real (next)   | 155.25% |
-:end:
 
 Since this changed algorithm cuts out almost half of the steps, you might expect
 something more like a 200% speedup. Let's try optimizing it further. Two observations:
 
-1. The condition src_scheme{(divides? 2 n)} only needs to be run once at the
-   start of the program.
-2. Because it only needs to be run once, it doesn't need to be a separate
-   function at all.
+1.  The condition <span class="inline-src language-scheme" data-lang="scheme">`(divides? 2 n)`</span> only needs to be run once at the
+    start of the program.
+2.  Because it only needs to be run once, it doesn't need to be a separate
+    function at all.
 
-#+NAME: find-divisor-faster-real2
-#+BEGIN_SRC scheme -n :eval no-export :exports code :results silent
+<!--listend-->
+
+<a id="code-snippet--find-divisor-faster-real2"></a>
+```scheme { linenos=true, linenostart=1 }
 <<square>>
 (define (smallest-divisor n)
   (if (divides? 2 n)                  ;; check for division by 2
@@ -3931,19 +3570,20 @@ something more like a 200% speedup. Let's try optimizing it further. Two observa
       (find-divisor n 3)))            ;; start find-divisor at 3
 
 (define (find-divisor n test-divisor)
-  (cond ((> (square test-divisor) n) 
+  (cond ((> (square test-divisor) n)
          n)
-        ((divides? test-divisor n) 
+        ((divides? test-divisor n)
          test-divisor)
-        (else (find-divisor 
-               n 
+        (else (find-divisor
+               n
                (+ 2 test-divisor))))) ;; just increase by 2
 
 (define (divides? a b)
   (= (remainder b a) 0))
-#+END_SRC
-#+NAME: smallest-divisor-benchmark-real2
-#+BEGIN_SRC scheme -n :noeval :tangle 1/primebench/smdff2.scheme :exports code
+```
+
+<a id="code-snippet--smallest-divisor-benchmark-real2"></a>
+```scheme { linenos=true, linenostart=1 }
 <<mattbench2>>
 <<find-divisor-faster-real2>>
 (define (prime? n)
@@ -3960,136 +3600,82 @@ something more like a 200% speedup. Let's try optimizing it further. Two observa
 
 (print-row
  (testit search-for-primes))
-#+END_SRC
+```
 
+<a id="table--1-22-smdff2"></a>
 
-#+NAME: 1-22-smdff2
+|             |             |              |              |
+|-------------|-------------|--------------|--------------|
 | 3151.259574 | 11245.20428 | 27803.067944 | 61997.275154 |
 
-#+NAME: 1-22-smdff2-massage
-#+BEGIN_SRC scheme :eval no-export :results value table :var smd=1-22-smd smdf=1-22-smdf smdff=1-22-smdff smdff2=1-22-smdff2 :exports results :rownames no :colnames no
-<<print-table-spaced>>
-(use-srfis '(1))
-(zip '("min" "---" 1000 10000 100000 1000000)
-     (append '("(+1)" "---") (car smd))
-     (append '("(next-broken)" "---") (car smdf))
-     (append '("(next-fixed)" "---") (car smdff))
-     (append '("integrated" "---") (car smdff2)))
-#+END_SRC
-
-#+RESULTS[39aed0154d20c6f0dee74c868a7613701ebb1dea]: 1-22-smdff2-massage
-:results:
-|     min |          (+1) | (next-broken) | (next-fixed) |   integrated |
-|     --- |           --- |           --- |          --- |          --- |
-|    1000 |   5425.223086 |   6456.538118 |    3863.7424 |  3151.259574 |
-|   10000 |  20772.332491 |  25550.757304 | 13519.209814 |  11245.20428 |
-|  100000 |  53577.240193 |  66746.041644 | 33520.676384 | 27803.067944 |
+| min     | (+1)          | (next-broken) | (next-fixed) | integrated   |
+|---------|---------------|---------------|--------------|--------------|
+| ---     | ---           | ---           | ---          | ---          |
+| 1000    | 5425.223086   | 6456.538118   | 3863.7424    | 3151.259574  |
+| 10000   | 20772.332491  | 25550.757304  | 13519.209814 | 11245.20428  |
+| 100000  | 53577.240193  | 66746.041644  | 33520.676384 | 27803.067944 |
 | 1000000 | 121986.712395 | 148505.580638 | 73005.539932 | 61997.275154 |
-:end:
 
-#+begin_src gnuplot :var data=1-22-smdff2-massage :file 1/fig/1-22-4.png :exports results :rownames no :colnames no :hlines no :cache no
-reset
-set key autotitle columnheader
-set logscale x
-set xlabel 'minimum number'
-set xtics rotate by -45
-set ylabel 'time'
-set title 'time to run prime search (x scaled log)'
+{{< figure src="/ox-hugo/1-22-4.png" >}}
 
-plot data using 2:xticlabels(1) with linespoints, \
-     data using 3:xticlabels(1) with linespoints, \
-     data using 4:xticlabels(1) with linespoints, \
-     data using 5:xticlabels(1) with linespoints
-#+end_src
-
-#+RESULTS:
-:results:
-file:1/fig/1-22-4.png
-:end:
-
-#+BEGIN_SRC scheme :eval no-export :results value table :var smd=1-22-smd smdf=1-22-smdf smdff=1-22-smdff smdff2=1-22-smdff2 :exports results :rownames no :colnames no
-<<average-varargs>>
-(define (print-percentage name lista listb)
-  (list (format #f "% speedup for ~a" name)
-        (format #f "~2$%"
-                (apply average
-                       (map (lambda (x y) (* 100 (/ x y)))
-                            lista listb)))))
-(list (print-percentage "broken (next)" (car smd) (car smdf))
-      (print-percentage "real (next)" (car smd) (car smdff))
-      (print-percentage "optimized" (car smd) (car smdff2)))
-#+END_SRC
-
-#+RESULTS[2a8c88e516dcf2998063353d1be32f3b9838c7de]:
-:results:
-| % speedup for broken (next) |  81.93% |
+| % speedup for broken (next) | 81.93%  |
+|-----------------------------|---------|
 | % speedup for real (next)   | 155.25% |
 | % speedup for optimized     | 186.59% |
-:end:
 
-** Exercise 1.24
-:PROPERTIES:
-:ID:       24f2cec1-17bd-456c-84e9-fe5c685301d5
-:CUSTOM-ID: 24f2cec1-17bd-456c-84e9-fe5c685301d5
-:END:
 
-*** Text
-:PROPERTIES:
-:ID:       9259fc75-fc98-4f03-b755-6fab60dc38f6
-:CUSTOM-ID: 9259fc75-fc98-4f03-b755-6fab60dc38f6
-:END:
+### <span class="section-num">2.38</span> Exercise 1.24 {#exercise-1-dot-24}
 
-#+NAME: expmod
-#+BEGIN_SRC scheme :eval no-export :results output silent :exports code
+
+#### <span class="section-num">2.38.1</span> Text {#text}
+
+<a id="code-snippet--expmod"></a>
+```scheme
 <<square>>
 (define (expmod base exp m)
   (cond ((= exp 0) 1)
         ((even? exp)
-         (remainder 
+         (remainder
           (square (expmod base (/ exp 2) m))
           m))
         (else
-         (remainder 
+         (remainder
           (* base (expmod base (- exp 1) m))
           m))))
-#+END_SRC
-#+NAME: fermat-test
-#+BEGIN_SRC scheme :eval no-export :results output silent :exports code
+```
+
+<a id="code-snippet--fermat-test"></a>
+```scheme
 (define (fermat-test n)
   (define (try-it a)
     (= (expmod a n n) a))
   (try-it (+ 1 (random (- n 1)))))
-#+END_SRC
-#+NAME: fast-prime
-#+BEGIN_SRC scheme :eval no-export :results output silent :exports code
+```
+
+<a id="code-snippet--fast-prime"></a>
+```scheme
 (define (fast-prime? n times)
   (cond ((= times 0) #t)
-        ((fermat-test n) 
+        ((fermat-test n)
          (fast-prime? n (- times 1)))
         (else #f)))
-#+END_SRC
+```
 
-*** Question
-:PROPERTIES:
-:ID:       d1464d89-e40f-4220-83a2-07bd83cdba29
-:CUSTOM-ID: d1464d89-e40f-4220-83a2-07bd83cdba29
-:END:
 
-Modify the src_scheme{timed-prime-test} procedure of [[Exercise 1.22]] to use
-src_scheme{fast-prime?} (the Fermat method), and test each of the 12 primes you
-found in that exercise. Since the Fermat test has \(\Theta(\text{log}n)\)
+#### <span class="section-num">2.38.2</span> Question {#question}
+
+Modify the <span class="inline-src language-scheme" data-lang="scheme">`timed-prime-test`</span> procedure of [2.36](#exercise-1-dot-22) to use
+<span class="inline-src language-scheme" data-lang="scheme">`fast-prime?`</span> (the Fermat method), and test each of the 12 primes you
+found in that exercise. Since the Fermat test has \\(\Theta(\text{log}n)\\)
 growth, how would you expect the time to test primes near 1,000,000 to compare
 with the time needed to test primes near 1000? Do your data bear this out? Can
 you explain any discrepancy you find?
 
-*** Answer
-:PROPERTIES:
-:ID:       32df4fe3-ba2b-4580-b6fc-ac2d683d69a4
-:CUSTOM-ID: 32df4fe3-ba2b-4580-b6fc-ac2d683d69a4
-:END:
 
-#+NAME: fermat-bench
-#+BEGIN_SRC scheme -n :noeval :tangle 1/primebench/fermat.scheme :exports code
+#### <span class="section-num">2.38.3</span> Answer {#answer}
+
+<a id="code-snippet--fermat-bench"></a>
+```scheme { linenos=true, linenostart=1 }
 <<mattbench2>>
 <<expmod>>
 <<fermat-test>>
@@ -4109,56 +3695,29 @@ you explain any discrepancy you find?
 
 (print-row
  (testit search-for-primes))
-#+END_SRC
+```
 
-#+NAME: 1-24-fermat
+<a id="table--1-24-fermat"></a>
+
+|              |             |              |              |
+|--------------|-------------|--------------|--------------|
 | 11175.799722 | 23518.62116 | 32150.745642 | 32679.766448 |
 
-#+NAME: 1-24-massage
-#+BEGIN_SRC scheme :eval no-export :results value table :var smd=1-22-smd smdff2=1-22-smdff2 fermat=1-24-fermat :exports results :rownames no :colnames no
-<<print-table-spaced>>
-(use-srfis '(1))
-(zip '("min" "---" 1000 10000 100000 1000000)
-     (append '("(+1)" "---") (car smd))
-     (append '("integrated" "---") (car smdff2))
-     (append '("fermat (2 guesses)" "---") (car fermat)))
-#+END_SRC
+| min     | (+1)          | integrated   | fermat (2 guesses) |
+|---------|---------------|--------------|--------------------|
+| ---     | ---           | ---          | ---                |
+| 1000    | 5425.223086   | 3151.259574  | 11175.799722       |
+| 10000   | 20772.332491  | 11245.20428  | 23518.62116        |
+| 100000  | 53577.240193  | 27803.067944 | 32150.745642       |
+| 1000000 | 121986.712395 | 61997.275154 | 32679.766448       |
 
-#+RESULTS[c9241299552f4a1e84ecbb973fb1d1f9cca04fca]: 1-24-massage
-:results:
-|     min |          (+1) |   integrated | fermat (2 guesses) |
-|     --- |           --- |          --- |                --- |
-|    1000 |   5425.223086 |  3151.259574 |       11175.799722 |
-|   10000 |  20772.332491 |  11245.20428 |        23518.62116 |
-|  100000 |  53577.240193 | 27803.067944 |       32150.745642 |
-| 1000000 | 121986.712395 | 61997.275154 |       32679.766448 |
-:end:
-
-#+begin_src gnuplot :var data=1-24-massage :file 1/fig/1-24-1.png :exports results :rownames no :colnames no :hlines no :cache no
-reset
-set key autotitle columnheader
-set logscale x
-set xlabel 'minimum number'
-set xtics rotate by -45
-set ylabel 'time'
-set title 'time to run prime search (x scaled log)'
-
-plot data using 2:xticlabels(1) with linespoints, \
-     data using 3:xticlabels(1) with linespoints, \
-     data using 4:xticlabels(1) with linespoints, \
-     data using 5:xticlabels(1) with linespoints
-#+end_src
-
-#+RESULTS:
-:results:
-file:1/fig/1-24-1.png
-:end:
+{{< figure src="/ox-hugo/1-24-1.png" >}}
 
 It definitely looks to be advancing much slower than the other methods. I'd like
 to see more of the function.
 
-#+NAME: smallest-divisor-benchmark-real3
-#+BEGIN_SRC scheme -n :noeval :tangle 1/primebench/more.scheme :exports code
+<a id="code-snippet--smallest-divisor-benchmark-real3"></a>
+```scheme { linenos=true, linenostart=1 }
 <<mattbench2>>
 <<find-divisor-faster-real>>
 (define (prime? n)
@@ -4181,10 +3740,10 @@ to see more of the function.
 
 (print-row
  (testit search-for-primes))
-#+END_SRC
+```
 
-#+NAME: fermat-bench2
-#+BEGIN_SRC scheme -n :noeval :tangle 1/primebench/more.scheme :exports code
+<a id="code-snippet--fermat-bench2"></a>
+```scheme { linenos=true, linenostart=1 }
 <<mattbench2>>
 <<expmod>>
 <<fermat-test>>
@@ -4210,98 +3769,48 @@ to see more of the function.
 
 (print-row
  (testit search-for-primes))
-#+END_SRC
+```
 
-#+NAME: 1-24-massage2
-#+BEGIN_SRC scheme :eval no-export :results value table :exports none :rownames no :colnames no :session scheme
-
-(let ((table '((3802.45146 13397.91871 32948.31241 73237.64777 299326.76182 678512.75719 2064911.33345 7065717.58395 20198370.27007 60956807.83034) (237945.8945 319761.90842 391573.47557 448501.96232 614009.08547 661205.34772 700058.30723 2852221.29076 3717690.96246 3995948.05596))))
-(use-srfis '(1))
-(zip '("min" 1000 10000 100000 1000000 10000000 100000000 1000000000 10000000000 100000000000 1000000000000)
-     (append '("integrated") (car table))
-     (append '("fermat (100 guesses)") (cadr table))))
-#+END_SRC
-
-#+RESULTS[1cd094d12aae7b8d5baef1f5e2c9261f806cffc4]: 1-24-massage2
-#+begin_EXAMPLE
-|           min |     integrated | fermat (100 guesses) |
-|          1000 |     3802.45146 |          237945.8945 |
-|         10000 |    13397.91871 |         319761.90842 |
-|        100000 |    32948.31241 |         391573.47557 |
-|       1000000 |    73237.64777 |         448501.96232 |
-|      10000000 |   299326.76182 |         614009.08547 |
-|     100000000 |   678512.75719 |         661205.34772 |
-|    1000000000 |  2064911.33345 |         700058.30723 |
-|   10000000000 |  7065717.58395 |        2852221.29076 |
-|  100000000000 | 20198370.27007 |        3717690.96246 |
-| 1000000000000 | 60956807.83034 |        3995948.05596 |
-#+end_EXAMPLE
-
-#+begin_src gnuplot :var data=1-24-massage2 :file 1/fig/1-24-2.png :exports results :rownames no :colnames no :hlines no :cache no :eval no-export
-reset
-set key autotitle columnheader
-set logscale xy
-set xlabel 'minimum number'
-set xtics rotate by -45
-set ylabel 'time'
-set title 'time to run prime search (x\&y scaled log)'
-
-plot data using 2:xticlabels(1) with linespoints, \
-     data using 3:xticlabels(1) with linespoints
-#+end_src
-
-#+RESULTS:
-:results:
-file:1/fig/1-24-2.png
-:end:
+{{< figure src="/ox-hugo/1-24-2.png" >}}
 
 For the life of me I have no idea what that bump is. Maybe it needs more
 aggressive bignum processing there?
 
-** Exercise 1.25
-:PROPERTIES:
-:ID:       ed832d1f-dde0-45db-8891-014b0c9daff9
-:CUSTOM-ID: ed832d1f-dde0-45db-8891-014b0c9daff9
-:END:
 
-*** Question
-:PROPERTIES:
-:ID:       76148d28-d72e-4be4-ab2a-d96c2f100dea
-:CUSTOM-ID: 76148d28-d72e-4be4-ab2a-d96c2f100dea
-:END:
+### <span class="section-num">2.39</span> Exercise 1.25 {#exercise-1-dot-25}
+
+
+#### <span class="section-num">2.39.1</span> Question {#question}
 
 Alyssa P. Hacker complains that we went to a lot of extra work in writing
-src_scheme{expmod}. After all, she says, since we already know how to compute
+<span class="inline-src language-scheme" data-lang="scheme">`expmod`</span>. After all, she says, since we already know how to compute
 exponentials, we could have simply written
 
-#+BEGIN_SRC scheme -n 
+```scheme { linenos=true, linenostart=1 }
 (define (expmod base exp m)
   (remainder (fast-expt base exp) m))
-#+END_SRC
+```
 
 Is she correct? Would this procedure serve as well for our fast prime tester?
 Explain.
 
-*** Answer
-:PROPERTIES:
-:ID:       f4e6ce08-2adb-4c3f-a565-096aea235bfc
-:CUSTOM-ID: f4e6ce08-2adb-4c3f-a565-096aea235bfc
-:END:
 
-In Alyssa's version of src_scheme{expmod}, the result of the
-src_scheme{fast-expt} operation is /extremely/ large. For example, in the
+#### <span class="section-num">2.39.2</span> Answer {#answer}
+
+In Alyssa's version of <span class="inline-src language-scheme" data-lang="scheme">`expmod`</span>, the result of the
+<span class="inline-src language-scheme" data-lang="scheme">`fast-expt`</span> operation is _extremely_ large. For example, in the
 process of checking for divisors of 1,001, the number 455 will be tried.
-src_scheme{(expt 455 1001)} produces an integer 2,661 digits long. This is just
-one of the thousands of exponentiations that src_scheme{smallest-divisor} will
+<span class="inline-src language-scheme" data-lang="scheme">`(expt 455 1001)`</span> produces an integer 2,661 digits long. This is just
+one of the thousands of exponentiations that <span class="inline-src language-scheme" data-lang="scheme">`smallest-divisor`</span> will
 perform. It's best to avoid this, so we use to our advantage the fact that we
-only need to know the remainder of the exponentiations. src_scheme{expmod}
+only need to know the remainder of the exponentiations. <span class="inline-src language-scheme" data-lang="scheme">`expmod`</span>
 breaks down the exponentiation into smaller steps and performs
-src_scheme{remainder} after every step, significantly reducing the memory
+<span class="inline-src language-scheme" data-lang="scheme">`remainder`</span> after every step, significantly reducing the memory
 requirements.
 
-As an example, let's trace (some of) the execution of src_scheme{(expmod 455 1001 1001)}:
+As an example, let's trace (some of) the execution of <span class="inline-src language-scheme" data-lang="scheme">`(expmod 455 1001 1001)`</span>:
 
-#+BEGIN_SRC scheme
+```scheme
 (expmod 455 1001 1001)
 >  (even? 1001)
 >  #f
@@ -4332,87 +3841,73 @@ As an example, let's trace (some of) the execution of src_scheme{(expmod 455 100
 >  >  132496
 >  364
 455
-#+END_SRC
+```
 
 You can see that the numbers remain quite manageable throughout this process. So
 taking these extra steps actually leads to an algorithm that performs better.
 
-** Exercise 1.26
-:PROPERTIES:
-:ID:       77720381-e1ba-460a-aef5-08292daa3384
-:CUSTOM-ID: 77720381-e1ba-460a-aef5-08292daa3384
-:END:
 
-*** Question
-:PROPERTIES:
-:ID:       eee5142a-175d-4ae0-b9cb-6c1fd079ba0a
-:CUSTOM-ID: eee5142a-175d-4ae0-b9cb-6c1fd079ba0a
-:END:
+### <span class="section-num">2.40</span> Exercise 1.26 {#exercise-1-dot-26}
+
+
+#### <span class="section-num">2.40.1</span> Question {#question}
 
 Louis Reasoner is having great difficulty doing Exercise 1.24. His
-src_scheme{fast-prime?} test seems to run more slowly than his
-src_scheme{prime?} test. Louis calls his friend Eva Lu Ator over to help. When
+<span class="inline-src language-scheme" data-lang="scheme">`fast-prime?`</span> test seems to run more slowly than his
+<span class="inline-src language-scheme" data-lang="scheme">`prime?`</span> test. Louis calls his friend Eva Lu Ator over to help. When
 they examine Louis's code, they find that he has rewritten the
-src_scheme{expmod} procedure to use an explicit multiplication, rather than
-calling src_scheme{square}:
+<span class="inline-src language-scheme" data-lang="scheme">`expmod`</span> procedure to use an explicit multiplication, rather than
+calling <span class="inline-src language-scheme" data-lang="scheme">`square`</span>:
 
-#+begin_src scheme -n
+```scheme { linenos=true, linenostart=1 }
 (define (expmod base exp m)
   (cond ((= exp 0) 1)
         ((even? exp)
-         (remainder 
+         (remainder
           (* (expmod base (/ exp 2) m) ;; <== hmm.
              (expmod base (/ exp 2) m))
           m))
         (else
-         (remainder 
-          (* base 
+         (remainder
+          (* base
              (expmod base (- exp 1) m))
           m))))
-#+end_src
+```
 
 "I don't see what difference that could make," says Louis. "I do." says Eva. "By
-writing the procedure like that, you have transformed the \(\Theta(\log n)\)
-process into a \(\Theta(n)\) process." Explain.
+writing the procedure like that, you have transformed the \\(\Theta(\log n)\\)
+process into a \\(\Theta(n)\\) process." Explain.
 
-*** Answer
-:PROPERTIES:
-:ID:       9e8c8cdc-7517-4422-939d-f22026d6aa91
-:CUSTOM-ID: 9e8c8cdc-7517-4422-939d-f22026d6aa91
-:END:
+
+#### <span class="section-num">2.40.2</span> Answer {#answer}
 
 Making the same function call twice isn't the same as using a variable twice --
 Louis' version doubles the work, having two processes solving the exact same
 problem. Since the number of processes used increases exponentially, this turns
-\(\log n\) into \(n\).
+\\(\log n\\) into \\(n\\).
 
-** Exercise 1.27
-:PROPERTIES:
-:ID:       6a54e493-0e3d-4bb1-84ff-88196dda3f15
-:CUSTOM-ID: 6a54e493-0e3d-4bb1-84ff-88196dda3f15
-:END:
 
-*** Question
-:PROPERTIES:
-:ID:       9efef8fb-5bcf-45bb-96b0-76902a307f51
-:CUSTOM-ID: 9efef8fb-5bcf-45bb-96b0-76902a307f51
-:END:
+### <span class="section-num">2.41</span> Exercise 1.27 {#exercise-1-dot-27}
+
+
+#### <span class="section-num">2.41.1</span> Question {#question}
 
 Demonstrate that the Carmichael numbers listed in Footnote 1.47 really do fool
-the Fermat test. That is, write a procedure that takes an integer \(n\) and
-tests whether \(a^n\) is congruent to \(a\) modulo \(n\) for every \(a < n\),
+the Fermat test. That is, write a procedure that takes an integer \\(n\\) and
+tests whether \\(a^n\\) is congruent to \\(a\\) modulo \\(n\\) for every \\(a < n\\),
 and try your procedure on the given Carmichael numbers.
-#+NAME: carmichael
+
+<a id="table--carmichael"></a>
+
+|     |      |      |      |      |      |
+|-----|------|------|------|------|------|
 | 561 | 1105 | 1729 | 2465 | 2821 | 6601 |
 
-*** Answer
-:PROPERTIES:
-:ID:       c7e064e7-5ace-4ef2-9e29-469b2573cb7b
-:CUSTOM-ID: c7e064e7-5ace-4ef2-9e29-469b2573cb7b
-:END:
 
-#+NAME: car-test
-#+begin_src scheme -n :results silent :exports code :eval no-export
+#### <span class="section-num">2.41.2</span> Answer {#answer}
+
+<a id="code-snippet--car-test"></a>
+```scheme { linenos=true, linenostart=1 }
 <<expmod>>
 (define (car-test n)
   (define (check a)
@@ -4420,71 +3915,63 @@ and try your procedure on the given Carmichael numbers.
        (remainder (modulo a n) n)))
   (every check
            (cddr (iota n))))
-#+end_src
+```
 
-#+NAME: car-test-check
-#+BEGIN_SRC scheme noeval :exports code :eval no-export
+<a id="code-snippet--car-test-check"></a>
+```scheme
 <<car-test>>
 (list (car-test 12) ; <== false (not prime)
       (car-test 1009);<== true  (real prime)
       (car-test 561));<== true  (not prime,
                      ;      Carmichael number)
-#+END_SRC
+```
 
-** Exercise 1.28
-:PROPERTIES:
-:ID:       99be304b-3e68-4500-8c6d-f4300fbcdf36
-:CUSTOM-ID: 99be304b-3e68-4500-8c6d-f4300fbcdf36
-:END:
 
-*** Question
-:PROPERTIES:
-:ID:       dbc95aaa-41b7-44ff-b563-8d87e448682d
-:CUSTOM-ID: dbc95aaa-41b7-44ff-b563-8d87e448682d
-:END:
+### <span class="section-num">2.42</span> Exercise 1.28 {#exercise-1-dot-28}
+
+
+#### <span class="section-num">2.42.1</span> Question {#question}
 
 One variant of the Fermat test that cannot be fooled is called the
-**Miller-Rabin test** (Miller 1976; Rabin 1980). This starts from an alternate
-form of Fermat's Little Theorem, which states that if \( n \) is a prime number
-and \( a \) is any positive integer less than \( n \), then \( a \) raised to
-the \( (n-1) \) -st power is congruent to 1 modulo \( n \). To test the
-primality of a number \( n \) by the Miller-Rabin test, we pick a random number
-\( a<n \) and raise \( a \) to the \( (n-1) \) -st power modulo \( n \) using
-the src_scheme{expmod} procedure. However, whenever we perform the squaring step
-in src_scheme{expmod}, we check to see if we have discovered a "nontrivial
-square root of 1 modulo \( n \)," that is, a number not equal to 1 or \( n-1 \)
-whose square is equal to 1 modulo \( n \). It is possible to prove that if such
-a nontrivial square root of 1 exists, then \( n \) is not prime. It is also
-possible to prove that if \( n \) is an odd number that is not prime, then, for
-at least half the numbers \( a<n \), computing \( an-1 \) in this way will
-reveal a nontrivial square root of 1 modulo \( n \). (This is why the
-Miller-Rabin test cannot be fooled.) Modify the src_scheme{expmod} procedure to
+****Miller-Rabin test**** (Miller 1976; Rabin 1980). This starts from an alternate
+form of Fermat's Little Theorem, which states that if \\( n \\) is a prime number
+and \\( a \\) is any positive integer less than \\( n \\), then \\( a \\) raised to
+the \\( (n-1) \\) -st power is congruent to 1 modulo \\( n \\). To test the
+primality of a number \\( n \\) by the Miller-Rabin test, we pick a random number
+\\( a<n \\) and raise \\( a \\) to the \\( (n-1) \\) -st power modulo \\( n \\) using
+the <span class="inline-src language-scheme" data-lang="scheme">`expmod`</span> procedure. However, whenever we perform the squaring step
+in <span class="inline-src language-scheme" data-lang="scheme">`expmod`</span>, we check to see if we have discovered a "nontrivial
+square root of 1 modulo \\( n \\)," that is, a number not equal to 1 or \\( n-1 \\)
+whose square is equal to 1 modulo \\( n \\). It is possible to prove that if such
+a nontrivial square root of 1 exists, then \\( n \\) is not prime. It is also
+possible to prove that if \\( n \\) is an odd number that is not prime, then, for
+at least half the numbers \\( a<n \\), computing \\( an-1 \\) in this way will
+reveal a nontrivial square root of 1 modulo \\( n \\). (This is why the
+Miller-Rabin test cannot be fooled.) Modify the <span class="inline-src language-scheme" data-lang="scheme">`expmod`</span> procedure to
 signal if it discovers a nontrivial square root of 1, and use this to implement
 the Miller-Rabin test with a procedure analogous to fermat-test. Check your
 procedure by testing various known primes and non-primes. Hint: One convenient
-way to make src_scheme{expmod} signal is to have it return 0.
+way to make <span class="inline-src language-scheme" data-lang="scheme">`expmod`</span> signal is to have it return 0.
 
-*** Analysis
-:PROPERTIES:
-:ID:       1a682537-2536-4aca-afcf-bd46ea38d862
-:CUSTOM-ID: 1a682537-2536-4aca-afcf-bd46ea38d862
-:END:
+
+#### <span class="section-num">2.42.2</span> Analysis {#analysis}
 
 For the sake of verifying this, I want to get a bigger list of primes and
 Carmichael numbers to verify against. I'll save them using Guile's built in
 read/write functions that save Lisp lists to text:
-#+NAME: findsomeprimes
-#+BEGIN_SRC scheme :eval no-export :results output :exports code :tangle 1/Ex28/findsomeprimes.scheme
+
+<a id="code-snippet--findsomeprimes"></a>
+```scheme
 <<find-divisor-faster-real>>
 (define (prime? n)
   (= n (smallest-divisor n)))
 (call-with-output-file "Data/primes-1k_to_1mil.txt" (lambda(port)
   (write (filter prime? (iota (- 1000000 1000) 1000))
          port)))
-#+END_SRC
+```
 
-#+NAME: fermat-prime?
-#+BEGIN_SRC scheme :eval no-export :results output silent :exports code
+<a id="code-snippet--fermat-prime?"></a>
+```scheme
 ;; fermat prime test but checks *every* value from 2 to n-1
 (define (fermat-prime? n)
   (define (iter a)
@@ -4494,10 +3981,10 @@ read/write functions that save Lisp lists to text:
             #t
             (iter (+ 1 a)))))
   (iter 2))
-#+END_SRC
+```
 
-#+NAME: findcars
-#+BEGIN_SRC scheme :eval no-export :results output silent :exports code :tangle 1/Ex28/findcars.scheme
+<a id="code-snippet--findcars"></a>
+```scheme
 (use-srfis '(1))
 <<expmod>>
 <<fermat-prime?>>
@@ -4510,16 +3997,17 @@ read/write functions that save Lisp lists to text:
                         (not (prime? x))))
              (iota (- 1000000 1000) 1000))
             port)))
-#+END_SRC
+```
 
 This will be useful in various future functions:
-#+NAME: get-lists-of-primes
-#+BEGIN_SRC scheme :eval no-export :results output silent :exports code :cache no
+
+<a id="code-snippet--get-lists-of-primes"></a>
+```scheme
 (define list-of-primes (call-with-input-file "Data/primes-1k_to_1mil.txt" read))
 (define list-of-carmichaels (call-with-input-file "Data/carmichael.txt" read))
-#+END_SRC
+```
 
-#+BEGIN_SRC scheme :eval no-export :results output :exports both :cache no
+```scheme
 (use-srfis '(1))
 <<expmod>>
 <<fermat-prime?>>
@@ -4541,24 +4029,18 @@ This will be useful in various future functions:
         (if fermat-is-vulnerable
             "Yes"
             "No"))
-#+END_SRC
+```
 
-#+RESULTS:
-:results:
-#+begin_example
+```text
 (prime?) is working: Yes
 (fermat-prime?) is vulnerable: Yes
-#+end_example
-:end:
+```
 
-*** Answer
-:PROPERTIES:
-:ID:       cd30d1cc-10c2-4e3c-a97e-2154b2ea4bf2
-:CUSTOM-ID: cd30d1cc-10c2-4e3c-a97e-2154b2ea4bf2
-:END:
 
-#+NAME: expmod-mr
-#+BEGIN_SRC scheme -n :eval no-export :results output silent :exports code
+#### <span class="section-num">2.42.3</span> Answer {#answer}
+
+<a id="code-snippet--expmod-mr"></a>
+```scheme { linenos=true, linenostart=1 }
 <<square>>
 (define (expmod-mr base exp m)
   (cond ((= exp 0) 1)
@@ -4569,30 +4051,32 @@ This will be useful in various future functions:
                0
                (remainder sqr m))))
         (else
-         (remainder 
+         (remainder
           (* base (expmod-mr base (- exp 1) m))
           m))))
-#+END_SRC
-#+NAME: mr-test
-#+BEGIN_SRC scheme :eval no-export :results output silent :exports code
+```
+
+<a id="code-snippet--mr-test"></a>
+```scheme
 (define (mr-test n)
   (define (try-it a)
     (let ((it (expmod-mr a n n)))
       (or (= it a)
           (= it 0))))
   (try-it (+ 1 (random (- n 1)))))
-#+END_SRC
-#+NAME: mr-prime
-#+BEGIN_SRC scheme :eval no-export :results output silent :exports code
+```
+
+<a id="code-snippet--mr-prime"></a>
+```scheme
 (define (mr-prime? n times)
   (cond ((= times 0) #t)
-        ((mr-test n) 
+        ((mr-test n)
          (mr-prime? n (- times 1)))
         (else #f)))
-#+END_SRC
+```
 
-#+NAME: mr-verification
-#+BEGIN_SRC scheme :eval no-export :results value :exports both :tangle 1/Ex28/mr_check.scheme
+<a id="code-snippet--mr-verification"></a>
+```scheme
 <<expmod-mr>>
 <<mr-test>>
 <<mr-prime>>
@@ -4601,21 +4085,20 @@ This will be useful in various future functions:
 (format #t "      mr detects primes: ~a~%mr false-positives Carmichaels: ~a~%"
         (and-map (lambda(x)(mr-prime? x mr-times)) list-of-primes)
       (and-map (lambda(x)(mr-prime? x mr-times)) list-of-carmichaels))
-#+END_SRC
+```
 
-#+RESULTS[949daa71bbf35095f8025130b9fb179b5308e7fa]: mr-verification
-#+BEGIN_SRC 
+```nil
       mr detects primes: #t
 mr false-positives Carmichaels: #t
-#+END_SRC
+```
 
 Shoot. And I thought I did a very literal interpretation of what the book asked.
 
 Ah, I see the problem. I need to keep track of what the pre-squaring number was
 and use that to determine whether the square is valid or not.
 
-#+NAME: expmod-mr2
-#+BEGIN_SRC scheme -n :eval no-export :results output silent :exports code
+<a id="code-snippet--expmod-mr2"></a>
+```scheme { linenos=true, linenostart=1 }
 <<square>>
 (define (expmod-mr base exp m)
   (cond ((= exp 0) 1)
@@ -4629,45 +4112,36 @@ and use that to determine whether the square is valid or not.
                0 ;; non-trivial sqrt mod 1 is found
                rem)))
         (else
-         (remainder 
+         (remainder
           (* base (expmod-mr base (- exp 1) m))
           m))))
-#+END_SRC
-#+NAME: mr-verification2
-#+BEGIN_SRC scheme :noeval :exports none :tangle 1/Ex28/mr_check2.scheme
-<<expmod-mr2>>
-<<mr-test>>
-<<mr-prime>>
-(define mr-times 100)
-<<get-lists-of-primes>>
-(format #t "      mr detects primes: ~a~%mr false-positives Carmichaels: ~a~%"
-        (and-map (lambda(x)(mr-prime? x mr-times)) list-of-primes)
-      (and-map (lambda(x)(mr-prime? x mr-times)) list-of-carmichaels))
-#+END_SRC
+```
 
 Unfortunately this one has the same problem. What's the issue?
 
-Sadly, there's a massive issue in src_scheme{mr-test}.
-#+BEGIN_SRC scheme +n :eval no-export :results output silent :exports code
+Sadly, there's a massive issue in <span class="inline-src language-scheme" data-lang="scheme">`mr-test`</span>.
+
+```scheme { linenos=true, linenostart=17 }
 (define (mr-test n)
   (define (try-it a)
     (let ((it (expmod-mr a n n))) ;; Should be "a (- n 1) n"
       (or (= it a)    ;; Should be (= it 1)
           (= it 0)))) ;; Two strikes, you're out
   (try-it (+ 1 (random (- n 1)))))
-#+END_SRC
+```
 
 One more time.
-#+NAME: mr-test2
-#+BEGIN_SRC scheme +n :eval no-export :results output silent :exports code
+
+<a id="code-snippet--mr-test2"></a>
+```scheme { linenos=true, linenostart=23 }
 (define (mr-test n)
   (define (try-it a)
     (= 1 (expmod-mr a (- n 1) n)))
   (try-it (+ 1 (random (- n 1)))))
-#+END_SRC
+```
 
-#+NAME: mr-verification2
-#+BEGIN_SRC scheme -n :exports both :results output raw :tangle 1/Ex28/mr_check3.scheme
+<a id="code-snippet--mr-verification2"></a>
+```scheme { linenos=true, linenostart=1 }
 <<expmod-mr2>>
 <<mr-test2>>
 <<mr-prime>>
@@ -4676,109 +4150,93 @@ One more time.
 (format #t "      mr detects primes: ~a~%mr false-positives Carmichaels: ~a~%"
         (and-map (lambda(x)(mr-prime? x mr-times)) list-of-primes)
       (and-map (lambda(x)(mr-prime? x mr-times)) list-of-carmichaels))
-#+END_SRC
+```
 
-#+BEGIN_SRC
+```nil
      mr detects primes: #t
 mr false-positives Carmichaels: #f
-#+END_SRC
+```
 
-** 1.3: Formulating Abstractions with Higher-Order Procedures
-:PROPERTIES:
-:ID:       27250639-d875-4ff2-9a74-1274c57310e1
-:CUSTOM-ID: 27250639-d875-4ff2-9a74-1274c57310e1
-:END:
 
-Procedures that manipulate procedures are called /higher-order procedures/.
+### <span class="section-num">2.43</span> 1.3: Formulating Abstractions with Higher-Order Procedures {#1-dot-3-formulating-abstractions-with-higher-order-procedures}
 
-** 1.3.1: Procedures as Arguments
-:PROPERTIES:
-:ID:       5fa080a9-ceb5-41c8-81b7-d98b449b0287
-:CUSTOM-ID: 5fa080a9-ceb5-41c8-81b7-d98b449b0287
-:END:
+Procedures that manipulate procedures are called _higher-order procedures_.
+
+
+### <span class="section-num">2.44</span> 1.3.1: Procedures as Arguments {#1-dot-3-dot-1-procedures-as-arguments}
 
 Let's say we have several different types of series that we want to sum.
 Functions for each of these tasks will look very similar, so we're better off
-defining a general function that expresses the /idea/ of summation, that can
+defining a general function that expresses the _idea_ of summation, that can
 then be passed specific functions to cause the specific behavior of the series.
-Mathematicians express this as \(\sum\) ("sigma") notation.
+Mathematicians express this as \\(\sum\\) ("sigma") notation.
 
 For the program:
 
-#+begin_src scheme
+```scheme
 (define (sum term a next b)
   (if (> a b)
       0
       (+ (term a)
          (sum term (next a) next b))))
-#+end_src
+```
 
 Which is equivalent to:
 
-\[\sum^{b}_{n~a}term(n)~term(a)+term(next(a))+term(next(next(a)))+\cdots+term(b)\]
+$$\sum^{b}\_{n~a}term(n)~term(a)+term(next(a))+term(next(next(a)))+\cdots+term(b)$$
 
-We can pass integers to src_scheme{a} and src_scheme{b} and functions to
-src_scheme{term} and src_scheme{next}. Note that in order to simply sum
-integers, we'd need to define and pass an identity function to src_scheme{term}.
+We can pass integers to <span class="inline-src language-scheme" data-lang="scheme">`a`</span> and <span class="inline-src language-scheme" data-lang="scheme">`b`</span> and functions to
+<span class="inline-src language-scheme" data-lang="scheme">`term`</span> and <span class="inline-src language-scheme" data-lang="scheme">`next`</span>. Note that in order to simply sum
+integers, we'd need to define and pass an identity function to <span class="inline-src language-scheme" data-lang="scheme">`term`</span>.
 
-** Exercise 1.29
-:PROPERTIES:
-:ID:       22b91a3d-9eb1-4d5f-9f28-0c085c98d58f
-:CUSTOM-ID: 22b91a3d-9eb1-4d5f-9f28-0c085c98d58f
-:END:
 
-*** Text
-:PROPERTIES:
-:ID:       c323c9f4-932d-4d36-865e-a18e76f566b4
-:CUSTOM-ID: c323c9f4-932d-4d36-865e-a18e76f566b4
-:END:
-#+NAME: sum
-#+BEGIN_SRC scheme -n :eval no-export :results output silent :exports code
+### <span class="section-num">2.45</span> Exercise 1.29 {#exercise-1-dot-29}
+
+
+#### <span class="section-num">2.45.1</span> Text {#text}
+
+<a id="code-snippet--sum"></a>
+```scheme { linenos=true, linenostart=1 }
 (define (sum term a next b)
   (if (> a b)
       0
       (+ (term a)
          (sum term (next a) next b))))
-#+END_SRC
-#+NAME: integral
-#+BEGIN_SRC scheme -n :eval no-export :results output silent :exports code
+```
+
+<a id="code-snippet--integral"></a>
+```scheme { linenos=true, linenostart=1 }
 (define (integral f a b dx)
   (define (add-dx x)
     (+ x dx))
   (* (sum f (+ a (/ dx 2.0)) add-dx b)
      dx))
-#+END_SRC
+```
 
-*** Question
-:PROPERTIES:
-:ID:       8b97d855-2b4f-4c1c-aec3-815efe988cc3
-:CUSTOM-ID: 8b97d855-2b4f-4c1c-aec3-815efe988cc3
-:END:
+
+#### <span class="section-num">2.45.2</span> Question {#question}
 
 Simpson's Rule is a more accurate method of numerical integration than the
-method illustrated above. Using Simpson's Rule, the integral of a function \(f\)
-between \(a\) and \(b\) is approximated as
+method illustrated above. Using Simpson's Rule, the integral of a function \\(f\\)
+between \\(a\\) and \\(b\\) is approximated as
 
-\[
-\frac{h}{3}(y_0 + 4y_1 + 2y_2 + 4y_3 + 2y_4 + \dots + 2y_{n-2} + 4y_{n-1} + y_n)
-\]
+$$
+\frac{h}{3}(y\_0 + 4y\_1 + 2y\_2 + 4y\_3 + 2y\_4 + \dots + 2y\_{n-2} + 4y\_{n-1} + y\_n)
+$$
 
-where \(h = (b - a) / n\), for some even integer \(n\), and \(y_k = f(a + kh)\).
-(Increasing \(n\) increases the accuracy of the approximation.) Define a
-procedure that takes as arguments \(f\), \(a\), \(b\), and \(n\) and returns the
+where \\(h = (b - a) / n\\), for some even integer \\(n\\), and \\(y\_k = f(a + kh)\\).
+(Increasing \\(n\\) increases the accuracy of the approximation.) Define a
+procedure that takes as arguments \\(f\\), \\(a\\), \\(b\\), and \\(n\\) and returns the
 value of the integral, computed using Simpson's Rule. Use your procedure to
-integrate src_scheme{cube} between 0 and 1 (with \(n = 100\) and \(n = 1000\)),
-and compare the results to those of the src_scheme{integral} procedure shown
+integrate <span class="inline-src language-scheme" data-lang="scheme">`cube`</span> between 0 and 1 (with \\(n = 100\\) and \\(n = 1000\\)),
+and compare the results to those of the <span class="inline-src language-scheme" data-lang="scheme">`integral`</span> procedure shown
 above.
 
-*** Answer
-:PROPERTIES:
-:ID:       6d0c9bfa-5b69-4994-b5aa-ed531a2ecae8
-:CUSTOM-ID: 6d0c9bfa-5b69-4994-b5aa-ed531a2ecae8
-:END:
 
-#+NAME: int-simp
-#+BEGIN_SRC scheme -n :eval no-export :results output silent :exports code
+#### <span class="section-num">2.45.3</span> Answer {#answer}
+
+<a id="code-snippet--int-simp"></a>
+```scheme { linenos=true, linenostart=1 }
 (define (int-simp f a b n)
   (define h
     (/ (- b a)
@@ -4795,10 +4253,11 @@ above.
                  (+ 1 k)))))
   (define sum-of-series (series-y (gety a) 1)) ;; (f a) = y_0
   (* (/ h 3) sum-of-series))
-#+END_SRC
+```
 
 Let's compare these at equal levels of computational difficulty.
-#+BEGIN_SRC scheme -n :noeval :exports both :results output table :tangle 1/Ex29-bench.scheme
+
+```scheme { linenos=true, linenostart=1 }
 <<mattbench2>>
 <<print-table>>
 (define (cube x)
@@ -4817,127 +4276,83 @@ Let's compare these at equal levels of computational difficulty.
                    (list (cadr (mattbench2 run-test1 iterations))
                          (cadr (mattbench2 run-test2 iterations))))
              #:colnames #t)
-#+END_SRC
+```
 
-#+RESULTS[f1ab42d01728399d2e9c3b9f8c996a3766a58da4]:
-:results:
-|  integral dx:0.0008 |     int-simp i:1000 |
-|---------------------+---------------------|
+| integral dx:0.0008  | int-simp i:1000     |
+|---------------------|---------------------|
 | 0.24999992000001311 | 0.25000000000000006 |
-|         321816.2755 |         330405.8918 |
-:end:
+| 321816.2755         | 330405.8918         |
 
 So, more accurate for roughly the same effort or less.
 
-** Exercise 1.30
-:PROPERTIES:
-:ID:       e54f9c79-9c6e-40e3-8d72-c3b38277249f
-:CUSTOM-ID: e54f9c79-9c6e-40e3-8d72-c3b38277249f
-:END:
 
-*** Question
-:PROPERTIES:
-:ID:       0e7c46b4-644b-4448-b4a4-8a93967ac9b2
-:CUSTOM-ID: 0e7c46b4-644b-4448-b4a4-8a93967ac9b2
-:END:
+### <span class="section-num">2.46</span> Exercise 1.30 {#exercise-1-dot-30}
 
-The src_scheme{sum} procedure above generates a linear recursion. The procedure
+
+#### <span class="section-num">2.46.1</span> Question {#question}
+
+The <span class="inline-src language-scheme" data-lang="scheme">`sum`</span> procedure above generates a linear recursion. The procedure
 can be rewritten so that the sum is performed iteratively. Show how to do this
 by filling in the missing expressions in the following definition:
 
-*** Answer
-:PROPERTIES:
-:ID:       a6d60e74-2b88-4332-adf2-e8e0a31b856e
-:CUSTOM-ID: a6d60e74-2b88-4332-adf2-e8e0a31b856e
-:END:
 
-#+NAME: sum-iter
-#+BEGIN_SRC scheme -n :eval no-export :exports code :results silent
+#### <span class="section-num">2.46.2</span> Answer {#answer}
+
+<a id="code-snippet--sum-iter"></a>
+```scheme { linenos=true, linenostart=1 }
 (define (sum-iter term a next b)
   (define (iter a result)
     (if (> a b)
         result
         (iter (next a) (+ result (term a)))))
   (iter a 0))
-#+END_SRC
+```
 
 Let's check the stats!
-#+NAME: sum-bench
-#+BEGIN_SRC scheme -n :noeval :exports results :results output :tangle 1/Ex30-bench.scheme
-<<print-table>>
-<<mattbench2>>
-<<sum>>
-<<sum-iter>>
-(define iterations 1000000)
-(define (test1)
-  (sum + 1 1+ 1000))
-(define (test2)
-  (sum-iter + 1 1+ 1000))
-(print-table (list
-              (list "recursive" "iterative")
-              (list (cadr (mattbench2 test1 iterations))
-                   (cadr (mattbench2 test2 iterations))))
-             #:colnames #t)
-#+END_SRC
 
-#+RESULTS:
-|    recursive |    iterative |
-|--------------+--------------|
+| recursive    | iterative    |
+|--------------|--------------|
 | 30051.080005 | 19568.685587 |
 
-** Exercise 1.31
-:PROPERTIES:
-:ID:       3b741046-fc06-4a6f-a4f8-dbd1656de562
-:CUSTOM-ID: 3b741046-fc06-4a6f-a4f8-dbd1656de562
-:END:
 
-*** Question A.1
-:PROPERTIES:
-:ID:       b2a6bb77-2e48-4c1e-a8bb-3197667412fb
-:CUSTOM-ID: b2a6bb77-2e48-4c1e-a8bb-3197667412fb
-:END:
+### <span class="section-num">2.47</span> Exercise 1.31 {#exercise-1-dot-31}
 
-The src_scheme{sum} procedure is only the simplest of a vast number of similar
+
+#### <span class="section-num">2.47.1</span> Question A.1 {#question-a-dot-1}
+
+The <span class="inline-src language-scheme" data-lang="scheme">`sum`</span> procedure is only the simplest of a vast number of similar
 abstractions that can be captured as higher-order procedures. Write an analogous
-procedure called src_scheme{product} that returns the product of the values of a
+procedure called <span class="inline-src language-scheme" data-lang="scheme">`product`</span> that returns the product of the values of a
 function at points over a given range.
 
-*** Answer A.1
-:PROPERTIES:
-:ID:       c0d12247-b8ec-4627-beb3-a3ea241588f6
-:CUSTOM-ID: c0d12247-b8ec-4627-beb3-a3ea241588f6
-:END:
 
-#+NAME: product-iter
-#+BEGIN_SRC scheme -n :eval no-export :exports code :results silent
+#### <span class="section-num">2.47.2</span> Answer A.1 {#answer-a-dot-1}
+
+<a id="code-snippet--product-iter"></a>
+```scheme { linenos=true, linenostart=1 }
 (define (product-iter term a next b)
   (define (iter a result)
     (if (> a b)
         result
         (iter (next a) (* result (term a)))))
   (iter a 1)) ;; start at 1 so it's not always 0
-#+END_SRC
+```
 
-*** Question A.2
-:PROPERTIES:
-:ID:       9cdeebe4-d20b-477d-b261-1cf6aebe163c
-:CUSTOM-ID: 9cdeebe4-d20b-477d-b261-1cf6aebe163c
-:END:
 
-Show how to define src_scheme{factorial} in terms of src_scheme{product}.
+#### <span class="section-num">2.47.3</span> Question A.2 {#question-a-dot-2}
 
-*** Answer A.2
-:PROPERTIES:
-:ID:       1f80f423-6bcf-4ed0-b339-f51dbe117833
-:CUSTOM-ID: 1f80f423-6bcf-4ed0-b339-f51dbe117833
-:END:
+Show how to define <span class="inline-src language-scheme" data-lang="scheme">`factorial`</span> in terms of <span class="inline-src language-scheme" data-lang="scheme">`product`</span>.
 
-I was briefly stumped because src_scheme{product} only counts upward. Then I
+
+#### <span class="section-num">2.47.4</span> Answer A.2 {#answer-a-dot-2}
+
+I was briefly stumped because <span class="inline-src language-scheme" data-lang="scheme">`product`</span> only counts upward. Then I
 realized that's just how it's presented and it can go either direction, since
 addition and multiplication are commutative. I look forward to building up a
 more intuitive sense of numbers.
-#+NAME: factorial-product
-#+BEGIN_SRC scheme -n :eval no-export :exports both :results output
+
+<a id="code-snippet--factorial-product"></a>
+```scheme { linenos=true, linenostart=1 }
 <<product-iter>>
 (define (identity x)
   x)
@@ -4948,40 +4363,28 @@ more intuitive sense of numbers.
   (product-iter identity 1 inc n))
 
 (display (factorial 7))
-#+END_SRC
+```
 
-#+RESULTS[62b530c1156728394dbfd7f2df3aa06defdbe68c]: product-iter
-:results:
-#+begin_example
-5040
-#+end_example
-:end:
 
-*** Question A.3
-:PROPERTIES:
-:ID:       aabc1dbe-2fd6-4569-9dfc-7cbea0f9286f
-:CUSTOM-ID: aabc1dbe-2fd6-4569-9dfc-7cbea0f9286f
-:END:
+#### <span class="section-num">2.47.5</span> Question A.3 {#question-a-dot-3}
 
-Also use src_scheme{product} to compute approximations to \(\pi\) using the
+Also use <span class="inline-src language-scheme" data-lang="scheme">`product`</span> to compute approximations to \\(\pi\\) using the
 formula
 
-\[
+$$
 \frac{\pi}{4} =
 \frac{2\cdot 4\cdot 4\cdot 6\cdot 6\cdot 8\cdots}{3\cdot 3\cdot 5\cdot 5\cdot 7\cdot 7\cdots}
-\]
+$$
 
-*** Answer A.3
-:PROPERTIES:
-:ID:       8dd42248-4caa-4eba-bea6-92130574a000
-:CUSTOM-ID: 8dd42248-4caa-4eba-bea6-92130574a000
-:END:
 
-Once this equation is encoded, you just need to multiply it by two to get \(\pi\).
+#### <span class="section-num">2.47.6</span> Answer A.3 {#answer-a-dot-3}
 
-Fun fact: the formula is slightly wrong, it should start the series with \(\frac{1}{2}\).
-#+NAME: pi-product
-#+BEGIN_SRC scheme -n :eval no-export :exports both :results output
+Once this equation is encoded, you just need to multiply it by two to get \\(\pi\\).
+
+Fun fact: the formula is slightly wrong, it should start the series with \\(\frac{1}{2}\\).
+
+<a id="code-snippet--pi-product"></a>
+```scheme { linenos=true, linenostart=1 }
 <<product-iter>>
 (define (pi-product n)
   (define (div x)
@@ -4991,42 +4394,33 @@ Fun fact: the formula is slightly wrong, it should start the series with \(\frac
   (* 2.0 (product-iter div 2 (lambda (z) (+ z 2)) n)))
 
 (display (pi-product 100000))
-#+END_SRC
+```
 
-#+RESULTS[ec9a51379631fed566dd2d3883f600356c3f0dd8]: pi-product
-:results:
-#+begin_example
+```text
 3.1415769458228726
-#+end_example
-:end:
+```
 
-*** Question B
-:PROPERTIES:
-:ID:       8e708af0-405b-4500-8c24-a8b2b14add83
-:CUSTOM-ID: 8e708af0-405b-4500-8c24-a8b2b14add83
-:END:
+
+#### <span class="section-num">2.47.7</span> Question B {#question-b}
 
 If your product procedure generates a recursive process, write one that
 generates an iterative process. If it generates an iterative process, write one
 that generates a recursive process.
 
-*** Answer B
-:PROPERTIES:
-:ID:       ecd3adca-6ab8-4a51-82af-8d45f3f84410
-:CUSTOM-ID: ecd3adca-6ab8-4a51-82af-8d45f3f84410
-:END:
 
-#+NAME: product-rec
-#+BEGIN_SRC scheme -n :eval no-export :exports code :results silent
+#### <span class="section-num">2.47.8</span> Answer B {#answer-b}
+
+<a id="code-snippet--product-rec"></a>
+```scheme { linenos=true, linenostart=1 }
 (define (product-rec term a next b)
   (if (> a b)
       1
       (* (term a)
          (product-rec term (next a) next b))))
-#+END_SRC
+```
 
-#+NAME: product-bench
-#+BEGIN_SRC scheme -n :exports both :tangle 1/Ex31-bench.scheme
+<a id="code-snippet--product-bench"></a>
+```scheme { linenos=true, linenostart=1 }
 <<mattbench2>>
 <<print-table>>
 <<product-iter>>
@@ -5050,53 +4444,44 @@ that generates a recursive process.
        (list (cadr (mattbench2 (lambda()(pi-product 1000)) iterations))
              (cadr (mattbench2 (lambda()(pi-product-rec 1000)) iterations))))
  #:colnames #t)
-#+END_SRC
+```
 
-#+RESULTS:
-|    iterative |    recursive |
-|--------------+--------------|
+| iterative    | recursive    |
+|--------------|--------------|
 | 1267118.0538 | 3067085.5323 |
 
-** Exercise 1.32
-:PROPERTIES:
-:ID:       f4a4d034-09b6-4ff5-968a-69b74b5ed370
-:CUSTOM-ID: f4a4d034-09b6-4ff5-968a-69b74b5ed370
-:END:
 
-*** Question A
-:PROPERTIES:
-:ID:       acee9589-f807-4d91-acf4-f432887f9269
-:CUSTOM-ID: acee9589-f807-4d91-acf4-f432887f9269
-:END:
+### <span class="section-num">2.48</span> Exercise 1.32 {#exercise-1-dot-32}
 
-Show that src_scheme{sum} and src_scheme{product} are both special cases of a
-still more general notion called src_scheme{accumulate} that combines a
+
+#### <span class="section-num">2.48.1</span> Question A {#question-a}
+
+Show that <span class="inline-src language-scheme" data-lang="scheme">`sum`</span> and <span class="inline-src language-scheme" data-lang="scheme">`product`</span> are both special cases of a
+still more general notion called <span class="inline-src language-scheme" data-lang="scheme">`accumulate`</span> that combines a
 collection of terms, using some general accumulation function:
 
-#+BEGIN_SRC scheme
+```scheme
 (accumulate combiner null-value term a next b)
-#+END_SRC
+```
 
-src_scheme{accumulate} takes as arguments the same term and range specifications
-as src_scheme{sum} and src_scheme{product}, together with a src_scheme{combiner}
+<span class="inline-src language-scheme" data-lang="scheme">`accumulate`</span> takes as arguments the same term and range specifications
+as <span class="inline-src language-scheme" data-lang="scheme">`sum`</span> and <span class="inline-src language-scheme" data-lang="scheme">`product`</span>, together with a <span class="inline-src language-scheme" data-lang="scheme">`combiner`</span>
 procedure (of two arguments) that specifies how the current term is to be
 combined with the accumulation of the preceding terms and a
-src_scheme{null-value} that specifies what base value to use when the terms run
-out. Write src_scheme{accumulate} and show how src_scheme{sum} and
-src_scheme{product} can both be defined as simple calls to
-src_scheme{accumulate}.
+<span class="inline-src language-scheme" data-lang="scheme">`null-value`</span> that specifies what base value to use when the terms run
+out. Write <span class="inline-src language-scheme" data-lang="scheme">`accumulate`</span> and show how <span class="inline-src language-scheme" data-lang="scheme">`sum`</span> and
+<span class="inline-src language-scheme" data-lang="scheme">`product`</span> can both be defined as simple calls to
+<span class="inline-src language-scheme" data-lang="scheme">`accumulate`</span>.
 
-*** Answer A
-:PROPERTIES:
-:ID:       b6e058f3-443d-455d-9b2a-42e6a0726c2c
-:CUSTOM-ID: b6e058f3-443d-455d-9b2a-42e6a0726c2c
-:END:
+
+#### <span class="section-num">2.48.2</span> Answer A {#answer-a}
 
 When I first did this question, I struggled a lot before realizing
-src_scheme{accumulate} was much closer to the exact definitions of sum/product
+<span class="inline-src language-scheme" data-lang="scheme">`accumulate`</span> was much closer to the exact definitions of sum/product
 than I thought.
-#+NAME: accumulate-iter
-#+BEGIN_SRC scheme -n :eval no-export :results silent
+
+<a id="code-snippet--accumulate-iter"></a>
+```scheme { linenos=true, linenostart=1 }
 (define (accumulate-iter combiner null-value term a next b)
   (define (iter a result)
     (if (> a b)
@@ -5104,9 +4489,9 @@ than I thought.
         (iter (next a)
               (combiner result (term a)))))
   (iter a null-value))
-#+END_SRC
+```
 
-#+BEGIN_SRC scheme -n :eval no-export
+```scheme { linenos=true, linenostart=1 }
 <<accumulate-iter>>
 
 ;; here you can see definitions in terms of accumulate
@@ -5125,70 +4510,51 @@ than I thought.
   (accumulate-iter * 1 identity 1 inc n))
 
 (display (factorial 7))
-#+END_SRC
+```
 
-#+RESULTS[4887ddb9da2fc846473c03144fb7dfe4f69aa8f1]:
-:results:
-#+begin_example
+```text
 5040
-#+end_example
-:end:
+```
 
-*** Question B
-:PROPERTIES:
-:ID:       5af0317d-e560-4a81-b2ae-dfdc061356e1
-:CUSTOM-ID: 5af0317d-e560-4a81-b2ae-dfdc061356e1
-:END:
 
-If your src_scheme{accumulate} procedure generates a recursive process, write
+#### <span class="section-num">2.48.3</span> Question B {#question-b}
+
+If your <span class="inline-src language-scheme" data-lang="scheme">`accumulate`</span> procedure generates a recursive process, write
 one that generates an iterative process. If it generates an iterative process,
 write one that generates a recursive process.
 
-*** Answer B
-:PROPERTIES:
-:ID:       89f3a10e-0d2d-42df-8261-c850d9ca0152
-:CUSTOM-ID: 89f3a10e-0d2d-42df-8261-c850d9ca0152
-:END:
 
-#+NAME: accumulate-rec
-#+BEGIN_SRC scheme -n :eval no-export :exports code :results silent
+#### <span class="section-num">2.48.4</span> Answer B {#answer-b}
+
+<a id="code-snippet--accumulate-rec"></a>
+```scheme { linenos=true, linenostart=1 }
 (define (accumulate-rec combiner null-value term a next b)
   (if (> a b)
       null-value
       (combiner (term a)
          (accumulate-rec combiner null-value
                          term (next a) next b))))
-#+END_SRC
+```
 
-** Exercise 1.33
-:PROPERTIES:
-:ID:       0f988768-6d07-4947-a89d-bc294a2da075
-:CUSTOM-ID: 0f988768-6d07-4947-a89d-bc294a2da075
-:END:
 
-*** Question A
-:PROPERTIES:
-:ID:       cc9235e8-f2a4-4ee0-9ec0-eae8f7c42f19
-:CUSTOM-ID: cc9235e8-f2a4-4ee0-9ec0-eae8f7c42f19
-:END:
+### <span class="section-num">2.49</span> Exercise 1.33 {#exercise-1-dot-33}
 
-#+INDEX: filter
-You can obtain an even more general version of src_scheme{accumulate} by
+
+#### <span class="section-num">2.49.1</span> Question A {#question-a}
+
+You can obtain an even more general version of <span class="inline-src language-scheme" data-lang="scheme">`accumulate`</span> by
 introducing the notion of a filter on the terms to be combined. That is, combine
 only those terms derived from values in the range that satisfy a specified
-condition. The resulting src_scheme{filtered-accumulate} abstraction takes the
+condition. The resulting <span class="inline-src language-scheme" data-lang="scheme">`filtered-accumulate`</span> abstraction takes the
 same arguments as accumulate, together with an additional predicate of one
-argument that specifies the filter. Write src_scheme{filtered-accumulate} as a
+argument that specifies the filter. Write <span class="inline-src language-scheme" data-lang="scheme">`filtered-accumulate`</span> as a
 procedure.
 
-*** Answer A
-:PROPERTIES:
-:ID:       398f19b8-8908-467d-9b84-b921525bab17
-:CUSTOM-ID: 398f19b8-8908-467d-9b84-b921525bab17
-:END:
 
-#+NAME: filtered-accumulate-iter
-#+BEGIN_SRC scheme -n :eval no-export :results silent
+#### <span class="section-num">2.49.2</span> Answer A {#answer-a}
+
+<a id="code-snippet--filtered-accumulate-iter"></a>
+```scheme { linenos=true, linenostart=1 }
 (define (filtered-accumulate-iter
            predicate? combiner null-value
            term a next b)
@@ -5200,226 +4566,184 @@ procedure.
           (else (iter (next a)
                       result))))
   (iter a null-value))
-#+END_SRC
+```
 
-*** Question B
-:PROPERTIES:
-:ID:       f9acb49a-f3e7-4b81-9a67-fb0c2468d60d
-:CUSTOM-ID: f9acb49a-f3e7-4b81-9a67-fb0c2468d60d
-:END:
 
-Show how to express the following using src_scheme{filtered-accumulate}:
+#### <span class="section-num">2.49.3</span> Question B {#question-b}
 
-**** A
-:PROPERTIES:
-:ID:       d52ed48f-0ada-438c-92a4-81a698b86434
-:CUSTOM-ID: d52ed48f-0ada-438c-92a4-81a698b86434
-:END:
+Show how to express the following using <span class="inline-src language-scheme" data-lang="scheme">`filtered-accumulate`</span>:
 
-Find the sum of the squares of the prime numbers in the interval \(a\) to \(b\)
-(assuming that you have a src_scheme{prime?} predicate already written)
+<!--list-separator-->
 
-#+BEGIN_SRC scheme -n :eval no-export :results output :results both
-(load "mattcheck.scm")
-(define (square x)
-  (* x x))
-<<filtered-accumulate-iter>>
-<<expmod-mr2>>
-<<mr-test2>>
-<<mr-prime>>
-(define mr-times 100)
-(define (prime? x)
-  (mr-prime? x mr-times))
-(define (prime-sum a b)
-  (filtered-accumulate-iter prime? + 0
-                            square a 1+ b))
+1.  A
 
-(mattcheck-equal "1 prime correct"
-                 (prime-sum 1008 1010)
-                 (square 1009)) ;; 1009
-(mattcheck-equal "many primes correct"
-                 (prime-sum 1000 2001)
-                 (apply +
-                        (map square
-                             (filter prime? (iota (- 2001 1000)
-                                                  1000)))))
-#+END_SRC
+    Find the sum of the squares of the prime numbers in the interval \\(a\\) to \\(b\\)
+    (assuming that you have a <span class="inline-src language-scheme" data-lang="scheme">`prime?`</span> predicate already written)
 
-#+RESULTS[9d2efd935ed9abfe7480e0fd9117c25f7db9eb02]:
-:results:
-#+begin_example
-SUCCEED at 1 prime correct
-SUCCEED at many primes correct
-#+end_example
-:end:
+    ```scheme { linenos=true, linenostart=1 }
+    (load "mattcheck.scm")
+    (define (square x)
+      (* x x))
+    <<filtered-accumulate-iter>>
+    <<expmod-mr2>>
+    <<mr-test2>>
+    <<mr-prime>>
+    (define mr-times 100)
+    (define (prime? x)
+      (mr-prime? x mr-times))
+    (define (prime-sum a b)
+      (filtered-accumulate-iter prime? + 0
+                                square a 1+ b))
 
-**** B
-:PROPERTIES:
-:ID:       1c20e096-168c-42d6-a625-14a62757c355
-:CUSTOM-ID: 1c20e096-168c-42d6-a625-14a62757c355
-:END:
+    (mattcheck-equal "1 prime correct"
+                     (prime-sum 1008 1010)
+                     (square 1009)) ;; 1009
+    (mattcheck-equal "many primes correct"
+                     (prime-sum 1000 2001)
+                     (apply +
+                            (map square
+                                 (filter prime? (iota (- 2001 1000)
+                                                      1000)))))
+    ```
 
-#+begin_quote
-Find the product of all the positive integers less than \(n\) that are
-relatively prime to \(n\) (i.e., all positive integers \(i < n\) such that
-\(\textsc{gcd}(i, n) = 1\).
-#+end_quote
+    ```text
+    SUCCEED at 1 prime correct
+    SUCCEED at many primes correct
+    ```
 
-#+BEGIN_SRC scheme -n :eval no-export :results output :results both
-(load "mattcheck.scm")
-(define (square x)
-  (* x x))
-(define (id x) x)
-<<filtered-accumulate-iter>>
-<<gcd>>
-(define (relative-prime? x y)
-  (= 1 (gcd x y)))
+<!--list-separator-->
 
-(define (Ex_1-33B n)
-  (filtered-accumulate-iter
-   (lambda(i) (relative-prime? i n))
-   ,* 1 id
-   1 1+ (1- n)))
+2.  B
 
-(define (alternate n)
-  (apply *
-         (filter (lambda(i) (relative-prime? i n))
-                 (iota (- n 1) 1))))
+    > Find the product of all the positive integers less than \\(n\\) that are
+    > relatively prime to \\(n\\) (i.e., all positive integers \\(i < n\\) such that
+    > \\(\textsc{gcd}(i, n) = 1\\).
 
-(mattcheck-equal "Ex_1-33B"
-                 (Ex_1-33B 100)
-                 (alternate 100))
-#+END_SRC
+    ```scheme { linenos=true, linenostart=1 }
+    (load "mattcheck.scm")
+    (define (square x)
+      (* x x))
+    (define (id x) x)
+    <<filtered-accumulate-iter>>
+    <<gcd>>
+    (define (relative-prime? x y)
+      (= 1 (gcd x y)))
 
-#+RESULTS[55bb2d7ee1ab4c812a9f57fd811be17be87b2093]:
-:results:
-#+begin_example
-SUCCEED at Ex_1-33B
-#+end_example
-:end:
+    (define (Ex_1-33B n)
+      (filtered-accumulate-iter
+       (lambda(i) (relative-prime? i n))
+       * 1 id
+       1 1+ (1- n)))
 
-** 1.3.2: Constructing Procedures Using lambda
-:PROPERTIES:
-:ID:       bebc1b91-d31b-44dd-84af-04b0da3604ba
-:CUSTOM-ID: bebc1b91-d31b-44dd-84af-04b0da3604ba
-:END:
+    (define (alternate n)
+      (apply *
+             (filter (lambda(i) (relative-prime? i n))
+                     (iota (- n 1) 1))))
+
+    (mattcheck-equal "Ex_1-33B"
+                     (Ex_1-33B 100)
+                     (alternate 100))
+    ```
+
+    ```text
+    SUCCEED at Ex_1-33B
+    ```
+
+
+### <span class="section-num">2.50</span> 1.3.2: Constructing Procedures Using lambda {#1-dot-3-dot-2-constructing-procedures-using-lambda}
 
 A procedure that's only used once is more conveniently expressed as the special
-form src_scheme{lambda}.
+form <span class="inline-src language-scheme" data-lang="scheme">`lambda`</span>.
 
 Variables that are only briefly used in a limited scope can be specified with
-the special form src_scheme{let}. Variables in src_scheme{let} blocks override
-external variables. The authors recommend using src_scheme{define} for
-procedures and src_scheme{let} for variables.
+the special form <span class="inline-src language-scheme" data-lang="scheme">`let`</span>. Variables in <span class="inline-src language-scheme" data-lang="scheme">`let`</span> blocks override
+external variables. The authors recommend using <span class="inline-src language-scheme" data-lang="scheme">`define`</span> for
+procedures and <span class="inline-src language-scheme" data-lang="scheme">`let`</span> for variables.
 
-** Exercise 1.34
-:PROPERTIES:
-:ID:       a8aa7863-ffd5-49b2-9111-0deba26721fb
-:CUSTOM-ID: a8aa7863-ffd5-49b2-9111-0deba26721fb
-:END:
 
-*** Question
-:PROPERTIES:
-:ID:       9d5702e5-4f3a-4664-8eaa-5fc05ee79095
-:CUSTOM-ID: 9d5702e5-4f3a-4664-8eaa-5fc05ee79095
-:END:
-#+begin_quote
-Suppose we define the procedure
-#+end_quote
+### <span class="section-num">2.51</span> Exercise 1.34 {#exercise-1-dot-34}
 
-#+BEGIN_SRC scheme
+
+#### <span class="section-num">2.51.1</span> Question {#question}
+
+> Suppose we define the procedure
+
+```scheme
 (define (f g) (g 2))
-#+END_SRC
+```
 
-#+begin_quote
-Then, we have
-#+end_quote
+> Then, we have
 
-#+BEGIN_SRC scheme
+```scheme
 (f square)
 ; 4
 (f (lambda (z) (* z (+ z 1))))
 ; 6
-#+END_SRC
+```
 
-#+begin_quote
-What happens if we (perversely) ask the interpreter to evaluate the combination
-src_scheme{(f f)}? Explain.
-#+end_quote
+> What happens if we (perversely) ask the interpreter to evaluate the combination
+> <span class="inline-src language-scheme" data-lang="scheme">`(f f)`</span>? Explain.
 
-*** Answer
-:PROPERTIES:
-:ID:       572f2214-dd1b-41a3-aab8-1f689eeb18f8
-:CUSTOM-ID: 572f2214-dd1b-41a3-aab8-1f689eeb18f8
-:END:
 
-It ends up trying to execute src_scheme{2} as a function.
-#+BEGIN_SRC scheme -n :eval no-export :results output
+#### <span class="section-num">2.51.2</span> Answer {#answer}
+
+It ends up trying to execute <span class="inline-src language-scheme" data-lang="scheme">`2`</span> as a function.
+
+```scheme { linenos=true, linenostart=1 }
 ;; Will be evaluated like this:
 ;;   (f f)
 ;;   (f 2)
 ;;   (2 2)
 (define (f g) (g 2))
 (f f)
-#+END_SRC
+```
 
-#+RESULTS[fa3fee1227bd981f86a7f021bb6f63e9ad869b8e]:
-:results:
-#+begin_example
+```text
 ice-9/boot-9.scm:1685:16: In procedure raise-exception:
 Wrong type to apply: 2
-#+end_example
-:end:
+```
 
-** 1.3.3 Procedures as General Methods
-:PROPERTIES:
-:ID:       0d57f264-3dde-4357-9bcf-8ae957350f5d
-:CUSTOM-ID: 0d57f264-3dde-4357-9bcf-8ae957350f5d
-:END:
 
-The *half-interval method*: if \(f(a)<0<f(b)\), then \(f\) must have at least
-one 0 between \(a\) and \(b\). To find 0, let \(x\) be the average of \(a\) and
-\(b\), if \(f(x) < 0\) then 0 must be between \(x\) and \(b\), if \(f(x)>0\)
-than 0 must be between \(a\) and \(x\).
+### <span class="section-num">2.52</span> 1.3.3 Procedures as General Methods {#1-dot-3-dot-3-procedures-as-general-methods}
 
-The *fixed point* of a function satisfies the equation \[f(x)=x\]
+The **half-interval method**: if \\(f(a)<0<f(b)\\), then \\(f\\) must have at least
+one 0 between \\(a\\) and \\(b\\). To find 0, let \\(x\\) be the average of \\(a\\) and
+\\(b\\), if \\(f(x) < 0\\) then 0 must be between \\(x\\) and \\(b\\), if \\(f(x)>0\\)
+than 0 must be between \\(a\\) and \\(x\\).
+
+The **fixed point** of a function satisfies the equation $$f(x)=x$$
 
 For some functions, we can locate a fixed point by beginning with an initial
-guess \(y\) and applying \(f(y)\) repeatedly until the value doesn't change
+guess \\(y\\) and applying \\(f(y)\\) repeatedly until the value doesn't change
 much.
 
-*Average damping* can help converge fixed-point searches.
+**Average damping** can help converge fixed-point searches.
 
-The symbol \(\mapsto\) ("maps to") can be considered equivalent to a lambda. For
-example, \(x \mapsto x+x\) is equivalent to src_scheme{(lambda (x) (+ x x))}. In
-English, "the function whose value at \(y\) is \(x/y\)". /Though it seems like
-\(\mapsto\) doesn't necessarily describe a function, but the value of a function
-at a certain point? Or maybe that would just be \(~\), ie \(f(x)~etc\)/
+The symbol \\(\mapsto\\) ("maps to") can be considered equivalent to a lambda. For
+example, \\(x \mapsto x+x\\) is equivalent to <span class="inline-src language-scheme" data-lang="scheme">`(lambda (x) (+ x x))`</span>. In
+English, "the function whose value at \\(y\\) is \\(x/y\\)". _Though it seems like
+\\(\mapsto\\) doesn't necessarily describe a function, but the value of a function
+at a certain point? Or maybe that would just be \\(~\\), ie \\(f(x)~etc\\)_
 
-** Exercise 1.35
-:PROPERTIES:
-:ID:       e31d236d-e1ce-4869-81b0-8b79d34638ca
-:CUSTOM-ID: e31d236d-e1ce-4869-81b0-8b79d34638ca
-:END:
 
-*** Text
-:PROPERTIES:
-:ID:       be2873e9-e336-4dc4-bf2f-bd853e3eaf9e
-:CUSTOM-ID: be2873e9-e336-4dc4-bf2f-bd853e3eaf9e
-:END:
-#+NAME: close-enough-txt
-#+BEGIN_SRC scheme -n :eval no-export :results silent
-(define (close-enough? x y) 
+### <span class="section-num">2.53</span> Exercise 1.35 {#exercise-1-dot-35}
+
+
+#### <span class="section-num">2.53.1</span> Text {#text}
+
+<a id="code-snippet--close-enough-txt"></a>
+```scheme { linenos=true, linenostart=1 }
+(define (close-enough? x y)
   (< (abs (- x y)) 0.001))
-#+END_SRC
+```
 
-#+NAME: fixed-point-txt
-#+BEGIN_SRC scheme -n :eval no-export :results silent
+<a id="code-snippet--fixed-point-txt"></a>
+```scheme { linenos=true, linenostart=1 }
 (define tolerance 0.00001)
 
 (define (fixed-point f first-guess)
   (define (close-enough? v1 v2)
-    (< (abs (- v1 v2)) 
+    (< (abs (- v1 v2))
        tolerance))
   (define (try guess)
     (let ((next (f guess)))
@@ -5427,28 +4751,20 @@ at a certain point? Or maybe that would just be \(~\), ie \(f(x)~etc\)/
           next
           (try next))))
   (try first-guess))
-#+END_SRC
+```
 
-*** Question
-:PROPERTIES:
-:ID:       34a47af6-9e71-451d-8c6f-0698d43b8e7b
-:CUSTOM-ID: 34a47af6-9e71-451d-8c6f-0698d43b8e7b
-:END:
 
-#+begin_quote
-Show that the golden ratio \(\varphi\) is a fixed point of the transformation
-\(x \mapsto 1 + 1 / x\), and use this fact to compute \(\varphi\) by means of
-the src_scheme{fixed-point} procedure.
-#+end_quote
+#### <span class="section-num">2.53.2</span> Question {#question}
 
-*** Answer
-:PROPERTIES:
-:ID:       b34d7cd6-a871-4e8c-9988-df80f50af1aa
-:CUSTOM-ID: b34d7cd6-a871-4e8c-9988-df80f50af1aa
-:END:
+> Show that the golden ratio \\(\varphi\\) is a fixed point of the transformation
+> \\(x \mapsto 1 + 1 / x\\), and use this fact to compute \\(\varphi\\) by means of
+> the <span class="inline-src language-scheme" data-lang="scheme">`fixed-point`</span> procedure.
 
-#+NAME: golden-ratio
-#+BEGIN_SRC scheme -n :eval no-export :results output
+
+#### <span class="section-num">2.53.3</span> Answer {#answer}
+
+<a id="code-snippet--golden-ratio"></a>
+```scheme { linenos=true, linenostart=1 }
 <<close-enough>>
 <<fixed-point-txt>>
 (define golden-ratio
@@ -5456,54 +4772,41 @@ the src_scheme{fixed-point} procedure.
                1.0))
 
 (display golden-ratio)
-#+END_SRC
+```
 
-#+RESULTS[ab642d672c1d63abecbdf383dc53da955f5e11c7]: fixed-point-txt
-:results:
-#+begin_example
+```text
 1.6180327868852458
-#+end_example
-:end:
+```
 
-** Exercise 1.36
-:PROPERTIES:
-:ID:       14a2f8ac-4e60-4c39-8df7-b3c4991e03d0
-:CUSTOM-ID: 14a2f8ac-4e60-4c39-8df7-b3c4991e03d0
-:END:
 
-*** Question
-:PROPERTIES:
-:ID:       b53a92e6-8307-4e5f-823e-2670eb1e7e96
-:CUSTOM-ID: b53a92e6-8307-4e5f-823e-2670eb1e7e96
-:END:
+### <span class="section-num">2.54</span> Exercise 1.36 {#exercise-1-dot-36}
 
-#+begin_quote
-Modify src_scheme{fixed-point} so that it prints the sequence of approximations
-it generates, using the src_scheme{newline} and src_scheme{display} primitives
-shown in Exercise 1.22. Then find a solution to \(x^x = 1000\) by finding a
-fixed point of \(x \mapsto \log(1000) / \log(x)\). (Use Scheme's primitive
-src_scheme{log} procedure, which computes natural logarithms.) Compare the
-number of steps this takes with and without average damping. (Note that you
-cannot start src_scheme{fixed-point} with a guess of 1, as this would cause
-division by \(\log(1) = 0\).)
-#+end_quote
 
-*** Answer
-:PROPERTIES:
-:ID:       5742a471-6570-4168-8d26-bf7fd9458c84
-:CUSTOM-ID: 5742a471-6570-4168-8d26-bf7fd9458c84
-:END:
+#### <span class="section-num">2.54.1</span> Question {#question}
 
-Using the src_scheme{display} and src_scheme{newline} functions at any great
-extent is pretty exhausting, so I'll use src_scheme{format} instead.
-#+NAME: fixed-point-debug
-#+BEGIN_SRC scheme -n :eval no-export :results silent
+> Modify <span class="inline-src language-scheme" data-lang="scheme">`fixed-point`</span> so that it prints the sequence of approximations
+> it generates, using the <span class="inline-src language-scheme" data-lang="scheme">`newline`</span> and <span class="inline-src language-scheme" data-lang="scheme">`display`</span> primitives
+> shown in Exercise 1.22. Then find a solution to \\(x^x = 1000\\) by finding a
+> fixed point of \\(x \mapsto \log(1000) / \log(x)\\). (Use Scheme's primitive
+> <span class="inline-src language-scheme" data-lang="scheme">`log`</span> procedure, which computes natural logarithms.) Compare the
+> number of steps this takes with and without average damping. (Note that you
+> cannot start <span class="inline-src language-scheme" data-lang="scheme">`fixed-point`</span> with a guess of 1, as this would cause
+> division by \\(\log(1) = 0\\).)
+
+
+#### <span class="section-num">2.54.2</span> Answer {#answer}
+
+Using the <span class="inline-src language-scheme" data-lang="scheme">`display`</span> and <span class="inline-src language-scheme" data-lang="scheme">`newline`</span> functions at any great
+extent is pretty exhausting, so I'll use <span class="inline-src language-scheme" data-lang="scheme">`format`</span> instead.
+
+<a id="code-snippet--fixed-point-debug"></a>
+```scheme { linenos=true, linenostart=1 }
 (use-modules (ice-9 format))
 (define tolerance 0.00001)
 
 (define (fixed-point f first-guess)
   (define (close-enough? v1 v2)
-    (< (abs (- v1 v2)) 
+    (< (abs (- v1 v2))
        tolerance))
   (define (try guess)
     (let ((next (f guess)))
@@ -5512,135 +4815,59 @@ extent is pretty exhausting, so I'll use src_scheme{format} instead.
           next
           (try next))))
   (try first-guess))
-#+END_SRC
+```
 
-#+BEGIN_SRC scheme -n :eval no-export :results output :exports code
+```scheme { linenos=true, linenostart=1 }
 <<close-enough>>
 <<fixed-point-debug>>
 (fixed-point (lambda(x) (/ (log 1000) (log x))) 1.1)
-#+END_SRC
-
-#+RESULTS[26e30764924462e2d22df8d8ba9a56af22698a31]:
-:results:
-72.47657378429035
-1.6127318474109593
-14.45350138636525
-2.5862669415385087
-7.269672273367045
-3.4822383620848467
-5.536500810236703
-4.036406406288111
-4.95053682041456
-4.318707390180805
-4.721778787145103
-4.450341068884912
-4.626821434106115
-4.509360945293209
-4.586349500915509
-4.535372639594589
-4.568901484845316
-4.546751100777536
-4.561341971741742
-4.551712230641226
-4.558059671677587
-4.55387226495538
-4.556633177654167
-4.554812144696459
-4.556012967736543
-4.555220997683307
-4.555743265552239
-4.555398830243649
-4.555625974816275
-4.555476175432173
-4.555574964557791
-4.555509814636753
-4.555552779647764
-4.555524444961165
-4.555543131130589
-4.555530807938518
-4.555538934848503
-:end:
+```
 
 Undamped, fixed-point makes 37 guesses.
 
-#+BEGIN_SRC scheme -n :eval no-export :results output :exports code
+```scheme { linenos=true, linenostart=1 }
 <<close-enough>>
 <<fixed-point-debug>>
 (define (average x y)
   (/ (+ x y) 2))
 (fixed-point (lambda(x) (average (log x) (/ (log 1000) (log x)))) 1.1)
-#+END_SRC
-
-#+RESULTS[c8b656c007db26b56776bc139a6cba1a86bb3755]:
-:results:
-36.28594198204734
-2.7574149265729444
-3.912351744086603
-3.213980298130383
-3.542082820324556
-3.363310959347184
-3.4540216132238184
-3.4061901980695635
-3.4309216866411916
-3.418001560431991
-3.4247152892453725
-3.4212168715053366
-3.42303720142058
-3.4220893146379012
-3.422582706729079
-3.4223258347369994
-3.4224595543381247
-3.4223899401968296
-3.4224261801254277
-3.422407313956363
-3.4224171354313153
-:end:
+```
 
 Damped, it makes 21.
 
-** Exercise 1.37
-:PROPERTIES:
-:ID:       ea7098b0-6504-4aaf-89e1-894f16593e0b
-:CUSTOM-ID: ea7098b0-6504-4aaf-89e1-894f16593e0b
-:END:
 
-*** Question A
-:PROPERTIES:
-:ID:       cd886b09-1c12-4a40-966f-685ccf39cd73
-:CUSTOM-ID: cd886b09-1c12-4a40-966f-685ccf39cd73
-:END:
+### <span class="section-num">2.55</span> Exercise 1.37 {#exercise-1-dot-37}
 
-#+begin_quote
-An infinite continued fraction is an expression of the form
 
-\[ {f} = \cfrac{N_1}{D_1 + \cfrac{N_2}{D_2 + \cfrac{N_3}{D_3 + \dots}}} \]
+#### <span class="section-num">2.55.1</span> Question A {#question-a}
 
-As an example, one can show that the infinite continued fraction expansion with
-the \(N_i\) and the \(D_i\) all equal to 1 produces \(1 / \varphi\), where
-\(\varphi\) is the golden ratio (described in 1.2.2). One way to approximate an
-infinite continued fraction is to truncate the expansion after a given number of
-terms. Such a truncation---a so-called \(k\)-term finite continued
-fraction}---has the form
+> An infinite continued fraction is an expression of the form
+>
+> $$ {f} = \cfrac{N\_1}{D\_1 + \cfrac{N\_2}{D\_2 + \cfrac{N\_3}{D\_3 + \dots}}} $$
+>
+> As an example, one can show that the infinite continued fraction expansion with
+> the \\(N\_i\\) and the \\(D\_i\\) all equal to 1 produces \\(1 / \varphi\\), where
+> \\(\varphi\\) is the golden ratio (described in 1.2.2). One way to approximate an
+> infinite continued fraction is to truncate the expansion after a given number of
+> terms. Such a truncation---a so-called \\(k\\)-term finite continued
+> fraction}---has the form
+>
+> $$ \cfrac{N\_1}{D\_1 + \cfrac{N\_2}{\ddots + \cfrac{N\_k}{D\_k}}} $$
+>
+> Suppose that <span class="inline-src language-scheme" data-lang="scheme">`n`</span> and <span class="inline-src language-scheme" data-lang="scheme">`d`</span> are procedures of one argument (the
+> term index \\(i\\)) that return the \\(N\_i\\) and \\(D\_i\\) of the terms of the
+> continued fraction. Define a procedure <span class="inline-src language-scheme" data-lang="scheme">`cont-frac`</span> such that
+> evaluating <span class="inline-src language-scheme" data-lang="scheme">`(cont-frac n d k)`</span> computes the value of the \\(k\\)-term
+> finite continued fraction.
 
-\[ \cfrac{N_1}{D_1 + \cfrac{N_2}{\ddots + \cfrac{N_k}{D_k}}} \]
 
-Suppose that src_scheme{n} and src_scheme{d} are procedures of one argument (the
-term index \(i\)) that return the \(N_i\) and \(D_i\) of the terms of the
-continued fraction. Define a procedure src_scheme{cont-frac} such that
-evaluating src_scheme{(cont-frac n d k)} computes the value of the \(k\)-term
-finite continued fraction.
-#+end_quote
+#### <span class="section-num">2.55.2</span> Answer A {#answer-a}
 
-*** Answer A
-:PROPERTIES:
-:ID:       2ee7e946-ede6-458d-a353-82cc67999c8a
-:CUSTOM-ID: 2ee7e946-ede6-458d-a353-82cc67999c8a
-:END:
-
-A note: the "golden ratio" this code estimates is exactly =1.0= less than the
+A note: the "golden ratio" this code estimates is exactly `1.0` less than the
 golden ratio anyone else seems to be talking about.
-#+NAME: cont-frac
-#+BEGIN_SRC scheme -n :eval no-export :results silent
+
+<a id="code-snippet--cont-frac"></a>
+```scheme { linenos=true, linenostart=1 }
 (define (cont-frac n d k)
   (define (iter i result)
     (if (= i 0)
@@ -5648,98 +4875,53 @@ golden ratio anyone else seems to be talking about.
         (iter (1- i) (/ (n i) (+ (d i) result)))))
 
   (iter (1- k) (/ (n k) (d k))))
-#+END_SRC
+```
 
-*** Question B
-:PROPERTIES:
-:ID:       f58d571e-0643-4f24-8db5-1e1431ee4315
-:CUSTOM-ID: f58d571e-0643-4f24-8db5-1e1431ee4315
-:END:
 
-Check your procedure by approximating \(1 / \varphi\) using
+#### <span class="section-num">2.55.3</span> Question B {#question-b}
 
-#+BEGIN_SRC scheme
+Check your procedure by approximating \\(1 / \varphi\\) using
+
+```scheme
 (cont-frac (lambda (i) 1.0)
            (lambda (i) 1.0)
            k)
-#+END_SRC
+```
 
-for successive values of src_scheme{k}. How large must you make src_scheme{k} in
+for successive values of <span class="inline-src language-scheme" data-lang="scheme">`k`</span>. How large must you make <span class="inline-src language-scheme" data-lang="scheme">`k`</span> in
 order to get an approximation that is accurate to 4 decimal places?
 
-*** Answer B
-:PROPERTIES:
-:ID:       169fe6a8-aba3-45c3-8e8e-181a28252426
-:CUSTOM-ID: 169fe6a8-aba3-45c3-8e8e-181a28252426
-:END:
 
-#+NAME: cont-frac-data
-#+BEGIN_SRC scheme -n :eval no-export :results value table :exports results
-<<cont-frac>>
-(define (golden-ratio k)
-  (cont-frac (lambda(i) 1.0)(lambda(i)1.0) k))
+#### <span class="section-num">2.55.4</span> Answer B {#answer-b}
 
-(map (lambda(x y) (list x y))
-     (iota 10 1)
-      (map (lambda(x)(- 0.61803398874989484820
-                   (golden-ratio x)))
-           (iota 10 1)))
-#+END_SRC
+| 1  | -0.3819660112501051     |
+|----|-------------------------|
+| 2  | 0.1180339887498949      |
+| 3  | -0.04863267791677173    |
+| 4  | 0.018033988749894814    |
+| 5  | -0.0069660112501050975  |
+| 6  | 0.0026493733652794837   |
+| 7  | -0.0010136302977241662  |
+| 8  | 0.00038692992636546464  |
+| 9  | -0.00014782943192326314 |
+| 10 | 5.6460660007306984e-05  |
 
-#+RESULTS[c254d70f15375afe5614dfb4a165f1fa23fa4c6f]: cont-frac-data
-:results:
-|  1 |     -0.3819660112501051 |
-|  2 |      0.1180339887498949 |
-|  3 |    -0.04863267791677173 |
-|  4 |    0.018033988749894814 |
-|  5 |  -0.0069660112501050975 |
-|  6 |   0.0026493733652794837 |
-|  7 |  -0.0010136302977241662 |
-|  8 |  0.00038692992636546464 |
-|  9 | -0.00014782943192326314 |
-| 10 |  5.6460660007306984e-05 |
-:end:
+{{< figure src="/ox-hugo/1-36-1.png" >}}
+
+\\(k\\) must be at least 10 to get precision of 4 decimal places.
 
 
-#+begin_src gnuplot :var data=cont-frac-data :file 1/fig/1-36-1.png :exports results :cache no :eval no-export
-reset
-#set logscale xy
-set xlabel 'iterations'
-set xtics rotate by -45
-set ylabel 'error'
-set title 'distance from true golden ratio'
+#### <span class="section-num">2.55.5</span> Question C {#question-c}
 
-plot data using 2:xticlabels(1) with fillsteps fs solid 0.3 noborder lt 1 notitle,\
-     data using 2:xticlabels(1) with steps lt 1 lw 4 title '(golden-ratio)'
-#+end_src
+> If your <span class="inline-src language-scheme" data-lang="scheme">`cont-frac`</span> procedure generates a recursive process, write one
+> that generates an iterative process. If it generates an iterative process, write
+> one that generates a recursive process.
 
-#+RESULTS:
-:results:
-[[file:1/fig/1-36-1.png]]
-:end:
 
-\(k\) must be at least 10 to get precision of 4 decimal places.
+#### <span class="section-num">2.55.6</span> Answer C {#answer-c}
 
-*** Question C
-:PROPERTIES:
-:ID:       8a5386a8-3be8-46b8-b9b0-e04b83df0931
-:CUSTOM-ID: 8a5386a8-3be8-46b8-b9b0-e04b83df0931
-:END:
-
-#+begin_quote
-If your src_scheme{cont-frac} procedure generates a recursive process, write one
-that generates an iterative process. If it generates an iterative process, write
-one that generates a recursive process.
-#+end_quote
-
-*** Answer C
-:PROPERTIES:
-:ID:       1cb2b491-4ebd-4314-ac47-ac16b1126f97
-:CUSTOM-ID: 1cb2b491-4ebd-4314-ac47-ac16b1126f97
-:END:
-
-#+NAME: cont-frac-rec
-#+BEGIN_SRC scheme -n :eval no-export :results silent
+<a id="code-snippet--cont-frac-rec"></a>
+```scheme { linenos=true, linenostart=1 }
 (define (cont-frac-rec n d k)
   (define (rec i)
     (if (= i k)
@@ -5747,8 +4929,9 @@ one that generates a recursive process.
         (/ (n i) (+ (d i) (rec (1+ i))))))
 
   (rec 1))
-#+END_SRC
-#+BEGIN_SRC scheme -n :eval no-export :results output :exports both
+```
+
+```scheme { linenos=true, linenostart=1 }
 <<cont-frac>>
 <<cont-frac-rec>>
 (define (golden-ratio k)
@@ -5760,43 +4943,29 @@ one that generates a recursive process.
 (mattcheck-equal "cont-frac iter and recursive equivalence"
            (golden-ratio-rec 15)
            (golden-ratio 15))
-#+END_SRC
+```
 
-#+RESULTS[061d67cf4b680c4b50b710fad1cf7538691b71ac]:
-:results:
-#+begin_example
+```text
 SUCCEED at cont-frac iter and recursive equivalence
-#+end_example
-:end:
+```
 
-** Exercise 1.38
-:PROPERTIES:
-:ID:       61db36fc-e74e-4fae-984d-648099f51a24
-:CUSTOM-ID: 61db36fc-e74e-4fae-984d-648099f51a24
-:END:
 
-*** Question
-:PROPERTIES:
-:ID:       7343df58-ada0-4c1c-8fb3-43433350140f
-:CUSTOM-ID: 7343df58-ada0-4c1c-8fb3-43433350140f
-:END:
+### <span class="section-num">2.56</span> Exercise 1.38 {#exercise-1-dot-38}
 
-#+begin_quote
-In 1737, the Swiss mathematician Leonhard Euler published a memoir /De
-Fractionibus Continuis/, which included a continued fraction expansion for \(e -
-2\), where \(e\) is the base of the natural logarithms. In this fraction, the
-\(N_i\) are all 1, and the \(D_i\) are successively 1, 2, 1, 1, 4, 1, 1, 6, 1,
-1, 8, \(\dots\). Write a program that uses your src_scheme{cont-frac} procedure
-from Exercise 1.37 to approximate \(e\), based on Euler's expansion.
-#+end_quote
 
-*** Answer
-:PROPERTIES:
-:ID:       eef88f33-1190-4794-b067-44c1cc80c758
-:CUSTOM-ID: eef88f33-1190-4794-b067-44c1cc80c758
-:END:
+#### <span class="section-num">2.56.1</span> Question {#question}
 
-#+BEGIN_SRC scheme -n :eval no-export :results value :exports both
+> In 1737, the Swiss mathematician Leonhard Euler published a memoir _De
+> Fractionibus Continuis_, which included a continued fraction expansion for \\(e -
+> 2\\), where \\(e\\) is the base of the natural logarithms. In this fraction, the
+> \\(N\_i\\) are all 1, and the \\(D\_i\\) are successively 1, 2, 1, 1, 4, 1, 1, 6, 1,
+> 1, 8, \\(\dots\\). Write a program that uses your <span class="inline-src language-scheme" data-lang="scheme">`cont-frac`</span> procedure
+> from Exercise 1.37 to approximate \\(e\\), based on Euler's expansion.
+
+
+#### <span class="section-num">2.56.2</span> Answer {#answer}
+
+```scheme { linenos=true, linenostart=1 }
 <<cont-frac>>
 (define (euler k)
   (+ 2
@@ -5808,45 +4977,31 @@ from Exercise 1.37 to approximate \(e\), based on Euler's expansion.
              k)))
 
 (euler 100)
-#+END_SRC
+```
 
-#+RESULTS[a208d4dc1b978fe45e625fd5adc3de43be87dd9c]:
-:results:
-#+begin_example
+```text
 2.7182818284590455
-#+end_example
-:end:
+```
 
-** Exercise 1.39
-:PROPERTIES:
-:ID:       33240ea6-67dd-4e04-a7b1-7df13beb73a2
-:CUSTOM-ID: 33240ea6-67dd-4e04-a7b1-7df13beb73a2
-:END:
 
-*** Question
-:PROPERTIES:
-:ID:       61af3f88-a44f-4bc8-a17f-7ea62b42b555
-:CUSTOM-ID: 61af3f88-a44f-4bc8-a17f-7ea62b42b555
-:END:
+### <span class="section-num">2.57</span> Exercise 1.39 {#exercise-1-dot-39}
 
-#+begin_quote
-A continued fraction representation of the tangent function was published in
-1770 by the German mathematician J.H. Lambert:
 
-\[ {\tan x} = \cfrac{x}{1 - \cfrac{x^2}{3 - \cfrac{x^2}{5 - \dots}}} \]
+#### <span class="section-num">2.57.1</span> Question {#question}
 
-where \(x\) is in radians. Define a procedure src_scheme{(tan-cf x k)} that
-computes an approximation to the tangent function based on Lambert's formula.
-src_scheme{k} specifies the number of terms to compute, as in Exercise 1.37.
-#+end_quote
+> A continued fraction representation of the tangent function was published in
+> 1770 by the German mathematician J.H. Lambert:
+>
+> $$ {\tan x} = \cfrac{x}{1 - \cfrac{x^2}{3 - \cfrac{x^2}{5 - \dots}}} $$
+>
+> where \\(x\\) is in radians. Define a procedure <span class="inline-src language-scheme" data-lang="scheme">`(tan-cf x k)`</span> that
+> computes an approximation to the tangent function based on Lambert's formula.
+> <span class="inline-src language-scheme" data-lang="scheme">`k`</span> specifies the number of terms to compute, as in Exercise 1.37.
 
-*** Answer
-:PROPERTIES:
-:ID:       ecd94155-42f3-434b-8c71-a16800fa6486
-:CUSTOM-ID: ecd94155-42f3-434b-8c71-a16800fa6486
-:END:
 
-#+BEGIN_SRC scheme -n :eval no-export :results value :exports both
+#### <span class="section-num">2.57.2</span> Answer {#answer}
+
+```scheme { linenos=true, linenostart=1 }
 <<cont-frac>>
 (define (tan-cf x k)
   (cont-frac (lambda(i) (if (= i 1)
@@ -5858,319 +5013,236 @@ src_scheme{k} specifies the number of terms to compute, as in Exercise 1.37.
              k))
 
 (tan-cf 55 101)
-#+END_SRC
+```
 
-#+RESULTS[a9f862c95bda0554e11a254c33a0772723442763]:
-:results:
-#+begin_example
+```text
 -45.1830879105221
-#+end_example
-:end:
+```
 
-** 1.3.4 Procedures as Returned Values
-:PROPERTIES:
- :ID:       1653578d-c9b3-443c-8cc9-2495778dd9b1
- :CUSTOM-ID: 1653578d-c9b3-443c-8cc9-2495778dd9b1
-:END:
+
+### <span class="section-num">2.58</span> 1.3.4 Procedures as Returned Values {#1-dot-3-dot-4-procedures-as-returned-values}
 
 Procedures can return other procedures, which opens up new ways to express
 processes.
 
-#+begin_quote
-Newton's Method: \(g(x)=0\) is a fixed point of the function \(x \mapsto f(x)\)
-where \[f(x)=x-\frac{g(x)}{Dg(x)}\]
+> Newton's Method: \\(g(x)=0\\) is a fixed point of the function \\(x \mapsto f(x)\\)
+> where $$f(x)=x-\frac{g(x)}{Dg(x)}$$
+>
+> Where \\(x \mapsto g(x)\\) is a differentiable function and \\(Dg(x)\\) is the
+> derivative of \\(g\\) evaluated at \\(x\\).
 
-Where \(x \mapsto g(x)\) is a differentiable function and \(Dg(x)\) is the
-derivative of \(g\) evaluated at \(x\).
-#+end_quote
 
-** Exercise 1.40
-:PROPERTIES:
-:ID:       dc134e55-b99b-4cbe-accc-fd1475f484b5
-:CUSTOM-ID: dc134e55-b99b-4cbe-accc-fd1475f484b5
-:END:
+### <span class="section-num">2.59</span> Exercise 1.40 {#exercise-1-dot-40}
 
-*** Text
-:PROPERTIES:
-:ID:       6fb6395e-367b-4503-965d-76272e2a6f71
-:CUSTOM-ID: 6fb6395e-367b-4503-965d-76272e2a6f71
-:END:
-#+NAME: average-damp
-#+BEGIN_SRC scheme -n :eval no-export :results silent :exports code
+
+#### <span class="section-num">2.59.1</span> Text {#text}
+
+<a id="code-snippet--average-damp"></a>
+```scheme { linenos=true, linenostart=1 }
 (define (average-damp f)
   (lambda (x) (average x (f x))))
-#+END_SRC
+```
 
-#+NAME: dx
-#+BEGIN_SRC scheme -n :eval no-export :results silent :exports code
+<a id="code-snippet--dx"></a>
+```scheme { linenos=true, linenostart=1 }
 (define dx 0.00001)
-#+END_SRC
+```
 
-#+NAME: deriv
-#+BEGIN_SRC scheme -n :eval no-export :results silent :exports code
+<a id="code-snippet--deriv"></a>
+```scheme { linenos=true, linenostart=1 }
 (define (deriv g)
   (lambda (x) (/ (- (g (+ x dx)) (g x)) dx)))
-#+END_SRC
+```
 
-#+NAME: newtons-method
-#+BEGIN_SRC scheme -n :eval no-export :results silent :exports code
+<a id="code-snippet--newtons-method"></a>
+```scheme { linenos=true, linenostart=1 }
 (define (newton-transform g)
   (lambda (x) (- x (/ (g x) ((deriv g) x)))))
 (define (newtons-method g guess)
   (fixed-point (newton-transform g) guess))
-#+END_SRC
-#+NAME: newtons-method-txt
-#+BEGIN_SRC scheme -n :eval no-export :results silent :exports code
+```
+
+<a id="code-snippet--newtons-method-txt"></a>
+```scheme { linenos=true, linenostart=1 }
 <<average>>
 <<average-damp>>
 <<dx>>
 <<deriv>>
 <<newtons-method>>
-#+END_SRC
+```
 
-*** Question
-:PROPERTIES:
-:ID:       974b89d3-82b5-4c67-b67c-7f7e0341498b
-:CUSTOM-ID: 974b89d3-82b5-4c67-b67c-7f7e0341498b
-:END:
 
-#+begin_quote
-Define a procedure src_scheme{cubic} that can be used together with the
-src_scheme{newtons-method} procedure in expressions of the form:
-#+end_quote
+#### <span class="section-num">2.59.2</span> Question {#question}
 
-#+BEGIN_SRC scheme
+> Define a procedure <span class="inline-src language-scheme" data-lang="scheme">`cubic`</span> that can be used together with the
+> <span class="inline-src language-scheme" data-lang="scheme">`newtons-method`</span> procedure in expressions of the form:
+
+```scheme
 (newtons-method (cubic a b c) 1)
-#+END_SRC
+```
 
-#+begin_quote
-to approximate zeros of the cubic \(x^3 + ax^2 + bx + c\).
-#+end_quote
+> to approximate zeros of the cubic \\(x^3 + ax^2 + bx + c\\).
 
-*** Answer
-:PROPERTIES:
-:ID:       28acf8cb-95d9-4517-99e1-b5497ec4b602
-:CUSTOM-ID: 28acf8cb-95d9-4517-99e1-b5497ec4b602
-:END:
 
-#+NAME: cubic
-#+BEGIN_SRC scheme -n :eval no-export :results silent :exports code
+#### <span class="section-num">2.59.3</span> Answer {#answer}
+
+<a id="code-snippet--cubic"></a>
+```scheme { linenos=true, linenostart=1 }
 (define (cubic a b c)
   (lambda (x)
     (+ (expt x 3)
        (* a (expt x 2))
        (* b x)
        c)))
-#+END_SRC
+```
 
-#+NAME: cubic-zero
-#+BEGIN_SRC scheme -n :eval no-export :results silent :exports code
+<a id="code-snippet--cubic-zero"></a>
+```scheme { linenos=true, linenostart=1 }
 (define (cubic-zero a b c)
   (newtons-method (cubic a b c) 1))
-#+END_SRC
+```
 
-#+BEGIN_SRC scheme -n :eval no-export :results value :exports code
+```scheme { linenos=true, linenostart=1 }
 <<fixed-point-txt>>
 <<newtons-method-txt>>
 <<cubic>>
 <<cubic-zero>>
 
 (cubic-zero 2 3 4)
-#+END_SRC
+```
 
-#+RESULTS[b8fe4f9579a7f55cc0714e136ae1b983a07db228]:
-:results:
-#+begin_example
--1.6506291914330982
-#+end_example
-:end:
 
-** Exercise 1.41
-:PROPERTIES:
-:ID:       da9d8f81-540b-4e51-922f-446e3340280b
-:CUSTOM-ID: da9d8f81-540b-4e51-922f-446e3340280b
-:END:
+### <span class="section-num">2.60</span> Exercise 1.41 {#exercise-1-dot-41}
 
-*** Question
-:PROPERTIES:
-:ID:       271f8549-974f-4b6f-8c54-314771d7ff51
-:CUSTOM-ID: 271f8549-974f-4b6f-8c54-314771d7ff51
-:END:
 
-#+begin_quote
-Define a procedure src_scheme{double} that takes a procedure of one argument as
-argument and returns a procedure that applies the original procedure twice. For
-example, if src_scheme{inc} is a procedure that adds 1 to its argument, then
-src_scheme{(double inc)} should be a procedure that adds 2. What value is
-returned by
-#+end_quote
+#### <span class="section-num">2.60.1</span> Question {#question}
 
-#+NAME: Ex1-41
-#+BEGIN_SRC scheme :eval no-export
+> Define a procedure <span class="inline-src language-scheme" data-lang="scheme">`double`</span> that takes a procedure of one argument as
+> argument and returns a procedure that applies the original procedure twice. For
+> example, if <span class="inline-src language-scheme" data-lang="scheme">`inc`</span> is a procedure that adds 1 to its argument, then
+> <span class="inline-src language-scheme" data-lang="scheme">`(double inc)`</span> should be a procedure that adds 2. What value is
+> returned by
+
+<a id="code-snippet--Ex1-41"></a>
+```scheme
 (((double (double double)) inc) 5)
-#+END_SRC
+```
 
-*** Answer
-:PROPERTIES:
-:ID:       71a9dffd-4337-4840-a923-ab857f624063
-:CUSTOM-ID: 71a9dffd-4337-4840-a923-ab857f624063
-:END:
 
-#+NAME: double
-#+BEGIN_SRC scheme :eval no-export :results silent
+#### <span class="section-num">2.60.2</span> Answer {#answer}
+
+<a id="code-snippet--double"></a>
+```scheme
 (define (double f)
   (lambda (x)
     (f (f x))))
-#+END_SRC
+```
 
-#+BEGIN_SRC scheme :eval no-export :results value
+```scheme
 (define inc 1+)
 <<double>>
 <<Ex1-41>>
-#+END_SRC
+```
 
-#+RESULTS[d378985b9b2b6be8eb74b8df173275c6bd56ae10]:
-:results:
-#+begin_example
+```text
 21
-#+end_example
-:end:
+```
 
-**  Exercise 1.42
-:PROPERTIES:
-:ID:       9eeccdb7-f70f-4832-bc89-3e6cebfc5b18
-:CUSTOM-ID: 9eeccdb7-f70f-4832-bc89-3e6cebfc5b18
-:END:
 
-*** Question
-:PROPERTIES:
-:ID:       cefb2712-b83b-47bd-b455-62fc04444889
-:CUSTOM-ID: cefb2712-b83b-47bd-b455-62fc04444889
-:END:
+### <span class="section-num">2.61</span> Exercise 1.42 {#exercise-1-dot-42}
 
-#+begin_quote
-Let \(f\) and \(g\) be two one-argument functions. The composition \(f\) after
-\(g\) is defined to be the function \(x \mapsto f(g(x))\). Define a procedure
-src_scheme{compose} that implements composition.
-#+end_quote
 
-*** Answer
-:PROPERTIES:
-:ID:       ab28db3a-f050-4a37-bd07-a9862022bffb
-:CUSTOM-ID: ab28db3a-f050-4a37-bd07-a9862022bffb
-:END:
+#### <span class="section-num">2.61.1</span> Question {#question}
 
-#+NAME: compose
-#+BEGIN_SRC scheme :eval no-export :results silent
+> Let \\(f\\) and \\(g\\) be two one-argument functions. The composition \\(f\\) after
+> \\(g\\) is defined to be the function \\(x \mapsto f(g(x))\\). Define a procedure
+> <span class="inline-src language-scheme" data-lang="scheme">`compose`</span> that implements composition.
+
+
+#### <span class="section-num">2.61.2</span> Answer {#answer}
+
+<a id="code-snippet--compose"></a>
+```scheme
 (define (compose f g)
   (lambda(x)
     (f (g x))))
-#+END_SRC
+```
 
-#+BEGIN_SRC scheme :eval no-export :results value
+```scheme
 <<compose>>
 <<square>>
 (define inc 1+)
 ((compose square inc) 6)
-#+END_SRC
+```
 
-#+RESULTS[80a0d7155cb9d63a3166cc9ed13620258b09201d]:
-:results:
-#+begin_example
+```text
 49
-#+end_example
-:end:
+```
 
-**  Exercise 1.43
-:PROPERTIES:
-:ID:       0e43bfd1-f2ae-4aa5-8821-50c89f7e72f1
-:CUSTOM-ID: 0e43bfd1-f2ae-4aa5-8821-50c89f7e72f1
-:END:
 
-*** Question
-:PROPERTIES:
-:ID:       29170fd6-15da-4fe7-8a93-968bfefa43b2
-:CUSTOM-ID: 29170fd6-15da-4fe7-8a93-968bfefa43b2
-:END:
+### <span class="section-num">2.62</span> Exercise 1.43 {#exercise-1-dot-43}
 
-#+begin_quote
-If \(f\) is a numerical function
-and \(n\) is a positive integer, then we can form the \(n^{\mathrm{th}}\) repeated
-application of \(f\), which is defined to be the function whose value at \(x\)
-is \(f(f(\dots (f(x))\dots ))\).  For example, if \(f\) is the
-function \(x \mapsto x + 1\), then the \(n^{\mathrm{th}}\) repeated application of \(f\) is
-the function \(x \mapsto x + n\).  If \(f\) is the operation of squaring a
-number, then the \(n^{\mathrm{th}}\) repeated application of \(f\) is the function that
-raises its argument to the \(2^n\)-th power.  Write a procedure that takes as
-inputs a procedure that computes \(f\) and a positive integer \(n\) and returns
-the procedure that computes the \(n^{\mathrm{th}}\) repeated application of \(f\).
-#+end_quote
 
-*** Answer
-:PROPERTIES:
-:ID:       71f59a74-b638-4939-b1ac-f61da9a6f79a
-:CUSTOM-ID: 71f59a74-b638-4939-b1ac-f61da9a6f79a
-:END:
+#### <span class="section-num">2.62.1</span> Question {#question}
 
-#+NAME: repeated
-#+BEGIN_SRC scheme :eval no-export :results silent
+> If \\(f\\) is a numerical function
+> and \\(n\\) is a positive integer, then we can form the \\(n^{\mathrm{th}}\\) repeated
+> application of \\(f\\), which is defined to be the function whose value at \\(x\\)
+> is \\(f(f(\dots (f(x))\dots ))\\).  For example, if \\(f\\) is the
+> function \\(x \mapsto x + 1\\), then the \\(n^{\mathrm{th}}\\) repeated application of \\(f\\) is
+> the function \\(x \mapsto x + n\\).  If \\(f\\) is the operation of squaring a
+> number, then the \\(n^{\mathrm{th}}\\) repeated application of \\(f\\) is the function that
+> raises its argument to the \\(2^n\\)-th power.  Write a procedure that takes as
+> inputs a procedure that computes \\(f\\) and a positive integer \\(n\\) and returns
+> the procedure that computes the \\(n^{\mathrm{th}}\\) repeated application of \\(f\\).
+
+
+#### <span class="section-num">2.62.2</span> Answer {#answer}
+
+<a id="code-snippet--repeated"></a>
+```scheme
 <<compose>>
 (define (repeated f n)
   (if (= n 1)
       f
       (repeated (compose f f)
                 (- n 1))))
-#+END_SRC
+```
 
-#+BEGIN_SRC scheme :eval no-export :results value
+```scheme
 <<square>>
 <<repeated>>
 (if (= ((repeated square 2) 5) 625)
     "Success"
     "Fail")
-#+END_SRC
+```
 
-#+RESULTS[272bb6d728bab74579f0a931d49a14a7ad2a5498]:
-:results:
-#+begin_example
+```text
 Success
-#+end_example
-:end:
+```
 
-**  Exercise 1.44
-:PROPERTIES:
-:ID:       1458530a-7fc0-4686-9cc4-3296acae158a
-:CUSTOM-ID: 1458530a-7fc0-4686-9cc4-3296acae158a
-:END:
 
-*** Question
-:PROPERTIES:
-:ID:       30dcfc41-5441-4193-9155-ab38b40430bc
-:CUSTOM-ID: 30dcfc41-5441-4193-9155-ab38b40430bc
-:END:
+### <span class="section-num">2.63</span> Exercise 1.44 {#exercise-1-dot-44}
 
-#+INDEX: smoothing
-#+begin_quote
-The idea of smoothing a function is an important concept in signal processing.
-If \(f\) is a function and \(dx\) is some small number, then the smoothed
-version of \(f\) is the function whose value at a point \(x\) is the average of
-\(f(x - dx)\), \(f(x)\), and \(f(x + dx)\). Write a procedure src_scheme{smooth}
-that takes as input a procedure that computes \(f\) and returns a procedure that
-computes the smoothed \(f\). It is sometimes valuable to repeatedly smooth a
-function (that is, smooth the smoothed function, and so on) to obtain the
-\(n\)-fold smoothed function. Show how to generate the \(n\)-fold smoothed
-function of any given function using src_scheme{smooth} and src_scheme{repeated}
-from Exercise 1.43.
-#+end_quote
 
-*** Answer
-:PROPERTIES:
-:ID:       6892b2be-25d8-4769-81ba-e563af89d2c0
-:CUSTOM-ID: 6892b2be-25d8-4769-81ba-e563af89d2c0
-:END:
+#### <span class="section-num">2.63.1</span> Question {#question}
 
-#+NAME: smooth
-#+BEGIN_SRC scheme :eval no-export :results silent
+> The idea of smoothing a function is an important concept in signal processing.
+> If \\(f\\) is a function and \\(dx\\) is some small number, then the smoothed
+> version of \\(f\\) is the function whose value at a point \\(x\\) is the average of
+> \\(f(x - dx)\\), \\(f(x)\\), and \\(f(x + dx)\\). Write a procedure <span class="inline-src language-scheme" data-lang="scheme">`smooth`</span>
+> that takes as input a procedure that computes \\(f\\) and returns a procedure that
+> computes the smoothed \\(f\\). It is sometimes valuable to repeatedly smooth a
+> function (that is, smooth the smoothed function, and so on) to obtain the
+> \\(n\\)-fold smoothed function. Show how to generate the \\(n\\)-fold smoothed
+> function of any given function using <span class="inline-src language-scheme" data-lang="scheme">`smooth`</span> and <span class="inline-src language-scheme" data-lang="scheme">`repeated`</span>
+> from Exercise 1.43.
+
+
+#### <span class="section-num">2.63.2</span> Answer {#answer}
+
+<a id="code-snippet--smooth"></a>
+```scheme
 <<average-varargs>>
 (define (smooth f)
   (lambda(x)
@@ -6179,47 +5251,37 @@ from Exercise 1.43.
              (f (+ x dx)))))
 (define (smooth-n f n)
   ((repeated smooth n) f))
-#+END_SRC
+```
 
-**  Exercise 1.45
-:PROPERTIES:
-:ID:       7c8049da-73e4-4748-903c-770016a883f7
-:CUSTOM-ID: 7c8049da-73e4-4748-903c-770016a883f7
-:END:
 
-*** Question
-:PROPERTIES:
-:ID:       632c75bb-272e-4c01-85d7-1c839fcbb813
-:CUSTOM-ID: 632c75bb-272e-4c01-85d7-1c839fcbb813
-:END:
+### <span class="section-num">2.64</span> Exercise 1.45 {#exercise-1-dot-45}
 
-#+begin_quote
-We saw in 1.3.3 that attempting to compute square roots by naively finding a
-fixed point of \(y \mapsto x / y\) does not converge, and that this can be fixed
-by average damping. The same method works for finding cube roots as fixed points
-of the average-damped \(y \mapsto x / y^2\). Unfortunately, the process does not
-work for fourth roots---a single average damp is not enough to make a
-fixed-point search for \(y \mapsto x / y^3\) converge. On the other hand, if we
-average damp twice (i.e., use the average damp of the average damp of \(y
-\mapsto x / y^3\)) the fixed-point search does converge. Do some experiments to
-determine how many average damps are required to compute \(n^{\mathrm{th}}\)
-roots as a fixed-point search based upon repeated average damping of \(y \mapsto
-x / y^{n-1}\). Use this to implement a simple procedure for computing
-\(n^{\mathrm{th}}\) roots using src_scheme{fixed-point~, ~average-damp}, and the
-src_scheme{repeated} procedure of Exercise 1.43. Assume that any arithmetic
-operations you need are available as primitives.
-#+end_quote
 
-*** Answer
-:PROPERTIES:
-:ID:       1f0e74e2-6ecf-4e38-8836-afa42f2471be
-:CUSTOM-ID: 1f0e74e2-6ecf-4e38-8836-afa42f2471be
-:END:
+#### <span class="section-num">2.64.1</span> Question {#question}
+
+> We saw in 1.3.3 that attempting to compute square roots by naively finding a
+> fixed point of \\(y \mapsto x / y\\) does not converge, and that this can be fixed
+> by average damping. The same method works for finding cube roots as fixed points
+> of the average-damped \\(y \mapsto x / y^2\\). Unfortunately, the process does not
+> work for fourth roots---a single average damp is not enough to make a
+> fixed-point search for \\(y \mapsto x / y^3\\) converge. On the other hand, if we
+> average damp twice (i.e., use the average damp of the average damp of \\(y
+> \mapsto x / y^3\\)) the fixed-point search does converge. Do some experiments to
+> determine how many average damps are required to compute \\(n^{\mathrm{th}}\\)
+> roots as a fixed-point search based upon repeated average damping of \\(y \mapsto
+> x / y^{n-1}\\). Use this to implement a simple procedure for computing
+> \\(n^{\mathrm{th}}\\) roots using <span class="inline-src language-scheme" data-lang="scheme">`fixed-point~, ~average-damp`</span>, and the
+> <span class="inline-src language-scheme" data-lang="scheme">`repeated`</span> procedure of Exercise 1.43. Assume that any arithmetic
+> operations you need are available as primitives.
+
+
+#### <span class="section-num">2.64.2</span> Answer {#answer}
 
 So this is strange. Back in my original workthrough of this book, I'd decided
-that finding an \(n\)th root required \(\lfloor\sqrt{n}\rfloor\) dampings. With
+that finding an \\(n\\)th root required \\(\lfloor\sqrt{n}\rfloor\\) dampings. With
 a solution like this:
-#+BEGIN_SRC scheme :eval no-export :results silent
+
+```scheme
 <<fixed-point-txt>>
 <<repeated>>
 <<average-damp>>
@@ -6235,13 +5297,15 @@ a solution like this:
     (lambda (y)
       (/ x (expt y (- n 1)))))
    1.0))
-#+END_SRC
+```
+
 While this solution appears to work fine, my experiments are suggesting that it
-takes /less/ than \(\lfloor\sqrt{n}\rfloor\). For example, I originally thought
+takes _less_ than \\(\lfloor\sqrt{n}\rfloor\\). For example, I originally thought
 powers of 16 required four dampings, but this code isn't failing until it
 reaches powers of 32.
-#+NAME: repeated-z
-#+BEGIN_SRC scheme :eval no-export :results silent
+
+<a id="code-snippet--repeated-z"></a>
+```scheme
 ;; Version of "repeated" that can handle being asked to repeat zero times.
 <<compose>>
 <<identity>>
@@ -6254,15 +5318,16 @@ reaches powers of 32.
   (if (= n 0)
       identity
       (rec n)))
-#+END_SRC
-#+NAME: limited-fixed-point
-#+BEGIN_SRC scheme :eval no-export :results silent :exports code
+```
+
+<a id="code-snippet--limited-fixed-point"></a>
+```scheme
 ;; version of "fixed-point" that will give up after a certain number of guesses.
 (define (limited-fixed-point f first-guess)
   (define limit 5000)
   (define tolerance 0.00000001)
   (define (close-enough? v1 v2)
-    (< (abs (- v1 v2)) 
+    (< (abs (- v1 v2))
        tolerance))
   (define (try guess tries)
     (if (= tries limit)
@@ -6272,60 +5337,15 @@ reaches powers of 32.
               next
               (try next (+ 1 tries))))))
     (try first-guess 1))
-#+END_SRC
-#+NAME: nth-damp-experiments
-#+BEGIN_SRC scheme :eval no-export :results output :exports none
-<<limited-fixed-point>>
-<<average-varargs>>
-<<repeated-z>>
-<<average-damp>>
-(define (try-damp base nth damp)
-  (format #t "Root ~a, Damp ~a: ~a~%" nth damp
-          (limited-fixed-point
-           ((repeated average-damp damp)
-            (lambda (y)
-              (/ base (expt y (- nth 1)))))
-           1.0)))
-(define random-base 4)
-(try-damp random-base 2 1)
-(try-damp random-base 3 1)
-(try-damp random-base 4 1)
-(try-damp random-base 4 2)
-(format #t "...~%")
-(try-damp random-base 8 2)
-(try-damp random-base 8 3)
-(format #t "...~%")
-(try-damp random-base 16 3)
-(format #t "...~%")
-(try-damp random-base 32 3)
-(try-damp random-base 32 4)
-#+END_SRC
-
-#+RESULTS[baa7d010b67b75e2bd3a059b0a1b06b3875af0ba]: nth-damp-experiments
-:results:
-#+begin_example
-Root 2, Damp 1: 2.0
-Root 3, Damp 1: 1.5874010540873353
-Root 4, Damp 1: LIMIT REACHED
-Root 4, Damp 2: 1.414213562373095
-...
-Root 8, Damp 2: LIMIT REACHED
-Root 8, Damp 3: 1.1892071085557818
-...
-Root 16, Damp 3: 1.0905077326652577
-...
-Root 32, Damp 3: LIMIT REACHED
-Root 32, Damp 4: 1.0442737140494485
-#+end_example
-:end:
+```
 
 Let's automatically find how many dampings are necessary. We can make a program
-that finds higher and higher \(n\)th roots, and adds another layer of damping
-when it hits the error. It returns a list of \(n\)th roots along with how many
+that finds higher and higher \\(n\\)th roots, and adds another layer of damping
+when it hits the error. It returns a list of \\(n\\)th roots along with how many
 dampings were needed to find them.
 
-#+NAME: nthtester
-#+BEGIN_SRC scheme :eval no-export :results value table :exports code :hlines no :session scheme
+<a id="code-snippet--nthtester"></a>
+```scheme
 <<fixed-point-txt>>
 <<limited-fixed-point>>
 <<repeated>>
@@ -6361,137 +5381,40 @@ dampings were needed to find them.
                        (list (floor (sqrt (car x)))
                              (floor (/ (log (car x))(log 2))))))
              (map cdr t))))
-#+END_SRC
+```
 
-#+RESULTS[d992ef4a748476608795d2c8a3fe54460d3f8a8a]: nthtester
-:results:
-| root |             result | damps needed | floor(sqrt(root)) | floor(log2(root)) |
-|    2 | 1.7320508075688772 |            1 |               1.0 |               1.0 |
-|    3 | 1.4422495728972309 |            1 |               1.0 |               1.0 |
-|    4 | 1.3160740129524924 |            2 |               2.0 |               2.0 |
-|    5 | 1.2457309390978177 |            2 |               2.0 |               2.0 |
-|    6 |    1.2009369582204 |            2 |               2.0 |               2.0 |
-|    7 | 1.1699308089776124 |            2 |               2.0 |               2.0 |
-|    8 | 1.1472026821129655 |            3 |               2.0 |               3.0 |
-|    9 | 1.1298309604123054 |            3 |               3.0 |               3.0 |
-|   10 | 1.1161231685395683 |            3 |               3.0 |               3.0 |
-|   11 | 1.1050314993438861 |            3 |               3.0 |               3.0 |
-|   12 | 1.0958726922025126 |            3 |               3.0 |               3.0 |
-|   13 | 1.0881822443361364 |            3 |               3.0 |               3.0 |
-|   14 | 1.0816334006324368 |            3 |               3.0 |               3.0 |
-|   15 | 1.0759896251411307 |            3 |               3.0 |               3.0 |
-|   16 | 1.0710754830729146 |            3 |               4.0 |               4.0 |
-|   17 |  1.066758117243043 |            3 |               4.0 |               4.0 |
-|   18 | 1.0629350706173066 |            3 |               4.0 |               4.0 |
-|   19 | 1.0595260635832688 |            3 |               4.0 |               4.0 |
-|   20 |  1.056467307522174 |            3 |               4.0 |               4.0 |
-|   21 | 1.0537074708846985 |            3 |               4.0 |               4.0 |
-|   22 |  1.051204784758733 |            3 |               4.0 |               4.0 |
-|   23 | 1.0489249192322252 |            3 |               4.0 |               4.0 |
-|   24 | 1.0468393795110007 |            3 |               4.0 |               4.0 |
-|   25 | 1.0449243484862798 |            3 |               5.0 |               4.0 |
-|   26 | 1.0431597437151425 |            3 |               5.0 |               4.0 |
-|   27 | 1.0415285013758537 |            3 |               5.0 |               4.0 |
-|   28 |  1.040016054068828 |            3 |               5.0 |               4.0 |
-|   29 | 1.0386098933815124 |            3 |               5.0 |               4.0 |
-|   30 | 1.0372992018887395 |            3 |               5.0 |               4.0 |
-|   31 | 1.0360745603591814 |            3 |               5.0 |               4.0 |
-|   32 | 1.0349278294117377 |            4 |               5.0 |               5.0 |
-|   33 | 1.0338516994340794 |            4 |               5.0 |               5.0 |
-|   34 | 1.0328398949566373 |            4 |               5.0 |               5.0 |
-|   35 | 1.0318868074940988 |            4 |               5.0 |               5.0 |
-|   36 | 1.0309874779794508 |            4 |               6.0 |               5.0 |
-|   37 | 1.0301374915678254 |            4 |               6.0 |               5.0 |
-|   38 | 1.0293328804238742 |            4 |               6.0 |               5.0 |
-|   39 | 1.0285701132080831 |            4 |               6.0 |               5.0 |
-|   40 | 1.0278460087576442 |            4 |               6.0 |               5.0 |
-|   41 |  1.027157691880423 |            4 |               6.0 |               5.0 |
-|   42 |  1.026502589210212 |            4 |               6.0 |               5.0 |
-|   43 | 1.0258783464077128 |            4 |               6.0 |               5.0 |
-|   44 | 1.0252828248592394 |            4 |               6.0 |               5.0 |
-|   45 | 1.0247141024331754 |            4 |               6.0 |               5.0 |
-|   46 | 1.0241703948455623 |            4 |               6.0 |               5.0 |
-|   47 | 1.0236501025835851 |            4 |               6.0 |               5.0 |
-|   48 | 1.0231517295808754 |            4 |               6.0 |               5.0 |
-|   49 | 1.0226739268075815 |            4 |               7.0 |               5.0 |
-|   50 | 1.0222154464817517 |            4 |               7.0 |               5.0 |
-|   51 | 1.0217751474551418 |            4 |               7.0 |               5.0 |
-|   52 | 1.0213519544877643 |            4 |               7.0 |               5.0 |
-|   53 | 1.0209448968817703 |            4 |               7.0 |               5.0 |
-|   54 | 1.0205530691216933 |            4 |               7.0 |               5.0 |
-|   55 | 1.0201756322085958 |            4 |               7.0 |               5.0 |
-|   56 | 1.0198118076629914 |            4 |               7.0 |               5.0 |
-|   57 | 1.0194608721653386 |            4 |               7.0 |               5.0 |
-|   58 | 1.0191221527564327 |            4 |               7.0 |               5.0 |
-|   59 | 1.0187950225306854 |            4 |               7.0 |               5.0 |
-|   60 | 1.0184788967642957 |            4 |               7.0 |               5.0 |
-|   61 |  1.018173221527439 |            4 |               7.0 |               5.0 |
-|   62 | 1.0178775017280584 |            4 |               7.0 |               5.0 |
-|   63 | 1.0175912519998893 |            4 |               7.0 |               5.0 |
-|   64 |  1.017314024680506 |            4 |               8.0 |               6.0 |
-|   65 | 1.0170453922678477 |            4 |               8.0 |               6.0 |
-:end:
-
-#+begin_src gnuplot :var data=nthtester :file 1/fig/1-45-1.png :exports results :rownames no :colnames no :hlines no :cache no :eval no-export :session nil
-reset
-set key autotitle columnheader
-#set logscale xy
-set xlabel 'dampings'
-set xtics (2, 4, 8, 16, 24, 32, 36, 49, 64)
-set ylabel 'powers'
-set title 'dampings needed vs estimated'
-
-plot data using 1:3 with linespoints, \
-     data using 1:4 with linespoints, \
-     data using 1:5 with linespoints
-#+end_src
-
-#+RESULTS:
-:results:
-[[file:1/fig/1-45-1.png]]
-:end:
+{{< figure src="/ox-hugo/1-45-1.png" >}}
 
 I've spent too much time on this problem already but I have to wonder about
 floating-point issues, given that they are the core of the
-src_scheme{good-enough} procedure. I have to wonder whether a
-src_scheme{fixed-point} version that replaces the src_scheme{tolerance} decision
+<span class="inline-src language-scheme" data-lang="scheme">`good-enough`</span> procedure. I have to wonder whether a
+<span class="inline-src language-scheme" data-lang="scheme">`fixed-point`</span> version that replaces the <span class="inline-src language-scheme" data-lang="scheme">`tolerance`</span> decision
 making, and instead retains the last three guesses and checks for a loop. (TODO)
 
-**  Exercise 1.46
-:PROPERTIES:
-:ID:       e4ef33d7-c5f2-4807-9715-3c8535b6fc06
-:CUSTOM-ID: e4ef33d7-c5f2-4807-9715-3c8535b6fc06
-:END:
 
-*** Question
-:PROPERTIES:
-:ID:       e04bcbdd-bec5-4320-81c9-5121bd1e2462
-:CUSTOM-ID: e04bcbdd-bec5-4320-81c9-5121bd1e2462
-:END:
+### <span class="section-num">2.65</span> Exercise 1.46 {#exercise-1-dot-46}
 
-#+begin_quote
-Several of the numerical methods described in this chapter are instances of an
-extremely general computational strategy known as /iterative improvement/.
-Iterative improvement says that, to compute something, we start with an initial
-guess for the answer, test if the guess is good enough, and otherwise improve
-the guess and continue the process using the improved guess as the new guess.
-Write a procedure src_scheme{iterative-improve} that takes two procedures as
-arguments: a method for telling whether a guess is good enough and a method for
-improving a guess. src_scheme{iterative-improve} should return as its value a
-procedure that takes a guess as argument and keeps improving the guess until it
-is good enough. Rewrite the src_scheme{sqrt} procedure of 1.1.7 and the
-src_scheme{fixed-point} procedure of 1.3.3 in terms of
-src_scheme{iterative-improve}.
-#+end_quote
 
-*** Answer
-:PROPERTIES:
-:ID:       f3669b45-83c2-4280-b4d9-c75eab7cbc96
-:CUSTOM-ID: f3669b45-83c2-4280-b4d9-c75eab7cbc96
-:END:
+#### <span class="section-num">2.65.1</span> Question {#question}
 
-#+NAME: iterative-improve
-#+BEGIN_SRC scheme -n :eval no-export :results silent
+> Several of the numerical methods described in this chapter are instances of an
+> extremely general computational strategy known as _iterative improvement_.
+> Iterative improvement says that, to compute something, we start with an initial
+> guess for the answer, test if the guess is good enough, and otherwise improve
+> the guess and continue the process using the improved guess as the new guess.
+> Write a procedure <span class="inline-src language-scheme" data-lang="scheme">`iterative-improve`</span> that takes two procedures as
+> arguments: a method for telling whether a guess is good enough and a method for
+> improving a guess. <span class="inline-src language-scheme" data-lang="scheme">`iterative-improve`</span> should return as its value a
+> procedure that takes a guess as argument and keeps improving the guess until it
+> is good enough. Rewrite the <span class="inline-src language-scheme" data-lang="scheme">`sqrt`</span> procedure of 1.1.7 and the
+> <span class="inline-src language-scheme" data-lang="scheme">`fixed-point`</span> procedure of 1.3.3 in terms of
+> <span class="inline-src language-scheme" data-lang="scheme">`iterative-improve`</span>.
+
+
+#### <span class="section-num">2.65.2</span> Answer {#answer}
+
+<a id="code-snippet--iterative-improve"></a>
+```scheme { linenos=true, linenostart=1 }
 (define (iterative-improve good-enough? improve)
   (define (iter guess)
     (let ((next (improve guess)))
@@ -6499,23 +5422,25 @@ src_scheme{iterative-improve}.
           next
           (iter next))))
   iter)
-#+END_SRC
-#+NAME: fixed-point-improve
-#+BEGIN_SRC scheme -n :eval no-export :results silent
+```
+
+<a id="code-snippet--fixed-point-improve"></a>
+```scheme { linenos=true, linenostart=1 }
 <<iterative-improve>>
 (define tolerance 0.00001)
 
 (define (fixed-point-improve f first-guess)
   (define (close-enough? v1 v2)
-    (< (abs (- v1 v2)) 
+    (< (abs (- v1 v2))
        tolerance))
   ((iterative-improve
     close-enough?
     f)
    first-guess))
-#+END_SRC
-#+NAME: sqrt-improve
-#+BEGIN_SRC scheme -n :eval no-export :results silent
+```
+
+<a id="code-snippet--sqrt-improve"></a>
+```scheme { linenos=true, linenostart=1 }
 <<square>>
 <<average>>
 <<iterative-improve>>
@@ -6529,10 +5454,9 @@ src_scheme{iterative-improve}.
     (lambda(guess next)(good-enough? next x))
     (lambda(guess) (improve guess x)))
    1.0))
-#+end_src
+```
 
-
-#+BEGIN_SRC scheme -n :eval no-export :results output :exports both :tangle 1/Ex46.scheme
+```scheme { linenos=true, linenostart=1 }
 (load "mattcheck2.scm")
 <<fixed-point-txt>>
 <<fixed-point-improve>>
@@ -6544,38 +5468,31 @@ src_scheme{iterative-improve}.
 (mattcheck "sqrt-improve still working"
                  (sqrt 5)
                  (sqrt-improve 5))
-#+end_src
+```
 
-#+RESULTS[01861d3b1d99dfe95bf538d05a4e432e15714eef]:
-#+begin_EXAMPLE
+```text
 SUCCEED at fixed-point-improve still working
 SUCCEED at sqrt-improve still working
-#+end_EXAMPLE
+```
 
-* Chapter 2: Building Abstractions with Data
-:PROPERTIES:
-:ID:       b89a7dcb-6526-4c26-b10f-ba6e9b63d5c9
-:CUSTOM-ID: b89a7dcb-6526-4c26-b10f-ba6e9b63d5c9
-:END:
+
+## <span class="section-num">3</span> Chapter 2: Building Abstractions with Data {#chapter-2-building-abstractions-with-data}
 
 The basic representations of data we've used so far aren't enough to deal with
 complex, real-world phenomena. We need to combine these representations to form
-*compound data*.
+**compound data**.
 
-The technique of isolating how data objects are /represented/ from how they are
-/used/ is called *data abstraction*.
+The technique of isolating how data objects are _represented_ from how they are
+_used_ is called **data abstraction**.
 
-** 2.1.1: Example: Arithmetic Operations for Rational Numbers
-:PROPERTIES:
-:ID:       442cf939-1c57-4db7-8985-5449da80b11f
-:CUSTOM-ID: 442cf939-1c57-4db7-8985-5449da80b11f
-:END:
 
-Lisp gives the procedures src_scheme{cons}, src_scheme{car}, and src_scheme{cdr}
-to create *pairs*. This is an easy system for representing rational numbers.
+### <span class="section-num">3.1</span> 2.1.1: Example: Arithmetic Operations for Rational Numbers {#2-dot-1-dot-1-example-arithmetic-operations-for-rational-numbers}
+
+Lisp gives the procedures <span class="inline-src language-scheme" data-lang="scheme">`cons`</span>, <span class="inline-src language-scheme" data-lang="scheme">`car`</span>, and <span class="inline-src language-scheme" data-lang="scheme">`cdr`</span>
+to create **pairs**. This is an easy system for representing rational numbers.
 
 Note that the system proposed for representing and working with rational numbers
-has *abstraction barriers* isolating different parts of the system. The parts
+has **abstraction barriers** isolating different parts of the system. The parts
 that use rational numbers don't know how the constructors and selectors for
 rational numbers work, and the constructors and selectors use the underlying
 Lisp interpreter's pair functions without caring how they work.
@@ -6583,20 +5500,14 @@ Lisp interpreter's pair functions without caring how they work.
 Note that these abstraction layers allow the developer to change the underlying
 architecture without modifying the programs that depend on it.
 
-**  Exercise 2.1
-:PROPERTIES:
-:ID:       64654350-d098-47cf-839b-faa92a13906b
-:CUSTOM-ID: 64654350-d098-47cf-839b-faa92a13906b
-:END:
 
-*** Text
-:PROPERTIES:
-:ID:       c88cd22e-f8c7-47a8-9782-178c7d90c8ff
-:CUSTOM-ID: c88cd22e-f8c7-47a8-9782-178c7d90c8ff
-:END:
+### <span class="section-num">3.2</span> Exercise 2.1 {#exercise-2-dot-1}
 
-#+NAME: rat-ops-txt
-#+BEGIN_SRC scheme -n :eval no-export :results silent
+
+#### <span class="section-num">3.2.1</span> Text {#text}
+
+<a id="code-snippet--rat-ops-txt"></a>
+```scheme { linenos=true, linenostart=1 }
 (define (add-rat x y)
   (make-rat (+ (* (numer x) (denom y))
                (* (numer y) (denom x)))
@@ -6618,67 +5529,52 @@ architecture without modifying the programs that depend on it.
 (define (equal-rat? x y)
   (= (* (numer x) (denom y))
      (* (numer y) (denom x))))
-#+end_src
+```
 
-#+NAME: make-rat-txt
-#+BEGIN_SRC scheme -n :eval no-export :results silent
+<a id="code-snippet--make-rat-txt"></a>
+```scheme { linenos=true, linenostart=1 }
 (define (make-rat n d) (cons n d))
 (define (numer x) (car x))
 (define (denom x) (cdr x))
-#+end_src
+```
 
-#+NAME: print-rat-txt
-#+BEGIN_SRC scheme -n :eval no-export :results silent
+<a id="code-snippet--print-rat-txt"></a>
+```scheme { linenos=true, linenostart=1 }
 (define (print-rat x)
   (newline)
   (display (numer x))
   (display "/")
   (display (denom x)))
-#+end_src
+```
 
-#+NAME: test-rats
-#+BEGIN_SRC scheme -n :eval no-export :results silent
+<a id="code-snippet--test-rats"></a>
+```scheme { linenos=true, linenostart=1 }
 (define one-half (make-rat 1 2))
 (define one-third (make-rat 1 3))
 (print-rat one-half)
 (print-rat
  (mul-rat one-half one-third))
-#+end_src
-#+BEGIN_SRC scheme -n :eval no-export :results output :exports results
-<<make-rat-txt>>
-<<print-rat-txt>>
-<<rat-ops-txt>>
-<<test-rats>>
-#+end_src
+```
 
-#+RESULTS[5284680400d64a3dbc6e21d0d8290e327844ee81]:
-#+begin_EXAMPLE
+```text
 1/2
 1/6
-#+end_EXAMPLE
+```
 
-*** Question
-:PROPERTIES:
-:ID:       de21a7ee-5fcf-4812-a6db-f6b71c82bdfe
-:CUSTOM-ID: de21a7ee-5fcf-4812-a6db-f6b71c82bdfe
-:END:
 
-#+begin_quote
-Define a better version of src_scheme{make-rat} that handles both positive and
-negative arguments. src_scheme{make-rat} should normalize the sign so that if
-the rational number is positive, both the numerator and denominator are
-positive, and if the rational number is negative, only the numerator is
-negative.
-#+end_quote
+#### <span class="section-num">3.2.2</span> Question {#question}
 
-*** Answer
-:PROPERTIES:
-:ID:       2d51f2aa-f168-40b8-aea9-e5a4fc158535
-:CUSTOM-ID: 2d51f2aa-f168-40b8-aea9-e5a4fc158535
-:END:
+> Define a better version of <span class="inline-src language-scheme" data-lang="scheme">`make-rat`</span> that handles both positive and
+> negative arguments. <span class="inline-src language-scheme" data-lang="scheme">`make-rat`</span> should normalize the sign so that if
+> the rational number is positive, both the numerator and denominator are
+> positive, and if the rational number is negative, only the numerator is
+> negative.
 
-#+NAME: make-rat
-#+BEGIN_SRC scheme -n :eval no-export :results silent
+
+#### <span class="section-num">3.2.3</span> Answer {#answer}
+
+<a id="code-snippet--make-rat"></a>
+```scheme { linenos=true, linenostart=1 }
 <<abs>>
 (define (make-rat n d)
   (cond ((not (or (< n 0)
@@ -6702,8 +5598,9 @@ negative.
            (cons (- n) (- d)))
           (else
            (cons (- (abs n)) (abs d))))))
-#+end_src
-#+BEGIN_SRC scheme -n :eval no-export :results output :exports both
+```
+
+```scheme { linenos=true, linenostart=1 }
 <<make-rat>>
 <<print-rat-txt>>
 <<rat-ops-txt>>
@@ -6726,71 +5623,45 @@ negative.
 (mattcheck "make-rat-opt denominator negative"
            (cons -1 2)
            (make-rat-opt 1 -2))
-#+end_src
+```
 
-#+RESULTS[6a599c6ffbdd54a018b8f6fcc59203abdefb8621]:
-#+begin_EXAMPLE
+```text
 SUCCEED at make-rat double negative
 SUCCEED at make-rat numerator negative
 SUCCEED at make-rat denominator negative
 SUCCEED at make-rat-opt double negative
 SUCCEED at make-rat-opt numerator negative
 SUCCEED at make-rat-opt denominator negative
-#+end_EXAMPLE
-
-#+BEGIN_SRC scheme -n :noeval :results output :exports results :tangle 2/Ex1-bench.scm
-(use-modules (ice-9 format))
-<<make-rat>>
-<<print-rat-txt>>
-<<rat-ops-txt>>
-(load "../mattbench.scm")
-
-(let ((tryit (lambda(f)
-               (f 1 2)
-               (f -1 2)
-               (f 1 -2)
-               (f -1 -2))))
-
-  (format #t "~&unoptimized make-rat: ~a~%"(mattbench2 (lambda()(tryit make-rat)) 500000000))
-  (format #t "~&optimized make-rat: ~a~%"(mattbench2 (lambda()(tryit make-rat-opt)) 500000000)))
-#+end_src
+```
 
 My "optimized" version shows no benefit at all:
-#+RESULTS:
-#+BEGIN_EXAMPLE
+
+```text
 unoptimized make-rat: ((1 . 2) 231.74267794)
 optimized make-rat: ((1 . 2) 233.99087033)
-#+END_EXAMPLE
+```
 
-**  Exercise 2.2
-:PROPERTIES:
-:ID:       2feac1a8-049e-4cbd-a100-8774579bc33b
-:CUSTOM-ID: 2feac1a8-049e-4cbd-a100-8774579bc33b
-:END:
 
-*** Question
-:PROPERTIES:
-:ID:       181e49cc-aeec-40f5-9ef3-7ca71b6eb372
-:CUSTOM-ID: 181e49cc-aeec-40f5-9ef3-7ca71b6eb372
-:END:
+### <span class="section-num">3.3</span> Exercise 2.2 {#exercise-2-dot-2}
 
-#+begin_quote
-Consider the problem of representing line segments in a plane. Each segment is
-represented as a pair of points: a starting point and an ending point. Define a
-constructor src_scheme{make-segment} and selectors src_scheme{start-segment} and
-src_scheme{end-segment} that define the representation of segments in terms of
-points. Furthermore, a point can be represented as a pair of numbers: the \(x\)
-coordinate and the \(y\) coordinate. Accordingly, specify a constructor
-src_scheme{make-point} and selectors src_scheme{x-point} and src_scheme{y-point}
-that define this representation. Finally, using your selectors and constructors,
-define a procedure src_scheme{midpoint-segment} that takes a line segment as
-argument and returns its midpoint (the point whose coordinates are the average
-of the coordinates of the endpoints). To try your procedures, you'll need a way
-to print points:
-#+end_quote
 
-#+NAME: print-point
-#+BEGIN_SRC scheme -n :eval no-export :output silent
+#### <span class="section-num">3.3.1</span> Question {#question}
+
+> Consider the problem of representing line segments in a plane. Each segment is
+> represented as a pair of points: a starting point and an ending point. Define a
+> constructor <span class="inline-src language-scheme" data-lang="scheme">`make-segment`</span> and selectors <span class="inline-src language-scheme" data-lang="scheme">`start-segment`</span> and
+> <span class="inline-src language-scheme" data-lang="scheme">`end-segment`</span> that define the representation of segments in terms of
+> points. Furthermore, a point can be represented as a pair of numbers: the \\(x\\)
+> coordinate and the \\(y\\) coordinate. Accordingly, specify a constructor
+> <span class="inline-src language-scheme" data-lang="scheme">`make-point`</span> and selectors <span class="inline-src language-scheme" data-lang="scheme">`x-point`</span> and <span class="inline-src language-scheme" data-lang="scheme">`y-point`</span>
+> that define this representation. Finally, using your selectors and constructors,
+> define a procedure <span class="inline-src language-scheme" data-lang="scheme">`midpoint-segment`</span> that takes a line segment as
+> argument and returns its midpoint (the point whose coordinates are the average
+> of the coordinates of the endpoints). To try your procedures, you'll need a way
+> to print points:
+
+<a id="code-snippet--print-point"></a>
+```scheme { linenos=true, linenostart=1 }
 (define (print-point p)
   (newline)
   (display "(")
@@ -6798,16 +5669,13 @@ to print points:
   (display ",")
   (display (y-point p))
   (display ")"))
-#+END_SRC
+```
 
-*** Answer
-:PROPERTIES:
-:ID:       11b92346-4c31-419d-8294-45ed6b89f0c7
-:CUSTOM-ID: 11b92346-4c31-419d-8294-45ed6b89f0c7
-:END:
 
-#+NAME: make-point
-#+BEGIN_SRC scheme -n :eval no-export :results silent
+#### <span class="section-num">3.3.2</span> Answer {#answer}
+
+<a id="code-snippet--make-point"></a>
+```scheme { linenos=true, linenostart=1 }
 <<average>>
 (define (make-point x y)
   (cons x y))
@@ -6835,9 +5703,10 @@ to print points:
                        bx)
               (average ay
                        by))))
-#+end_src
-#+NAME: midpoint-segment-test
-#+BEGIN_SRC scheme -n :eval no-export :results output :exports both
+```
+
+<a id="code-snippet--midpoint-segment-test"></a>
+```scheme { linenos=true, linenostart=1 }
 <<make-point>>
 (load "mattcheck2.scm")
 (mattcheck "make-point"
@@ -6858,71 +5727,44 @@ to print points:
   (mattcheck "midpoint-segment-opt"
               (make-point 0 0)
               (midpoint-segment-opt s)))
-#+end_src
+```
 
-#+RESULTS[141746ba8a525e713c10e21026fc2a808eda58b8]: midpoint-segment-test
-#+begin_EXAMPLE
+```text
 SUCCEED at make-point
 SUCCEED at make-segment
 SUCCEED at midpoint-segment
 SUCCEED at midpoint-segment-opt
-#+end_EXAMPLE
-
-#+BEGIN_SRC scheme -n :noeval :results output :exports results :tangle 2/Ex2-bench.scm
-(use-modules (ice-9 format))
-<<make-point>>
-(load "../mattbench.scm")
-
-(let* ((p1 (make-point 1.0 2.0))
-       (p2 (make-point -1.0 -2.0))
-       (s (make-segment p1 p2))
-       (tryit (lambda(f)
-               (f s))))
-
-  (format #t "~&unoptimized midpoint-segment: ~a~%" (mattbench2 (lambda()(tryit midpoint-segment)) 50000000))
-  (format #t "~&optimized midpoint-segment: ~a~%" (mattbench2 (lambda()(tryit midpoint-segment-opt)) 50000000)))
-#+end_src
+```
 
 And once again my bikeshedding is revealed:
-#+RESULTS:
-#+BEGIN_EXAMPLE
+
+```text
 unoptimized make-rat: ((0.0 . 0.0) 326.94653558)
 optimized make-rat: ((0.0 . 0.0) 331.83410742)
-#+END_EXAMPLE
+```
 
-**  Exercise 2.3
-:PROPERTIES:
-:ID:       8d579e83-08b9-4d23-bd86-94ff1ede7ac4
-:CUSTOM-ID: 8d579e83-08b9-4d23-bd86-94ff1ede7ac4
-:END:
 
-*** Question
-:PROPERTIES:
-:ID:       ee93d34f-946b-4ea8-94c3-47762d5253b0
-:CUSTOM-ID: ee93d34f-946b-4ea8-94c3-47762d5253b0
-:END:
+### <span class="section-num">3.4</span> Exercise 2.3 {#exercise-2-dot-3}
 
-#+begin_quote
-Implement a representation for rectangles in a plane. (Hint: You may want to
-make use of Exercise 2.2.) In terms of your constructors and selectors, create
-procedures that compute the perimeter and the area of a given rectangle. Now
-implement a different representation for rectangles. Can you design your system
-with suitable abstraction barriers, so that the same perimeter and area
-procedures will work using either representation?
-#+end_quote
 
-*** Answer 1
-:PROPERTIES:
-:ID:       b67b681f-b5b8-4672-befd-7cc4cea94df6
-:CUSTOM-ID: b67b681f-b5b8-4672-befd-7cc4cea94df6
-:END:
+#### <span class="section-num">3.4.1</span> Question {#question}
+
+> Implement a representation for rectangles in a plane. (Hint: You may want to
+> make use of Exercise 2.2.) In terms of your constructors and selectors, create
+> procedures that compute the perimeter and the area of a given rectangle. Now
+> implement a different representation for rectangles. Can you design your system
+> with suitable abstraction barriers, so that the same perimeter and area
+> procedures will work using either representation?
+
+
+#### <span class="section-num">3.4.2</span> Answer 1 {#answer-1}
 
 I don't really like the "wishful thinking" process the book advocates but since
 this question specifically regards abstraction, I'll start by writing the two
 requested procedures first.
 
-#+NAME: rect-area-peri
-#+BEGIN_SRC scheme -n :eval no-export :results silent
+<a id="code-snippet--rect-area-peri"></a>
+```scheme { linenos=true, linenostart=1 }
 (define (rect-area R)
   (* (rect-height R)
      (rect-width R)))
@@ -6931,21 +5773,21 @@ requested procedures first.
   (* 2
      (+ (rect-height R)
         (rect-width R))))
-#+end_src
+```
 
-So my "wishlist" is just for src_scheme{(rect-area R)} and src_scheme{(rect-width R)}.
+So my "wishlist" is just for <span class="inline-src language-scheme" data-lang="scheme">`(rect-area R)`</span> and <span class="inline-src language-scheme" data-lang="scheme">`(rect-width R)`</span>.
 
 So, my first implementation of a rectangle will be of a list of 3 points
-\(\mathrm{ABC}\), with the fourth point \(\mathrm{D}\) being constructed from
+\\(\mathrm{ABC}\\), with the fourth point \\(\mathrm{D}\\) being constructed from
 the others. I haven't done geometry lessons in a while but logically I can
-deduce that \(\mathrm{D}\) is as far from \(\mathrm{A}\) as \(\mathrm{B}\) is
-from \(\mathrm{C}\), and as far from \(\mathrm{C}\) as \(\mathrm{A}\) is from
-\(\mathrm{B}\). by experimentation I've figured out that
-\(\mathrm{D}=\mathrm{A} + (\mathrm{C}-\mathrm{B})=\mathrm{C} +
-(\mathrm{A}-\mathrm{B})\).
+deduce that \\(\mathrm{D}\\) is as far from \\(\mathrm{A}\\) as \\(\mathrm{B}\\) is
+from \\(\mathrm{C}\\), and as far from \\(\mathrm{C}\\) as \\(\mathrm{A}\\) is from
+\\(\mathrm{B}\\). by experimentation I've figured out that
+\\(\mathrm{D}=\mathrm{A} + (\mathrm{C}-\mathrm{B})=\mathrm{C} +
+(\mathrm{A}-\mathrm{B})\\).
 
-#+NAME: rect-4pt
-#+BEGIN_SRC scheme -n :eval no-export :results silent
+<a id="code-snippet--rect-4pt"></a>
+```scheme { linenos=true, linenostart=1 }
 ;;   AB = width
 ;;(0,1) (1,1)
 ;; A-----B
@@ -7016,10 +5858,10 @@ from \(\mathrm{C}\), and as far from \(\mathrm{C}\) as \(\mathrm{A}\) is from
 (define (length-segment seg)
   (abs (length-points (start-segment seg)
                  (end-segment seg))))
-#+end_src
+```
 
-#+NAME: rect-test
-#+BEGIN_SRC scheme -n :eval no-export :results output :exports both
+<a id="code-snippet--rect-test"></a>
+```scheme { linenos=true, linenostart=1 }
 (load "mattcheck2.scm")
 
 <<rect-4pt>>
@@ -7079,10 +5921,9 @@ from \(\mathrm{C}\), and as far from \(\mathrm{C}\) as \(\mathrm{A}\) is from
   (mattcheck "rect-peri WXYZ"
              (rect-peri WXY)
              7.0710678118654755))
-#+end_src
+```
 
-#+RESULTS[1230dad0b67bba1d7069d74c6482009dd4cd5d37]: rect-test
-#+begin_EXAMPLE
+```text
 SUCCEED at make-rect
 SUCCEED at rect-d and rect-d-alt (ABCD)
 SUCCEED at rect-d and rect-d-alt (CDAB)
@@ -7096,21 +5937,19 @@ SUCCEED at rect-area ABCD
 SUCCEED at rect-area WXYZ
 SUCCEED at rect-peri ABCD
 SUCCEED at rect-peri WXYZ
-#+end_EXAMPLE
+```
 
-*** Answer 2
-:PROPERTIES:
-:ID:       3bcac536-608f-460e-8163-63298dd9963c
-:CUSTOM-ID: 3bcac536-608f-460e-8163-63298dd9963c
-:END:
+
+#### <span class="section-num">3.4.3</span> Answer 2 {#answer-2}
 
 My second implementation will be of a rectangle as an origin, height, width, and
 angle. Basically, height and width are two vectors originating from origin, with
-width going straight right and height offset \(90\deg\) from width. Angle is
+width going straight right and height offset \\(90\deg\\) from width. Angle is
 added during conversion from Polar to Cartesian coordinates. In relation to my
 1st implementation, point D is where the origin is.
-#+NAME: rect-ohwa
-#+BEGIN_SRC scheme -n :eval no-export :results silent :session scheme
+
+<a id="code-snippet--rect-ohwa"></a>
+```scheme { linenos=true, linenostart=1 }
 <<make-point>>
 ;; origin is a (make-point), hwa are floats
 (define (make-rect origin height width angle)
@@ -7161,10 +6000,10 @@ added during conversion from Polar to Cartesian coordinates. In relation to my
     (vector-to-xy (rect-width R) (rect-angle R))
     (vector-to-xy (rect-height R)
                   (+ 90 (rect-angle R))))))
-#+end_src
+```
 
-#+NAME: rect-test2
-#+BEGIN_SRC scheme -n :eval no-export :results output :exports both
+<a id="code-snippet--rect-test2"></a>
+```scheme { linenos=true, linenostart=1 }
 (load "mattcheck2.scm")
 
 <<rect-ohwa>>
@@ -7214,10 +6053,9 @@ added during conversion from Polar to Cartesian coordinates. In relation to my
   (mattcheck "rect-peri WXYZ"
              (rect-peri WXY)
              7.0710678118654755))
-#+end_src
+```
 
-#+RESULTS[68186716ddc449e54bf88d08c60cbf7256e70641]: rect-test2
-#+begin_EXAMPLE
+```text
 SUCCEED at make-rect
 SUCCEED at rect-b (ABCD)
 SUCCEED at rect-b (CDAB)
@@ -7228,60 +6066,45 @@ SUCCEED at rect-area ABCD
 SUCCEED at rect-area WXYZ
 SUCCEED at rect-peri ABCD
 SUCCEED at rect-peri WXYZ
-#+end_EXAMPLE
+```
 
-** 2.1.3: What Is Meant by Data?
-:PROPERTIES:
-:ID:       81df1f92-08c7-4b58-804a-2eb47620c500
-:CUSTOM-ID: 81df1f92-08c7-4b58-804a-2eb47620c500
-:END:
+
+### <span class="section-num">3.5</span> 2.1.3: What Is Meant by Data? {#2-dot-1-dot-3-what-is-meant-by-data}
 
 We can consider data as being a collection of selectors and constructors,
 together with specific conditions that these procedures must fulfill in order to
 be a valid representation. For example, in the case of our rational number
-implementation, for rational number \(x\) made with numerator \(n\) and
-denominator \(d\), dividing the result of src_scheme{(numer x)} over the result
-of src_scheme{(denom x)} should be equivalent to dividing \(n\) over \(d\).
+implementation, for rational number \\(x\\) made with numerator \\(n\\) and
+denominator \\(d\\), dividing the result of <span class="inline-src language-scheme" data-lang="scheme">`(numer x)`</span> over the result
+of <span class="inline-src language-scheme" data-lang="scheme">`(denom x)`</span> should be equivalent to dividing \\(n\\) over \\(d\\).
 
-**  Exercise 2.4
-:PROPERTIES:
-:ID:       367b79ac-f582-440c-8964-5df42721011e
-:CUSTOM-ID: 367b79ac-f582-440c-8964-5df42721011e
-:END:
 
-*** Question
-:PROPERTIES:
-:ID:       5205e39b-4083-4cfa-bcdf-964fac03184e
-:CUSTOM-ID: 5205e39b-4083-4cfa-bcdf-964fac03184e
-:END:
+### <span class="section-num">3.6</span> Exercise 2.4 {#exercise-2-dot-4}
 
-#+begin_quote
-Here is an alternative procedural representation of pairs. For this
-representation, verify that src_scheme{(car (cons x y))} yields src_scheme{x} for any
-objects src_scheme{x} and src_scheme{y}.
-#+end_quote
 
-#+NAME: alt-pairs-txt
-#+BEGIN_SRC scheme -n :eval no-export :results silent
+#### <span class="section-num">3.6.1</span> Question {#question}
+
+> Here is an alternative procedural representation of pairs. For this
+> representation, verify that <span class="inline-src language-scheme" data-lang="scheme">`(car (cons x y))`</span> yields <span class="inline-src language-scheme" data-lang="scheme">`x`</span> for any
+> objects <span class="inline-src language-scheme" data-lang="scheme">`x`</span> and <span class="inline-src language-scheme" data-lang="scheme">`y`</span>.
+
+<a id="code-snippet--alt-pairs-txt"></a>
+```scheme { linenos=true, linenostart=1 }
 (define (cons x y)
   (lambda (m) (m x y)))
 (define (car z)
   (z (lambda (p q) p)))
-#+END_SRC
+```
 
-#+begin_quote
-What is the corresponding definition of src_scheme{cdr}? (Hint: To verify that
-this works, make use of the substitution model of 1.1.5.)
-#+end_quote
+> What is the corresponding definition of <span class="inline-src language-scheme" data-lang="scheme">`cdr`</span>? (Hint: To verify that
+> this works, make use of the substitution model of 1.1.5.)
 
-*** Answer
-:PROPERTIES:
-:ID:       2a32f8e7-2f72-4780-ad6d-a744d6c52c27
-:CUSTOM-ID: 2a32f8e7-2f72-4780-ad6d-a744d6c52c27
-:END:
+
+#### <span class="section-num">3.6.2</span> Answer {#answer}
 
 First, let's explain with the substitution model.
-#+BEGIN_SRC scheme -n :eval no-export :results silent
+
+```scheme { linenos=true, linenostart=1 }
 (cons 0 1)
 (lambda (m) (m 0 1))
 
@@ -7293,11 +6116,12 @@ First, let's explain with the substitution model.
 ((lambda (m) (m 0 1)) (lambda (p q) q))
 (lambda (0 1) 1)
 1
-#+END_SRC
+```
 
 Now for implementation.
-#+NAME: alt-pairs
-#+BEGIN_SRC scheme -n :eval no-export :results output :exports both
+
+<a id="code-snippet--alt-pairs"></a>
+```scheme { linenos=true, linenostart=1 }
 (load "mattcheck2.scm")
 <<alt-pairs-txt>>
 (define (cdr z)
@@ -7310,10 +6134,9 @@ Now for implementation.
   (mattcheck "cdr"
              (cdr pair)
              1))
-#+END_SRC
+```
 
-#+RESULTS[24aebdc670f62e62b39d29c568b3e881d59dbcf1]: alt-pairs
-#+begin_EXAMPLE
+```text
 | (0 . 0) | (0 . 1) | (0 . 2) | (0 . 3) | (0 . 4) | (0 . 5) | (0 . 6) |
 | (1 . 0) | (1 . 1) | (1 . 2) | (1 . 3) | (1 . 4) | (1 . 5) | (1 . 6) |
 | (2 . 0) | (2 . 1) | (2 . 2) | (2 . 3) | (2 . 4) | (2 . 5) | (2 . 6) |
@@ -7321,47 +6144,35 @@ Now for implementation.
 | (4 . 0) | (4 . 1) | (4 . 2) | (4 . 3) | (4 . 4) | (4 . 5) | (4 . 6) |
 | (5 . 0) | (5 . 1) | (5 . 2) | (5 . 3) | (5 . 4) | (5 . 5) | (5 . 6) |
 | (6 . 0) | (6 . 1) | (6 . 2) | (6 . 3) | (6 . 4) | (6 . 5) | (6 . 6) |
-#+end_EXAMPLE
+```
 
-**  Exercise 2.5 :optional:
-:PROPERTIES:
-:ID:       4410574f-de61-4c0b-a1b0-d4ebdee63e9d
-:CUSTOM-ID: 4410574f-de61-4c0b-a1b0-d4ebdee63e9d
-:END:
 
-*** Question
-:PROPERTIES:
-:ID:       3666d727-4d7a-4519-9a56-88c0bebd4d40
-:CUSTOM-ID: 3666d727-4d7a-4519-9a56-88c0bebd4d40
-:END:
+### <span class="section-num">3.7</span> Exercise 2.5 <span class="tag"><span class="optional">optional</span></span> {#exercise-2-dot-5}
 
-#+begin_quote
-Show that we can represent pairs of nonnegative integers using only numbers and
-arithmetic operations if we represent the pair \(a\) and \(b\) as the integer
-that is the product \(2^a 3^b\). Give the corresponding definitions of the
-procedures src_scheme{cons}, src_scheme{car}, and src_scheme{cdr}.
-#+end_quote
 
-*** Answer
-:PROPERTIES:
-:ID:       cd53185c-9159-494d-9955-078b1e8bfde6
-:CUSTOM-ID: cd53185c-9159-494d-9955-078b1e8bfde6
-:END:
+#### <span class="section-num">3.7.1</span> Question {#question}
+
+> Show that we can represent pairs of nonnegative integers using only numbers and
+> arithmetic operations if we represent the pair \\(a\\) and \\(b\\) as the integer
+> that is the product \\(2^a 3^b\\). Give the corresponding definitions of the
+> procedures <span class="inline-src language-scheme" data-lang="scheme">`cons`</span>, <span class="inline-src language-scheme" data-lang="scheme">`car`</span>, and <span class="inline-src language-scheme" data-lang="scheme">`cdr`</span>.
+
+
+#### <span class="section-num">3.7.2</span> Answer {#answer}
 
 This one really blew my mind inside-out when I first did it. Basically, because
 the two numbers are coprime, you can factor out the unwanted number and be left
 with the desired one.
 
-#+begin_quote
-Where \(x\) is the scrambled number, \(p\) is the base we want to remove, \(q\)
-is the base we want to retrieve from and \(y\) is the value exponentiating
-\(p\), the original number is retrieved by dividing \(x\) by \(p\) for \(y\)
-number of times, and then applying \(\log_{q}\) to the result.
-#+end_quote
+> Where \\(x\\) is the scrambled number, \\(p\\) is the base we want to remove, \\(q\\)
+> is the base we want to retrieve from and \\(y\\) is the value exponentiating
+> \\(p\\), the original number is retrieved by dividing \\(x\\) by \\(p\\) for \\(y\\)
+> number of times, and then applying \\(\log\_{q}\\) to the result.
 
-First, let's make src_scheme{cons}.
-#+NAME: cons-nnint
-#+BEGIN_SRC scheme -n :eval no-export :results silent
+First, let's make <span class="inline-src language-scheme" data-lang="scheme">`cons`</span>.
+
+<a id="code-snippet--cons-nnint"></a>
+```scheme { linenos=true, linenostart=1 }
 (define (cons-nnint a b)
   (* (expt 2 a) (expt 3 b)))
 (define (cons-nnint-debug a b) ;; DEBUG
@@ -7375,18 +6186,20 @@ First, let's make src_scheme{cons}.
     (display ab)
     (newline)
     ab))
-#+END_SRC
+```
 
 Also, Guile doesn't have a function for custom logs so let's define that now.
-#+NAME: logn
-#+BEGIN_SRC scheme -n :eval no-export :results silent
+
+<a id="code-snippet--logn"></a>
+```scheme { linenos=true, linenostart=1 }
 (define (logn b p)
   (/ (log p) (log b)))
-#+END_SRC
+```
 
 Let's do some analysis to see how these numbers are related.
-#+NAME: 2-5-table
-#+BEGIN_SRC scheme -n :eval no-export :results value table :exports both :wrap
+
+<a id="code-snippet--2-5-table"></a>
+```scheme { linenos=true, linenostart=1 }
 <<cons-nnint>>
 (let*
     ((tablesize 7)
@@ -7401,21 +6214,21 @@ Let's do some analysis to see how these numbers are related.
                           row))
                    inputs)))
   outputs)
-#+END_SRC
+```
 
-#+RESULTS[f749743950b6e317a8e20ab5b434c3bdb7a358c4]: 2-5-table
-|  1 |   3 |   9 |   27 |   81 |   243 |   729 |
-|  2 |   6 |  18 |   54 |  162 |   486 |  1458 |
-|  4 |  12 |  36 |  108 |  324 |   972 |  2916 |
-|  8 |  24 |  72 |  216 |  648 |  1944 |  5832 |
-| 16 |  48 | 144 |  432 | 1296 |  3888 | 11664 |
-| 32 |  96 | 288 |  864 | 2592 |  7776 | 23328 |
+| 1  | 3   | 9   | 27   | 81   | 243   | 729   |
+|----|-----|-----|------|------|-------|-------|
+| 2  | 6   | 18  | 54   | 162  | 486   | 1458  |
+| 4  | 12  | 36  | 108  | 324  | 972   | 2916  |
+| 8  | 24  | 72  | 216  | 648  | 1944  | 5832  |
+| 16 | 48  | 144 | 432  | 1296 | 3888  | 11664 |
+| 32 | 96  | 288 | 864  | 2592 | 7776  | 23328 |
 | 64 | 192 | 576 | 1728 | 5184 | 15552 | 46656 |
 
-Here are our scrambled numbers. 
+Here are our scrambled numbers.
 
-#+NAME: 2-5-table2
-#+BEGIN_SRC scheme -n :eval no-export :results value table :exports both :var data=2-5-table
+<a id="code-snippet--2-5-table2"></a>
+```scheme { linenos=true, linenostart=1 }
 ;; To find a number of some base in some column,
 ;; First divide by unwantedbase for targetcol number of times
 <<repeated>>
@@ -7423,27 +6236,27 @@ Here are our scrambled numbers.
       (unwantedbase 3))
   (map (lambda(row)
          (map (lambda(item)
-                ((repeated (lambda(x) 
+                ((repeated (lambda(x)
                              (/ x unwantedbase)) targetcol)
                  item))
                 row))
        data))
-#+END_SRC
+```
 
-#+RESULTS[0c7b79127cc7f944c0915bac19a6e5275cd87389]: 2-5-table2
-| 1/9  | 1/3  |  1 |   3 |   9 |   27 |   81 |
-| 2/9  | 2/3  |  2 |   6 |  18 |   54 |  162 |
-| 4/9  | 4/3  |  4 |  12 |  36 |  108 |  324 |
-| 8/9  | 8/3  |  8 |  24 |  72 |  216 |  648 |
-| 16/9 | 16/3 | 16 |  48 | 144 |  432 | 1296 |
-| 32/9 | 32/3 | 32 |  96 | 288 |  864 | 2592 |
+| 1/9  | 1/3  | 1  | 3   | 9   | 27   | 81   |
+|------|------|----|-----|-----|------|------|
+| 2/9  | 2/3  | 2  | 6   | 18  | 54   | 162  |
+| 4/9  | 4/3  | 4  | 12  | 36  | 108  | 324  |
+| 8/9  | 8/3  | 8  | 24  | 72  | 216  | 648  |
+| 16/9 | 16/3 | 16 | 48  | 144 | 432  | 1296 |
+| 32/9 | 32/3 | 32 | 96  | 288 | 864  | 2592 |
 | 64/9 | 64/3 | 64 | 192 | 576 | 1728 | 5184 |
 
 The numbers from our target column onwards are integers, with the target column
 being linearly exponentiated by 2 because the original numbers were linear.
 
-#+NAME: 2-5-table3
-#+BEGIN_SRC scheme -n :eval no-export :results value table :exports both :var data=2-5-table2
+<a id="code-snippet--2-5-table3"></a>
+```scheme { linenos=true, linenostart=1 }
 <<logn>>
 (let ((wantedbase 2))
   (map (lambda(row)
@@ -7451,26 +6264,26 @@ being linearly exponentiated by 2 because the original numbers were linear.
                 (format #f "~6,3f" (logn 2 item)))
                 row))
        data))
-#+END_SRC
+```
 
-#+RESULTS[36dd324367b48addac3960ee0675f28de84481b0]: 2-5-table3
-| -3.170 | -1.585 | 0.000 | 1.585 | 3.170 |  4.755 |  6.340 |
-| -2.170 | -0.585 | 1.000 | 2.585 | 4.170 |  5.755 |  7.340 |
-| -1.170 |  0.415 | 2.000 | 3.585 | 5.170 |  6.755 |  8.340 |
-| -0.170 |  1.415 | 3.000 | 4.585 | 6.170 |  7.755 |  9.340 |
-|  0.830 |  2.415 | 4.000 | 5.585 | 7.170 |  8.755 | 10.340 |
-|  1.830 |  3.415 | 5.000 | 6.585 | 8.170 |  9.755 | 11.340 |
-|  2.830 |  4.415 | 6.000 | 7.585 | 9.170 | 10.755 | 12.340 |
+| -3.170 | -1.585 | 0.000 | 1.585 | 3.170 | 4.755  | 6.340  |
+|--------|--------|-------|-------|-------|--------|--------|
+| -2.170 | -0.585 | 1.000 | 2.585 | 4.170 | 5.755  | 7.340  |
+| -1.170 | 0.415  | 2.000 | 3.585 | 5.170 | 6.755  | 8.340  |
+| -0.170 | 1.415  | 3.000 | 4.585 | 6.170 | 7.755  | 9.340  |
+| 0.830  | 2.415  | 4.000 | 5.585 | 7.170 | 8.755  | 10.340 |
+| 1.830  | 3.415  | 5.000 | 6.585 | 8.170 | 9.755  | 11.340 |
+| 2.830  | 4.415  | 6.000 | 7.585 | 9.170 | 10.755 | 12.340 |
 
 Now the second column has recovered its original values. Although we didn't know
 what the original integer values were, we can now tell which column has the
 correct numbers by looking at which are integer values.
 
-We can use this sign of a correct result in the proposed src_scheme{car} and
-src_scheme{cdr} procedures.
+We can use this sign of a correct result in the proposed <span class="inline-src language-scheme" data-lang="scheme">`car`</span> and
+<span class="inline-src language-scheme" data-lang="scheme">`cdr`</span> procedures.
 
-#+NAME: nnint-test
-#+BEGIN_SRC scheme -n :eval no-export :results value table :exports both
+<a id="code-snippet--nnint-test"></a>
+```scheme { linenos=true, linenostart=1 }
 <<cons-nnint>>
 <<logn>>
 (use-srfis '(1))
@@ -7498,59 +6311,46 @@ src_scheme{cdr} procedures.
   (map (lambda(x y) (cons x y))
        (list "pairs" "cons'd" "car" "cdr")
        (list initvalues conslist carlist cdrlist)))
-#+END_SRC
+```
 
-#+RESULTS[93e78e368bd1c1d5d50a5e2d73888ee2e23a409c]: nnint-test
 | pairs  | (2 3) | (4 5) | (7 2) |
-|--------+-------+-------+-------|
-| cons'd |   108 |  3888 |  1152 |
-| car    |   2.0 |   4.0 |   7.0 |
-| cdr    |   3.0 |   5.0 |   2.0 |
+|--------|-------|-------|-------|
+| cons'd | 108   | 3888  | 1152  |
+| car    | 2.0   | 4.0   | 7.0   |
+| cdr    | 3.0   | 5.0   | 2.0   |
 
-**  Exercise 2.6 :optional:
-:PROPERTIES:
-:ID:       d2faecbf-e622-4e31-aeb7-46b6dcc2fe04
-:CUSTOM-ID: d2faecbf-e622-4e31-aeb7-46b6dcc2fe04
-:END:
 
-*** Question
-:PROPERTIES:
-:ID:       53b69abf-b68d-488c-98e0-b925899f0119
-:CUSTOM-ID: 53b69abf-b68d-488c-98e0-b925899f0119
-:END:
+### <span class="section-num">3.8</span> Exercise 2.6 <span class="tag"><span class="optional">optional</span></span> {#exercise-2-dot-6}
 
-#+begin_quote
-In case representing pairs as procedures wasn't mind-boggling enough, consider
-that, in a language that can manipulate procedures, we can get by without
-numbers (at least insofar as nonnegative integers are concerned) by implementing
-0 and the operation of adding 1 as
-#+end_quote
 
-#+NAME: lc-zero-add1
-#+BEGIN_SRC scheme -n :eval no-export
+#### <span class="section-num">3.8.1</span> Question {#question}
+
+> In case representing pairs as procedures wasn't mind-boggling enough, consider
+> that, in a language that can manipulate procedures, we can get by without
+> numbers (at least insofar as nonnegative integers are concerned) by implementing
+> 0 and the operation of adding 1 as
+
+<a id="code-snippet--lc-zero-add1"></a>
+```scheme { linenos=true, linenostart=1 }
 (define zero (lambda (f) (lambda (x) x)))
 (define (add-1 n)
   (lambda (f) (lambda (x) (f ((n f) x)))))
-#+END_SRC
+```
 
-#+begin_quote
-This representation is known as /Church numerals/, after its inventor, Alonzo
-Church, the logician who invented the \lambda-calculus.
+> This representation is known as _Church numerals_, after its inventor, Alonzo
+> Church, the logician who invented the &lambda;-calculus.
+>
+> Define <span class="inline-src language-scheme" data-lang="scheme">`one`</span> and <span class="inline-src language-scheme" data-lang="scheme">`two`</span> directly (not in terms of
+> <span class="inline-src language-scheme" data-lang="scheme">`zero`</span> and <span class="inline-src language-scheme" data-lang="scheme">`add-1`</span>). (Hint: Use substitution to evaluate
+> <span class="inline-src language-scheme" data-lang="scheme">`(add-1 zero)`</span>). Give a direct definition of the addition procedure
+> <span class="inline-src language-scheme" data-lang="scheme">`+`</span> (not in terms of repeated application of <span class="inline-src language-scheme" data-lang="scheme">`add-1`</span>).
 
-Define src_scheme{one} and src_scheme{two} directly (not in terms of
-src_scheme{zero} and src_scheme{add-1}). (Hint: Use substitution to evaluate
-src_scheme{(add-1 zero)}). Give a direct definition of the addition procedure
-src_scheme{+} (not in terms of repeated application of src_scheme{add-1}).
-#+end_quote
 
-*** Answer
-:PROPERTIES:
-:ID:       373a5055-5305-4ba5-893e-502848a4dfae
-:CUSTOM-ID: 373a5055-5305-4ba5-893e-502848a4dfae
-:END:
+#### <span class="section-num">3.8.2</span> Answer {#answer}
 
-First, let's check out src_scheme{(add-1 zero)}.
-#+BEGIN_SRC scheme -n
+First, let's check out <span class="inline-src language-scheme" data-lang="scheme">`(add-1 zero)`</span>.
+
+```scheme { linenos=true, linenostart=1 }
 (define zero (lambda (f) (lambda (x) x)))
 (define (add-1 n)
   (lambda (f) (lambda (x)
@@ -7563,10 +6363,11 @@ First, let's check out src_scheme{(add-1 zero)}.
           (f ((lambda (x) x) x)))))
 ((lambda (f) (lambda (x)
           (f x))))
-#+END_SRC
+```
 
 So from this I believe the correct definition of one and two are:
-#+BEGIN_SRC scheme -n :eval no-export :exports both
+
+```scheme { linenos=true, linenostart=1 }
 (load "mattcheck2.scm")
 (define one
   (lambda (f) (lambda (x)
@@ -7589,29 +6390,22 @@ So from this I believe the correct definition of one and two are:
 (mattcheck "3 = 1+2 = (1+0) + (1+1+0)"
            3
            (((add one two) 1+) 0))
-#+END_SRC
+```
 
-#+RESULTS[12c88e9dd92087809182a4956164401f3dd5dd37]:
-#+begin_EXAMPLE
+```text
 SUCCEED at 1 = 1+0
 SUCCEED at 2 = 1+1+0
 SUCCEED at 3 = 1+2 = (1+0) + (1+1+0)
-#+end_EXAMPLE
+```
 
-**  Exercise 2.7
-:PROPERTIES:
-:ID:       25273dbb-b905-4c0f-82d4-019fc389114e
-:CUSTOM-ID: 25273dbb-b905-4c0f-82d4-019fc389114e
-:END:
 
-*** Text
-:PROPERTIES:
-:ID:       860b4109-1280-4883-9562-49f57183f067
-:CUSTOM-ID: 860b4109-1280-4883-9562-49f57183f067
-:END:
+### <span class="section-num">3.9</span> Exercise 2.7 {#exercise-2-dot-7}
 
-#+NAME: interval-txt
-#+BEGIN_SRC scheme -n :eval no-export :results silent
+
+#### <span class="section-num">3.9.1</span> Text {#text}
+
+<a id="code-snippet--interval-txt"></a>
+```scheme { linenos=true, linenostart=1 }
 (define (add-interval x y)
   (make-interval (+ (lower-bound x) (lower-bound y))
                  (+ (upper-bound x) (upper-bound y))))
@@ -7627,36 +6421,26 @@ SUCCEED at 3 = 1+2 = (1+0) + (1+1+0)
    x
    (make-interval (/ 1.0 (upper-bound y))
                   (/ 1.0 (lower-bound y)))))
-#+END_SRC
+```
 
-*** Question
-:PROPERTIES:
-:ID:       77308977-b69d-4fd5-8c1b-cadd954f689c
-:CUSTOM-ID: 77308977-b69d-4fd5-8c1b-cadd954f689c
-:END:
 
-#+begin_quote
-Alyssa's program is incomplete because she has not specified the implementation
-of the interval abstraction. Here is a definition of the interval constructor:
-#+end_quote
+#### <span class="section-num">3.9.2</span> Question {#question}
 
-#+BEGIN_SRC scheme -n :eval no-export :results silent
+> Alyssa's program is incomplete because she has not specified the implementation
+> of the interval abstraction. Here is a definition of the interval constructor:
+
+```scheme { linenos=true, linenostart=1 }
 (define (make-interval a b) (cons a b))
-#+END_SRC
+```
 
-#+begin_quote
-Define selectors src_scheme{upper-bound} and src_scheme{lower-bound} to complete
-the implementation.
-#+end_quote
+> Define selectors <span class="inline-src language-scheme" data-lang="scheme">`upper-bound`</span> and <span class="inline-src language-scheme" data-lang="scheme">`lower-bound`</span> to complete
+> the implementation.
 
-*** Answer
-:PROPERTIES:
-:ID:       6468e6ee-f282-406a-9b12-7c2f767013eb
-:CUSTOM-ID: 6468e6ee-f282-406a-9b12-7c2f767013eb
-:END:
 
-#+NAME: make-interval
-#+BEGIN_SRC scheme -n :eval no-export :results silent
+#### <span class="section-num">3.9.3</span> Answer {#answer}
+
+<a id="code-snippet--make-interval"></a>
+```scheme { linenos=true, linenostart=1 }
 <<interval-txt>>
 
 ;; Makes more sense to me to test
@@ -7670,83 +6454,63 @@ the implementation.
   (car i))
 (define (lower-bound i)
   (cdr i))
-#+END_SRC
+```
 
-**  Exercise 2.8
-:PROPERTIES:
-:ID:       fc6580f7-1084-45af-be42-d838bc1e7686
-:CUSTOM-ID: fc6580f7-1084-45af-be42-d838bc1e7686
-:END:
 
-*** Question
-:PROPERTIES:
-:ID:       691b6556-635f-4283-bd5e-45a6bc2f005a
-:CUSTOM-ID: 691b6556-635f-4283-bd5e-45a6bc2f005a
-:END:
+### <span class="section-num">3.10</span> Exercise 2.8 {#exercise-2-dot-8}
 
-#+begin_quote
-Using reasoning analogous to Alyssa's, describe how the difference of two
-intervals may be computed. Define a corresponding subtraction procedure, called
-src_scheme{sub-interval}.
-#+end_quote
 
-*** Answer
-:PROPERTIES:
-:ID:       58aa4210-0605-4053-a0bd-14246bc47115
-:CUSTOM-ID: 58aa4210-0605-4053-a0bd-14246bc47115
-:END:
+#### <span class="section-num">3.10.1</span> Question {#question}
+
+> Using reasoning analogous to Alyssa's, describe how the difference of two
+> intervals may be computed. Define a corresponding subtraction procedure, called
+> <span class="inline-src language-scheme" data-lang="scheme">`sub-interval`</span>.
+
+
+#### <span class="section-num">3.10.2</span> Answer {#answer}
 
 I would argue that with one interval subtracted from the other, the lowest
-possible value is the lower of the first subtracted from the /upper/ of the
+possible value is the lower of the first subtracted from the _upper_ of the
 second, and the highest is the upper of the first subtracted from the lower of
 the second.
-#+NAME: sub-interval
-#+BEGIN_SRC scheme -n :eval no-export :results silent
+
+<a id="code-snippet--sub-interval"></a>
+```scheme { linenos=true, linenostart=1 }
 (define (sub-interval x y)
   (make-interval (- (lower-bound x) (upper-bound y))
                  (- (upper-bound x) (lower-bound y))))
-#+END_SRC
+```
 
-**  Exercise 2.9
-:PROPERTIES:
-:ID:       f10d8027-e143-4262-b9e0-0e8607f4e240
-:CUSTOM-ID: f10d8027-e143-4262-b9e0-0e8607f4e240
-:END:
 
-*** Question
-:PROPERTIES:
-:ID:       349cd4e2-bf0d-496a-b7a3-761deeed95e7
-:CUSTOM-ID: 349cd4e2-bf0d-496a-b7a3-761deeed95e7
-:END:
-#+begin_quote
-The /width/ of an interval is half of the difference between its upper and lower
-bounds. The width is a measure of the uncertainty of the number specified by the
-interval. For some arithmetic operations the width of the result of combining
-two intervals is a function only of the widths of the argument intervals,
-whereas for others the width of the combination is not a function of the widths
-of the argument intervals. Show that the width of the sum (or difference) of two
-intervals is a function only of the widths of the intervals being added (or
-subtracted). Give examples to show that this is not true for multiplication or
-division.
-#+end_quote
+### <span class="section-num">3.11</span> Exercise 2.9 {#exercise-2-dot-9}
 
-*** Answer
-:PROPERTIES:
-:ID:       922c3352-632d-4531-915a-7385bd10f1dd
-:CUSTOM-ID: 922c3352-632d-4531-915a-7385bd10f1dd
-:END:
+
+#### <span class="section-num">3.11.1</span> Question {#question}
+
+> The _width_ of an interval is half of the difference between its upper and lower
+> bounds. The width is a measure of the uncertainty of the number specified by the
+> interval. For some arithmetic operations the width of the result of combining
+> two intervals is a function only of the widths of the argument intervals,
+> whereas for others the width of the combination is not a function of the widths
+> of the argument intervals. Show that the width of the sum (or difference) of two
+> intervals is a function only of the widths of the intervals being added (or
+> subtracted). Give examples to show that this is not true for multiplication or
+> division.
+
+
+#### <span class="section-num">3.11.2</span> Answer {#answer}
 
 My first interpretation of the question was that it asked whether width
-operations are /distributive/. For example, multiplication is distributive:
+operations are _distributive_. For example, multiplication is distributive:
 
-\[
+$$
   a(b+c) = (a \times b)+(a \times c)
-\]
+$$
 
 For this I wrote the following tests:
 
-#+NAME: interval-width
-#+BEGIN_SRC scheme -n :eval no-export :results output
+<a id="code-snippet--interval-width"></a>
+```scheme { linenos=true, linenostart=1 }
 (load "mattcheck2.scm")
 <<make-interval>>
 <<sub-interval>>
@@ -7786,10 +6550,9 @@ For this I wrote the following tests:
                    (width-interval Dab)
                    (/ (width-interval ia)
                       (width-interval ib))))
-#+END_SRC
+```
 
-#+RESULTS[fd604189d7982cfc00149ec25da8bbcd60053aa1]: interval-width
-#+begin_EXAMPLE
+```text
 SUCCEED at ia width = roughly .1
 SUCCEED at ib width = roughly .2
 SUCCEED at width addition is distributive
@@ -7802,26 +6565,24 @@ returned: 2.5
 FAIL at width division is distributive
 expected: 0.4999999999999978
 returned: 0.10016025641025639
-#+end_EXAMPLE
+```
 
 However upon rereading the question I see that it could be rephrased as "in what
 operations can you calculate the resulting interval's width with only the widths
 of the argument intervals?"
 
-Basically, for argument interval \(x\) and \(y\) and result interval \(z\):
+Basically, for argument interval \\(x\\) and \\(y\\) and result interval \\(z\\):
 
-#+begin_quote
-=IF= \(z = x + y\) \\
-=THEN= \(z_{width} = x_{width} + y_{width}\) \\
-=IF= \(z = x - y\) \\
-=THEN= \(z_{width} = x_{width} + y_{width}\) \\
-Multiplied or divided widths cannot be determined from widths alone.
-#+end_quote
+> `IF` \\(z = x + y\\) <br />
+> `THEN` \\(z\_{width} = x\_{width} + y\_{width}\\) <br />
+> `IF` \\(z = x - y\\) <br />
+> `THEN` \\(z\_{width} = x\_{width} + y\_{width}\\) <br />
+> Multiplied or divided widths cannot be determined from widths alone.
 
 So, let's try that again.
 
-#+NAME: interval-operations
-#+BEGIN_SRC scheme -n :eval no-export :results output
+<a id="code-snippet--interval-operations"></a>
+```scheme { linenos=true, linenostart=1 }
 (load "mattcheck2.scm")
 <<make-interval>>
 <<sub-interval>>
@@ -7851,42 +6612,30 @@ So, let's try that again.
                    (width-interval Sab)
                    (+ (width-interval ia)
                       (width-interval ib))))
-#+END_SRC
+```
 
-#+RESULTS[4b92c98c1711878ce321a2a589bb65308d703ad6]: interval-operations
-#+begin_EXAMPLE
+```text
 SUCCEED at ia width = roughly .1
 SUCCEED at ib width = roughly .2
 SUCCEED at width(ia+ib) = width(ia) + width(ib)
 SUCCEED at width(ia-ib) = width(ia) + width(ib)
-#+end_EXAMPLE
+```
 
-**  Exercise 2.10
-:PROPERTIES:
-:ID:       b9af79c4-abc2-473b-9973-bf0ecc5e036f
-:CUSTOM-ID: b9af79c4-abc2-473b-9973-bf0ecc5e036f
-:END:
 
-*** Question
-:PROPERTIES:
-:ID:       c1ab865c-3dfc-4656-a2f6-ffd4e42df260
-:CUSTOM-ID: c1ab865c-3dfc-4656-a2f6-ffd4e42df260
-:END:
+### <span class="section-num">3.12</span> Exercise 2.10 {#exercise-2-dot-10}
 
-#+begin_quote
-Ben Bitdiddle, an expert systems programmer, looks over Alyssa's shoulder and
-comments that it is not clear what it means to divide by an interval that spans
-zero. Modify Alyssa's code to check for this condition and to signal an error if
-it occurs.
-#+end_quote
 
-*** Answer
-:PROPERTIES:
-:ID:       ec0d39fc-09ca-4311-8742-6ba091b2568d
-:CUSTOM-ID: ec0d39fc-09ca-4311-8742-6ba091b2568d
-:END:
+#### <span class="section-num">3.12.1</span> Question {#question}
 
-#+BEGIN_SRC scheme -n
+> Ben Bitdiddle, an expert systems programmer, looks over Alyssa's shoulder and
+> comments that it is not clear what it means to divide by an interval that spans
+> zero. Modify Alyssa's code to check for this condition and to signal an error if
+> it occurs.
+
+
+#### <span class="section-num">3.12.2</span> Answer {#answer}
+
+```scheme { linenos=true, linenostart=1 }
 (define (interval-spans-zero? I)
   (and (> upper-bound 0)
        (< lower-bound 0)))
@@ -7897,39 +6646,28 @@ it occurs.
        x
        (make-interval (/ 1.0 (upper-bound y))
                       (/ 1.0 (lower-bound y))))))
-#+END_SRC
+```
 
-**  Exercise 2.11
-:PROPERTIES:
-:ID:       fe8157f6-0e9b-4048-8f97-837cfb1797bb
-:CUSTOM-ID: fe8157f6-0e9b-4048-8f97-837cfb1797bb
-:END:
 
-*** Question
-:PROPERTIES:
-:ID:       be471a80-4642-4792-ba1e-cdc4cd0ae5e3
-:CUSTOM-ID: be471a80-4642-4792-ba1e-cdc4cd0ae5e3
-:END:
+### <span class="section-num">3.13</span> Exercise 2.11 {#exercise-2-dot-11}
 
-#+begin_quote
-In passing, Ben also cryptically comments: ``By testing the signs of the
-endpoints of the intervals, it is possible to break src_scheme{mul-interval}
-into nine cases, only one of which requires more than two multiplications.''
-Rewrite this procedure using Ben's suggestion.
-#+end_quote
 
-*** Answer
-:PROPERTIES:
-:ID:       56419705-45bd-4fdc-8f4c-478f840a1751
-:CUSTOM-ID: 56419705-45bd-4fdc-8f4c-478f840a1751
-:END:
+#### <span class="section-num">3.13.1</span> Question {#question}
+
+> In passing, Ben also cryptically comments: \`\`By testing the signs of the
+> endpoints of the intervals, it is possible to break <span class="inline-src language-scheme" data-lang="scheme">`mul-interval`</span>
+> into nine cases, only one of which requires more than two multiplications.''
+> Rewrite this procedure using Ben's suggestion.
+
+
+#### <span class="section-num">3.13.2</span> Answer {#answer}
 
 This problem doesn't appear to have a beautiful, elegant answer.
 
 Let's examine the nine cases.
 
-#+NAME: checking-multiples
-#+BEGIN_SRC scheme -n :eval no-export :results value table
+<a id="code-snippet--checking-multiples"></a>
+```scheme { linenos=true, linenostart=1 }
 (use-modules (ice-9 format))
 (use-srfis '(1))
 (load "mattcheck2.scm")
@@ -7986,13 +6724,12 @@ Let's examine the nine cases.
           listofpairs))))
 (cons
  (list "problem" "result" "signs" "problem signs")
- (apply zip 
+ (apply zip
         (matt-examine-mult mul-interval)))
-#+END_SRC
+```
 
-#+RESULTS[eb1646265584f59fe337c3987aebbcc0a224664e]: checking-multiples
 | problem           | result   | signs | problem signs |
-|-------------------+----------+-------+---------------|
+|-------------------|----------|-------|---------------|
 | 3/2 times 3/2     | 9/4      | + +   | + + // + +    |
 | 3/2 times 3/-5    | 9/-15    | + -   | + + // + -    |
 | 3/2 times -5/-7   | -10/-21  | - -   | + + // - -    |
@@ -8004,8 +6741,8 @@ Let's examine the nine cases.
 | -5/-7 times 3/-5  | 35/-21   | + -   | - - // + -    |
 | -5/-7 times -5/-7 | 49/25    | + +   | - - // - -    |
 
-#+NAME: mul-interval-opt
-#+BEGIN_SRC scheme -n :eval no-export :results silent
+<a id="code-snippet--mul-interval-opt"></a>
+```scheme { linenos=true, linenostart=1 }
 (define (mul-interval-opt x y)
   (let ((xu (upper-bound x))
         (xl (lower-bound x))
@@ -8049,10 +6786,10 @@ Let's examine the nine cases.
           ((check-signs? n? n? p? n?)
            (make-interval (* xl yl)
                           (* xl yu))))))
-#+END_SRC
+```
 
-#+NAME: checking-optimized
-#+BEGIN_SRC scheme -n :eval no-export :results output
+<a id="code-snippet--checking-optimized"></a>
+```scheme { linenos=true, linenostart=1 }
 (use-modules (ice-9 format))
 (use-srfis '(1))
 (load "mattcheck2.scm")
@@ -8083,10 +6820,9 @@ Let's examine the nine cases.
          listofpairs)))
 
 (matt-mult-consistency mul-interval mul-interval-opt)
-#+END_SRC
+```
 
-#+RESULTS[b10bdc030d52d0922553653de7d1c79c8080a0af]: checking-optimized
-#+begin_EXAMPLE
+```text
 SUCCEED at pp*nn
 SUCCEED at pp*pn
 SUCCEED at pp*nn
@@ -8097,81 +6833,37 @@ SUCCEED at pn*nn
 SUCCEED at nn*pp
 SUCCEED at nn*pn
 SUCCEED at nn*nn
-#+end_EXAMPLE
+```
 
-#+NAME: mult-benchmark
-#+BEGIN_SRC scheme -n :noeval :results output :exports results :tangle 2/Ex11-bench.scm
-(define iters 10000000)
-(load "../mattbench.scm")
-<<make-interval>>
-<<sub-interval>>
-<<mul-interval-opt>>
-(let* ((pp (make-interval 3 2))
-       (pn (make-interval 3 -5))
-       (pn2 (make-interval 1 -0.5))
-       (nn (make-interval -5 -7))
-       (listofpairs (list
-                     (list pp pp)
-                     (list pp pn)
-                     (list pp nn)
-                     (list pn pp)
-                     (list pn pn)
-                     (list pn pn2) ;;<- edge case to catch incomplete
-                     (list pn nn)  ;;   multiplication functions
-                     (list nn pp)
-                     (list nn pn)
-                     (list nn nn))))
-  (format #t "Unoptimized mul-interval: ~a"
-          (cdr (mattbench2 (lambda()
-                             (map (lambda(l)
-                                    (apply mul-interval l))
-                                  listofpairs))
-                           iters)))
-  (format #t "Unoptimized mul-interval: ~a"
-          (cdr (mattbench2 (lambda()
-                             (map (lambda(l)
-                                    (apply mul-interval-opt l))
-                                  listofpairs))
-                           iters)))
-  )
-#+END_SRC
-
-#+RESULTS: mul-benchmark
-#+BEGIN_EXAMPLE
+```text
 Unoptimized mul-interval: (5231.8421225)
 Optimized mul-interval: (2526.5896437)
-#+END_EXAMPLE
+```
 
 So as expected, about twice as fast!
 
-**  Exercise 2.12
-:PROPERTIES:
-:ID:       ccd05e64-baed-4c60-8cef-c767e30e471e
-:CUSTOM-ID: ccd05e64-baed-4c60-8cef-c767e30e471e
-:END:
 
-*** Question
-:PROPERTIES:
-:ID:       df7c487f-db1f-4e9a-ac3c-3f4669c0fb96
-:CUSTOM-ID: df7c487f-db1f-4e9a-ac3c-3f4669c0fb96
-:END:
+### <span class="section-num">3.14</span> Exercise 2.12 {#exercise-2-dot-12}
+
+
+#### <span class="section-num">3.14.1</span> Question {#question}
 
 After debugging her program, Alyssa shows it to a potential user, who complains
 that her program solves the wrong problem. He wants a program that can deal with
 numbers represented as a center value and an additive tolerance; for example, he
-wants to work with intervals such as \(3.5 \pm 0.15\) rather than [3.35, 3.65].
+wants to work with intervals such as \\(3.5 \pm 0.15\\) rather than [3.35, 3.65].
 Alyssa returns to her desk and fixes this problem by supplying an alternate
 constructor and alternate selectors:
 
-#+NAME: interval-center-width
-#+BEGIN_SRC scheme -n
+<a id="code-snippet--interval-center-width"></a>
+```scheme { linenos=true, linenostart=1 }
 (define (make-center-width c w)
   (make-interval (- c w) (+ c w)))
 (define (center i)
   (/ (+ (lower-bound i) (upper-bound i)) 2))
 (define (width i)
   (/ (- (upper-bound i) (lower-bound i)) 2))
-#+END_SRC
+```
 
 Unfortunately, most of Alyssa's users are engineers. Real engineering situations
 usually involve measurements with only a small uncertainty, measured as the
@@ -8179,24 +6871,22 @@ ratio of the width of the interval to the midpoint of the interval. Engineers
 usually specify percentage tolerances on the parameters of devices, as in the
 resistor specifications given earlier.
 
-Define a constructor src_scheme{make-center-percent} that takes a center and a
+Define a constructor <span class="inline-src language-scheme" data-lang="scheme">`make-center-percent`</span> that takes a center and a
 percentage tolerance and produces the desired interval. You must also define a
-selector src_scheme{percent} that produces the percentage tolerance for a given
-interval. The src_scheme{center} selector is the same as the one shown above.
+selector <span class="inline-src language-scheme" data-lang="scheme">`percent`</span> that produces the percentage tolerance for a given
+interval. The <span class="inline-src language-scheme" data-lang="scheme">`center`</span> selector is the same as the one shown above.
 
-*** Answer
-:PROPERTIES:
-:ID:       5ae1028e-a8e1-4b7c-841b-6e0a963b8587
-:CUSTOM-ID: 5ae1028e-a8e1-4b7c-841b-6e0a963b8587
-:END:
 
-#+NAME: reciprocal
-#+BEGIN_SRC scheme -n :eval no-export :results silent
+#### <span class="section-num">3.14.2</span> Answer {#answer}
+
+<a id="code-snippet--reciprocal"></a>
+```scheme { linenos=true, linenostart=1 }
 (define (reciprocal x)
   (/ 1 x))
-#+END_SRC
-#+NAME: interval-percent
-#+BEGIN_SRC scheme -n :eval no-export :results silent
+```
+
+<a id="code-snippet--interval-percent"></a>
+```scheme { linenos=true, linenostart=1 }
 <<reciprocal>>
 <<make-interval>>
 <<sub-interval>>
@@ -8210,10 +6900,10 @@ interval. The src_scheme{center} selector is the same as the one shown above.
   (* 100.0
      (/ (width I)
         (center I))))
-#+END_SRC
+```
 
-#+NAME: checking-interval-percent
-#+BEGIN_SRC scheme -n :eval no-export :results output
+<a id="code-snippet--checking-interval-percent"></a>
+```scheme { linenos=true, linenostart=1 }
 <<interval-percent>>
 (load "mattcheck2.scm")
   (define (roughly-eq? a b)
@@ -8243,44 +6933,33 @@ interval. The src_scheme{center} selector is the same as the one shown above.
   (mattcheck+ "make-center-percent is consistent"
               (list i1 i3)
               #:eql? interval-roughly-eq?))
-#+END_SRC
+```
 
-#+RESULTS[805f7bbb69cfddbd7c91eedb1bd952a41877fe7f]: checking-interval-percent
-#+begin_EXAMPLE
+```text
 SUCCEED at make-center-width
 SUCCEED at make-center-percent
 SUCCEED at percent
 SUCCEED at make-center-percent is consistent
-#+end_EXAMPLE
+```
 
-**  Exercise 2.13 :optional:
-:PROPERTIES:
-:ID:       3280cdb0-2f9f-4ede-9f29-0c46af1e326e
-:CUSTOM-ID: 3280cdb0-2f9f-4ede-9f29-0c46af1e326e
-:END:
 
-*** Question
-:PROPERTIES:
-:ID:       7e2dfdf8-2ad3-4882-b14e-0f2c450bffa2
-:CUSTOM-ID: 7e2dfdf8-2ad3-4882-b14e-0f2c450bffa2
-:END:
+### <span class="section-num">3.15</span> Exercise 2.13 <span class="tag"><span class="optional">optional</span></span> {#exercise-2-dot-13}
 
-#+begin_quote
-Show that under the assumption of small percentage tolerances there is a simple
-formula for the approximate percentage tolerance of the product of two intervals
-in terms of the tolerances of the factors. You may simplify the problem by
-assuming that all numbers are positive.
-#+end_quote
 
-*** Answer
-:PROPERTIES:
-:ID:       54bf6179-da7c-4543-a652-186d01cf3e62
-:CUSTOM-ID: 54bf6179-da7c-4543-a652-186d01cf3e62
-:END:
+#### <span class="section-num">3.15.1</span> Question {#question}
+
+> Show that under the assumption of small percentage tolerances there is a simple
+> formula for the approximate percentage tolerance of the product of two intervals
+> in terms of the tolerances of the factors. You may simplify the problem by
+> assuming that all numbers are positive.
+
+
+#### <span class="section-num">3.15.2</span> Answer {#answer}
 
 I should've written this function a while ago.
-#+NAME: echo
-#+BEGIN_SRC scheme -n :eval no-export :results silent
+
+<a id="code-snippet--echo"></a>
+```scheme { linenos=true, linenostart=1 }
 (use-modules (ice-9 format))
 (define (stringit . args)
   (string-append
@@ -8290,12 +6969,12 @@ I should've written this function a while ago.
         args))))
 (define (echo . args)
   (format #t "~&~:a~%" (apply stringit args)))
-#+END_SRC
+```
 
 Now, let's examine how interval percents relate to each other.
 
-#+NAME: checking-interval-relations
-#+BEGIN_SRC scheme -n :eval no-export :results output
+<a id="code-snippet--checking-interval-relations"></a>
+```scheme { linenos=true, linenostart=1 }
 <<echo>>
 <<interval-percent>>
 <<mul-interval-opt>>
@@ -8309,22 +6988,21 @@ Now, let's examine how interval percents relate to each other.
   (echo "i1*i2 = " M12)
   (echo "width M12:" (width M12))
   (echo "percent M12:" (percent M12)))
-#+END_SRC
+```
 
-#+RESULTS[c7bf5a5d43464607ef3302188104e67ec1235c24]: checking-interval-relations
-#+begin_EXAMPLE
-intervals 1 and 2: (105 . 95) (205 . 195) 
-width of 1 and 2: 5 5 
-percent of 1 and 2: 5.0 2.5 
-i1*i2 =  (21525 . 18525) 
-width M12 1500 
-percent M12 7.490636704119851 
-#+end_EXAMPLE
+```text
+intervals 1 and 2: (105 . 95) (205 . 195)
+width of 1 and 2: 5 5
+percent of 1 and 2: 5.0 2.5
+i1*i2 =  (21525 . 18525)
+width M12 1500
+percent M12 7.490636704119851
+```
 
-Perhaps percent\((A\times B) =\)percent\((A)+\)percent\((B)\)?
+Perhaps percent\\((A\times B) =\\)percent\\((A)+\\)percent\\((B)\\)?
 
-#+NAME: checking-interval-relations2
-#+BEGIN_SRC scheme -n :eval no-export :results output
+<a id="code-snippet--checking-interval-relations2"></a>
+```scheme { linenos=true, linenostart=1 }
 <<echo>>
 <<interval-percent>>
 <<mul-interval-opt>>
@@ -8334,48 +7012,39 @@ Perhaps percent\((A\times B) =\)percent\((A)+\)percent\((B)\)?
        (M12 (mul-interval-opt i1 i2)))
   (echo "percent of 1 and 2:" (percent i1) (percent i2))
   (echo "percent M12:" (percent M12)))
-#+END_SRC
+```
 
-#+RESULTS[8fccf6198fb4c9f4fba0c52e6e5ec4f3bb2dd284]: checking-interval-relations2
-#+begin_EXAMPLE
-percent of 1 and 2: 0.09999999999999788 0.40000000000000563 
-percent M12: 0.499998000008 
-#+end_EXAMPLE
+```text
+percent of 1 and 2: 0.09999999999999788 0.40000000000000563
+percent M12: 0.499998000008
+```
 
-**  Exercise 2.14
-:PROPERTIES:
-:ID:       d1e66abc-2f0f-4cc6-907d-309e34fda663
-:CUSTOM-ID: d1e66abc-2f0f-4cc6-907d-309e34fda663
-:END:
 
-*** Question
-:PROPERTIES:
-:ID:       c49a3157-62af-4e7a-81c1-51b9df4e292e
-:CUSTOM-ID: c49a3157-62af-4e7a-81c1-51b9df4e292e
-:END:
+### <span class="section-num">3.16</span> Exercise 2.14 {#exercise-2-dot-14}
 
-#+begin_quote
-After considerable work, Alyssa P. Hacker delivers her finished system. Several
-years later, after she has forgotten all about it, she gets a frenzied call from
-an irate user, Lem E. Tweakit. It seems that Lem has noticed that the formula
-for parallel resistors can be written in two algebraically equivalent ways:
 
-\[
-\frac{R_1 R_2}{R_1 + R_2}
-\]
+#### <span class="section-num">3.16.1</span> Question {#question}
 
-and
+> After considerable work, Alyssa P. Hacker delivers her finished system. Several
+> years later, after she has forgotten all about it, she gets a frenzied call from
+> an irate user, Lem E. Tweakit. It seems that Lem has noticed that the formula
+> for parallel resistors can be written in two algebraically equivalent ways:
+>
+> $$
+> \frac{R\_1 R\_2}{R\_1 + R\_2}
+> $$
+>
+> and
+>
+> $$
+> \frac{1}{\frac{1}{R\_1} + \frac{1}{R\_2}}
+> $$
+>
+> He has written the following two programs, each of which computes the
+> parallel-resistors formula differently:
 
-\[
-\frac{1}{\frac{1}{R_1} + \frac{1}{R_2}}
-\]
-
-He has written the following two programs, each of which computes the
-parallel-resistors formula differently:
-#+end_quote
-
-#+NAME: par-resistors
-#+BEGIN_SRC scheme -n :eval no-export
+<a id="code-snippet--par-resistors"></a>
+```scheme { linenos=true, linenostart=1 }
 (define (par1 r1 r2)
   (div-interval (mul-interval r1 r2)
                 (add-interval r1 r2)))
@@ -8385,28 +7054,23 @@ parallel-resistors formula differently:
     (div-interval
      one (add-interval (div-interval one r1)
                        (div-interval one r2)))))
-#+END_SRC
+```
 
-#+begin_quote
-Lem complains that Alyssa's program gives different answers for the two ways of
-computing. This is a serious complaint.
+> Lem complains that Alyssa's program gives different answers for the two ways of
+> computing. This is a serious complaint.
+>
+> Demonstrate that Lem is right. Investigate the behavior of the system on a
+> variety of arithmetic expressions. Make some intervals \\(A\\) and \\(B\\), and use
+> them in computing the expressions \\(A / A\\) and \\(A / B\\). You will get the most
+> insight by using intervals whose width is a small percentage of the center
+> value. Examine the results of the computation in center-percent form (see
+> Exercise 2.12).
 
-Demonstrate that Lem is right. Investigate the behavior of the system on a
-variety of arithmetic expressions. Make some intervals \(A\) and \(B\), and use
-them in computing the expressions \(A / A\) and \(A / B\). You will get the most
-insight by using intervals whose width is a small percentage of the center
-value. Examine the results of the computation in center-percent form (see
-Exercise 2.12).
-#+end_quote
 
-*** Answer
-:PROPERTIES:
-:ID:       a1f25a4b-7a82-4715-b5bb-c839dc628ac4
-:CUSTOM-ID: a1f25a4b-7a82-4715-b5bb-c839dc628ac4
-:END:
+#### <span class="section-num">3.16.2</span> Answer {#answer}
 
-#+NAME: resistor-testing
-#+BEGIN_SRC scheme -n :eval no-export :results output
+<a id="code-snippet--resistor-testing"></a>
+```scheme { linenos=true, linenostart=1 }
 <<echo>>
 <<interval-percent>>
 <<mul-interval-opt>>
@@ -8446,68 +7110,55 @@ Exercise 2.12).
             A)))
   (echo "p1:" (center p1))
   (echo "p2:" (center p2)))
-#+END_SRC
+```
 
-#+RESULTS[328809af4974fa00f964a66bcef767df4e52c98e]: resistor-testing
-#+begin_EXAMPLE
-A,B: (10.1 . 9.9) (10.001 . 9.999) 
-par1(A,B): (5.076139504497713 . 4.924635590269141) 
-par2(A,B): (5.025128103079449 . 4.974626865671642) 
-percent(par1): 1.5149217214958663 
-percent(par2): 0.5050247487625606 
-center(par1): 5.000387547383427 
-center(par2): 4.999877484375546 
-So these two have inconsistent effects on the width. 
+```text
+A,B: (10.1 . 9.9) (10.001 . 9.999)
+par1(A,B): (5.076139504497713 . 4.924635590269141)
+par2(A,B): (5.025128103079449 . 4.974626865671642)
+percent(par1): 1.5149217214958663
+percent(par2): 0.5050247487625606
+center(par1): 5.000387547383427
+center(par2): 4.999877484375546
+So these two have inconsistent effects on the width.
 
-It should also be noted that floating-point errors accumulate. 
-Take a look at the error on these (correct answer is 1) 
-p1: 1.0008001600240033 
-p2: 1.0018006601460259 
-#+end_EXAMPLE
+It should also be noted that floating-point errors accumulate.
+Take a look at the error on these (correct answer is 1)
+p1: 1.0008001600240033
+p2: 1.0018006601460259
+```
 
-**  Exercise 2.15
-:PROPERTIES:
-:ID:       c7eae4d2-1154-4308-b73d-02a1da53195a
-:CUSTOM-ID: c7eae4d2-1154-4308-b73d-02a1da53195a
-:END:
 
-*** Question
-:PROPERTIES:
-:ID:       2c1f64e2-c811-4ae2-ad5f-94c59005218c
-:CUSTOM-ID: 2c1f64e2-c811-4ae2-ad5f-94c59005218c
-:END:
+### <span class="section-num">3.17</span> Exercise 2.15 {#exercise-2-dot-15}
 
-#+begin_quote
-Eva Lu Ator, another user, has also noticed the different intervals computed by
-different but algebraically equivalent expressions. She says that a formula to
-compute with intervals using Alyssa's system will produce tighter error bounds
-if it can be written in such a form that no variable that represents an
-uncertain number is repeated. Thus, she says, src_scheme{par2} is a "better"
-program for parallel resistances than src_scheme{par1}. Is she right? Why?
-#+end_quote
 
-*** Answer
-:PROPERTIES:
-:ID:       189f4ab1-0028-46f2-8a06-a33a9b40e08f
-:CUSTOM-ID: 189f4ab1-0028-46f2-8a06-a33a9b40e08f
-:END:
+#### <span class="section-num">3.17.1</span> Question {#question}
+
+> Eva Lu Ator, another user, has also noticed the different intervals computed by
+> different but algebraically equivalent expressions. She says that a formula to
+> compute with intervals using Alyssa's system will produce tighter error bounds
+> if it can be written in such a form that no variable that represents an
+> uncertain number is repeated. Thus, she says, <span class="inline-src language-scheme" data-lang="scheme">`par2`</span> is a "better"
+> program for parallel resistances than <span class="inline-src language-scheme" data-lang="scheme">`par1`</span>. Is she right? Why?
+
+
+#### <span class="section-num">3.17.2</span> Answer {#answer}
 
 If I am correct in understanding that "uncertain number" means "a number with an
-error tolerance", than src_scheme{par2} /is/ better -- it only uses two
-instances of variables with error tolerance, while src_scheme{par1} uses four.
+error tolerance", than <span class="inline-src language-scheme" data-lang="scheme">`par2`</span> _is_ better -- it only uses two
+instances of variables with error tolerance, while <span class="inline-src language-scheme" data-lang="scheme">`par1`</span> uses four.
 
 It should be noted that this system does not directly translate to algebraic
 expressions. For example, take these expressions:
 
-\[A + A = 2A\]
-\[A - A = 0\]
-\[A / A = 1\]
+$$A + A = 2A$$
+$$A - A = 0$$
+$$A / A = 1$$
 
 Note that these do not hold up in practice with uncertain numbers:
 
-
-#+NAME: EX2-15
-#+BEGIN_SRC scheme -n :eval no-export :results output
+<a id="code-snippet--EX2-15"></a>
+```scheme { linenos=true, linenostart=1 }
 <<echo>>
 <<interval-percent>>
 <<mul-interval-opt>>
@@ -8516,103 +7167,88 @@ Note that these do not hold up in practice with uncertain numbers:
 (echo "A+A = 2A !=" (add-interval A A))
 (echo "A-A = 0 !=" (sub-interval A A))
 (echo "A/A = 1 !=" (div-interval A A))
-#+END_SRC
+```
 
-#+RESULTS[c98481168e2d14b4c88fbfee3ca435ee9544c2eb]: EX2-15
-#+begin_EXAMPLE
-A+A = 2A != (20.2 . 19.8) 
-A-A = 0 != (0.1999999999999993 . -0.1999999999999993) 
-A/A = 1 != (1.02020202020202 . 0.9801980198019803) 
-#+end_EXAMPLE
+```text
+A+A = 2A != (20.2 . 19.8)
+A-A = 0 != (0.1999999999999993 . -0.1999999999999993)
+A/A = 1 != (1.02020202020202 . 0.9801980198019803)
+```
 
-**  Exercise 2.16 :optional:
-:PROPERTIES:
-:ID:       b8b8d432-47ab-4218-8bad-d6fa6a70fde5
-:CUSTOM-ID: b8b8d432-47ab-4218-8bad-d6fa6a70fde5
-:END:
 
-*** Question
-:PROPERTIES:
-:ID:       9ef9c5f1-107f-4e7a-a59a-34074832cdf9
-:CUSTOM-ID: 9ef9c5f1-107f-4e7a-a59a-34074832cdf9
-:END:
+### <span class="section-num">3.18</span> Exercise 2.16 <span class="tag"><span class="optional">optional</span></span> {#exercise-2-dot-16}
 
-#+begin_quote
-Explain, in general, why equivalent algebraic expressions may lead to different
-answers. Can you devise an interval-arithmetic package that does not have this
-shortcoming, or is this task impossible? (Warning: This problem is very
-difficult.)
-#+end_quote
 
-*** Answer
-:PROPERTIES:
-:ID:       fa0bb72f-72e1-44bb-a86c-b27774b9f9da
-:CUSTOM-ID: fa0bb72f-72e1-44bb-a86c-b27774b9f9da
-:END:
+#### <span class="section-num">3.18.1</span> Question {#question}
 
-It is /indeed/ very difficult, because from what I'm seeing online, no interval
+> Explain, in general, why equivalent algebraic expressions may lead to different
+> answers. Can you devise an interval-arithmetic package that does not have this
+> shortcoming, or is this task impossible? (Warning: This problem is very
+> difficult.)
+
+
+#### <span class="section-num">3.18.2</span> Answer {#answer}
+
+It is _indeed_ very difficult, because from what I'm seeing online, no interval
 system without these issues exists. To avoid these issues, interval mathematics
-would need to satisfy the conditions for a *field* -- and failing that, needs to
+would need to satisfy the conditions for a **field** -- and failing that, needs to
 only use each variable once, which becomes impossible as soon as you encounter
-an expression as simple as \(x^2\).
+an expression as simple as \\(x^2\\).
 
-GitHub user "=diiq=" has an incredible analysis of this, which can be found here:
-[[https://gist.github.com/diiq/1f39df0e54b2137bb07e7e04b11cb075]]
+GitHub user "`diiq`" has an incredible analysis of this, which can be found here:
+<https://gist.github.com/diiq/1f39df0e54b2137bb07e7e04b11cb075>
 
-** 2.2: Hierarchical Data and the Closure Property
-:PROPERTIES:
-:ID:       83758def-8586-4f95-a292-e262eeec307c
-:CUSTOM-ID: 83758def-8586-4f95-a292-e262eeec307c
-:END:
 
-src_scheme{cons} pairs can be used to construct more complex data-types.
+### <span class="section-num">3.19</span> 2.2: Hierarchical Data and the Closure Property {#2-dot-2-hierarchical-data-and-the-closure-property}
 
-file:2/cons-cells.jpeg
+<span class="inline-src language-scheme" data-lang="scheme">`cons`</span> pairs can be used to construct more complex data-types.
+
+{{< figure src="/ox-hugo/cons-cells.jpeg" >}}
 
 The ability to combine things using an operation, then combine those results
-using the same operation, can be called the *closure property*. src_scheme{cons} can
+using the same operation, can be called the **closure property**. <span class="inline-src language-scheme" data-lang="scheme">`cons`</span> can
 create pairs whose elements are pairs, which satisfies the closure property.
 This property enables you to create hierarchical structures. We've already
 regularly used the closure property in creating procedures composed of other
 procedures.
 
-#+begin_quote
-  *Definitions of "closure"*
+> **Definitions of "closure"**
+>
+> The use of the word "closure" here comes from abstract algebra, where a set of
+> elements is said to be closed under an operation if applying the operation to
+> elements in the set produces an element that is again an element of the set.
+> The Lisp community also (unfortunately) uses the word "closure" to describe a
+> totally unrelated concept: A closure is an implementation technique for
+> representing procedures with free variables. We do not use the word "closure"
+> in this second sense in this book.
 
-  The use of the word "closure" here comes from abstract algebra, where a set of
-  elements is said to be closed under an operation if applying the operation to
-  elements in the set produces an element that is again an element of the set.
-  The Lisp community also (unfortunately) uses the word "closure" to describe a
-  totally unrelated concept: A closure is an implementation technique for
-  representing procedures with free variables. We do not use the word "closure"
-  in this second sense in this book.
-#+end_quote
 
-** 2.2.1: Representing Sequences
-:PROPERTIES:
-:ID:       a17be458-3194-46f1-9961-2aa4c052f60f
-:CUSTOM-ID: a17be458-3194-46f1-9961-2aa4c052f60f
-:END:
+### <span class="section-num">3.20</span> 2.2.1: Representing Sequences {#2-dot-2-dot-1-representing-sequences}
 
-- *sequence* :: An ordered collection of data objects.
-- *list* :: A sequence of src_scheme{cons} pairs.
+**sequence**
+: An ordered collection of data objects.
 
-#+BEGIN_SRC scheme
+**list**
+: A sequence of <span class="inline-src language-scheme" data-lang="scheme">`cons`</span> pairs.
+
+<!--listend-->
+
+```scheme
 (cons 1
       (cons 2
             (cons 3
                   (cons 4 nil))))
 (list 1 2 3 4)
 ;; both evaluate to '(1 2 3 4)
-#+END_SRC
-
+```
 
 An aside: many parts of this book have covered ways to solve problems by
 splitting problems into simple recursive solutions. I may be getting ahead of
-myself, but I wanted to note how the src_scheme{cons} pair system goes
-hand-in-hand with this. For example, when going over a list src_scheme{l} with
-function src_scheme{f}:
-#+BEGIN_SRC scheme :eval no-export :results value
+myself, but I wanted to note how the <span class="inline-src language-scheme" data-lang="scheme">`cons`</span> pair system goes
+hand-in-hand with this. For example, when going over a list <span class="inline-src language-scheme" data-lang="scheme">`l`</span> with
+function <span class="inline-src language-scheme" data-lang="scheme">`f`</span>:
+
+```scheme
 (define (map f l)
   (if (null? l)
       #nil
@@ -8621,90 +7257,68 @@ function src_scheme{f}:
 
 (map (lambda(x)(* x 2))
      (list 1 2 3 4))
-#+END_SRC
+```
 
-#+RESULTS[e2464f1ca2c69060ca4476041917eb97b5c43c5e]:
-#+begin_EXAMPLE
+```text
 | 2 | 4 | 6 | 8 |
-#+end_EXAMPLE
+```
 
-** Exercise 2.17
-:PROPERTIES:
-:ID:       df832283-cdbb-40a3-8536-5e029fd3f4dd
-:CUSTOM-ID: df832283-cdbb-40a3-8536-5e029fd3f4dd
-:END:
 
-*** Question
-:PROPERTIES:
-:ID:       e8fd5c2d-cee3-4178-badf-230243451076
-:CUSTOM-ID: e8fd5c2d-cee3-4178-badf-230243451076
-:END:
+### <span class="section-num">3.21</span> Exercise 2.17 {#exercise-2-dot-17}
 
-#+begin_quote
-Define a procedure
-src_scheme{last-pair} that returns the list that contains only the last element of a
-given (nonempty) list:
-#+end_quote
 
-#+BEGIN_SRC scheme
+#### <span class="section-num">3.21.1</span> Question {#question}
+
+> Define a procedure
+> <span class="inline-src language-scheme" data-lang="scheme">`last-pair`</span> that returns the list that contains only the last element of a
+> given (nonempty) list:
+
+```scheme
 (last-pair (list 23 72 149 34))
 ;; (34)
-#+END_SRC
+```
 
-*** Answer
-:PROPERTIES:
-:ID:       0dec0924-7246-4528-98a2-5b137ec500a2
-:CUSTOM-ID: 0dec0924-7246-4528-98a2-5b137ec500a2
-:END:
 
-#+NAME: last-pair
-#+BEGIN_SRC scheme :eval no-export :results silent
+#### <span class="section-num">3.21.2</span> Answer {#answer}
+
+<a id="code-snippet--last-pair"></a>
+```scheme
 (define (last-pair l)
   (let ((a (car l))
         (d (cdr l)))
     (if (= 1 (length d))
         d
         (last-pair d))))
-#+END_SRC
-#+BEGIN_SRC scheme :eval no-export :results value
+```
+
+```scheme
 <<last-pair>>
 (last-pair (list 23 72 149 34))
-#+END_SRC
+```
 
-#+RESULTS[92b3f391da7b9ca2894a07d71692d4de07c5377f]:
-#+begin_EXAMPLE
+```text
 | 34 |
-#+end_EXAMPLE
+```
 
-** Exercise 2.18
-:PROPERTIES:
-:ID:       613581ea-f114-42c7-8179-cc85ad288d59
-:CUSTOM-ID: 613581ea-f114-42c7-8179-cc85ad288d59
-:END:
 
-*** Question
-:PROPERTIES:
-:ID:       aac18e73-5930-4ed9-b48a-82aab894bd19
-:CUSTOM-ID: aac18e73-5930-4ed9-b48a-82aab894bd19
-:END:
-#+begin_quote
-Define a procedure src_scheme{reverse} that takes a list as argument and returns
-a list of the same elements in reverse order:
-#+end_quote
+### <span class="section-num">3.22</span> Exercise 2.18 {#exercise-2-dot-18}
 
-#+BEGIN_SRC scheme
+
+#### <span class="section-num">3.22.1</span> Question {#question}
+
+> Define a procedure <span class="inline-src language-scheme" data-lang="scheme">`reverse`</span> that takes a list as argument and returns
+> a list of the same elements in reverse order:
+
+```scheme
 (reverse (list 1 4 9 16 25))
 ;; (25 16 9 4 1)
-#+END_SRC
+```
 
-*** Answer
-:PROPERTIES:
-:ID:       ac51a6b8-4121-406d-bc54-f3a394594a56
-:CUSTOM-ID: ac51a6b8-4121-406d-bc54-f3a394594a56
-:END:
 
-#+NAME: reverse
-#+BEGIN_SRC scheme :eval no-export :results silent
+#### <span class="section-num">3.22.2</span> Answer {#answer}
+
+<a id="code-snippet--reverse"></a>
+```scheme
 (define (reverse l)
   (define len (length l))
   (define (iter i result)
@@ -8714,64 +7328,54 @@ a list of the same elements in reverse order:
               (cons (list-ref l i)
                     result))))
   (iter 0 '()))
-#+END_SRC
-#+BEGIN_SRC scheme :eval no-export :results value
+```
+
+```scheme
 <<reverse>>
 (reverse (list 23 72 149 34))
-#+END_SRC
+```
 
-#+RESULTS[c2b867c136d1561f95ea2814ed53cf08104e76b3]:
+|    |     |    |    |
+|----|-----|----|----|
 | 34 | 149 | 72 | 23 |
 
-** Exercise 2.19
-:PROPERTIES:
-:ID:       49dafc3f-cfe8-4bf5-9612-d75c6b7c75c1
-:CUSTOM-ID: 49dafc3f-cfe8-4bf5-9612-d75c6b7c75c1
-:END:
 
-*** Question
-:PROPERTIES:
-:ID:       66168120-ab19-4de4-a7ed-3f66bf6aee39
-:CUSTOM-ID: 66168120-ab19-4de4-a7ed-3f66bf6aee39
-:END:
+### <span class="section-num">3.23</span> Exercise 2.19 {#exercise-2-dot-19}
 
-#+begin_quote
-Consider the change-counting program of 1.2.2. It would be nice to be able to
-easily change the currency used by the program, so that we could compute the
-number of ways to change a British pound, for example. As the program is
-written, the knowledge of the currency is distributed partly into the procedure
-src_scheme{first-denomination} and partly into the procedure
-src_scheme{count-change} (which knows that there are five kinds of U.S. coins).
-It would be nicer to be able to supply a list of coins to be used for making
-change.
 
-We want to rewrite the procedure src_scheme{cc} so that its second argument is a
-list of the values of the coins to use rather than an integer specifying which
-coins to use. We could then have lists that defined each kind of currency:
-#+end_quote
+#### <span class="section-num">3.23.1</span> Question {#question}
 
-#+BEGIN_SRC scheme
+> Consider the change-counting program of 1.2.2. It would be nice to be able to
+> easily change the currency used by the program, so that we could compute the
+> number of ways to change a British pound, for example. As the program is
+> written, the knowledge of the currency is distributed partly into the procedure
+> <span class="inline-src language-scheme" data-lang="scheme">`first-denomination`</span> and partly into the procedure
+> <span class="inline-src language-scheme" data-lang="scheme">`count-change`</span> (which knows that there are five kinds of U.S. coins).
+> It would be nicer to be able to supply a list of coins to be used for making
+> change.
+>
+> We want to rewrite the procedure <span class="inline-src language-scheme" data-lang="scheme">`cc`</span> so that its second argument is a
+> list of the values of the coins to use rather than an integer specifying which
+> coins to use. We could then have lists that defined each kind of currency:
+
+```scheme
 (define us-coins (list 50 25 10 5 1))
 (define uk-coins (list 100 50 20 10 5 2 1 0.5))
-#+END_SRC
+```
 
-#+begin_quote
-We could then call src_scheme{cc} as follows:
-#+end_quote
+> We could then call <span class="inline-src language-scheme" data-lang="scheme">`cc`</span> as follows:
 
-#+BEGIN_SRC scheme
+```scheme
 (cc 100 us-coins)
 ; 292
-#+END_SRC
+```
 
-#+begin_quote
-To do this will require changing the program src_scheme{cc} somewhat. It will
-still have the same form, but it will access its second argument differently, as
-follows:
-#+end_quote
+> To do this will require changing the program <span class="inline-src language-scheme" data-lang="scheme">`cc`</span> somewhat. It will
+> still have the same form, but it will access its second argument differently, as
+> follows:
 
-#+NAME: cc-lists
-#+BEGIN_SRC scheme -n :results silent :eval no-export
+<a id="code-snippet--cc-lists"></a>
+```scheme { linenos=true, linenostart=1 }
 (define (cc amount coin-values)
   (cond ((= amount 0) 1)
         ((or (< amount 0) (no-more? coin-values)) 0)
@@ -8783,106 +7387,72 @@ follows:
                    (first-denomination
                     coin-values))
                 coin-values)))))
-#+END_SRC
+```
 
-#+begin_quote
-Define the procedures src_scheme{first-denomination},
-src_scheme{except-first-denomination}, and src_scheme{no-more?} in terms of
-primitive operations on list structures. Does the order of the list
-src_scheme{coin-values} affect the answer produced by src_scheme{cc}? Why or why
-not?
-#+end_quote
+> Define the procedures <span class="inline-src language-scheme" data-lang="scheme">`first-denomination`</span>,
+> <span class="inline-src language-scheme" data-lang="scheme">`except-first-denomination`</span>, and <span class="inline-src language-scheme" data-lang="scheme">`no-more?`</span> in terms of
+> primitive operations on list structures. Does the order of the list
+> <span class="inline-src language-scheme" data-lang="scheme">`coin-values`</span> affect the answer produced by <span class="inline-src language-scheme" data-lang="scheme">`cc`</span>? Why or why
+> not?
 
-*** Answer
-:PROPERTIES:
-:ID:       349c968a-5e4d-450f-95da-1e5bccd3ce18
-:CUSTOM-ID: 349c968a-5e4d-450f-95da-1e5bccd3ce18
-:END:
 
-#+NAME: Ex-2-19
-#+BEGIN_SRC scheme :eval no-export :results silent
+#### <span class="section-num">3.23.2</span> Answer {#answer}
+
+<a id="code-snippet--Ex-2-19"></a>
+```scheme
 <<cc-lists>>
 
-(define us-coins 
+(define us-coins
   (list 50 25 10 5 1))
-(define uk-coins 
+(define uk-coins
   (list 100 50 20 10 5 2 1 0.5))
 
 (define first-denomination car)
 (define except-first-denomination cdr)
 (define no-more? null?)
-#+END_SRC
+```
 
-#+BEGIN_SRC scheme :eval no-export :results value
+```scheme
 <<Ex-2-19>>
 (list
  (cc 100 us-coins)
  (cc 100 (reverse us-coins))
  (cc 100 (list 50 10 25 5 1)))
-#+END_SRC
+```
 
-#+RESULTS[1440dcdbebd75dfa0ad49b760cd48a05b374a9b8]:
-#+begin_EXAMPLE
+```text
 | 292 | 292 | 292 |
-#+end_EXAMPLE
+```
 
-Apparently, the order of the list does /not/ affect the value. However, it does effect the execution time, with small-to-large coin lists taking more time than large-to-small.
+Apparently, the order of the list does _not_ affect the value. However, it does effect the execution time, with small-to-large coin lists taking more time than large-to-small.
 
-#+NAME: cc-list-benchmark
-#+BEGIN_SRC scheme -n :noeval :results output :exports results :tangle 2/Ex19-bench.scm
-(define iters 50000)
-(load "../mattbench.scm")
-<<Ex-2-19>>
-(let ((rev-us-coins (reverse us-coins)))
-  (format #t "decreasing values: ~a~%"
-          (cdr (mattbench2 (lambda()
-                             (cc 100 us-coins))
-                           iters)))
-  (format #t "increasing values: ~a~%"
-          (cdr (mattbench2 (lambda()
-                             (cc 100 rev-us-coins))
-                           iters))))
-#+END_SRC
-
-#+RESULTS: cc-list-benchmark
-#+begin_example
+```text
 decreasing values: (357503.80704)
 increasing values: (823460.64376)
-#+end_example
+```
 
-** Exercise 2.20
-:PROPERTIES:
-:ID:       3fddccfe-0012-4058-b840-0617fdbe104f
-:CUSTOM-ID: 3fddccfe-0012-4058-b840-0617fdbe104f
-:END:
 
-*** Question
-:PROPERTIES:
-:ID:       28845497-e50d-434b-a37e-f5f8274b8998
-:CUSTOM-ID: 28845497-e50d-434b-a37e-f5f8274b8998
-:END:
+### <span class="section-num">3.24</span> Exercise 2.20 {#exercise-2-dot-20}
 
-#+begin_quote
-Use =[dotted-pair]= notation to write a procedure src_scheme{same-parity} that takes one or
-more integers and returns a list of all the arguments that have the same
-even-odd parity as the first argument.  For example,
-#+end_quote
 
-#+BEGIN_SRC scheme
+#### <span class="section-num">3.24.1</span> Question {#question}
+
+> Use `[dotted-pair]` notation to write a procedure <span class="inline-src language-scheme" data-lang="scheme">`same-parity`</span> that takes one or
+> more integers and returns a list of all the arguments that have the same
+> even-odd parity as the first argument.  For example,
+
+```scheme
 (same-parity 1 2 3 4 5 6 7)
 ; (1 3 5 7)
 (same-parity 2 3 4 5 6 7)
 ; (2 4 6)
-#+END_SRC
+```
 
-*** Answer
-:PROPERTIES:
-:ID:       884ab392-ed28-4843-aa00-0eea45c63543
-:CUSTOM-ID: 884ab392-ed28-4843-aa00-0eea45c63543
-:END:
 
-#+NAME: same-parity
-#+BEGIN_SRC scheme -n :eval no-export :result silent
+#### <span class="section-num">3.24.2</span> Answer {#answer}
+
+<a id="code-snippet--same-parity"></a>
+```scheme { linenos=true, linenostart=1 }
 (define (same-parity . rest)
   (define same?
     (if (even? (car rest))
@@ -8915,91 +7485,60 @@ even-odd parity as the first argument.  For example,
                               (cons a #nil)))
               (iter d results)))))
   (iter (cdr args) (cons first #nil)))
-#+END_SRC
+```
 
-#+BEGIN_SRC scheme -n :eval no-export :results value
+```scheme { linenos=true, linenostart=1 }
 <<same-parity>>
 (list
  (same-parity 1 2 3 4 5 6 7)
  (same-parity2 2 3 4 5 6 7))
-#+END_SRC
+```
 
-#+RESULTS[fc9b426af98cdf036973b2b682d4e8fae21e8e41]:
-#+begin_EXAMPLE
+```text
 | 1 | 3 | 5 | 7 |
 | 2 | 4 | 6 |   |
-#+end_EXAMPLE
+```
 
-#+NAME: same-parity-benchmark
-#+BEGIN_SRC scheme -n :noeval :results output :exports results :tangle 2/Ex20-bench.scm
-(define iters 500000)
-(load "../mattbench.scm")
-<<same-parity>>
-(let ((l (cddr (iota 100))))
-  (format #t "same-parity: ~a~%"
-          (cdr (mattbench2 (lambda()
-                             (apply same-parity l))
-                           iters)))
-  (format #t "same-parity2: ~a~%"
-          (cdr (mattbench2 (lambda()
-                             (apply same-parity2 l))
-                           iters))))
-#+END_SRC
-
-#+RESULTS: same-parity-benchmark
-#+BEGIN_EXAMPLE
+```text
 same-parity: (10003.483436)
 same-parity2: (56007.042334)
-#+END_EXAMPLE
+```
 
 Once again, my attempts to optimize are a complete failure. I'm guessing that
-the act of traversing the whole list in the call to src_scheme{append} is the
+the act of traversing the whole list in the call to <span class="inline-src language-scheme" data-lang="scheme">`append`</span> is the
 problem.
 
-** Exercise 2.21
-:PROPERTIES:
-:ID:       6a0ed282-f958-4baa-a0a4-9cf112a72a0d
-:CUSTOM-ID: 6a0ed282-f958-4baa-a0a4-9cf112a72a0d
-:END:
 
-*** Question
-:PROPERTIES:
-:ID:       39acd29c-4385-4244-a4b8-ca659597d5ea
-:CUSTOM-ID: 39acd29c-4385-4244-a4b8-ca659597d5ea
-:END:
+### <span class="section-num">3.25</span> Exercise 2.21 {#exercise-2-dot-21}
 
-#+begin_quote
-The procedure src_scheme{square-list} takes a list of numbers as argument and
-returns a list of the squares of those numbers.
-#+end_quote
 
-#+BEGIN_SRC scheme
+#### <span class="section-num">3.25.1</span> Question {#question}
+
+> The procedure <span class="inline-src language-scheme" data-lang="scheme">`square-list`</span> takes a list of numbers as argument and
+> returns a list of the squares of those numbers.
+
+```scheme
 (square-list (list 1 2 3 4))
 ;; (1 4 9 16)
-#+END_SRC
+```
 
-#+begin_quote
-Here are two different definitions of src_scheme{square-list}. Complete both of
-them by filling in the missing expressions:
-#+end_quote
+> Here are two different definitions of <span class="inline-src language-scheme" data-lang="scheme">`square-list`</span>. Complete both of
+> them by filling in the missing expressions:
 
-#+BEGIN_SRC scheme -n
+```scheme { linenos=true, linenostart=1 }
 (define (square-list items)
   (if (null? items)
       nil
       (cons <??> <??>)))
 (define (square-list items)
   (map <??> <??>))
-#+END_SRC
+```
 
-*** Answer
-:PROPERTIES:
-:ID:       39d96109-1859-49c7-8fcd-9dff4d8fc4b0
-:CUSTOM-ID: 39d96109-1859-49c7-8fcd-9dff4d8fc4b0
-:END:
 
-#+NAME: square-list
-#+BEGIN_SRC scheme -n :eval no-export :results silent
+#### <span class="section-num">3.25.2</span> Answer {#answer}
+
+<a id="code-snippet--square-list"></a>
+```scheme { linenos=true, linenostart=1 }
 <<square>>
 (define (square-list-manual items)
   (if (null? items)
@@ -9008,40 +7547,32 @@ them by filling in the missing expressions:
             (square-list-manual (cdr items)))))
 (define (square-list items)
   (map square items))
-#+END_SRC
-#+BEGIN_SRC scheme -n :eval no-export :exports both :results value table
+```
+
+```scheme { linenos=true, linenostart=1 }
 <<square-list>>
 (let ((l (list 2 3 4 5 6)))
   (list l
         (square-list-manual l)
         (square-list l)))
-#+END_SRC
+```
 
-#+RESULTS[25d4496062bb94eb4e767a7e36578714e9c3b629]:
-#+begin_EXAMPLE
+```text
 | 2 | 3 |  4 |  5 |  6 |
 | 4 | 9 | 16 | 25 | 36 |
 | 4 | 9 | 16 | 25 | 36 |
-#+end_EXAMPLE
+```
 
-** Exercise 2.22
-:PROPERTIES:
-:ID:       4757f6ab-7e16-4169-8a77-9f42c2747abe
-:CUSTOM-ID: 4757f6ab-7e16-4169-8a77-9f42c2747abe
-:END:
 
-*** Questions
-:PROPERTIES:
-:ID:       704bb669-f8e9-47db-bab6-0c49bb8c3c77
-:CUSTOM-ID: 704bb669-f8e9-47db-bab6-0c49bb8c3c77
-:END:
+### <span class="section-num">3.26</span> Exercise 2.22 {#exercise-2-dot-22}
 
-#+begin_quote
-Louis Reasoner tries to rewrite the first src_scheme{square-list} procedure of
-Exercise 2.21 so that it evolves an iterative process:
-#+end_quote
 
-#+BEGIN_SRC scheme -n
+#### <span class="section-num">3.26.1</span> Questions {#questions}
+
+> Louis Reasoner tries to rewrite the first <span class="inline-src language-scheme" data-lang="scheme">`square-list`</span> procedure of
+> Exercise 2.21 so that it evolves an iterative process:
+
+```scheme { linenos=true, linenostart=1 }
 (define (square-list items)
   (define (iter things answer)
     (if (null? things)
@@ -9050,17 +7581,15 @@ Exercise 2.21 so that it evolves an iterative process:
               (cons (square (car things))
                     answer))))
   (iter items nil))
-#+END_SRC
+```
 
-#+begin_quote
-Unfortunately, defining src_scheme{square-list} this way produces the answer
-list in the reverse order of the one desired. Why?
+> Unfortunately, defining <span class="inline-src language-scheme" data-lang="scheme">`square-list`</span> this way produces the answer
+> list in the reverse order of the one desired. Why?
+>
+> Louis then tries to fix his bug by interchanging the arguments to
+> <span class="inline-src language-scheme" data-lang="scheme">`cons`</span>:
 
-Louis then tries to fix his bug by interchanging the arguments to
-src_scheme{cons}:
-#+end_quote
-
-#+BEGIN_SRC scheme -n
+```scheme { linenos=true, linenostart=1 }
 (define (square-list items)
   (define (iter things answer)
     (if (null? things)
@@ -9069,32 +7598,28 @@ src_scheme{cons}:
               (cons answer
                     (square (car things))))))
   (iter items nil))
-#+END_SRC
+```
 
-#+begin_quote
-This doesn't work either.  Explain.
-#+end_quote
+> This doesn't work either.  Explain.
 
-*** Answer
-:PROPERTIES:
-:ID:       d4f705d9-a46f-4726-8a36-6b161fcf3845
-:CUSTOM-ID: d4f705d9-a46f-4726-8a36-6b161fcf3845
-:END:
+
+#### <span class="section-num">3.26.2</span> Answer {#answer}
 
 I'm positive I've made this exact mistake before, though this is likely not
 recorded.
 
-The first form of src_scheme{square-list} produces a correct list in reverse order:
+The first form of <span class="inline-src language-scheme" data-lang="scheme">`square-list`</span> produces a correct list in reverse order:
 
-#+BEGIN_SRC scheme
+```scheme
 (square-list (iota 6))
 (25 16 9 4 1 0)
-#+END_SRC
+```
 
 This is because he is prepending to the list every iteration.
 
 While the second produces a broken list, which is literally backwards:
-#+BEGIN_SRC scheme -n
+
+```scheme { linenos=true, linenostart=1 }
 (square-list (iota 6))
 ((((((#nil . 0) . 1) . 4) . 9) . 16) . 25)
 ;; Equivalent to:
@@ -9105,40 +7630,32 @@ While the second produces a broken list, which is literally backwards:
                   9)
             16)
       25)
-#+END_SRC
+```
 
-Since Lisp was designed with the ~cons pair~ structure of list-building, it
+Since Lisp was designed with the `cons pair` structure of list-building, it
 needed to define a "correct" direction for the pairs to go. Since the Western
 world thinks left-to-right, they made it so that the left (first) cell is for
 content, and the right is for the pointer to the next pair. However, this means
 that you can't append to a list without first traveling its length and changing
-the src_scheme{nil} marking the end to a pointer to your new pair. Since that is
-a lot of list traveling, it makes more sense to src_scheme{cons} your list
-together in reverse and then calling src_scheme{reverse} only once at the end of
+the <span class="inline-src language-scheme" data-lang="scheme">`nil`</span> marking the end to a pointer to your new pair. Since that is
+a lot of list traveling, it makes more sense to <span class="inline-src language-scheme" data-lang="scheme">`cons`</span> your list
+together in reverse and then calling <span class="inline-src language-scheme" data-lang="scheme">`reverse`</span> only once at the end of
 the procedure.
 
-** Exercise 2.23
-:PROPERTIES:
-:ID:       9931dcde-c75d-4277-916d-e26d012aa3cc
-:CUSTOM-ID: 9931dcde-c75d-4277-916d-e26d012aa3cc
-:END:
 
-*** Question
-:PROPERTIES:
-:ID:       3252b8cc-e1ab-4855-808f-a383e27a7396
-:CUSTOM-ID: 3252b8cc-e1ab-4855-808f-a383e27a7396
-:END:
+### <span class="section-num">3.27</span> Exercise 2.23 {#exercise-2-dot-23}
 
-#+begin_quote
-The procedure src_scheme{for-each} is similar to src_scheme{map}. It takes as
-arguments a procedure and a list of elements. However, rather than forming a
-list of the results, src_scheme{for-each} just applies the procedure to each of
-the elements in turn, from left to right. The values returned by applying the
-procedure to the elements are not used at all---src_scheme{for-each} is used
-with procedures that perform an action, such as printing. For example,
-#+end_quote
 
-#+BEGIN_SRC scheme -n
+#### <span class="section-num">3.27.1</span> Question {#question}
+
+> The procedure <span class="inline-src language-scheme" data-lang="scheme">`for-each`</span> is similar to <span class="inline-src language-scheme" data-lang="scheme">`map`</span>. It takes as
+> arguments a procedure and a list of elements. However, rather than forming a
+> list of the results, <span class="inline-src language-scheme" data-lang="scheme">`for-each`</span> just applies the procedure to each of
+> the elements in turn, from left to right. The values returned by applying the
+> procedure to the elements are not used at all---<span class="inline-src language-scheme" data-lang="scheme">`for-each`</span> is used
+> with procedures that perform an action, such as printing. For example,
+
+```scheme { linenos=true, linenostart=1 }
 (for-each (lambda (x)
             (newline)
             (display x))
@@ -9146,22 +7663,17 @@ with procedures that perform an action, such as printing. For example,
 ;; 57
 ;; 321
 ;; 88
-#+END_SRC
+```
 
-#+begin_quote
-The value returned by the call to src_scheme{for-each} (not illustrated above)
-can be something arbitrary, such as true. Give an implementation of
-src_scheme{for-each}.
-#+end_quote
+> The value returned by the call to <span class="inline-src language-scheme" data-lang="scheme">`for-each`</span> (not illustrated above)
+> can be something arbitrary, such as true. Give an implementation of
+> <span class="inline-src language-scheme" data-lang="scheme">`for-each`</span>.
 
-*** Answer
-:PROPERTIES:
-:ID:       d98e6318-8fd5-4c0f-8943-734a0eb6d108
-:CUSTOM-ID: d98e6318-8fd5-4c0f-8943-734a0eb6d108
-:END:
 
-#+NAME: for-each-mine
-#+BEGIN_SRC scheme -n :eval no-export :results silent
+#### <span class="section-num">3.27.2</span> Answer {#answer}
+
+<a id="code-snippet--for-each-mine"></a>
+```scheme { linenos=true, linenostart=1 }
 (define (for-each-mine proc items)
   (define (iter l)
     (if (null? l)
@@ -9169,61 +7681,48 @@ src_scheme{for-each}.
         (begin (proc (car l))
                (iter (cdr l)))))
   (iter items))
-#+END_SRC
-#+BEGIN_SRC scheme -n :eval no-export :results output
+```
+
+```scheme { linenos=true, linenostart=1 }
 <<for-each-mine>>
 (for-each-mine (lambda(x)(display x)(display " ")) (list "all" "your" "base"))
 (for-each (lambda(x)(display x)(display " ")) (list "are" "belong" "to" "us"))
-#+END_SRC
+```
 
-#+RESULTS[97f7b4879e8dbad6864e9651b39d957072f54621]:
-#+begin_EXAMPLE
-all your base are belong to us 
-#+end_EXAMPLE
+```text
+all your base are belong to us
+```
 
-** Exercise 2.24
-:PROPERTIES:
-:ID:       1859958b-e5fe-45e1-9c88-1bd50d0bccfc
-:CUSTOM-ID: 1859958b-e5fe-45e1-9c88-1bd50d0bccfc
-:END:
 
-*** Text Definitions
-:PROPERTIES:
-:ID:       75e2bc99-9250-45c5-bc99-68e9f7435478
-:CUSTOM-ID: 75e2bc99-9250-45c5-bc99-68e9f7435478
-:END:
+### <span class="section-num">3.28</span> Exercise 2.24 {#exercise-2-dot-24}
 
-#+NAME: count-leaves
-#+BEGIN_SRC scheme -n :eval no-export :results silent
+
+#### <span class="section-num">3.28.1</span> Text Definitions {#text-definitions}
+
+<a id="code-snippet--count-leaves"></a>
+```scheme { linenos=true, linenostart=1 }
 (define (count-leaves x)
   (cond ((null? x) 0)
         ((not (pair? x)) 1)
         (else (+ (count-leaves (car x))
                  (count-leaves (cdr x))))))
-#+END_SRC
+```
 
-*** Question
-:PROPERTIES:
-:ID:       2fc07509-94f8-4057-af0a-57e1975cca88
-:CUSTOM-ID: 2fc07509-94f8-4057-af0a-57e1975cca88
-:END:
 
-#+begin_quote
-Suppose we evaluate the expression src_scheme{(list 1 (list 2 (list 3 4)))}.
-Give the result printed by the interpreter, the corresponding box-and-pointer
-structure, and the interpretation of this as a tree (as in Figure 2.6).
-#+end_quote
+#### <span class="section-num">3.28.2</span> Question {#question}
 
-*** Answer
-:PROPERTIES:
-:ID:       5053c146-9dbe-470c-bc7b-505bf646f302
-:CUSTOM-ID: 5053c146-9dbe-470c-bc7b-505bf646f302
-:END:
+> Suppose we evaluate the expression <span class="inline-src language-scheme" data-lang="scheme">`(list 1 (list 2 (list 3 4)))`</span>.
+> Give the result printed by the interpreter, the corresponding box-and-pointer
+> structure, and the interpretation of this as a tree (as in Figure 2.6).
+
+
+#### <span class="section-num">3.28.3</span> Answer {#answer}
 
 This is sort of a trick question -- on first reading, I read it like a series of
-src_scheme{cons} statements. Looking again, though, I can see that the correct
+<span class="inline-src language-scheme" data-lang="scheme">`cons`</span> statements. Looking again, though, I can see that the correct
 formulation is as follows:
-#+BEGIN_SRC scheme -n :eval no-export :results output :exports both
+
+```scheme { linenos=true, linenostart=1 }
 <<echo>>
 (let ((l1 (list 1 (list 2 (list 3 4))))
       (l2 (cons 1
@@ -9237,158 +7736,37 @@ formulation is as follows:
                  #nil))))
   (echo "textbook version:" l1)
   (echo "cons'd version:" l2))
-#+END_SRC
+```
 
-#+RESULTS[7db9abab1fe2f100e098940e4505323400de476f]:
-#+begin_EXAMPLE
-textbook version: (1 (2 (3 4))) 
-cons'd version: (1 (2 (3 4))) 
-#+end_EXAMPLE
+```text
+textbook version: (1 (2 (3 4)))
+cons'd version: (1 (2 (3 4)))
+```
 
 Dot and box version:
-#+BEGIN_SRC dot :file 2/fig/24-dotandbox.png :exports results :eval no-export
-/* Why doesn't "arrowtail=dot" work? It is a mystery. */
-digraph {
-    newrank = true;
-    compound = true;
 
-    node [shape=ellipse,margin=0];
-    subgraph sg0 {
-        cluster = true;
-        color = lightgrey;
-        shape = rounded;
-        style = filled;
-        label = "'(1 (2 (3 4)))";
-        cellA [shape=none,label=<
-              <table border="0" cellborder="1" cellspacing="0">
-                     <tr>
-                        <td port="car">&nbsp;*&nbsp;</td>
-                        <td port="cdr">&nbsp;</td>
-                    </tr>
-                </table> >];
-        cellA:car:s -> "1":n [shape=ellipse];
-        cellAa [shape=none,label=<
-               <table border="0" cellborder="1" cellspacing="0">
-                <tr>
-                 <td port="car">&nbsp;*&nbsp;</td>
-                 <td port="cdr">X</td>
-                </tr>
-               </table>>];
-                
-        cellA:cdr:c -> cellAa:car:w [tailclip=false,dir=both,arrowtail=dot,dir=both,tailclip=false];
-        cellAa:car:s -> cellB:car:n;
-        subgraph sg1 {
-            cluster = true;
-            color = white;
-            shape = rounded;
-            style = filled;
-            label = "'(2 (3 4))";
-            cellB [shape=none,label=<
-                <table border="0" cellborder="1" cellspacing="0">
-                        <tr>
-                            <td port="car">&nbsp;*&nbsp;</td>
-                            <td port="cdr">&nbsp;</td>
-                        </tr>
-                    </table> >];
-            cellB:car:s -> "2":n [shape=ellipse];
-            cellBb [shape=none,label=<
-                <table border="0" cellborder="1" cellspacing="0">
-                    <tr>
-                    <td port="car">&nbsp;*&nbsp;</td>
-                    <td port="cdr">X</td>
-                    </tr>
-                </table>>];
-
-            cellB:cdr:c -> cellBb:car:w [tailclip=false,dir=both,arrowtail=dot,dir=both,tailclip=false];
-            cellBb:car:s -> cellC:car:n;
-            subgraph sg2 {
-                cluster = true;
-                color = lightgrey;
-                shape = rounded;
-                style = filled;
-                label = "'(3 4)";
-                cellC [shape=none,label=<
-                    <table border="0" cellborder="1" cellspacing="0">
-                            <tr>
-                                <td port="car">&nbsp;*&nbsp;</td>
-                                <td port="cdr">&nbsp;</td>
-                            </tr>
-                        </table> >];
-                cellC:car:s -> "3":n [shape=ellipse];
-                cellC:cdr:c -> cellD:car:w [tailclip=false,dir=both,arrowtail=dot,dir=both,tailclip=false];
-                subgraph sg3 {
-                    cluster = true;
-                    color = white;
-                    shape = rounded;
-                    style = filled;
-                    label = "'(4)";
-                    cellD [shape=none,label=<
-                        <table border="0" cellborder="1" cellspacing="0">
-                            <tr>
-                            <td port="car">&nbsp;*&nbsp;</td>
-                            <td port="cdr">X</td>
-                            </tr>
-                        </table>>];
-
-                    cellD:car:s -> "4":n;
-                };
-            };
-        };
-    };
-    { rank = same; cellA; cellAa; };
-    { rank = same; "1"; cellB; cellBb; };
-    { rank = same; "2"; cellC; cellD; };
-    { rank = same; "3"; "4"; };
-}
-#+end_src
-
-#+RESULTS[5e93cb48cc6fceab2c633d425f66162262af2005]:
-:results:
-[[file:2/fig/24-dotandbox.png]]
-:end:
+{{< figure src="/ox-hugo/24-dotandbox.png" >}}
 
 Tree version:
-#+BEGIN_SRC dot :file 2/fig/24-tree.png :exports results :eval no-export
-digraph {
-    node [shape=none,margin=0];
-    "(1 (2 (3 4)))":s -> "1";
-    "(1 (2 (3 4)))":s -> "(2 (3 4))";
-    "(2 (3 4))":s -> "2";
-    "(2 (3 4))":s -> "(3 4)";
-    "(3 4)":s -> "3";
-    "(3 4)":s -> "4";
-}
-#+END_SRC
 
-#+RESULTS[a845b46b004192cb2595d312eb6c40aa94c94931]:
-:results:
-[[file:2/fig/24-tree.png]]
-:end:
+{{< figure src="/ox-hugo/24-tree.png" >}}
 
-** Exercise 2.25
-:PROPERTIES:
-:ID:       ee1f06c2-8b9e-45e1-b411-f3d55ed81d4b
-:CUSTOM-ID: ee1f06c2-8b9e-45e1-b411-f3d55ed81d4b
-:END:
 
-*** Question
-:PROPERTIES:
-:ID:       73922dc1-c1cf-4667-a652-be1c4562b1fa
-:CUSTOM-ID: 73922dc1-c1cf-4667-a652-be1c4562b1fa
-:END:
+### <span class="section-num">3.29</span> Exercise 2.25 {#exercise-2-dot-25}
 
-#+begin_quote
-Give combinations of src_scheme{car}s and src_scheme{cdr}s that will pick 7 from
-each of the following lists:
-#+end_quote
 
-#+BEGIN_SRC scheme
+#### <span class="section-num">3.29.1</span> Question {#question}
+
+> Give combinations of <span class="inline-src language-scheme" data-lang="scheme">`car`</span>s and <span class="inline-src language-scheme" data-lang="scheme">`cdr`</span>s that will pick 7 from
+> each of the following lists:
+
+```scheme
 (1 3 (5 7) 9)
 ((7))
 (1 (2 (3 (4 (5 (6 7))))))
-#+END_SRC
+```
 
-#+BEGIN_SRC scheme -n :eval no-export :results output
+```scheme { linenos=true, linenostart=1 }
 <<echo>>
 (let ((l1 (list 1 3 (list 5 7) 9))
       (l2 (list (list 7)))
@@ -9396,52 +7774,38 @@ each of the following lists:
   (echo (car (cdaddr l1))
         (caar l2)
         (cadadr (cadadr (cadadr l3)))))
-#+END_SRC
+```
 
-#+RESULTS[5dd3e45a2df968170f6a2b00efe33964161ed387]:
-#+begin_EXAMPLE
-7 7 7 
-#+end_EXAMPLE
+```text
+7 7 7
+```
 
-** Exercise 2.26
-:PROPERTIES:
-:ID:       2420a238-983e-45b6-96f8-200c89225ea8
-:CUSTOM-ID: 2420a238-983e-45b6-96f8-200c89225ea8
-:END:
 
-*** Question
-:PROPERTIES:
-:ID:       3e049c8e-7c19-4260-9719-23aff843ee1c
-:CUSTOM-ID: 3e049c8e-7c19-4260-9719-23aff843ee1c
-:END:
+### <span class="section-num">3.30</span> Exercise 2.26 {#exercise-2-dot-26}
 
-#+begin_quote
-Suppose we define src_scheme{x} and src_scheme{y} to be two lists:
-#+end_quote
 
-#+BEGIN_SRC scheme
+#### <span class="section-num">3.30.1</span> Question {#question}
+
+> Suppose we define <span class="inline-src language-scheme" data-lang="scheme">`x`</span> and <span class="inline-src language-scheme" data-lang="scheme">`y`</span> to be two lists:
+
+```scheme
 (define x (list 1 2 3))
 (define y (list 4 5 6))
-#+END_SRC
+```
 
-#+begin_quote
-What result is printed by the interpreter in response to evaluating each of the
-following expressions:
-#+end_quote
+> What result is printed by the interpreter in response to evaluating each of the
+> following expressions:
 
-#+BEGIN_SRC scheme
+```scheme
 (append x y)
 (cons x y)
 (list x y)
-#+END_SRC
+```
 
-*** Answer
-:PROPERTIES:
-:ID:       43f5805e-5b76-43e0-a645-d9d591c4c480
-:CUSTOM-ID: 43f5805e-5b76-43e0-a645-d9d591c4c480
-:END:
 
-#+BEGIN_SRC scheme -n :eval no-export :results output
+#### <span class="section-num">3.30.2</span> Answer {#answer}
+
+```scheme { linenos=true, linenostart=1 }
 <<echo>>
 (let* ((x (list 1 2 3))
       (y (list 4 5 6))
@@ -9451,33 +7815,26 @@ following expressions:
   (echo "(append x y):" e1)
   (echo "(cons x y):" e2)
   (echo "(list x y):" e3))
-#+END_SRC
+```
 
-#+RESULTS[81ffb47c04cdae841253c59cf9d416ab5c4d6b10]:
-#+begin_EXAMPLE
-(append x y): (1 2 3 4 5 6) 
-(cons x y): ((1 2 3) 4 5 6) 
-(list x y): ((1 2 3) (4 5 6)) 
-#+end_EXAMPLE
+```text
+(append x y): (1 2 3 4 5 6)
+(cons x y): ((1 2 3) 4 5 6)
+(list x y): ((1 2 3) (4 5 6))
+```
 
-** Exercise 2.27
-:PROPERTIES:
-:ID:       54e96be8-2cea-4976-867d-43dd31887156
-:CUSTOM-ID: 54e96be8-2cea-4976-867d-43dd31887156
-:END:
 
-*** Question
-:PROPERTIES:
-:ID:       3eff3209-704b-42a7-8033-f43e4520f409
-:CUSTOM-ID: 3eff3209-704b-42a7-8033-f43e4520f409
-:END:
+### <span class="section-num">3.31</span> Exercise 2.27 {#exercise-2-dot-27}
 
-Modify your src_scheme{reverse} procedure of Exercise 2.18 to produce a
-src_scheme{deep-reverse} procedure that takes a list as argument and returns as
+
+#### <span class="section-num">3.31.1</span> Question {#question}
+
+Modify your <span class="inline-src language-scheme" data-lang="scheme">`reverse`</span> procedure of Exercise 2.18 to produce a
+<span class="inline-src language-scheme" data-lang="scheme">`deep-reverse`</span> procedure that takes a list as argument and returns as
 its value the list with its elements reversed and with all sublists
 deep-reversed as well. For example,
 
-#+BEGIN_SRC scheme
+```scheme
 (define x (list (list 1 2) (list 3 4)))
 x
 ;; ((1 2) (3 4))
@@ -9485,16 +7842,13 @@ x
 ;; ((3 4) (1 2))
 (deep-reverse x)
 ;; ((4 3) (2 1))
-#+END_SRC
+```
 
-*** Answer
-:PROPERTIES:
-:ID:       47d43f92-a841-4bb6-84d7-6b13036fddf6
-:CUSTOM-ID: 47d43f92-a841-4bb6-84d7-6b13036fddf6
-:END:
 
-#+NAME: deep-reverse
-#+BEGIN_SRC scheme :eval no-export :results silent
+#### <span class="section-num">3.31.2</span> Answer {#answer}
+
+<a id="code-snippet--deep-reverse"></a>
+```scheme
 (define (deep-reverse l)
   (define len (length l))
   (define (iter i result)
@@ -9507,49 +7861,40 @@ x
                           here))
                     result))))
   (iter 0 '()))
-#+END_SRC
-#+BEGIN_SRC scheme :eval no-export :results value code
+```
+
+```scheme
 <<deep-reverse>>
 (deep-reverse (list (list 1 2) (list 3 4)))
-#+END_SRC
+```
 
-#+RESULTS[fa54e5f7043136e95170dd1071f5dff1f0845d9e]:
-#+begin_src scheme
+```scheme
 ((4 3) (2 1))
-#+end_src
+```
 
-** Exercise 2.28
-:PROPERTIES:
-:ID:       e4661795-7d35-4b4c-87c8-4f27e61504e6
-:CUSTOM-ID: e4661795-7d35-4b4c-87c8-4f27e61504e6
-:END:
 
-*** Question
-:PROPERTIES:
-:ID:       1aa047af-6107-444f-9460-4720db3d56b5
-:CUSTOM-ID: 1aa047af-6107-444f-9460-4720db3d56b5
-:END:
+### <span class="section-num">3.32</span> Exercise 2.28 {#exercise-2-dot-28}
 
-Write a procedure src_scheme{fringe} that takes as argument a tree (represented
+
+#### <span class="section-num">3.32.1</span> Question {#question}
+
+Write a procedure <span class="inline-src language-scheme" data-lang="scheme">`fringe`</span> that takes as argument a tree (represented
 as a list) and returns a list whose elements are all the leaves of the tree
 arranged in left-to-right order. For example,
 
-#+BEGIN_SRC scheme
+```scheme
 (define x (list (list 1 2) (list 3 4)))
 (fringe x)
 ;; (1 2 3 4)
 (fringe (list x x))
 ;; (1 2 3 4 1 2 3 4)
-#+END_SRC
+```
 
-*** Answer
-:PROPERTIES:
-:ID:       03543166-fce5-48d5-b81b-447c9a945bcb
-:CUSTOM-ID: 03543166-fce5-48d5-b81b-447c9a945bcb
-:END:
 
-#+NAME: fringe
-#+BEGIN_SRC scheme :eval no-export :results silent
+#### <span class="section-num">3.32.2</span> Answer {#answer}
+
+<a id="code-snippet--fringe"></a>
+```scheme
 (define (fringe l)
   (if (null? l)
       #nil
@@ -9559,59 +7904,45 @@ arranged in left-to-right order. For example,
                     (fringe a)
                     (list a))
                 (fringe d)))))
-#+END_SRC
-#+BEGIN_SRC scheme :eval no-export :results value code :wrap src
+```
+
+```scheme
 <<fringe>>
 (fringe (list (list 1 (list 2 3)) (list 4 5)))
-#+END_SRC
+```
 
-#+RESULTS[6080592c2d871b7b64340ee9af439d3da32beb90]:
-#+begin_src
+```nil
 (1 2 3 4 5)
-#+end_src
+```
 
-** Exercise 2.29: Binary Mobiles
-:PROPERTIES:
-:ID:       63a9edde-9764-4d9e-8100-baed248c2dcb
-:CUSTOM-ID: 63a9edde-9764-4d9e-8100-baed248c2dcb
-:END:
 
-*** Text Definitions
-:PROPERTIES:
-:ID:       f0163b74-c449-4a13-ad88-1da47321397a
-:CUSTOM-ID: f0163b74-c449-4a13-ad88-1da47321397a
-:END:
+### <span class="section-num">3.33</span> Exercise 2.29: Binary Mobiles {#exercise-2-dot-29-binary-mobiles}
 
-#+NAME: mobile-constructors-list
-#+BEGIN_SRC scheme :eval no-export :results silent
+
+#### <span class="section-num">3.33.1</span> Text Definitions {#text-definitions}
+
+<a id="code-snippet--mobile-constructors-list"></a>
+```scheme
 (define (make-mobile left right)
   (list left right))
 
 (define (make-branch length structure)
   (list length structure))
-#+END_SRC
+```
 
-*** Question A: Selectors
-:PROPERTIES:
-:ID:       20aad58f-3c4f-4fa8-8d27-4a4a5aee09b3
-:CUSTOM-ID: 20aad58f-3c4f-4fa8-8d27-4a4a5aee09b3
-:END:
 
-#+begin_quote
-Write the corresponding selectors src_scheme{left-branch} and
-src_scheme{right-branch}, which return the branches of a mobile, and
-src_scheme{branch-length} and src_scheme{branch-structure}, which return the
-components of a branch.
-#+end_quote
+#### <span class="section-num">3.33.2</span> Question A: Selectors {#question-a-selectors}
 
-*** Answer A
-:PROPERTIES:
-:ID:       9412f002-9e0b-4e44-8bb4-195154f0b0d7
-:CUSTOM-ID: 9412f002-9e0b-4e44-8bb4-195154f0b0d7
-:END:
+> Write the corresponding selectors <span class="inline-src language-scheme" data-lang="scheme">`left-branch`</span> and
+> <span class="inline-src language-scheme" data-lang="scheme">`right-branch`</span>, which return the branches of a mobile, and
+> <span class="inline-src language-scheme" data-lang="scheme">`branch-length`</span> and <span class="inline-src language-scheme" data-lang="scheme">`branch-structure`</span>, which return the
+> components of a branch.
 
-#+NAME: mobile-selectors-list
-#+BEGIN_SRC scheme :eval no-export :results silent
+
+#### <span class="section-num">3.33.3</span> Answer A {#answer-a}
+
+<a id="code-snippet--mobile-selectors-list"></a>
+```scheme
 <<mobile-constructors-list>>
 (define (left-branch mobile)
   (car mobile))
@@ -9621,27 +7952,19 @@ components of a branch.
   (car branch))
 (define (branch-structure branch)
   (cadr branch))
-#+END_SRC
+```
 
-*** Question B: total-weight
-:PROPERTIES:
-:ID:       41775c86-5d20-49c2-9030-d07fc6174431
-:CUSTOM-ID: 41775c86-5d20-49c2-9030-d07fc6174431
-:END:
 
-#+begin_quote
-Using your selectors, define a procedure src_scheme{total-weight} that returns
-the total weight of a mobile.
-#+end_quote
+#### <span class="section-num">3.33.4</span> Question B: total-weight {#question-b-total-weight}
 
-*** Answer B
-:PROPERTIES:
-:ID:       6b9e8068-4729-464e-b963-f0ddfa5c0f64
-:CUSTOM-ID: 6b9e8068-4729-464e-b963-f0ddfa5c0f64
-:END:
+> Using your selectors, define a procedure <span class="inline-src language-scheme" data-lang="scheme">`total-weight`</span> that returns
+> the total weight of a mobile.
 
-#+NAME: mobile-total-weight
-#+BEGIN_SRC scheme :eval no-export :results silent
+
+#### <span class="section-num">3.33.5</span> Answer B {#answer-b}
+
+<a id="code-snippet--mobile-total-weight"></a>
+```scheme
 (define (total-weight mobile)
   (let ((leftS (branch-structure (left-branch mobile)))
         (rightS (branch-structure (right-branch mobile))))
@@ -9651,10 +7974,9 @@ the total weight of a mobile.
        (if (number? rightS)
            rightS
            (total-weight rightS)))))
-#+END_SRC
+```
 
-
-#+BEGIN_SRC scheme :eval no-export :results value
+```scheme
 <<mobile-selectors-list>>
 <<mobile-total-weight>>
 
@@ -9674,37 +7996,30 @@ the total weight of a mobile.
                          (make-branch 2 2))))))
   (list (total-weight M1)
         (total-weight M2)))
-#+END_SRC
+```
 
-#+RESULTS[889a3f8b4d827393dd7f03f5bb525c215ef6df8f]:
-#+begin_EXAMPLE
+```text
 | 10 | 8 |
-#+end_EXAMPLE
+```
 
-*** Question C: Balancing
-:PROPERTIES:
-:ID:       2137f250-1d72-4cf9-becc-26f1a07c4a61
-:CUSTOM-ID: 2137f250-1d72-4cf9-becc-26f1a07c4a61
-:END:
 
-A mobile is said to be *balanced* if the torque applied by its top-left branch is
+#### <span class="section-num">3.33.6</span> Question C: Balancing {#question-c-balancing}
+
+A mobile is said to be **balanced** if the torque applied by its top-left branch is
 equal to that applied by its top-right branch (that is, if the length of the
 left rod multiplied by the weight hanging from that rod is equal to the
 corresponding product for the right side) and if each of the submobiles hanging
 off its branches is balanced. Design a predicate that tests whether a binary
 mobile is balanced.
 
-*** Answer C
-:PROPERTIES:
-:ID:       f2cad0b2-6145-4224-8476-9e217f12028f
-:CUSTOM-ID: f2cad0b2-6145-4224-8476-9e217f12028f
-:END:
+
+#### <span class="section-num">3.33.7</span> Answer C {#answer-c}
 
 I can imagine a ton of ways I could shoot myself in the foot by starting with
 optimization, so let's just try to nail down exactly what needs to happen.
 
-#+NAME: mobile-balanced-dumb
-#+BEGIN_SRC scheme :eval no-export :results silent
+<a id="code-snippet--mobile-balanced-dumb"></a>
+```scheme
 (define (total-torque branch)
   (let ((len (branch-length branch))
         (struct (branch-structure branch)))
@@ -9730,13 +8045,13 @@ optimization, so let's just try to nail down exactly what needs to happen.
         (= (total-torque l)
            (total-torque r))
         #f)))
-#+END_SRC
+```
 
-I'll also need a modified src_scheme{total-weight} that can notice when its
+I'll also need a modified <span class="inline-src language-scheme" data-lang="scheme">`total-weight`</span> that can notice when its
 argument is a non-mobile and just return the value.
 
-#+NAME: mobile-total-weight-2
-#+BEGIN_SRC scheme :eval no-export :results silent
+<a id="code-snippet--mobile-total-weight-2"></a>
+```scheme
 (define (total-weight mobile)
   (if (number? mobile)
       mobile ;; this is a weight, just return it
@@ -9748,9 +8063,9 @@ argument is a non-mobile and just return the value.
            (if (number? rightS)
                rightS
                (total-weight rightS))))))
-#+END_SRC
+```
 
-#+BEGIN_SRC scheme :eval no-export :results output
+```scheme
 <<echo>>
 <<mobile-selectors-list>>
 <<mobile-total-weight-2>>
@@ -9801,59 +8116,48 @@ argument is a non-mobile and just return the value.
 (isbalanced? "M2" (balanced? M2))
 (isbalanced? "M3" (balanced? M3))
 (isbalanced? "M4" (balanced? M4))
-#+END_SRC
+```
 
-#+RESULTS[88a2604f1b945099eb77cd8d0a535f75cb070c24]:
-#+begin_EXAMPLE
-M1 is not balanced! 
-M2 is balanced! 
-M3 is not balanced! 
-M4 is balanced! 
-#+end_EXAMPLE
+```text
+M1 is not balanced!
+M2 is balanced!
+M3 is not balanced!
+M4 is balanced!
+```
 
 This one took quite some fiddling. First I struggled to figure out exactly how I
 should juggle of torque, weight, and balance. For example, a mobile is balanced
 if the torques of its branches are equal, and if every submobile is also
-balanced, with torque being defined as length\(\times\)weight. Note that it's
-the /weight/, not its submobile's /torque/.
+balanced, with torque being defined as length\\(\times\\)weight. Note that it's
+the _weight_, not its submobile's _torque_.
 
 TODO: I'd like to come back and make an optimized version that doesn't have to
 crawl the tree multiple times. Maybe getting torque/weight/balanced status at
 the same time?
 
-*** Question D: Implementation shakeup
-:PROPERTIES:
-:ID:       f5a9dc34-2ad7-4c13-944c-d0231cab3e7f
-:CUSTOM-ID: f5a9dc34-2ad7-4c13-944c-d0231cab3e7f
-:END:
 
-#+begin_quote
-Suppose we change the representation of mobiles so that the constructors are
-#+end_quote
+#### <span class="section-num">3.33.8</span> Question D: Implementation shakeup {#question-d-implementation-shakeup}
 
-#+NAME: mobile-constructors-cons
-#+BEGIN_SRC scheme :eval no-export :results silent
+> Suppose we change the representation of mobiles so that the constructors are
+
+<a id="code-snippet--mobile-constructors-cons"></a>
+```scheme
 (define (make-mobile left right)
   (cons left right))
 
 (define (make-branch length structure)
   (cons length structure))
-#+END_SRC
+```
 
-#+begin_quote
-How much do you need to change your programs to convert to the new representation?
-#+end_quote
+> How much do you need to change your programs to convert to the new representation?
 
-*** Answer D
-:PROPERTIES:
-:ID:       ff3509a0-b674-4752-9abd-b823d35fed43
-:CUSTOM-ID: ff3509a0-b674-4752-9abd-b823d35fed43
-:END:
+
+#### <span class="section-num">3.33.9</span> Answer D {#answer-d}
 
 Ideally I should only need to change the selectors, like this:
 
-#+NAME: mobile-selectors-cons
-#+BEGIN_SRC scheme :eval no-export :results silent
+<a id="code-snippet--mobile-selectors-cons"></a>
+```scheme
 <<mobile-constructors-cons>>
 (define (left-branch mobile)
   (car mobile))
@@ -9863,11 +8167,11 @@ Ideally I should only need to change the selectors, like this:
   (car branch))
 (define (branch-structure branch)
   (cdr branch))
-#+END_SRC
+```
 
 Now, if I run the same code, I should get the same result:
 
-#+BEGIN_SRC scheme :eval no-export :results output
+```scheme
 <<echo>>
 <<mobile-selectors-cons>>
 <<mobile-total-weight-2>>
@@ -9918,51 +8222,41 @@ Now, if I run the same code, I should get the same result:
 (isbalanced? "M2" (balanced? M2))
 (isbalanced? "M3" (balanced? M3))
 (isbalanced? "M4" (balanced? M4))
-#+END_SRC
+```
 
-#+RESULTS[9e3d1eab5aeb21aea820e55943c032458e5bb9e7]:
-#+begin_EXAMPLE
-M1 is not balanced! 
-M2 is balanced! 
-M3 is not balanced! 
-M4 is balanced! 
-#+end_EXAMPLE
+```text
+M1 is not balanced!
+M2 is balanced!
+M3 is not balanced!
+M4 is balanced!
+```
 
-** Exercise 2.30
-:PROPERTIES:
-:ID:       8fb7c1b7-31c5-4f08-8cf6-12094e850c3c
-:CUSTOM-ID: 8fb7c1b7-31c5-4f08-8cf6-12094e850c3c
-:END:
 
-*** Question
-:PROPERTIES:
-:ID:       36f8065d-dd3b-4120-851e-89c04ae7ffd4
-:CUSTOM-ID: 36f8065d-dd3b-4120-851e-89c04ae7ffd4
-:END:
+### <span class="section-num">3.34</span> Exercise 2.30 {#exercise-2-dot-30}
+
+
+#### <span class="section-num">3.34.1</span> Question {#question}
 
 Define a procedure
-src_scheme{square-tree} analogous to the src_scheme{square-@/list} procedure of
-[[Exercise 2.21]].  That is, src_scheme{square-tree} should behave as follows:
+<span class="inline-src language-scheme" data-lang="scheme">`square-tree`</span> analogous to the <span class="inline-src language-scheme" data-lang="scheme">`square-@/list`</span> procedure of
+[3.25](#exercise-2-dot-21).  That is, <span class="inline-src language-scheme" data-lang="scheme">`square-tree`</span> should behave as follows:
 
-#+BEGIN_SRC scheme -n
+```scheme { linenos=true, linenostart=1 }
 (square-tree
  (list 1
        (list 2 (list 3 4) 5)
        (list 6 7)))
 ;; (1 (4 (9 16) 25) (36 49))
-#+END_SRC
+```
 
-Define src_scheme{square-tree} both directly (i.e., without using any higher-order
-procedures) and also by using src_scheme{map} and recursion.
+Define <span class="inline-src language-scheme" data-lang="scheme">`square-tree`</span> both directly (i.e., without using any higher-order
+procedures) and also by using <span class="inline-src language-scheme" data-lang="scheme">`map`</span> and recursion.
 
-*** Answer
-:PROPERTIES:
-:ID:       203d3de0-6067-4723-a81d-bf43e4a3cb64
-:CUSTOM-ID: 203d3de0-6067-4723-a81d-bf43e4a3cb64
-:END:
 
-#+NAME: square-tree
-#+BEGIN_SRC scheme :eval no-export :results silent
+#### <span class="section-num">3.34.2</span> Answer {#answer}
+
+<a id="code-snippet--square-tree"></a>
+```scheme
 <<square>>
 (define (square-tree-discrete tree)
   (cond ((null? tree) '())
@@ -9976,9 +8270,9 @@ procedures) and also by using src_scheme{map} and recursion.
              (square-tree-map sub-tree)
              (square sub-tree)))
        tree))
-#+END_SRC
+```
 
-#+BEGIN_SRC scheme :eval no-export :results output
+```scheme
 (load "mattcheck2.scm")
 <<square-tree>>
 (let ((testlist
@@ -9995,16 +8289,16 @@ procedures) and also by using src_scheme{map} and recursion.
   (mattcheck "square-tree-map"
              (square-tree-map testlist)
              answer))
-#+END_SRC
+```
 
-#+RESULTS[e9e27db8ac9027cdcd1420c84234ff2a64f3a768]:
-#+begin_EXAMPLE
+```text
 SUCCEED at square-tree-discrete
 SUCCEED at square-tree-map
-#+end_EXAMPLE
+```
 
-While writing that, I ran headfirst into a lesson I've had to repeatedly learn: default Guile functions end their lists with src_scheme{'()} which does not match equality with lists ended with src_scheme{#nil}.
-#+BEGIN_SRC scheme :eval no-export :results output
+While writing that, I ran headfirst into a lesson I've had to repeatedly learn: default Guile functions end their lists with <span class="inline-src language-scheme" data-lang="scheme">`'()`</span> which does not match equality with lists ended with <span class="inline-src language-scheme" data-lang="scheme">`#nil`</span>.
+
+```scheme
 (let ((parens-list (cons 1 (cons 2 (cons 3 '()))))
       (nil-list (cons 1 (cons 2 (cons 3 #nil)))))
   (display parens-list)(display " <== ends with '()")
@@ -10019,54 +8313,43 @@ While writing that, I ran headfirst into a lesson I've had to repeatedly learn: 
   (newline)
   (display "What about #nil and #f? > ")
   (display (equal? #nil #f)))
-#+END_SRC
+```
 
-#+RESULTS[8942f65fc2e98e535b33a5aa21d98cc3e5ca0036]:
-#+begin_EXAMPLE
+```text
 (1 2 3) <== ends with '()
 (1 2 3) <== ends with #nil
 Are these two lists equal? > #f
 Does Guile consider #nil and '() equal? > #f
 What about #nil and #f? > #f
-#+end_EXAMPLE
+```
 
-** Exercise 2.31
-:PROPERTIES:
-:ID:       4ddf43c7-fd1b-441d-a599-0a8412646c1f
-:CUSTOM-ID: 4ddf43c7-fd1b-441d-a599-0a8412646c1f
-:END:
 
-*** Question
-:PROPERTIES:
-:ID:       5d38b71c-3887-48f7-b978-e90a17b6fbde
-:CUSTOM-ID: 5d38b71c-3887-48f7-b978-e90a17b6fbde
-:END:
+### <span class="section-num">3.35</span> Exercise 2.31 {#exercise-2-dot-31}
 
-#+begin_quote
-Abstract your answer to [[Exercise 2.30]] to produce a procedure
-src_scheme{tree-map} with the property that src_scheme{square-tree} could be
-defined as
-#+end_quote
 
-#+BEGIN_SRC scheme
+#### <span class="section-num">3.35.1</span> Question {#question}
+
+> Abstract your answer to [3.34](#exercise-2-dot-30) to produce a procedure
+> <span class="inline-src language-scheme" data-lang="scheme">`tree-map`</span> with the property that <span class="inline-src language-scheme" data-lang="scheme">`square-tree`</span> could be
+> defined as
+
+```scheme
 (define (square-tree tree) (tree-map square tree))
-#+END_SRC
+```
 
-*** Answer
-:PROPERTIES:
-:ID:       e70b89fa-ced4-4294-bf97-93177b5296bf
-:CUSTOM-ID: e70b89fa-ced4-4294-bf97-93177b5296bf
-:END:
 
-#+NAME: tree-map
-#+BEGIN_SRC scheme :eval no-export :results silent
+#### <span class="section-num">3.35.2</span> Answer {#answer}
+
+<a id="code-snippet--tree-map"></a>
+```scheme
 (define (tree-map f tree)
   (cond ((null? tree) '())
         ((not (pair? tree)) (f tree))
         (else (cons (tree-map f (car tree))
                     (tree-map f (cdr tree))))))
-#+END_SRC
-#+BEGIN_SRC scheme :eval no-export :results output
+```
+
+```scheme
 (load "mattcheck2.scm")
 <<tree-map>>
 <<square>>
@@ -10083,50 +8366,37 @@ defined as
   (mattcheck "square-tree-tm"
              (square-tree-tm testlist)
              answer))
-#+END_SRC
+```
 
-#+RESULTS[6adef597c27ce19e16711d7a4f8c643e736ea197]:
-#+begin_EXAMPLE
+```text
 SUCCEED at square-tree-tm
-#+end_EXAMPLE
+```
 
-** Exercise 2.32
-:PROPERTIES:
-:ID:       fb825e93-a665-49dd-b425-5c08f0a176b4
-:CUSTOM-ID: fb825e93-a665-49dd-b425-5c08f0a176b4
-:END:
 
-*** Question
-:PROPERTIES:
-:ID:       d367324d-0a43-4131-87e5-4789a887d8ae
-:CUSTOM-ID: d367324d-0a43-4131-87e5-4789a887d8ae
-:END:
+### <span class="section-num">3.36</span> Exercise 2.32 {#exercise-2-dot-32}
 
-#+begin_quote
-We can represent a set as a list of distinct elements, and we can represent the
-set of all subsets of the set as a list of lists. For example, if the set is
-src_scheme{(1 2 3)}, then the set of all subsets is src_scheme{(() (3) (2) (2 3)
-(1) (1 3) (1 2) (1 2 3))}. Complete the following definition of a procedure that
-generates the set of subsets of a set and give a clear explanation of why it
-works:
-#+end_quote
 
-#+BEGIN_SRC scheme
+#### <span class="section-num">3.36.1</span> Question {#question}
+
+> We can represent a set as a list of distinct elements, and we can represent the
+> set of all subsets of the set as a list of lists. For example, if the set is
+> <span class="inline-src language-scheme" data-lang="scheme">`(1 2 3)`</span>, then the set of all subsets is <span class="inline-src language-scheme" data-lang="scheme">`(() (3) (2) (2 3) (1) (1 3) (1 2) (1 2 3))`</span>. Complete the following definition of a procedure that
+> generates the set of subsets of a set and give a clear explanation of why it
+> works:
+
+```scheme
 (define (subsets s)
   (if (null? s)
       (list nil)
       (let ((rest (subsets (cdr s))))
         (append rest (map <??> rest)))))
-#+END_SRC
+```
 
-*** Answer
-:PROPERTIES:
-:ID:       1c89de82-54ce-48f2-8ac3-2382391211fc
-:CUSTOM-ID: 1c89de82-54ce-48f2-8ac3-2382391211fc
-:END:
 
-#+NAME: subsets
-#+BEGIN_SRC scheme :eval no-export :results silent
+#### <span class="section-num">3.36.2</span> Answer {#answer}
+
+<a id="code-snippet--subsets"></a>
+```scheme
 (define (subsets s)
   (if (null? s)
       (list '())
@@ -10134,9 +8404,9 @@ works:
         (append rest (map (lambda(x)
                             (cons (car s) x))
                           rest)))))
-#+END_SRC
+```
 
-#+BEGIN_SRC scheme :eval no-export :results output
+```scheme
 <<subsets>>
 (load "mattcheck2.scm")
 (let ((answer
@@ -10148,24 +8418,23 @@ works:
   (mattcheck "subsets"
              (subsets (list 1 2 3))
              answer))
-#+END_SRC
+```
 
-#+RESULTS[fd91c5ab43cd94c6fcc25aced6b3a8a7d9ad7d3e]:
-#+begin_EXAMPLE
+```text
 SUCCEED at subsets
-#+end_EXAMPLE
+```
 
-Essentially, src_scheme{subsets} is rotating through members of the list in a
+Essentially, <span class="inline-src language-scheme" data-lang="scheme">`subsets`</span> is rotating through members of the list in a
 similar way that a counter incrementing rotates through all numbers in its base.
-For a list with items \(1\) to \(n\), src_scheme{subsets} makes a list with the
-last item, \([n]\), then lists \([n-1]\) and \([n-1, n]\), then lists
-\([n-2][n-2, n-1][n-2,n]\), then \([n-3][n-3,n-2][n-3,n-1][n-3,n]\) and so on.
+For a list with items \\(1\\) to \\(n\\), <span class="inline-src language-scheme" data-lang="scheme">`subsets`</span> makes a list with the
+last item, \\([n]\\), then lists \\([n-1]\\) and \\([n-1, n]\\), then lists
+\\([n-2][n-2, n-1][n-2,n]\\), then \\([n-3][n-3,n-2][n-3,n-1][n-3,n]\\) and so on.
 
 I'd like to try adding some debugging statements to subsets and see if it might
 help clarify the operation.
 
-#+NAME: echo-return
-#+BEGIN_SRC scheme :eval no-export :results silent
+<a id="code-snippet--echo-return"></a>
+```scheme
 <<echo>>
 (define (doit f x)
   (f x) ;; this probably has a formal lambda calculus name
@@ -10175,8 +8444,9 @@ help clarify the operation.
 (define (echo-y-return-x x . y)
   (apply echo y)
   x)
-#+END_SRC
-#+BEGIN_SRC scheme :eval no-export :results output
+```
+
+```scheme
 <<subsets>>
 <<echo-return>>
 (define (subsets-debug s)
@@ -10201,101 +8471,74 @@ help clarify the operation.
              (list 1 2) (list 1 2 3))))
   (subsets-debug (list 1 2 3))
   answer)
-#+END_SRC
+```
 
-#+RESULTS[6f69cef209e382eab3d630e741c2a8a917048153]:
-#+begin_EXAMPLE
-Enter with (1 2 3) { 
-Enter with (2 3) { 
-Enter with (3) { 
-Enter with () { 
-(()) 
-} end () 
-[ iter 3 over (()) ] 
-(3) 
-} end (3) 
-[ iter 2 over (() (3)) ] 
-(2) (2 3) 
-} end (2 3) 
-[ iter 1 over (() (3) (2) (2 3)) ] 
-(1) (1 3) (1 2) (1 2 3) 
-} end (1 2 3) 
-#+end_EXAMPLE
+```text
+Enter with (1 2 3) {
+Enter with (2 3) {
+Enter with (3) {
+Enter with () {
+(())
+} end ()
+[ iter 3 over (()) ]
+(3)
+} end (3)
+[ iter 2 over (() (3)) ]
+(2) (2 3)
+} end (2 3)
+[ iter 1 over (() (3) (2) (2 3)) ]
+(1) (1 3) (1 2) (1 2 3)
+} end (1 2 3)
+```
 
-** 2.2.3: Sequences as Conventional Interfaces
-:PROPERTIES:
-:ID:       ae4c378f-a18e-4988-9dfd-7c5404e78c9e
-:CUSTOM-ID: ae4c378f-a18e-4988-9dfd-7c5404e78c9e
-:END:
+
+### <span class="section-num">3.37</span> 2.2.3: Sequences as Conventional Interfaces {#2-dot-2-dot-3-sequences-as-conventional-interfaces}
 
 Abstractions are an important part of making code clearer and more easy to
 understand. One beneficial manner of abstraction is making available
 conventional interfaces for working with compound data, such as
-src_scheme{filter} and src_scheme{map}.
+<span class="inline-src language-scheme" data-lang="scheme">`filter`</span> and <span class="inline-src language-scheme" data-lang="scheme">`map`</span>.
 
 This allows for easily making "signal-flow" conceptions of processes:
 
-#+begin_src mermaid :file 2/fig/t_2-2-3.png
-graph TD;
-    A(enumerate: tree leaves)-->B(filter: odd?);
-    B-->C(map: square);
-    C-->D(accumulate: +, 0);
-#+end_src
+{{< figure src="/ox-hugo/t_2-2-3.png" >}}
 
-#+RESULTS:
-#+ATTR_LATEX: :width 0.3\linewidth
-[[file:2/fig/t_2-2-3.png]]
 
-** Exercise 2.33: The flexibility of ~accumulate~
-:PROPERTIES:
-:ID:       36c3ba68-f680-4525-9dab-23de05e01770
-:CUSTOM-ID: 36c3ba68-f680-4525-9dab-23de05e01770
-:END:
+### <span class="section-num">3.38</span> Exercise 2.33: The flexibility of `accumulate` {#exercise-2-dot-33-the-flexibility-of-accumulate}
 
-*** Text Definitions
-:PROPERTIES:
-:ID:       3095b036-e7c3-42d7-a386-d352cb3abd2e
-:CUSTOM-ID: 3095b036-e7c3-42d7-a386-d352cb3abd2e
-:END:
 
-#+NAME: accumulate
-#+BEGIN_SRC scheme :eval no-export :results silent
+#### <span class="section-num">3.38.1</span> Text Definitions {#text-definitions}
+
+<a id="code-snippet--accumulate"></a>
+```scheme
 (define (accumulate op initial sequence)
   (if (null? sequence)
       initial
       (op (car sequence)
-          (accumulate op 
-                      initial 
+          (accumulate op
+                      initial
                       (cdr sequence)))))
-#+END_SRC
+```
 
-*** Question
-:PROPERTIES:
-:ID:       2c3c90cc-d492-470b-b625-372f136c6dff
-:CUSTOM-ID: 2c3c90cc-d492-470b-b625-372f136c6dff
-:END:
 
-#+begin_quote
-Fill in the missing expressions to complete the following definitions of some basic list-manipulation operations as accumulations.
-#+end_quote
+#### <span class="section-num">3.38.2</span> Question {#question}
 
-#+BEGIN_SRC scheme
+> Fill in the missing expressions to complete the following definitions of some basic list-manipulation operations as accumulations.
+
+```scheme
 (define (map p sequence)
   (accumulate (lambda (x y) <??>) nil sequence))
 (define (append seq1 seq2)
   (accumulate cons <??> <??>))
 (define (length sequence)
   (accumulate <??> 0 sequence))
-#+END_SRC
+```
 
-*** Answer
-:PROPERTIES:
-:ID:       7785a981-acf8-4b1a-8f5b-77ca062c43a0
-:CUSTOM-ID: 7785a981-acf8-4b1a-8f5b-77ca062c43a0
-:END:
 
-#+NAME: accumulate-forms
-#+BEGIN_SRC scheme -n :eval no-export :results silent
+#### <span class="section-num">3.38.3</span> Answer {#answer}
+
+<a id="code-snippet--accumulate-forms"></a>
+```scheme { linenos=true, linenostart=1 }
 (define (map-acc p sequence)
   (accumulate (lambda (x y)
                 (cons (p x) y))
@@ -10306,8 +8549,9 @@ Fill in the missing expressions to complete the following definitions of some ba
   (accumulate (lambda(x y)
                 (1+ y))
               0 sequence))
-#+END_SRC
-#+BEGIN_SRC scheme -n :eval no-export :results output
+```
+
+```scheme { linenos=true, linenostart=1 }
 (load "mattcheck2.scm")
 <<accumulate>>
 <<accumulate-forms>>
@@ -10322,125 +8566,99 @@ Fill in the missing expressions to complete the following definitions of some ba
   (mattcheck "length"
              (length l)
              (length-acc l)))
-#+END_SRC
+```
 
-#+RESULTS[9d96e74f1f9774cf266e9950663a8b58b6e3b538]:
-#+begin_EXAMPLE
+```text
 SUCCEED at map
 SUCCEED at append
 SUCCEED at length
-#+end_EXAMPLE
+```
 
-** Exercise 2.34
-:PROPERTIES:
-:ID:       70003a6c-ebeb-4a1a-a29a-c637af29e348
-:CUSTOM-ID: 70003a6c-ebeb-4a1a-a29a-c637af29e348
-:END:
 
-*** Question
-:PROPERTIES:
-:ID:       20b40a17-9a77-43fe-bc32-3cd9a590f447
-:CUSTOM-ID: 20b40a17-9a77-43fe-bc32-3cd9a590f447
-:END:
+### <span class="section-num">3.39</span> Exercise 2.34 {#exercise-2-dot-34}
 
-#+begin_quote
-Evaluating a polynomial in \(x\) at a given value of \(x\) can be formulated as
-an accumulation. We evaluate the polynomial
 
-\[ a_n x^n + a_{n-1} x^{n-1} + \dots + a_1 x + a_0 \]
+#### <span class="section-num">3.39.1</span> Question {#question}
 
-using a well-known algorithm called /Horner's rule/, which structures the
-computation as
+> Evaluating a polynomial in \\(x\\) at a given value of \\(x\\) can be formulated as
+> an accumulation. We evaluate the polynomial
+>
+> $$ a\_n x^n + a\_{n-1} x^{n-1} + \dots + a\_1 x + a\_0 $$
+>
+> using a well-known algorithm called _Horner's rule_, which structures the
+> computation as
+>
+> $$ (\dots (a\_n x + a\_{n-1}) x + \dots + a\_1) x + a\_0. $$
+>
+> In other words, we start with \\(a\_n\\), multiply by \\(x\\), add \\(a\_{n-1}\\),
+> multiply by \\(x\\), and so on, until we reach \\(a\_0\\).
+>
+> Fill in the following template to produce a procedure that evaluates a
+> polynomial using Horner's rule. Assume that the coefficients of the polynomial
+> are arranged in a sequence, from \\(a\_0\\) through \\(a\_n\\).
 
-\[ (\dots (a_n x + a_{n-1}) x + \dots + a_1) x + a_0. \]
-
-In other words, we start with \(a_n\), multiply by \(x\), add \(a_{n-1}\),
-multiply by \(x\), and so on, until we reach \(a_0\).
-
-Fill in the following template to produce a procedure that evaluates a
-polynomial using Horner's rule. Assume that the coefficients of the polynomial
-are arranged in a sequence, from \(a_0\) through \(a_n\).
-#+end_quote
-
-#+BEGIN_SRC scheme
+```scheme
 (define (horner-eval x coefficient-sequence)
   (accumulate (lambda (this-coeff higher-terms) <??>)
               0
               coefficient-sequence))
-#+END_SRC
+```
 
-#+begin_quote
-For example, to compute \(1 + 3x + 5x^3 + x^5\) at \(x = 2\) you
-would evaluate
-#+end_quote
+> For example, to compute \\(1 + 3x + 5x^3 + x^5\\) at \\(x = 2\\) you
+> would evaluate
 
-#+BEGIN_SRC scheme
+```scheme
 (horner-eval 2 (list 1 3 0 5 0 1))
-#+END_SRC
+```
 
-*** Answer
-:PROPERTIES:
-:ID:       4f30d8db-3295-4190-bf1f-8fbcba81c950
-:CUSTOM-ID: 4f30d8db-3295-4190-bf1f-8fbcba81c950
-:END:
 
-#+NAME: horner-eval
-#+BEGIN_SRC scheme -n :eval no-export :results silent
+#### <span class="section-num">3.39.2</span> Answer {#answer}
+
+<a id="code-snippet--horner-eval"></a>
+```scheme { linenos=true, linenostart=1 }
 (define (horner-eval x coefficient-sequence)
   (accumulate (lambda (this-coeff higher-terms)
                 (+ this-coeff
                    (* higher-terms x)))
               0
               coefficient-sequence))
-#+END_SRC
-#+BEGIN_SRC scheme -n :eval no-export :results output
+```
+
+```scheme { linenos=true, linenostart=1 }
 (load "mattcheck2.scm")
 <<accumulate>>
 <<horner-eval>>
 (mattcheck "horner-eval"
            (horner-eval 2 (list 1 3 0 5 0 1))
            79)
-#+END_SRC
+```
 
-#+RESULTS[2ad17fe7e2cbf6e3f054954dd9ed7f42fd3b798b]:
-#+begin_EXAMPLE
+```text
 SUCCEED at horner-eval
-#+end_EXAMPLE
+```
 
 This one was very satisfying. It essentially "delays" the exponentiation, carrying it out per stage, by rewriting this:
 
-\(1 + 3 \times 2 + 5 \times 2^3 + 2^5\)
+\\(1 + 3 \times 2 + 5 \times 2^3 + 2^5\\)
 
 Into this operation, left to right:
 
-\[ 0+1*2+0*2+0*2+3*2+1 \]
+$$ 0+1\*2+0\*2+0\*2+3\*2+1 $$
 
 
-** Exercise 2.35
-:PROPERTIES:
-:ID:       d2ac02f3-e7d4-41d4-9265-5272695dbd92
-:CUSTOM-ID: d2ac02f3-e7d4-41d4-9265-5272695dbd92
-:END:
+### <span class="section-num">3.40</span> Exercise 2.35 {#exercise-2-dot-35}
 
-*** Question
-:PROPERTIES:
-:ID:       fad0445e-b03b-4996-bf19-be6d81e84afd
-:CUSTOM-ID: fad0445e-b03b-4996-bf19-be6d81e84afd
-:END:
 
-#+begin_quote
-Redefine src_scheme{count-leaves} from
-2.2.2 as an accumulation:
-#+end_quote
+#### <span class="section-num">3.40.1</span> Question {#question}
 
-*** Answer
-:PROPERTIES:
-:ID:       12b8a86f-f827-4522-a662-b38513d09b7b
-:CUSTOM-ID: 12b8a86f-f827-4522-a662-b38513d09b7b
-:END:
+> Redefine <span class="inline-src language-scheme" data-lang="scheme">`count-leaves`</span> from
+> 2.2.2 as an accumulation:
 
-#+NAME: count-leaves-acc
-#+BEGIN_SRC scheme -n :eval no-export :results silent
+
+#### <span class="section-num">3.40.2</span> Answer {#answer}
+
+<a id="code-snippet--count-leaves-acc"></a>
+```scheme { linenos=true, linenostart=1 }
 (define (count-leaves-acc t)
   (accumulate (lambda(i total)
                 (+ i total))
@@ -10449,8 +8667,9 @@ Redefine src_scheme{count-leaves} from
                            (count-leaves-acc x)
                            1))
                      t)))
-#+END_SRC
-#+BEGIN_SRC scheme -n :eval no-export :results output
+```
+
+```scheme { linenos=true, linenostart=1 }
 (load "mattcheck2.scm")
 <<accumulate>>
 <<count-leaves>>
@@ -10459,54 +8678,42 @@ Redefine src_scheme{count-leaves} from
   (mattcheck "count-leaves-acc"
               (count-leaves l)
               (count-leaves-acc l)))
-#+END_SRC
+```
 
-#+RESULTS[c6429013d876e42bed1937bc4eb5b64e0621fa50]:
-#+begin_EXAMPLE
+```text
 SUCCEED at count-leaves-acc
-#+end_EXAMPLE
+```
 
-** Exercise 2.36: Accumulate across multiple lists
-:PROPERTIES:
-:ID:       075ed620-b106-4eca-b1cf-185c181e032e
-:CUSTOM-ID: 075ed620-b106-4eca-b1cf-185c181e032e
-:END:
 
-*** Question
-:PROPERTIES:
-:ID:       fb101d9b-4436-4566-9c20-32ddd0a4bb0c
-:CUSTOM-ID: fb101d9b-4436-4566-9c20-32ddd0a4bb0c
-:END:
+### <span class="section-num">3.41</span> Exercise 2.36: Accumulate across multiple lists {#exercise-2-dot-36-accumulate-across-multiple-lists}
 
-#+begin_quote
-The procedure src_scheme{accumulate-n} is similar to src_scheme{accumulate}
-except that it takes as its third argument a sequence of sequences, which are
-all assumed to have the same number of elements. It applies the designated
-accumulation procedure to combine all the first elements of the sequences, all
-the second elements of the sequences, and so on, and returns a sequence of the
-results. For instance, if src_scheme{s} is a sequence containing four sequences,
-src_scheme{((1 2 3) (4 5 6) (7 8 9) (10 11 12))}, then the value of
-src_scheme{(accumulate-n + 0 s)} should be the sequence src_scheme{(22 26 30)}.
-Fill in the missing expressions in the following definition of
-src_scheme{accumulate-n}:
-#+end_quote
 
-#+BEGIN_SRC scheme
+#### <span class="section-num">3.41.1</span> Question {#question}
+
+> The procedure <span class="inline-src language-scheme" data-lang="scheme">`accumulate-n`</span> is similar to <span class="inline-src language-scheme" data-lang="scheme">`accumulate`</span>
+> except that it takes as its third argument a sequence of sequences, which are
+> all assumed to have the same number of elements. It applies the designated
+> accumulation procedure to combine all the first elements of the sequences, all
+> the second elements of the sequences, and so on, and returns a sequence of the
+> results. For instance, if <span class="inline-src language-scheme" data-lang="scheme">`s`</span> is a sequence containing four sequences,
+> <span class="inline-src language-scheme" data-lang="scheme">`((1 2 3) (4 5 6) (7 8 9) (10 11 12))`</span>, then the value of
+> <span class="inline-src language-scheme" data-lang="scheme">`(accumulate-n + 0 s)`</span> should be the sequence <span class="inline-src language-scheme" data-lang="scheme">`(22 26 30)`</span>.
+> Fill in the missing expressions in the following definition of
+> <span class="inline-src language-scheme" data-lang="scheme">`accumulate-n`</span>:
+
+```scheme
 (define (accumulate-n op init seqs)
   (if (null? (car seqs))
       nil
       (cons (accumulate op init <??>)
             (accumulate-n op init <??>))))
-#+END_SRC
+```
 
-*** Answers
-:PROPERTIES:
-:ID:       29bb2475-8f2b-46b0-8cc3-c5f5ea0d98dc
-:CUSTOM-ID: 29bb2475-8f2b-46b0-8cc3-c5f5ea0d98dc
-:END:
 
-#+NAME: accumulate-n
-#+BEGIN_SRC scheme -n :eval no-export :results silent
+#### <span class="section-num">3.41.2</span> Answers {#answers}
+
+<a id="code-snippet--accumulate-n"></a>
+```scheme { linenos=true, linenostart=1 }
 (define (accumulate-n op init seqs)
   (if (null? (car seqs))
       '()
@@ -10514,8 +8721,9 @@ src_scheme{accumulate-n}:
                         (map car seqs))
             (accumulate-n op init
                           (map cdr seqs)))))
-#+END_SRC
-#+BEGIN_SRC scheme -n :eval no-export :results output
+```
+
+```scheme { linenos=true, linenostart=1 }
 (load "mattcheck2.scm")
 <<accumulate>>
 <<accumulate-n>>
@@ -10523,42 +8731,37 @@ src_scheme{accumulate-n}:
   (mattcheck "accumulate-n"
              (accumulate-n + 0 s)
              (list 22 26 30)))
-#+END_SRC
+```
 
-#+RESULTS[63440285ad7749602e346c425c99c13c896ec758]:
-#+begin_EXAMPLE
+```text
 SUCCEED at accumulate-n
-#+end_EXAMPLE
+```
 
-** Exercise 2.37: Enter the matrices
-:PROPERTIES:
-:ID:       14ee47b2-bdb6-44f1-806e-0ce544f38cae
-:CUSTOM-ID: 14ee47b2-bdb6-44f1-806e-0ce544f38cae
-:END:
 
-*** Question
-:PROPERTIES:
-:ID:       aa6cbc48-348d-485c-8973-8d3151d7ad26
-:CUSTOM-ID: aa6cbc48-348d-485c-8973-8d3151d7ad26
-:END:
+### <span class="section-num">3.42</span> Exercise 2.37: Enter the matrices {#exercise-2-dot-37-enter-the-matrices}
 
-/See full quote in book./
+
+#### <span class="section-num">3.42.1</span> Question {#question}
+
+_See full quote in book._
 
 Suppose we represent vectors as lists, and matrices as lists of vectors. For example:
 
 \left(
+
 \begin{array}{cccc}
-  1 & 2 & 3 & 4 \\
-  4 & 5 & 6 & 6 \\
+  1 & 2 & 3 & 4 \\\\
+  4 & 5 & 6 & 6 \\\\
   6 & 7 & 8 & 9
 \end{array}
+
 \right)
 
-src_scheme{'((1 2 3 4) (4 5 6 6) (6 7 8 9))}
+<span class="inline-src language-scheme" data-lang="scheme">`'((1 2 3 4) (4 5 6 6) (6 7 8 9))`</span>
 
 Define these operations:
 
-#+BEGIN_SRC scheme -n
+```scheme { linenos=true, linenostart=1 }
 (define (dot-product v w)
   (accumulate + 0 (map * v w)))
 (define (matrix-*-vector m v)
@@ -10568,15 +8771,13 @@ Define these operations:
 (define (matrix-*-matrix m n)
   (let ((cols (transpose n)))
     (map <??> m)))
-    #+END_SRC
-*** Answer
-:PROPERTIES:
-:ID:       d38d82ff-dd0f-4555-841a-1a66d8fbacf3
-:CUSTOM-ID: d38d82ff-dd0f-4555-841a-1a66d8fbacf3
-:END:
+```
 
-#+NAME: matrix-ops
-#+BEGIN_SRC scheme -n :eval no-export :results silent
+
+#### <span class="section-num">3.42.2</span> Answer {#answer}
+
+<a id="code-snippet--matrix-ops"></a>
+```scheme { linenos=true, linenostart=1 }
 (define (dot-product v w)
   (accumulate + 0 (map * v w)))
 (define (matrix-*-vector m v)
@@ -10592,8 +8793,9 @@ Define these operations:
                   (dot-product row col))
                 cols))
            m)))
-#+END_SRC
-#+BEGIN_SRC scheme -n :eval no-export :results output
+```
+
+```scheme { linenos=true, linenostart=1 }
 (load "mattcheck2.scm")
 <<echo>>
 <<accumulate>>
@@ -10620,66 +8822,57 @@ Define these operations:
   (mattcheck "matrix-*-matrix"
              (matrix-*-matrix m1 m1t)
              m1-*-m1t))
-#+END_SRC
+```
 
-#+RESULTS[52c63f277ca222100ce639c3912830bfde495f09]:
-#+begin_EXAMPLE
+```text
 SUCCEED at transpose
 SUCCEED at dot-product
 SUCCEED at matrix-*-vector
 SUCCEED at matrix-*-matrix
-#+end_EXAMPLE
+```
 
 I struggled a lot with what order things should be processed and applied in.
 Some of that came from never having done matrix multiplication before now. I
-would probably still not understand it if I hadn't found [[https://youtu.be/MfN1lqArwAg][Herb Gross' lecture
-regarding matrix operations]][fn:: https://youtu.be/MfN1lqArwAg].
+would probably still not understand it if I hadn't found [Herb Gross' lecture
+regarding matrix operations](https://youtu.be/MfN1lqArwAg)[^fn:2].
 
 The other issue is nested map operations. I find it easy to read Python-ish
 code like this:
 
-#+begin_src python
+```python
 # Pseudocode
 for row in m1:
     for column in m2t:
         for a,b in row,column:
             answer[i:j] += a*b
-#+end_src
+```
 
 But much harder to comprehend Lisp code like this:
 
-#+begin_src scheme
+```scheme
 (map (lambda(row)
        (map (lambda(col)
               (dot-product row col))
             m1t))
      m1)
-#+end_src
+```
 
 I must have a mental block in the way I think about map operations.
 
-** Exercise 2.38: fold-right
-:PROPERTIES:
-:ID:       e718c293-a8c8-4c16-8ee9-7d108bab3fa0
-:CUSTOM-ID: e718c293-a8c8-4c16-8ee9-7d108bab3fa0
-:END:
 
-*** Question A
-:PROPERTIES:
-:ID:       68e456e3-b545-438a-850f-634035a184e8
-:CUSTOM-ID: 68e456e3-b545-438a-850f-634035a184e8
-:END:
+### <span class="section-num">3.43</span> Exercise 2.38: fold-right {#exercise-2-dot-38-fold-right}
 
-#+begin_quote
-The src_scheme{accumulate} procedure
-is also known as src_scheme{fold-right}, because it combines the first element of
-the sequence with the result of combining all the elements to the right.  There
-is also a src_scheme{fold-left}, which is similar to src_scheme{fold-right}, except that
-it combines elements working in the opposite direction:
-#+end_quote
 
-#+NAME: fold-left
-#+BEGIN_SRC scheme
+#### <span class="section-num">3.43.1</span> Question A {#question-a}
+
+> The <span class="inline-src language-scheme" data-lang="scheme">`accumulate`</span> procedure
+> is also known as <span class="inline-src language-scheme" data-lang="scheme">`fold-right`</span>, because it combines the first element of
+> the sequence with the result of combining all the elements to the right.  There
+> is also a <span class="inline-src language-scheme" data-lang="scheme">`fold-left`</span>, which is similar to <span class="inline-src language-scheme" data-lang="scheme">`fold-right`</span>, except that
+> it combines elements working in the opposite direction:
+
+<a id="code-snippet--fold-left"></a>
+```scheme
 (define (fold-left op initial sequence)
   (define (iter result rest)
     (if (null? rest)
@@ -10687,26 +8880,21 @@ it combines elements working in the opposite direction:
         (iter (op result (car rest))
               (cdr rest))))
   (iter initial sequence))
-#+END_SRC
+```
 
-#+begin_quote
-What are the values of
-#+end_quote
+> What are the values of
 
-#+BEGIN_SRC scheme
+```scheme
 (fold-right / 1 (list 1 2 3))
 (fold-left / 1 (list 1 2 3))
 (fold-right list nil (list 1 2 3))
 (fold-left list nil (list 1 2 3))
-#+END_SRC
+```
 
-*** Answer A
-:PROPERTIES:
-:ID:       8a5a2b11-b9f7-448d-8690-32b88fea7085
-:CUSTOM-ID: 8a5a2b11-b9f7-448d-8690-32b88fea7085
-:END:
 
-#+BEGIN_SRC scheme -n :eval no-export :results output
+#### <span class="section-num">3.43.2</span> Answer A {#answer-a}
+
+```scheme { linenos=true, linenostart=1 }
 <<accumulate>>
 (define fold-right accumulate)
 <<fold-left>>
@@ -10715,37 +8903,28 @@ What are the values of
 (echo "(fold-left / 1 (list 1 2 3)):" (fold-left / 1 (list 1 2 3)))
 (echo "(fold-right list nil (list 1 2 3))" (fold-right list '() (list 1 2 3)))
 (echo "(fold-left list nil (list 1 2 3))" (fold-left list '() (list 1 2 3)))
-#+END_SRC
+```
 
-#+RESULTS[edb1fd1da51fab72944ecd7d48d6c7fb5fcecf0c]:
-#+begin_EXAMPLE
-(fold-right / 1 (list 1 2 3)): 3/2 
-(fold-left / 1 (list 1 2 3)): 1/6 
-(fold-right list nil (list 1 2 3)) (1 (2 (3 ()))) 
-(fold-left list nil (list 1 2 3)) (((() 1) 2) 3) 
-#+end_EXAMPLE
+```text
+(fold-right / 1 (list 1 2 3)): 3/2
+(fold-left / 1 (list 1 2 3)): 1/6
+(fold-right list nil (list 1 2 3)) (1 (2 (3 ())))
+(fold-left list nil (list 1 2 3)) (((() 1) 2) 3)
+```
 
-*** Question B
-:PROPERTIES:
-:ID:       aebf1d56-1a8f-4519-8d3d-7bf1854718f2
-:CUSTOM-ID: aebf1d56-1a8f-4519-8d3d-7bf1854718f2
-:END:
 
-#+begin_quote
-Give a property that src_scheme{op} should satisfy to guarantee that
-src_scheme{fold-right} and src_scheme{fold-left} will produce the same values
-for any sequence.
-#+end_quote
+#### <span class="section-num">3.43.3</span> Question B {#question-b}
 
-*** Answer B
-:PROPERTIES:
-:ID:       cd5db947-e91d-4200-a5ba-69b708c6ae62
-:CUSTOM-ID: cd5db947-e91d-4200-a5ba-69b708c6ae62
-:END:
+> Give a property that <span class="inline-src language-scheme" data-lang="scheme">`op`</span> should satisfy to guarantee that
+> <span class="inline-src language-scheme" data-lang="scheme">`fold-right`</span> and <span class="inline-src language-scheme" data-lang="scheme">`fold-left`</span> will produce the same values
+> for any sequence.
+
+
+#### <span class="section-num">3.43.4</span> Answer B {#answer-b}
 
 They would need to be commutative, like addition and multiplication.
 
-#+BEGIN_SRC scheme -n :eval no-export :results output
+```scheme { linenos=true, linenostart=1 }
 (load "mattcheck2.scm")
 <<accumulate>>
 (define fold-right accumulate)
@@ -10764,59 +8943,47 @@ They would need to be commutative, like addition and multiplication.
              (fold-right * 1 lr)
              (fold-left * 1 l)
              (fold-left * 1 lr)))
-#+END_SRC
+```
 
-#+RESULTS[5ad69833502a5f98440ab8c1428a37f721d936d8]:
-#+begin_EXAMPLE
+```text
 SUCCEED at commutative addition
 SUCCEED at commutative multiplication
-#+end_EXAMPLE
+```
 
-** Exercise 2.39: reverse via fold
-:PROPERTIES:
-:ID:       65c7d1f3-bd94-4603-9534-3028979dd321
-:CUSTOM-ID: 65c7d1f3-bd94-4603-9534-3028979dd321
-:END:
 
-*** Question
-:PROPERTIES:
-:ID:       ad8bef77-fb45-4d6b-997a-2263472c20c3
-:CUSTOM-ID: ad8bef77-fb45-4d6b-997a-2263472c20c3
-:END:
+### <span class="section-num">3.44</span> Exercise 2.39: reverse via fold {#exercise-2-dot-39-reverse-via-fold}
 
-#+begin_quote
-Complete the following
-definitions of src_scheme{reverse} (Exercise 2.18) in terms of
-src_scheme{fold-right} and src_scheme{fold-left} from Exercise 2.38:
-#+end_quote
 
-#+BEGIN_SRC scheme
+#### <span class="section-num">3.44.1</span> Question {#question}
+
+> Complete the following
+> definitions of <span class="inline-src language-scheme" data-lang="scheme">`reverse`</span> (Exercise 2.18) in terms of
+> <span class="inline-src language-scheme" data-lang="scheme">`fold-right`</span> and <span class="inline-src language-scheme" data-lang="scheme">`fold-left`</span> from Exercise 2.38:
+
+```scheme
 (define (reverse sequence)
   (fold-right (lambda (x y) <??>) nil sequence))
 (define (reverse sequence)
   (fold-left (lambda (x y) <??>) nil sequence))
-#+END_SRC
+```
 
-*** Answer
-:PROPERTIES:
-:ID:       3b6f3fc0-a210-4091-b521-93ce82a913ba
-:CUSTOM-ID: 3b6f3fc0-a210-4091-b521-93ce82a913ba
-:END:
+
+#### <span class="section-num">3.44.2</span> Answer {#answer}
 
 First, I'd like to start using the SRFI folds instead. This is my little "compatibility module".
 
-#+NAME: fold-compat
-#+BEGIN_SRC scheme -n :eval no-export :results silent
+<a id="code-snippet--fold-compat"></a>
+```scheme { linenos=true, linenostart=1 }
 ;; SICP compat
 (use-srfis '(1))
 (define accumulate fold-right)
 (define fold-left fold)
-#+END_SRC
+```
 
 Now to the problem.
 
-#+NAME: reverse-fold
-#+BEGIN_SRC scheme -n :eval no-export :results silent
+<a id="code-snippet--reverse-fold"></a>
+```scheme { linenos=true, linenostart=1 }
 <<fold-compat>>
 (define (reverse-fr sequence)
   (fold-right (lambda (x y)
@@ -10826,8 +8993,9 @@ Now to the problem.
   (fold-left (lambda (x y)
                (append (list x) y))
              '() sequence))
-#+END_SRC
-#+BEGIN_SRC scheme -n :eval no-export :results output
+```
+
+```scheme { linenos=true, linenostart=1 }
 (load "mattcheck2.scm")
 <<reverse-fold>>
 (let ((l (iota 5))
@@ -10838,44 +9006,39 @@ Now to the problem.
   (mattcheck "reverse-fl"
              (reverse-fl l)
              lr))
-#+END_SRC
+```
 
-#+RESULTS[9c46803977b5337a2f802d5a3b2974e694a6f184]:
-#+begin_EXAMPLE
+```text
 SUCCEED at reverse-fr
 SUCCEED at reverse-fl
-#+end_EXAMPLE
+```
 
-** Exercise 2.40: ~unique-pairs~
-:PROPERTIES:
-:ID:       8fbcce71-99a3-4265-9e3c-4edee2d0c972
-:CUSTOM-ID: 8fbcce71-99a3-4265-9e3c-4edee2d0c972
-:END:
 
-*** Text Definitions
-:PROPERTIES:
-:ID:       04c72f6b-beb5-4008-8e30-e706e318a5b3
-:CUSTOM-ID: 04c72f6b-beb5-4008-8e30-e706e318a5b3
-:END:
-#+NAME: enumerate-interval
-#+BEGIN_SRC scheme -n :eval no-export :results silent
+### <span class="section-num">3.45</span> Exercise 2.40: `unique-pairs` {#exercise-2-dot-40-unique-pairs}
+
+
+#### <span class="section-num">3.45.1</span> Text Definitions {#text-definitions}
+
+<a id="code-snippet--enumerate-interval"></a>
+```scheme { linenos=true, linenostart=1 }
 (define (enumerate-interval low high)
   (if (> low high)
       '()
-      (cons low 
-            (enumerate-interval 
-             (+ low 1) 
+      (cons low
+            (enumerate-interval
+             (+ low 1)
              high))))
-#+END_SRC
+```
 
-#+NAME: flatmap
-#+BEGIN_SRC scheme -n :eval no-export :results silent
+<a id="code-snippet--flatmap"></a>
+```scheme { linenos=true, linenostart=1 }
 <<fold-compat>>
 (define (flatmap proc seq)
   (accumulate append '() (map proc seq)))
-#+END_SRC
-#+NAME: prime-sum-txt
-#+BEGIN_SRC scheme -n :eval no-export :results silent
+```
+
+<a id="code-snippet--prime-sum-txt"></a>
+```scheme { linenos=true, linenostart=1 }
 <<flatmap>>
 <<enumerate-interval>>
 <<prime-smallest-divisor>>
@@ -10890,29 +9053,21 @@ SUCCEED at reverse-fl
                              (map (lambda (j) (list i j))
                                   (enumerate-interval 1 (- i 1))))
                            (enumerate-interval 1 n)))))
-#+END_SRC
+```
 
-*** Question
-:PROPERTIES:
-:ID:       5b21dfdd-eb13-4cec-ae85-79eb0d3fbcf3
-:CUSTOM-ID: 5b21dfdd-eb13-4cec-ae85-79eb0d3fbcf3
-:END:
 
-#+begin_quote
-Define a procedure src_scheme{unique-pairs} that, given an integer \(n\),
-generates the sequence of pairs \((i, j)\) with \(1 \le j < i \le n\). Use
-src_scheme{unique-pairs} to simplify the definition of
-src_scheme{prime-sum-pairs} given above.
-#+end_quote
+#### <span class="section-num">3.45.2</span> Question {#question}
 
-*** Answer
-:PROPERTIES:
-:ID:       f5dfcaf8-f191-4701-9807-6962df851c3e
-:CUSTOM-ID: f5dfcaf8-f191-4701-9807-6962df851c3e
-:END:
+> Define a procedure <span class="inline-src language-scheme" data-lang="scheme">`unique-pairs`</span> that, given an integer \\(n\\),
+> generates the sequence of pairs \\((i, j)\\) with \\(1 \le j < i \le n\\). Use
+> <span class="inline-src language-scheme" data-lang="scheme">`unique-pairs`</span> to simplify the definition of
+> <span class="inline-src language-scheme" data-lang="scheme">`prime-sum-pairs`</span> given above.
 
-#+NAME: unique-pairs
-#+BEGIN_SRC scheme -n :eval no-export :results silent
+
+#### <span class="section-num">3.45.3</span> Answer {#answer}
+
+<a id="code-snippet--unique-pairs"></a>
+```scheme { linenos=true, linenostart=1 }
 <<fold-compat>>
 <<enumerate-interval>>
 <<flatmap>>
@@ -10922,8 +9077,9 @@ src_scheme{prime-sum-pairs} given above.
      (map (lambda (j) (list i j))
           (enumerate-interval 1 (- i 1))))
    (enumerate-interval 1 n)))
-#+END_SRC
-#+BEGIN_SRC scheme -n :eval no-export :results output
+```
+
+```scheme { linenos=true, linenostart=1 }
 (load "mattcheck2.scm")
 <<unique-pairs>>
 (let ((target 5)
@@ -10945,40 +9101,28 @@ src_scheme{prime-sum-pairs} given above.
   (mattcheck "prime-sum-pairs with unique-pairs"
              (prime-sum-pairs-mine 5)
              answer))
-#+END_SRC
+```
 
-#+RESULTS[988b22bf9eb3b02ea8f747d85a86683cd6fb86a2]:
-#+begin_EXAMPLE
+```text
 SUCCEED at unique-pairs
 SUCCEED at prime-sum-pairs with unique-pairs
-#+end_EXAMPLE
+```
 
-** Exercise 2.41: Ordered triples of positive integers
-:PROPERTIES:
-:ID:       f29f74e9-e2a6-4af9-b885-4c5ec0b4253f
-:CUSTOM-ID: f29f74e9-e2a6-4af9-b885-4c5ec0b4253f
-:END:
 
-*** Question
-:PROPERTIES:
-:ID:       5c6311c9-709f-4703-b1e4-a225f64e9312
-:CUSTOM-ID: 5c6311c9-709f-4703-b1e4-a225f64e9312
-:END:
+### <span class="section-num">3.46</span> Exercise 2.41: Ordered triples of positive integers {#exercise-2-dot-41-ordered-triples-of-positive-integers}
 
-#+begin_quote
-Write a procedure to find all ordered triples of distinct positive integers
-\(i\), \(j\), and \(k\) less than or equal to a given integer \(n\) that sum to
-a given integer \(s\).
-#+end_quote
 
-*** Answer
-:PROPERTIES:
-:ID:       865a33a4-b121-43e1-b16f-25de2c1d4897
-:CUSTOM-ID: 865a33a4-b121-43e1-b16f-25de2c1d4897
-:END:
+#### <span class="section-num">3.46.1</span> Question {#question}
 
-#+NAME: unique-triplets
-#+BEGIN_SRC scheme -n :eval no-export :results silent
+> Write a procedure to find all ordered triples of distinct positive integers
+> \\(i\\), \\(j\\), and \\(k\\) less than or equal to a given integer \\(n\\) that sum to
+> a given integer \\(s\\).
+
+
+#### <span class="section-num">3.46.2</span> Answer {#answer}
+
+<a id="code-snippet--unique-triplets"></a>
+```scheme { linenos=true, linenostart=1 }
 <<fold-compat>>
 <<enumerate-interval>>
 <<flatmap>>
@@ -10989,17 +9133,17 @@ a given integer \(s\).
                              (enumerate-interval 1 (- j 1))))
                       (enumerate-interval 1 (- i 1))))
            (enumerate-interval 1 n)))
-#+END_SRC
+```
 
-#+NAME: triplets-sum
-#+BEGIN_SRC scheme -n :eval no-export :results silent
+<a id="code-snippet--triplets-sum"></a>
+```scheme { linenos=true, linenostart=1 }
 (define (triplets-sum n s)
   (filter (lambda(triplet)
             (= s (fold + 0 triplet)))
           (unique-triplets n)))
-#+END_SRC
+```
 
-#+BEGIN_SRC scheme -n :eval no-export :results output
+```scheme { linenos=true, linenostart=1 }
 (load "mattcheck2.scm")
 <<unique-triplets>>
 <<triplets-sum>>
@@ -11018,33 +9162,24 @@ a given integer \(s\).
   (mattcheck "triplets-sum"
              (triplets-sum 7 10)
              answer-b))
-#+END_SRC
+```
 
-#+RESULTS[9df032ed4872a86df8c5b51fbdf014c1aaf32a66]:
-#+begin_EXAMPLE
+```text
 SUCCEED at unique-triplets
 SUCCEED at triplets-sum
-#+end_EXAMPLE
+```
 
-** Exercise 2.42: Eight Queens
-:PROPERTIES:
-:ID:       db842530-7a5d-4f0f-af80-0dd4c2e115f7
-:CUSTOM-ID: db842530-7a5d-4f0f-af80-0dd4c2e115f7
-:END:
 
-*** Question
-:PROPERTIES:
-:ID:       67862610-e761-4def-9374-735130432089
-:CUSTOM-ID: 67862610-e761-4def-9374-735130432089
-:END:
+### <span class="section-num">3.47</span> Exercise 2.42: Eight Queens {#exercise-2-dot-42-eight-queens}
 
-#+begin_quote
-The ``eight-queens puzzle'' asks how to place eight queens on a chessboard so
-that no queen is in check from any other.
-#+end_quote
 
-#+NAME: queens-txt
-#+begin_src scheme -n :eval no-export :results silent
+#### <span class="section-num">3.47.1</span> Question {#question}
+
+> The \`\`eight-queens puzzle'' asks how to place eight queens on a chessboard so
+> that no queen is in check from any other.
+
+<a id="code-snippet--queens-txt"></a>
+```scheme { linenos=true, linenostart=1 }
 <<flatmap>>
 <<enumerate-interval>>
 (define (queens board-size)
@@ -11061,28 +9196,24 @@ that no queen is in check from any other.
                  (enumerate-interval 1 board-size)))
           (queen-cols (- k 1))))))
   (queen-cols board-size))
-#+end_src
+```
 
-#+begin_quote
-Complete the program by writing the following:
-- representation for sets of board positions, including:
-  - src_scheme{adjoin-position}, which adjoins a new row-column position to a
-    set of positions
-  - src_scheme{empty-board}, which represents an empty set of positions.
-- src_scheme{safe?}, which determines for a set of positions, whether the queen
-  in the \(k^{\mathrm{th}}\) column is safe with respect to the others. (Note
-  that we need only check whether the new queen is safe---the other queens are
-  already guaranteed safe with respect to each other.)
-#+end_quote
+> Complete the program by writing the following:
+>
+> -   representation for sets of board positions, including:
+>     -   <span class="inline-src language-scheme" data-lang="scheme">`adjoin-position`</span>, which adjoins a new row-column position to a
+>         set of positions
+>     -   <span class="inline-src language-scheme" data-lang="scheme">`empty-board`</span>, which represents an empty set of positions.
+> -   <span class="inline-src language-scheme" data-lang="scheme">`safe?`</span>, which determines for a set of positions, whether the queen
+>     in the \\(k^{\mathrm{th}}\\) column is safe with respect to the others. (Note
+>     that we need only check whether the new queen is safe---the other queens are
+>     already guaranteed safe with respect to each other.)
 
-*** Answer
-:PROPERTIES:
-:ID:       3de2fa03-7508-4172-b9c3-aba6d64818ac
-:CUSTOM-ID: 3de2fa03-7508-4172-b9c3-aba6d64818ac
-:END:
 
-#+NAME: queens-mine
-#+begin_src scheme -n :eval no-export :results silent
+#### <span class="section-num">3.47.2</span> Answer {#answer}
+
+<a id="code-snippet--queens-mine"></a>
+```scheme { linenos=true, linenostart=1 }
 (define empty-board '())
 (define (adjoin-position new-row column rest-of-queens)
   (cons (list new-row column) rest-of-queens))
@@ -11107,8 +9238,9 @@ Complete the program by writing the following:
                (not (or (same-row? new pos)
                    (diagonal? new pos))))
              compare)))
-#+END_SRC
-#+BEGIN_SRC scheme -n :eval no-export :results output
+```
+
+```scheme { linenos=true, linenostart=1 }
 <<queens-txt>>
 <<queens-mine>>
 (load "mattcheck2.scm")
@@ -11119,62 +9251,48 @@ Complete the program by writing the following:
              (list (queens 4)
                    (length (queens 11)))
              (list q4 q11l)))
-#+END_SRC
+```
 
-#+RESULTS[2dd4171d68897629f5da1e8105a84caae4816775]:
-#+begin_EXAMPLE
+```text
 SUCCEED at queens
-#+end_EXAMPLE
+```
 
-** Exercise 2.43: Louis' ~queens~
-:PROPERTIES:
-:ID:       994c8401-9a1a-434e-8d78-3742c0c9d522
-:CUSTOM-ID: 994c8401-9a1a-434e-8d78-3742c0c9d522
-:END:
 
-*** Question
-:PROPERTIES:
-:ID:       787321bd-b16a-4c95-a19e-d42b2c8aa1fa
-:CUSTOM-ID: 787321bd-b16a-4c95-a19e-d42b2c8aa1fa
-:END:
+### <span class="section-num">3.48</span> Exercise 2.43: Louis' `queens` {#exercise-2-dot-43-louis-queens}
 
-#+begin_quote
-Louis Reasoner is having a terrible time doing Exercise 2.42. His
-src_scheme{queens} procedure seems to work, but it runs extremely slowly. (Louis
-never does manage to wait long enough for it to solve even the \(6\times6\)
-case.) When Louis asks Eva Lu Ator for help, she points out that he has
-interchanged the order of the nested mappings in the src_scheme{flatmap},
-writing it as
-#+end_quote
 
-#+BEGIN_SRC scheme
+#### <span class="section-num">3.48.1</span> Question {#question}
+
+> Louis Reasoner is having a terrible time doing Exercise 2.42. His
+> <span class="inline-src language-scheme" data-lang="scheme">`queens`</span> procedure seems to work, but it runs extremely slowly. (Louis
+> never does manage to wait long enough for it to solve even the \\(6\times6\\)
+> case.) When Louis asks Eva Lu Ator for help, she points out that he has
+> interchanged the order of the nested mappings in the <span class="inline-src language-scheme" data-lang="scheme">`flatmap`</span>,
+> writing it as
+
+```scheme
 (flatmap
  (lambda (new-row)
    (map (lambda (rest-of-queens)
           (adjoin-position new-row k rest-of-queens))
         (queen-cols (- k 1))))
  (enumerate-interval 1 board-size))
-#+END_SRC
+```
 
-#+begin_quote
-Explain why this interchange makes the program run slowly. Estimate how long it
-will take Louis's program to solve the eight-queens puzzle, assuming that the
-program in Exercise 2.42 solves the puzzle in time \(T\).
-#+end_quote
+> Explain why this interchange makes the program run slowly. Estimate how long it
+> will take Louis's program to solve the eight-queens puzzle, assuming that the
+> program in Exercise 2.42 solves the puzzle in time \\(T\\).
 
-*** Answer
-:PROPERTIES:
-:ID:       ac70f63f-d952-469a-9127-2d943557b879
-:CUSTOM-ID: ac70f63f-d952-469a-9127-2d943557b879
-:END:
+
+#### <span class="section-num">3.48.2</span> Answer {#answer}
 
 The biggest contributor to the slowdown is likely the location of the
-src_scheme{queen-cols} recursive call. This call being inside of the loop means
-it is being called \(k\) more times, all returning the same answer. But my math reasoning skills limit me from going further .Let's check
+<span class="inline-src language-scheme" data-lang="scheme">`queen-cols`</span> recursive call. This call being inside of the loop means
+it is being called \\(k\\) more times, all returning the same answer. But my math reasoning skills limit me from going further .Let's check
 with benchmarks.
 
-#+NAME: queens-benched
-#+begin_src scheme -n :eval no-export :results silent :tangle 2/Ex43.scheme
+<a id="code-snippet--queens-benched"></a>
+```scheme { linenos=true, linenostart=1 }
 <<queens-txt>>
 <<queens-mine>>
 (load "../mattbench.scm")
@@ -11202,10 +9320,9 @@ with benchmarks.
 (map (lambda(n)
        (test n))
      (enumerate-interval 5 8))
-#+END_SRC
+```
 
-#+RESULTS[d2fc9e1933fd0086e5c7eda60b5d215be3f45878]: queens-benched
-#+begin_EXAMPLE
+```text
 normal queens x5: 135424.6151
 swapped queens x5: 5487381.643
 normal queens x6: 538798.604
@@ -11214,91 +9331,53 @@ normal queens x7: 2210394.5659
 swapped queens x7: 1255288880.717
 normal queens x8: 8067290.5992
 swapped queens x8: 25384464494.259
-#+end_EXAMPLE
+```
 
-#+NAME: queensdata
-#+BEGIN_SRC scheme -n :eval no-export :results value table :exports none
-(list (list "size k" "normal time" "louis time")
-      (list 5 135424.6151 5487381.643)
-      (list 6 538798.604 85704466.218)
-      (list 7 2210394.5659 1255288880.717)
-      (list 8 8067290.5992 25384464494.259))
-#+END_SRC
-
-#+RESULTS[38434fb32a1c58a40c63a971c290754ea66b0363]: queensdata
-| size k |  normal time |      louis time |
-|      5 |  135424.6151 |     5487381.643 |
-|      6 |   538798.604 |    85704466.218 |
-|      7 | 2210394.5659 |  1255288880.717 |
-|      8 | 8067290.5992 | 25384464494.259 |
-
-#+begin_src gnuplot :var data=queensdata :file 2/fig/2-43.png :exports results :rownames no :colnames no :hlines no :cache no :eval no-export :session nil
-reset
-set key autotitle columnheader
-set logscale y
-set xlabel 'time taken'
-#set xtics (2, 4, 8, 16, 24, 32, 36, 49, 64)
-set ylabel 'size k'
-set title 'time taken for queens board size k'
-
-plot data using 2:xticlabels(1) with linespoints, \
-     data using 3:xticlabels(1) with linespoints
-#+end_src
-
-#+RESULTS:
-:results:
-[[file:2/fig/2-43.png]]
-:end:
+{{< figure src="/ox-hugo/2-43.png" >}}
 
 So that's 40 times worse at 5x5, 159 times worse at 6x6, 568 times worse at 7x7,
 and 3146 times at 8x8.
 
-after checking online with posts like this one [fn::
-https://wernerdegroot.wordpress.com/2015/08/01/sicp-exercise-2-43/] It looks
-like the big-O notation could be considered \(\Theta((N^N)*T)\) at its simplest.
+after checking online with posts like this one&nbsp;[^fn:3] It looks
+like the big-O notation could be considered \\(\Theta((N^N)\*T)\\) at its simplest.
 I don't have a good grasp on how to reason out the time complexity of a
 non-trivial algorithm. I aim to eventually do "How to Solve It" and "How to
 Prove It" and possibly that will fill in the missing gaps before trying more
 serious comp-sci literature.
 
-** 2.2.4: Example: A Picture Language
-:PROPERTIES:
-:ID:       8588fd65-1b81-43b8-855f-4fed731fb88f
-:CUSTOM-ID: 8588fd65-1b81-43b8-855f-4fed731fb88f
-:END:
+
+### <span class="section-num">3.49</span> 2.2.4: Example: A Picture Language {#2-dot-2-dot-4-example-a-picture-language}
 
 Authors describe a possible implementation of a "picture language" that tiles,
 patterns, and warps images according to a specification. This language consists
 of:
 
-- a *painter* which makes an image within a specified parallelogram shaped
-  frame. This is the most primitive element.
-- *Operations* which make new painters from other painters. For example:
-  - /beside/ takes two painters, producing a new painter that puts one in the
-    left half and one in the right half.
-  - /flip-horiz/ takes one painter and produces another to draw its image
-    right-to-left reversed. These are defined as Scheme procedures and therefore
-    have all the properties of Scheme procedures.   
+-   a **painter** which makes an image within a specified parallelogram shaped
+    frame. This is the most primitive element.
+-   **Operations** which make new painters from other painters. For example:
+    -   _beside_ takes two painters, producing a new painter that puts one in the
+        left half and one in the right half.
+    -   _flip-horiz_ takes one painter and produces another to draw its image
+        right-to-left reversed. These are defined as Scheme procedures and therefore
+        have all the properties of Scheme procedures.
 
 I'm going to have to get a little messy in order to make the picture language a
-reality. First I need a support library called [[https://git.elephly.net/gitweb.cgi?p=software/guile-picture-language.git;a=blob;f=pict.scm;h=54f0ce09f4ac33c3ecc3340f038d4c9da5f4a443;hb=HEAD][guile-picture-language]][fn:: https://git.elephly.net/gitweb.cgi?p=software/guile-picture-language.git;a=blob;f=pict.scm;h=54f0ce09f4ac33c3ecc3340f038d4c9da5f4a443;hb=HEAD] I
-installed Guix on my system and ran src_bash{guix shell guile-picture-language
-guile}. Now the src_scheme{pict} module is availale to me.
+reality. First I need a support library called [guile-picture-language](https://git.elephly.net/gitweb.cgi?p=software/guile-picture-language.git;a=blob;f=pict.scm;h=54f0ce09f4ac33c3ecc3340f038d4c9da5f4a443;hb=HEAD)[^fn:4] I
+installed Guix on my system and ran <span class="inline-src language-bash" data-lang="bash">`guix shell guile-picture-language guile`</span>. Now the <span class="inline-src language-scheme" data-lang="scheme">`pict`</span> module is availale to me.
 
-#+BEGIN_SRC scheme -n :eval no-export :results value
+```scheme { linenos=true, linenostart=1 }
 (use-modules (pict))
 (pict->file (triangle 50 70)
            "2/pict/test.svg")
-#+END_SRC
+```
 
-#+RESULTS[82505b44829f47d4c32c3a57ede30655376e2a61]:
-[[file:2/pict/test.png]]
+{{< figure src="/ox-hugo/test.png" >}}
 
 So that works.
 
 How about this?
 
-#+BEGIN_SRC scheme -n :eval no-export :results value
+```scheme { linenos=true, linenostart=1 }
 (use-modules (pict))
 (let* ((p (pict-from-file "2/pict/Potato.png"))
        (pr (rotate p 180)))
@@ -11306,17 +9385,16 @@ How about this?
  (scale (ht-append (vl-append pr p) pr p (vc-append pr p))
         0.5)
  "2/pict/Rotato.svg")) ;; must be SVG
-#+END_SRC
+```
 
-#+RESULTS[cec397842ea51d3c519277b4aadef5d922398749]:
-file:2/pict/Rotato.png
+{{< figure src="/ox-hugo/Rotato.png" >}}
 
 And I just realized there's no flip/mirror function in this library. Racket's
 picture language is more complete, but it won't integrate with org-mode how I
 need. Maybe I can mock up a text-based version, similar to the binary mobile,
 and simultaneously check my work with Racket.
 
-#+BEGIN_SRC scheme -n :eval no-export :results value
+```scheme { linenos=true, linenostart=1 }
 ;; tilting at windmills trying to make a text-only picture language
 ;; TODO, probably won't finish
 (define pl-defaultsize 32)
@@ -11351,102 +9429,74 @@ and simultaneously check my work with Racket.
   (hc-append a b))
 (define (below a b)
   (vc-append a b))
-#+END_SRC
+```
 
 
-** Exercise 2.44: ~up-split~
-:PROPERTIES:
-:ID:       dde0ab90-49dd-4d62-9e6b-c636959c20c6
-:CUSTOM-ID: dde0ab90-49dd-4d62-9e6b-c636959c20c6
-:END:
+### <span class="section-num">3.50</span> Exercise 2.44: `up-split` {#exercise-2-dot-44-up-split}
 
-*** Text Definitions
-:PROPERTIES:
-:ID:       b0a64d21-e7fc-4ef6-a374-26741e1d5303
-:CUSTOM-ID: b0a64d21-e7fc-4ef6-a374-26741e1d5303
-:END:
 
-#+BEGIN_SRC scheme -n :eval no-export :results silent
+#### <span class="section-num">3.50.1</span> Text Definitions {#text-definitions}
+
+```scheme { linenos=true, linenostart=1 }
 (define (right-split painter n)
   (if (= n 0)
       painter
-      (let ((smaller (right-split painter 
+      (let ((smaller (right-split painter
                                   (- n 1))))
-        (beside painter 
+        (beside painter
                 (below smaller smaller)))))
-#+END_SRC
+```
 
-*** Question
-:PROPERTIES:
-:ID:       d54717c6-0e99-42ef-a5db-a2405bb849bf
-:CUSTOM-ID: d54717c6-0e99-42ef-a5db-a2405bb849bf
-:END:
 
-#+begin_quote
-Define the procedure src_scheme{up-split} used by src_scheme{corner-split}. It
-is similar to src_scheme{right-split}, except that it switches the roles of
-src_scheme{below} and src_scheme{beside}.
-#+end_quote
+#### <span class="section-num">3.50.2</span> Question {#question}
 
-*** Answer
-:PROPERTIES:
-:ID:       6bd6c390-e052-420a-9b0e-67389c884b1b
-:CUSTOM-ID: 6bd6c390-e052-420a-9b0e-67389c884b1b
-:END:
+> Define the procedure <span class="inline-src language-scheme" data-lang="scheme">`up-split`</span> used by <span class="inline-src language-scheme" data-lang="scheme">`corner-split`</span>. It
+> is similar to <span class="inline-src language-scheme" data-lang="scheme">`right-split`</span>, except that it switches the roles of
+> <span class="inline-src language-scheme" data-lang="scheme">`below`</span> and <span class="inline-src language-scheme" data-lang="scheme">`beside`</span>.
 
-#+BEGIN_SRC scheme -n :eval no-export :results silent
+
+#### <span class="section-num">3.50.3</span> Answer {#answer}
+
+```scheme { linenos=true, linenostart=1 }
 (define (up-split painter n)
   (if (= n 0)
       painter
-      (let ((smaller (up-split painter 
+      (let ((smaller (up-split painter
                                (- n 1))))
-        (below painter 
+        (below painter
                (beside smaller smaller)))))
-#+END_SRC
+```
 
-** Exercise 2.45: Generalized splitting
-:PROPERTIES:
-:ID:       1450bd14-52fd-45d6-b249-868093976032
-:CUSTOM-ID: 1450bd14-52fd-45d6-b249-868093976032
-:END:
 
-*** Question
-:PROPERTIES:
-:ID:       3f151d8e-b88e-42cd-a812-c87e13529dd9
-:CUSTOM-ID: 3f151d8e-b88e-42cd-a812-c87e13529dd9
-:END:
+### <span class="section-num">3.51</span> Exercise 2.45: Generalized splitting {#exercise-2-dot-45-generalized-splitting}
 
-#+begin_quote
-src_scheme{right-split} and src_scheme{up-split} can be expressed as instances
-of a general splitting operation. Define a procedure src_scheme{split} with the
-property that evaluating
-#+end_quote
 
-#+BEGIN_SRC scheme -n :eval no-export :results silent
+#### <span class="section-num">3.51.1</span> Question {#question}
+
+> <span class="inline-src language-scheme" data-lang="scheme">`right-split`</span> and <span class="inline-src language-scheme" data-lang="scheme">`up-split`</span> can be expressed as instances
+> of a general splitting operation. Define a procedure <span class="inline-src language-scheme" data-lang="scheme">`split`</span> with the
+> property that evaluating
+
+```scheme { linenos=true, linenostart=1 }
 (define right-split (split beside below))
 (define up-split (split below beside))
-#+END_SRC
+```
 
-#+begin_quote
-produces procedures src_scheme{right-split} and src_scheme{up-split} with the
-same behaviors as the ones already defined.
-#+end_quote
+> produces procedures <span class="inline-src language-scheme" data-lang="scheme">`right-split`</span> and <span class="inline-src language-scheme" data-lang="scheme">`up-split`</span> with the
+> same behaviors as the ones already defined.
 
-*** Answer
-:PROPERTIES:
-:ID:       cf4b601e-6eb1-4c46-a2b6-c89279497b13
-:CUSTOM-ID: cf4b601e-6eb1-4c46-a2b6-c89279497b13
-:END:
 
-#+NAME: splits-generalized
-#+BEGIN_SRC scheme -n :eval no-export :results silent
+#### <span class="section-num">3.51.2</span> Answer {#answer}
+
+<a id="code-snippet--splits-generalized"></a>
+```scheme { linenos=true, linenostart=1 }
 (define (split f1 f2)
   (define (rec painter n)
     (if (= n 0)
         painter
-        (let ((smaller (rec painter 
+        (let ((smaller (rec painter
                             (- n 1))))
-          (f1 painter 
+          (f1 painter
               (f2 smaller smaller)))))
   rec)
 (define right-split (split beside below))
@@ -11455,62 +9505,53 @@ same behaviors as the ones already defined.
 (define (up-split painter n)
   (if (= n 0)
       painter
-      (let ((smaller (up-split painter 
+      (let ((smaller (up-split painter
                                (- n 1))))
-        (below painter 
+        (below painter
                (beside smaller smaller)))))
-#+END_SRC
+```
 
-** Exercise 2.46: Defining vectors
-:PROPERTIES:
-:ID:       cfdbca96-f763-4b61-9823-bd3363e0b385
-:CUSTOM-ID: cfdbca96-f763-4b61-9823-bd3363e0b385
-:END:
 
-*** Question
-:PROPERTIES:
-:ID:       eb5879a3-09a1-4819-9fc7-c2acd2c0f9e2
-:CUSTOM-ID: eb5879a3-09a1-4819-9fc7-c2acd2c0f9e2
-:END:
+### <span class="section-num">3.52</span> Exercise 2.46: Defining vectors {#exercise-2-dot-46-defining-vectors}
 
-#+begin_quote
-A two-dimensional vector \(\hbox{\bf v}\) running from the origin to a point can
-be represented as a pair consisting of an \(x\)-coordinate and a
-\(y\)-coordinate. Implement a data abstraction for vectors by giving a
-constructor src_scheme{make-vect} and corresponding selectors
-src_scheme{xcor-vect} and src_scheme{ycor-vect}. In terms of your selectors and
-constructor, implement procedures src_scheme{add-vect}, src_scheme{sub-vect},
-and src_scheme{scale-vect} that perform the operations vector addition, vector
-subtraction, and multiplying a vector by a scalar:
 
-\[
-\begin{array}{r@{{}={}}l}
-	(x_1, y_1) + (x_2, y_2) 	& (x_1 + x_2, y_1 + y_2), \\
-	(x_1, y_1) - (x_2, y_2) 	& (x_1 - x_2, y_1 - y_2), \\
-	s \cdot (x, y) 			& (sx, sy).
-\end{array}
-\]
-#+end_quote
+#### <span class="section-num">3.52.1</span> Question {#question}
 
-*** Answer
-:PROPERTIES:
-:ID:       75604738-82fe-47e9-ac83-889e2fa8bd7d
-:CUSTOM-ID: 75604738-82fe-47e9-ac83-889e2fa8bd7d
-:END:
+> A two-dimensional vector \\(\hbox{\bf v}\\) running from the origin to a point can
+> be represented as a pair consisting of an \\(x\\)-coordinate and a
+> \\(y\\)-coordinate. Implement a data abstraction for vectors by giving a
+> constructor <span class="inline-src language-scheme" data-lang="scheme">`make-vect`</span> and corresponding selectors
+> <span class="inline-src language-scheme" data-lang="scheme">`xcor-vect`</span> and <span class="inline-src language-scheme" data-lang="scheme">`ycor-vect`</span>. In terms of your selectors and
+> constructor, implement procedures <span class="inline-src language-scheme" data-lang="scheme">`add-vect`</span>, <span class="inline-src language-scheme" data-lang="scheme">`sub-vect`</span>,
+> and <span class="inline-src language-scheme" data-lang="scheme">`scale-vect`</span> that perform the operations vector addition, vector
+> subtraction, and multiplying a vector by a scalar:
+>
+> $$
+>
+> \begin{array}{r@{{}={}}l}
+> 	(x\_1, y\_1) + (x\_2, y\_2) 	& (x\_1 + x\_2, y\_1 + y\_2), \\\\
+> 	(x\_1, y\_1) - (x\_2, y\_2) 	& (x\_1 - x\_2, y\_1 - y\_2), \\\\
+> 	s \cdot (x, y) 			& (sx, sy).
+> \end{array}
+>
+> $$
 
-This is pretty close to the src_scheme{make-point} work done in Exercise 2.2, as well as my 2nd implementation of a rectangle in Exercise 2.3. Let's start there. Also, /aren't these points and not vectors since they don't have direction??/
 
-#+NAME: force-float
-#+BEGIN_SRC scheme -n :eval no-export :results silent
+#### <span class="section-num">3.52.2</span> Answer {#answer}
+
+This is pretty close to the <span class="inline-src language-scheme" data-lang="scheme">`make-point`</span> work done in Exercise 2.2, as well as my 2nd implementation of a rectangle in Exercise 2.3. Let's start there. Also, _aren't these points and not vectors since they don't have direction??_
+
+<a id="code-snippet--force-float"></a>
+```scheme { linenos=true, linenostart=1 }
 ;; Guarentee x is a float
 (define (float x)
   (if (inexact? x)
       x
       (exact->inexact x)))
-#+end_src
+```
 
-#+NAME: make-vect
-#+BEGIN_SRC scheme -n :eval no-export :results silent
+<a id="code-snippet--make-vect"></a>
+```scheme { linenos=true, linenostart=1 }
 <<force-float>>
 (define (make-vect x y)
   (cons (float x)
@@ -11532,48 +9573,35 @@ This is pretty close to the src_scheme{make-point} work done in Exercise 2.2, as
 (define (scale-vect s v)
   (make-vect (* s (xcor-vect v))
              (* s (ycor-vect v))))
-#+end_src
+```
 
-I originally got the definition for src_scheme{scale-vect} wrong by making it
-src_scheme{(scale v s)}, then modified src_scheme{frame-coord-map} when that
-broke. I realized my mistake once I went to write src_scheme{beside}.
+I originally got the definition for <span class="inline-src language-scheme" data-lang="scheme">`scale-vect`</span> wrong by making it
+<span class="inline-src language-scheme" data-lang="scheme">`(scale v s)`</span>, then modified <span class="inline-src language-scheme" data-lang="scheme">`frame-coord-map`</span> when that
+broke. I realized my mistake once I went to write <span class="inline-src language-scheme" data-lang="scheme">`beside`</span>.
 
-** Exercise 2.47: Defining frames
-:PROPERTIES:
-:ID:       eedeb3cf-97f6-4e91-8914-6308ad182504
-:CUSTOM-ID: eedeb3cf-97f6-4e91-8914-6308ad182504
-:END:
 
-*** Question
-:PROPERTIES:
-:ID:       0017b75c-f2c6-411e-94d7-8bdb8c2de92c
-:CUSTOM-ID: 0017b75c-f2c6-411e-94d7-8bdb8c2de92c
-:END:
+### <span class="section-num">3.53</span> Exercise 2.47: Defining frames {#exercise-2-dot-47-defining-frames}
 
-#+begin_quote
-Here are two possible
-constructors for frames:
-#+end_quote
 
-#+BEGIN_SRC scheme -n
+#### <span class="section-num">3.53.1</span> Question {#question}
+
+> Here are two possible
+> constructors for frames:
+
+```scheme { linenos=true, linenostart=1 }
 (define (make-frame origin edge1 edge2)
   (list origin edge1 edge2))
 (define (make-frame origin edge1 edge2)
   (cons origin (cons edge1 edge2)))
-#+END_SRC
+```
 
-#+begin_quote
-For each constructor supply the appropriate selectors to produce an
-implementation for frames.
-#+end_quote
+> For each constructor supply the appropriate selectors to produce an
+> implementation for frames.
 
-*** Answer
-:PROPERTIES:
-:ID:       2465aa1f-271c-4a42-9b82-d9d838efc061
-:CUSTOM-ID: 2465aa1f-271c-4a42-9b82-d9d838efc061
-:END:
 
-#+BEGIN_SRC scheme -n
+#### <span class="section-num">3.53.2</span> Answer {#answer}
+
+```scheme { linenos=true, linenostart=1 }
 (define (make-frame origin edge1 edge2)
   (list origin edge1 edge2))
 (define (origin-frame F)
@@ -11582,9 +9610,10 @@ implementation for frames.
   (cadr F))
 (define (edge2-frame F)
   (caddr F))
-#+END_SRC
-#+NAME: make-frame
-#+BEGIN_SRC scheme -n :eval no-export :results silent
+```
+
+<a id="code-snippet--make-frame"></a>
+```scheme { linenos=true, linenostart=1 }
 (define (make-frame origin edge1 edge2)
   (cons origin (cons edge1 edge2)))
 (define (origin-frame F)
@@ -11593,66 +9622,49 @@ implementation for frames.
   (cadr F))
 (define (edge2-frame F)
   (cddr F))
-#+END_SRC
+```
 
-** Exercise 2.48: Line segments
-:PROPERTIES:
-:ID:       d4e49e3e-ec42-470a-a1ca-903715953a43
-:CUSTOM-ID: d4e49e3e-ec42-470a-a1ca-903715953a43
-:END:
 
-*** Question
-:PROPERTIES:
-:ID:       d1775142-e3ba-4227-a2e9-950de381ae0c
-:CUSTOM-ID: d1775142-e3ba-4227-a2e9-950de381ae0c
-:END:
+### <span class="section-num">3.54</span> Exercise 2.48: Line segments {#exercise-2-dot-48-line-segments}
 
-#+begin_quote
-A directed line segment in the plane can be represented as a pair of
-vectors---the vector running from the origin to the start-point of the segment,
-and the vector running from the origin to the end-point of the segment. Use your
-vector representation from Exercise 2.46 to define a
-representation for segments with a constructor src_scheme{make-segment} and
-selectors src_scheme{start-segment} and src_scheme{end-segment}.
-#+end_quote
 
-*** Answer
-:PROPERTIES:
-:ID:       814704f8-5858-4324-ac28-c9b43ed7e86f
-:CUSTOM-ID: 814704f8-5858-4324-ac28-c9b43ed7e86f
-:END:
+#### <span class="section-num">3.54.1</span> Question {#question}
+
+> A directed line segment in the plane can be represented as a pair of
+> vectors---the vector running from the origin to the start-point of the segment,
+> and the vector running from the origin to the end-point of the segment. Use your
+> vector representation from Exercise 2.46 to define a
+> representation for segments with a constructor <span class="inline-src language-scheme" data-lang="scheme">`make-segment`</span> and
+> selectors <span class="inline-src language-scheme" data-lang="scheme">`start-segment`</span> and <span class="inline-src language-scheme" data-lang="scheme">`end-segment`</span>.
+
+
+#### <span class="section-num">3.54.2</span> Answer {#answer}
 
 Again reminding me of Exercise 2.2.
 
-#+NAME: make-segment
-#+BEGIN_SRC scheme -n :eval no-export :results silent
+<a id="code-snippet--make-segment"></a>
+```scheme { linenos=true, linenostart=1 }
 (define (make-segment start end)
   (cons start end))
 (define (start-segment seg)
   (car seg))
 (define (end-segment seg)
   (cdr seg))
-#+END_SRC
+```
 
-** Exercise 2.49: Primitive painters
-:PROPERTIES:
-:ID:       7913c8e9-10fa-4d5d-aafc-2c87f83e8ab2
-:CUSTOM-ID: 7913c8e9-10fa-4d5d-aafc-2c87f83e8ab2
-:END:
 
-*** Text Definitions
-:PROPERTIES:
-:ID:       97444370-d19f-4b80-a39f-d707e8721801
-:CUSTOM-ID: 97444370-d19f-4b80-a39f-d707e8721801
-:END:
+### <span class="section-num">3.55</span> Exercise 2.49: Primitive painters {#exercise-2-dot-49-primitive-painters}
 
-#+NAME: segments-painter
-#+BEGIN_SRC scheme -n :eval no-export :results silent
+
+#### <span class="section-num">3.55.1</span> Text Definitions {#text-definitions}
+
+<a id="code-snippet--segments-painter"></a>
+```scheme { linenos=true, linenostart=1 }
 (define (frame-coord-map frame)
   (lambda (v)
     (add-vect
      (origin-frame frame)
-     (add-vect 
+     (add-vect
       (scale-vect (xcor-vect v)
                   (edge1-frame frame))
       (scale-vect (ycor-vect v)
@@ -11667,37 +9679,28 @@ Again reminding me of Exercise 2.2.
         ((frame-coord-map frame)
          (end-segment segment))))
      segment-list)))
-#+END_SRC
+```
 
-*** Question
-:PROPERTIES:
-:ID:       32e57911-7ed3-4844-9231-578c641a3afb
-:CUSTOM-ID: 32e57911-7ed3-4844-9231-578c641a3afb
-:END:
 
-#+begin_quote
-Use src_scheme{segments->painter}
-to define the following primitive painters:
+#### <span class="section-num">3.55.2</span> Question {#question}
 
-a. The painter that draws the outline of the designated frame.
-b. The painter that draws an =X= by connecting opposite corners of the frame.
-c. The painter that draws a diamond shape by connecting the midpoints of the
-   sides of the frame.
-d. The src_scheme{wave} painter.
-#+end_quote
+> Use <span class="inline-src language-scheme" data-lang="scheme">`segments->painter`</span>
+> to define the following primitive painters:
+>
+> 1.  The painter that draws the outline of the designated frame.
+> 2.  The painter that draws an `X` by connecting opposite corners of the frame.
+> 3.  The painter that draws a diamond shape by connecting the midpoints of the
+>     sides of the frame.
+> 4.  The <span class="inline-src language-scheme" data-lang="scheme">`wave`</span> painter.
 
-*** Answer
-:PROPERTIES:
-:ID:       be7dd3d7-02fd-437e-9476-d5eb0112c4a7
-:CUSTOM-ID: be7dd3d7-02fd-437e-9476-d5eb0112c4a7
-:END:
+
+#### <span class="section-num">3.55.3</span> Answer {#answer}
 
 In the past I would need to constantly execute my code to "see" what I'm doing.
 But I'm starting to think in larger chunks and need the feedback less.
 
-
-#+NAME: painters
-#+BEGIN_SRC scheme -n :eval no-export :results silent
+<a id="code-snippet--painters"></a>
+```scheme { linenos=true, linenostart=1 }
 <<continuous-lines>>
 (define outline
   (segments->painter (list
@@ -11725,15 +9728,16 @@ But I'm starting to think in larger chunks and need the feedback less.
                  (make-vect 0 0.5))
    (make-segment (make-vect 0 0.5)
                  (make-vect 0.5 0)))))
-#+END_SRC
+```
 
 I'll make the wave painter once I have some graph paper in front of me.
 
-Ok, how can I verify this? I guess I could rewrite src_scheme{segments->painter}
-for src_scheme{pict}. Since this isn't a drawing system with imperative
+Ok, how can I verify this? I guess I could rewrite <span class="inline-src language-scheme" data-lang="scheme">`segments->painter`</span>
+for <span class="inline-src language-scheme" data-lang="scheme">`pict`</span>. Since this isn't a drawing system with imperative
 procedures, I should make it return a list of lines to be superimposed.
-#+NAME: linepainter-pict
-#+BEGIN_SRC scheme -n :eval no-export :results silent :tangle 2/pict/linepainter.scheme
+
+<a id="code-snippet--linepainter-pict"></a>
+```scheme { linenos=true, linenostart=1 }
 (use-modules (pict))
 <<make-frame>>
 <<make-vect>>
@@ -11743,7 +9747,7 @@ procedures, I should make it return a list of lines to be superimposed.
   (lambda (v)
     (add-vect
      (origin-frame frame)
-     (add-vect 
+     (add-vect
       (scale-vect (xcor-vect v)
                   (edge1-frame frame))
       (scale-vect (ycor-vect v)
@@ -11780,47 +9784,41 @@ procedures, I should make it return a list of lines to be superimposed.
                            (make-vect 0 500))))
     (apply lt-superimpose
            (painter Frame))))
-#+END_SRC
-#+BEGIN_SRC scheme -n :eval no-export :results output
+```
+
+```scheme { linenos=true, linenostart=1 }
 <<linepainter-pict>>
 (pict->file (paint-lines diamond)
             "2/pict/testline.svg")
 ; #:maxw 100 #:maxh 100) <- FIXME: This procedure should take these arguments
 ; but I can't get it to work.
-#+END_SRC
+```
 
-#+RESULTS[1166aed3387461ead23967b3741193798eacdc6f]:
-[[file:2/pict/testline.png]]
+{{< figure src="/ox-hugo/testline.png" >}}
 
 Holy moly it actually works.
 
-** Exercise 2.50: Transforming painters
-:PROPERTIES:
-:ID:       028d6bfc-468d-4ab1-86d3-673f1a1e4e43
-:CUSTOM-ID: 028d6bfc-468d-4ab1-86d3-673f1a1e4e43
-:END:
 
-*** Text Definitions
-:PROPERTIES:
-:ID:       a6debaa2-a28d-42bd-bccc-1dc85cfc6841
-:CUSTOM-ID: a6debaa2-a28d-42bd-bccc-1dc85cfc6841
-:END:
+### <span class="section-num">3.56</span> Exercise 2.50: Transforming painters {#exercise-2-dot-50-transforming-painters}
 
-#+NAME: frame-transforms-txt
-#+BEGIN_SRC scheme -n :eval no-export :results silent
-(define (transform-painter 
+
+#### <span class="section-num">3.56.1</span> Text Definitions {#text-definitions}
+
+<a id="code-snippet--frame-transforms-txt"></a>
+```scheme { linenos=true, linenostart=1 }
+(define (transform-painter
          painter origin corner1 corner2)
   (lambda (frame)
     (let ((m (frame-coord-map frame)))
       (let ((new-origin (m origin)))
         (painter (make-frame new-origin
-                             (sub-vect (m corner1) 
+                             (sub-vect (m corner1)
                                        new-origin)
                              (sub-vect (m corner2)
                                        new-origin)))))))
 
 (define (flip-vert painter)
-  (transform-painter 
+  (transform-painter
    painter
    (make-vect 0.0 1.0)   ; new origin
    (make-vect 1.0 1.0)   ; new end of edge1
@@ -11839,7 +9837,7 @@ Holy moly it actually works.
                      (make-vect 0.35 0.65)))
 (define (beside painter1 painter2)
   (let ((split-point (make-vect 0.5 0.0)))
-    (let ((paint-left  (transform-painter 
+    (let ((paint-left  (transform-painter
                         painter1
                         (make-vect 0.0 0.0)
                         split-point
@@ -11853,27 +9851,9 @@ Holy moly it actually works.
         (append
          (paint-left frame)
          (paint-right frame))))))
-#+END_SRC
-#+BEGIN_SRC scheme -n :eval no-export :results output :exports none
-<<linepainter-pict>>
-<<frame-transforms-txt>>
-(define topleft-tri
-  (segments->painter (list
-                      (make-segment (make-vect 0 0)
-                                    (make-vect 0 0.4))
-                      (make-segment (make-vect 0 0.4)
-                                    (make-vect 0.8 0))
-                      (make-segment (make-vect 0.8 0)
-                                    (make-vect 0 0)))))
-(let ((picture topleft-tri))
-(pict->file (paint-lines picture)
-            "2/pict/tritest.svg"))
-#+END_SRC
+```
 
-#+RESULTS[3b6460ef9bcc8e250580413268114952f9769c86]:
-[[file:2/pict/tritest.png]]
-
-#+BEGIN_SRC scheme -n :eval no-export :results output
+```scheme { linenos=true, linenostart=1 }
 <<linepainter-pict>>
 <<frame-transforms-txt>>
 (define topleft-tri
@@ -11889,33 +9869,24 @@ Holy moly it actually works.
                        (rotate90 topleft-tri))))
 (pict->file (paint-lines picture)
             "2/pict/rotatetest.svg"))
-#+END_SRC
+```
 
-#+RESULTS[83fca324a30d1ea587072343d0fb160304d8cf31]:
-[[file:2/pict/rotatetest.png]]
+{{< figure src="/ox-hugo/rotatetest.png" >}}
 
-*** Question
-:PROPERTIES:
-:ID:       1f5a11df-2b2e-49e9-b301-3c84a857aced
-:CUSTOM-ID: 1f5a11df-2b2e-49e9-b301-3c84a857aced
-:END:
 
-#+begin_quote
-Define the transformation src_scheme{flip-horiz}, which flips painters
-horizontally, and transformations that rotate painters counterclockwise by 180
-degrees and 270 degrees.
-#+end_quote
+#### <span class="section-num">3.56.2</span> Question {#question}
 
-*** Answer
-:PROPERTIES:
-:ID:       985538a4-a01a-45c1-b025-68c7845c55c8
-:CUSTOM-ID: 985538a4-a01a-45c1-b025-68c7845c55c8
-:END:
+> Define the transformation <span class="inline-src language-scheme" data-lang="scheme">`flip-horiz`</span>, which flips painters
+> horizontally, and transformations that rotate painters counterclockwise by 180
+> degrees and 270 degrees.
 
-#+NAME: flip-rotate2
-#+BEGIN_SRC scheme -n :eval no-export :results silent
+
+#### <span class="section-num">3.56.3</span> Answer {#answer}
+
+<a id="code-snippet--flip-rotate2"></a>
+```scheme { linenos=true, linenostart=1 }
 (define (flip-horiz painter)
-  (transform-painter 
+  (transform-painter
    painter
    (make-vect 1.0 0.0)   ; new origin
    (make-vect 0.0 0.0)   ; new end of edge1
@@ -11931,8 +9902,9 @@ degrees and 270 degrees.
                      (make-vect 0.0 1.0)
                      (make-vect 0.0 0.0)
                      (make-vect 1.0 1.0)))
-#+END_SRC
-#+BEGIN_SRC scheme -n :eval no-export :results output
+```
+
+```scheme { linenos=true, linenostart=1 }
 <<linepainter-pict>>
 <<frame-transforms-txt>>
 <<flip-rotate2>>
@@ -11952,44 +9924,32 @@ degrees and 270 degrees.
                         (rotate270 topleft-tri)))))
   (pict->file (paint-lines picture)
               "2/pict/rotate2.svg"))
-#+END_SRC
+```
 
-#+RESULTS[942a1cdf3a5aed31c833cf37149bb4e09ea82074]:
-[[file:2/pict/rotate2.png]]
+{{< figure src="/ox-hugo/rotate2.png" >}}
 
-** Exercise 2.51
-:PROPERTIES:
-:ID:       657b9460-c0c5-4f37-9dcc-8310d828d448
-:CUSTOM-ID: 657b9460-c0c5-4f37-9dcc-8310d828d448
-:END:
 
-*** Question
-:PROPERTIES:
-:ID:       fff4a3e4-e368-4acd-aa67-5d689830761a
-:CUSTOM-ID: fff4a3e4-e368-4acd-aa67-5d689830761a
-:END:
+### <span class="section-num">3.57</span> Exercise 2.51 {#exercise-2-dot-51}
 
-#+begin_quote
-Define the src_scheme{below} operation
-for painters.  src_scheme{below} takes two painters as arguments.  The resulting
-painter, given a frame, draws with the first painter in the bottom of the frame
-and with the second painter in the top.  Define src_scheme{below} in two different
-ways---first by writing a procedure that is analogous to the src_scheme{beside}
-procedure given above, and again in terms of src_scheme{beside} and suitable
-rotation operations (from @ref{Exercise 2.50}).
-#+end_quote
 
-*** Answer
-:PROPERTIES:
-:ID:       7ceba648-533f-4a5c-9368-37de4e9cc8bf
-:CUSTOM-ID: 7ceba648-533f-4a5c-9368-37de4e9cc8bf
-:END:
+#### <span class="section-num">3.57.1</span> Question {#question}
 
-#+NAME: below
-#+BEGIN_SRC scheme -n :eval no-export :results silent
+> Define the <span class="inline-src language-scheme" data-lang="scheme">`below`</span> operation
+> for painters.  <span class="inline-src language-scheme" data-lang="scheme">`below`</span> takes two painters as arguments.  The resulting
+> painter, given a frame, draws with the first painter in the bottom of the frame
+> and with the second painter in the top.  Define <span class="inline-src language-scheme" data-lang="scheme">`below`</span> in two different
+> ways---first by writing a procedure that is analogous to the <span class="inline-src language-scheme" data-lang="scheme">`beside`</span>
+> procedure given above, and again in terms of <span class="inline-src language-scheme" data-lang="scheme">`beside`</span> and suitable
+> rotation operations (from @ref{Exercise 2.50}).
+
+
+#### <span class="section-num">3.57.2</span> Answer {#answer}
+
+<a id="code-snippet--below"></a>
+```scheme { linenos=true, linenostart=1 }
 (define (below painter1 painter2)
   (let ((split-point (make-vect 0.0 0.5)))
-    (let ((paint-left  (transform-painter 
+    (let ((paint-left  (transform-painter
                         painter1
                         (make-vect 0.0 0.0)
                         (make-vect 1.0 0.0)
@@ -12007,9 +9967,9 @@ rotation operations (from @ref{Exercise 2.50}).
   (rotate270 (beside
               (rotate90 painter2)
               (rotate90 painter1))))
-#+END_SRC
+```
 
-#+BEGIN_SRC scheme -n :eval no-export :results output
+```scheme { linenos=true, linenostart=1 }
 <<linepainter-pict>>
 <<frame-transforms-txt>>
 <<flip-rotate2>>
@@ -12036,10 +9996,9 @@ rotation operations (from @ref{Exercise 2.50}).
                         (rotate270 topleft-tri)))))
   (pict->file (paint-lines (beside p1 p2))
               "2/pict/rotate3.svg"))
-#+END_SRC
+```
 
-#+RESULTS[419f2a4c29ab56d2d3463e20b1f63864eb193dcf]:
-[[file:2/pict/rotate3.png]]
+{{< figure src="/ox-hugo/rotate3.png" >}}
 
 An aside: I'm beginning to see what makes Lisp-style programming different from
 C style. In C, the pictures would be described with separate data structures
@@ -12048,62 +10007,51 @@ structure. Off the top of my head, the biggest players here would be first-level
 functions, and how statements evaluate to specific values rather than being
 imperative commands that cause something to happen elsewhere.
 
-** 2.2.4 continued
-:PROPERTIES:
-:ID:       35ea15ae-3459-4f78-999e-5d61928c5eb5
-:CUSTOM-ID: 35ea15ae-3459-4f78-999e-5d61928c5eb5
-:END:
 
-- stratified design :: is the notion that complex systems should be structured
-  as a sequence of levels with a sequence of languages. See how electronic
-  components are described in EE terms, the binary gates they form are described
-  in digital logic terms, the programs they run described in programming
-  language terms, the networks of programs described in network architecture
-  terms, etc.
+### <span class="section-num">3.58</span> 2.2.4 continued {#2-dot-2-dot-4-continued}
+
+stratified design
+: is the notion that complex systems should be structured
+    as a sequence of levels with a sequence of languages. See how electronic
+    components are described in EE terms, the binary gates they form are described
+    in digital logic terms, the programs they run described in programming
+    language terms, the networks of programs described in network architecture
+    terms, etc.
 
 This stratified design can be seen in our picture language. We use lines and
 points to specify painters, use painters to make arrangements with beside/below,
 arrange these arrangements into higher-level arrangements like
-src_scheme{up-split}.
+<span class="inline-src language-scheme" data-lang="scheme">`up-split`</span>.
 
-** Exercise 2.52
-:PROPERTIES:
-:ID:       fcc09b41-5e26-483c-9983-109499a6b031
-:CUSTOM-ID: fcc09b41-5e26-483c-9983-109499a6b031
-:END:
 
-*** Question A
-:PROPERTIES:
-:ID:       45bbf4fd-704e-4124-a54b-34012f42f5a9
-:CUSTOM-ID: 45bbf4fd-704e-4124-a54b-34012f42f5a9
-:END:
+### <span class="section-num">3.59</span> Exercise 2.52 {#exercise-2-dot-52}
 
-Make changes to the square limit of src_scheme{wave} shown in Figure 2.9 by
+
+#### <span class="section-num">3.59.1</span> Question A {#question-a}
+
+Make changes to the square limit of <span class="inline-src language-scheme" data-lang="scheme">`wave`</span> shown in Figure 2.9 by
 working at each of the levels described above. In particular:
 
-- Add some segments to the primitive src_scheme{wave} painter of Exercise 2.49 (to add a smile, for example).
+-   Add some segments to the primitive <span class="inline-src language-scheme" data-lang="scheme">`wave`</span> painter of Exercise 2.49 (to add a smile, for example).
 
-*** Answer A
-:PROPERTIES:
-:ID:       7e78cf22-b210-4018-9cc8-a88c3e1f7abb
-:CUSTOM-ID: 7e78cf22-b210-4018-9cc8-a88c3e1f7abb
-:END:
 
-I need to do what I've been slacking off on: actually making the src_scheme{wave} painter.
+#### <span class="section-num">3.59.2</span> Answer A {#answer-a}
+
+I need to do what I've been slacking off on: actually making the <span class="inline-src language-scheme" data-lang="scheme">`wave`</span> painter.
 First, I want a helper function to make inputting shapes easier.
 
-
-#+NAME: unwrap-if-needed
-#+BEGIN_SRC scheme -n :eval no-export :results silent
+<a id="code-snippet--unwrap-if-needed"></a>
+```scheme { linenos=true, linenostart=1 }
 (define (unwrap-if-needed args)
   ;; commonly needed in vararg functions
   (if (and (= 1 (length args))
            (list? (car args)))
       (car args) ; assume we were passed a list, unwrap it
       args))
-#+END_SRC
-#+NAME: continuous-lines
-#+BEGIN_SRC scheme -n :eval no-export :results silent
+```
+
+<a id="code-snippet--continuous-lines"></a>
+```scheme { linenos=true, linenostart=1 }
 <<unwrap-if-needed>>
 (define (continuous-lines . vectors)
   ;; Given a list of vectors, return a series of line segments
@@ -12132,9 +10080,9 @@ First, I want a helper function to make inputting shapes easier.
                 (cons (make-vect first second)
                       output)))))
   (reverse (iter numbers '())))
-#+END_SRC
+```
 
-#+BEGIN_SRC scheme -n :eval no-export :results output
+```scheme { linenos=true, linenostart=1 }
 <<linepainter-pict>>
 <<frame-transforms-txt>>
 <<flip-rotate2>>
@@ -12163,15 +10111,14 @@ First, I want a helper function to make inputting shapes easier.
                  (beside topleft-tri topleft-tri3))))
   (pict->file (paint-lines p1)
               "2/pict/cl-test.svg"))
-#+END_SRC
+```
 
-#+RESULTS[a2ef690a540771b7f579b7987827d14b86b9d47a]:
-[[file:2/pict/cl-test.png]]
+{{< figure src="/ox-hugo/cl-test.png" >}}
 
 Now, let's write the wave painter.
 
-#+NAME: wave-painter
-#+BEGIN_SRC scheme -n :eval no-export :results silent
+<a id="code-snippet--wave-painter"></a>
+```scheme { linenos=true, linenostart=1 }
 <<continuous-lines>>
 ;; Should be raising their left hand and
 ;; lowering their right. (I screwed up the axes)
@@ -12202,9 +10149,9 @@ Now, let's write the wave painter.
     0.65 0.3
     0.7 0.15 ;; center-right side of head
     0.65 0))))
-#+END_SRC
+```
 
-#+BEGIN_SRC scheme -n :eval no-export :results output
+```scheme { linenos=true, linenostart=1 }
 <<linepainter-pict>>
 <<frame-transforms-txt>>
 <<flip-rotate2>>
@@ -12214,16 +10161,15 @@ Now, let's write the wave painter.
 (let ((p1 (beside wave (flip-vert wave))))
   (pict->file (paint-lines p1)
               "2/pict/wave-test.svg"))
-#+END_SRC
+```
 
 The question needs me to overlay something new. So I need some way to add more
 segments to a painter after it's already been written.
 
-#+RESULTS[7339620f004b1a5970840eb4d2ccfd0f7fcb976d]:
-[[file:2/pict/wave-test.png]]
+{{< figure src="/ox-hugo/wave-test.png" >}}
 
-#+NAME: append-painters
-#+BEGIN_SRC scheme -n :eval no-export :results silent
+<a id="code-snippet--append-painters"></a>
+```scheme { linenos=true, linenostart=1 }
 <<unwrap-if-needed>>
 (define (append-painters-rec . args)
   (lambda (frame)
@@ -12243,8 +10189,9 @@ segments to a painter after it's already been written.
                       (cdr to-paint))))
     (iter '()
           (unwrap-if-needed args))))
-#+END_SRC
-#+BEGIN_SRC scheme -n :eval no-export :results output
+```
+
+```scheme { linenos=true, linenostart=1 }
 <<linepainter-pict>>
 <<frame-transforms-txt>>
 <<flip-rotate2>>
@@ -12259,15 +10206,14 @@ segments to a painter after it's already been written.
            outline)))
   (pict->file (paint-lines p1)
               "2/pict/append-test.svg"))
-#+END_SRC
+```
 
-#+RESULTS[c2ee764954c965185361915c7c56d64df1fbcf6b]:
-[[file:2/pict/append-test.png]]
+{{< figure src="/ox-hugo/append-test.png" >}}
 
 Now let's (try to) add a smile.
 
-#+NAME: wave-smile
-#+BEGIN_SRC scheme -n :eval no-export :results silent
+<a id="code-snippet--wave-smile"></a>
+```scheme { linenos=true, linenostart=1 }
 <<wave-painter>>
 <<append-painters>>
 (define wave-smile
@@ -12279,8 +10225,9 @@ Now let's (try to) add a smile.
       0.55 0.2
       0.6 0.225
       0.65 0.2)))))
-#+END_SRC
-#+BEGIN_SRC scheme -n :eval no-export :results output
+```
+
+```scheme { linenos=true, linenostart=1 }
 <<linepainter-pict>>
 <<frame-transforms-txt>>
 <<flip-rotate2>>
@@ -12289,54 +10236,50 @@ Now let's (try to) add a smile.
 <<wave-smile>>
 (pict->file (paint-lines wave-smile)
             "2/pict/wave-smile-test.svg")
-#+END_SRC
+```
 
-#+RESULTS[4ce5d12349ed189f5e2be1faaf7793a4670f68b3]:
-[[file:2/pict/wave-smile-test.png]]
+{{< figure src="/ox-hugo/wave-smile-test.png" >}}
 
-*** Question B
-:PROPERTIES:
-:ID:       129b6c3e-257f-4e9a-bd96-e8e13f4d5cc5
-:CUSTOM-ID: 129b6c3e-257f-4e9a-bd96-e8e13f4d5cc5
-:END:
 
-Change the pattern constructed by src_scheme{corner-split} (for example, by
-using only one copy of the src_scheme{up-split} and src_scheme{right-split}
+#### <span class="section-num">3.59.3</span> Question B {#question-b}
+
+Change the pattern constructed by <span class="inline-src language-scheme" data-lang="scheme">`corner-split`</span> (for example, by
+using only one copy of the <span class="inline-src language-scheme" data-lang="scheme">`up-split`</span> and <span class="inline-src language-scheme" data-lang="scheme">`right-split`</span>
 images instead of two).
 
-#+NAME: corner-split
-#+BEGIN_SRC scheme -n :eval no-export :results silent
+<a id="code-snippet--corner-split"></a>
+```scheme { linenos=true, linenostart=1 }
 (define (corner-split painter n)
   (if (= n 0)
       painter
       (let ((up (up-split painter (- n 1)))
-            (right (right-split painter 
+            (right (right-split painter
                                 (- n 1))))
         (let ((top-left (beside up up))
-              (bottom-right (below right 
+              (bottom-right (below right
                                    right))
-              (corner (corner-split painter 
+              (corner (corner-split painter
                                     (- n 1))))
           (beside (below painter top-left)
-                  (below bottom-right 
+                  (below bottom-right
                          corner))))))
 
 (define (corner-split-mine painter n)
   (if (= n 0)
       painter
       (let ((up (up-split painter (- n 1)))
-            (right (right-split painter 
+            (right (right-split painter
                                 (- n 1))))
         (let ((top-left up)
               (bottom-right right)
-              (corner (corner-split-mine painter 
+              (corner (corner-split-mine painter
                                     (- n 1))))
           (beside (below painter top-left)
-                  (below bottom-right 
+                  (below bottom-right
                          corner))))))
-#+END_SRC
+```
 
-#+BEGIN_SRC scheme -n :eval no-export :results output
+```scheme { linenos=true, linenostart=1 }
 <<linepainter-pict>>
 <<frame-transforms-txt>>
 <<flip-rotate2>>
@@ -12352,74 +10295,63 @@ images instead of two).
 ;(let ((p1 (up-split frame-X 5)))
   (pict->file (paint-lines p1)
               "2/pict/corner-splits.svg"))
-#+END_SRC
+```
 
-#+RESULTS[a1a1d7df20056fcf0986da88ad48dbda23a1a791]:
-[[file:2/pict/corner-splits.png]]
+{{< figure src="/ox-hugo/corner-splits.png" >}}
 
-So my modified version doesn't split at the src_scheme{corner-split} level, as
-predicted. However src_scheme{up-split} and src_scheme{right-split} do, so the
+So my modified version doesn't split at the <span class="inline-src language-scheme" data-lang="scheme">`corner-split`</span> level, as
+predicted. However <span class="inline-src language-scheme" data-lang="scheme">`up-split`</span> and <span class="inline-src language-scheme" data-lang="scheme">`right-split`</span> do, so the
 effect is only delayed by one level. But more importantly:
 
-/Why does it go down instead of up? I don't get it./
+_Why does it go down instead of up? I don't get it._
 
-src_scheme{corner-split} and src_scheme{up-split} are even the same code as
-every answer online. Could my src_scheme{paint-lines} procedure be what's
+<span class="inline-src language-scheme" data-lang="scheme">`corner-split`</span> and <span class="inline-src language-scheme" data-lang="scheme">`up-split`</span> are even the same code as
+every answer online. Could my <span class="inline-src language-scheme" data-lang="scheme">`paint-lines`</span> procedure be what's
 causing issues?
 
-*** Question C
-:PROPERTIES:
-:ID:       3c3aea71-197f-44cc-8ed0-97b464a037ec
-:CUSTOM-ID: 3c3aea71-197f-44cc-8ed0-97b464a037ec
-:END:
 
-#+begin_quote
-Modify the version of src_scheme{square-limit} that uses src_scheme{square-of-four} so as
-to assemble the corners in a different pattern.  (For example, you might make
-the big Mr. Rogers look outward from each corner of the square.)
-#+end_quote
+#### <span class="section-num">3.59.4</span> Question C {#question-c}
 
-*** Textbook Definitions
-:PROPERTIES:
-:ID:       b0a6d67f-6886-4a55-92fe-b233944c206a
-:CUSTOM-ID: b0a6d67f-6886-4a55-92fe-b233944c206a
-:END:
+> Modify the version of <span class="inline-src language-scheme" data-lang="scheme">`square-limit`</span> that uses <span class="inline-src language-scheme" data-lang="scheme">`square-of-four`</span> so as
+> to assemble the corners in a different pattern.  (For example, you might make
+> the big Mr. Rogers look outward from each corner of the square.)
 
-#+NAME: square-of-four-txt
-#+BEGIN_SRC scheme -n :eval no-export :results silent
+
+#### <span class="section-num">3.59.5</span> Textbook Definitions {#textbook-definitions}
+
+<a id="code-snippet--square-of-four-txt"></a>
+```scheme { linenos=true, linenostart=1 }
 (define (square-of-four tl tr bl br)
   (lambda (painter)
-    (let ((top (beside (tl painter) 
+    (let ((top (beside (tl painter)
                        (tr painter)))
-          (bottom (beside (bl painter) 
+          (bottom (beside (bl painter)
                           (br painter))))
       (below bottom top))))
 (define (square-limit painter n)
-  (let ((combine4 
-         (square-of-four flip-horiz 
+  (let ((combine4
+         (square-of-four flip-horiz
                          identity
-                         rotate180 
+                         rotate180
                          flip-vert)))
     (combine4 (corner-split painter n))))
-#+END_SRC
+```
 
-*** Answer C
-:PROPERTIES:
-:ID:       91c819a1-d908-4957-9713-ab4c6d282166
-:CUSTOM-ID: 91c819a1-d908-4957-9713-ab4c6d282166
-:END:
 
-#+NAME: square-limit-mine
-#+BEGIN_SRC scheme -n :eval no-export :results silent
+#### <span class="section-num">3.59.6</span> Answer C {#answer-c}
+
+<a id="code-snippet--square-limit-mine"></a>
+```scheme { linenos=true, linenostart=1 }
 (define (square-limit-mine painter n)
-  (let ((combine4 
+  (let ((combine4
          (square-of-four identity
                          flip-horiz
-                         flip-vert 
+                         flip-vert
                          rotate180)))
     (combine4 (corner-split painter n))))
-#+END_SRC
-#+BEGIN_SRC scheme -n :eval no-export :results output
+```
+
+```scheme { linenos=true, linenostart=1 }
 <<linepainter-pict>>
 <<frame-transforms-txt>>
 <<flip-rotate2>>
@@ -12433,16 +10365,15 @@ the big Mr. Rogers look outward from each corner of the square.)
 (pict->file (paint-lines (beside (square-limit wave-smile 5)
                                  (square-limit-mine wave-smile 5)))
             "2/pict/square-limits.svg")
-#+END_SRC
+```
 
-#+RESULTS[111fcd56e310536b0fc3d2f409babc1ea1d841ef]:
-[[file:2/pict/square-limits.png]]
+{{< figure src="/ox-hugo/square-limits.png" >}}
 
-Ok, I'm confused. Shouldn't the shape of src_scheme{square-limit} be the same
+Ok, I'm confused. Shouldn't the shape of <span class="inline-src language-scheme" data-lang="scheme">`square-limit`</span> be the same
 regardless of the operators passed to it? It looks like the operators effect
 each chunk separately.
 
-#+BEGIN_SRC scheme -n :eval no-export :results output
+```scheme { linenos=true, linenostart=1 }
 <<linepainter-pict>>
 <<frame-transforms-txt>>
 <<flip-rotate2>>
@@ -12453,7 +10384,7 @@ each chunk separately.
 <<corner-split>>
 <<square-of-four-txt>>
 (define (square-limit-mine painter n)
-  (let ((combine4 
+  (let ((combine4
          (square-of-four identity
                          identity
                          identity
@@ -12461,50 +10392,39 @@ each chunk separately.
     (combine4 (corner-split painter n))))
 (pict->file (paint-lines (square-limit-mine wave-smile 5))
             "2/pict/square-limit-identity.svg")
-#+END_SRC
+```
 
-#+RESULTS[0e130aa614fce200f3b764b2780d3360302f430f]:
-[[file:2/pict/square-limit-identity.png]]
+{{< figure src="/ox-hugo/square-limit-identity.png" >}}
 
-I expected the operators would change the /image orientation/, not the
-/structure/. Maybe this is because my src_scheme{draw-lines} makes recursively
+I expected the operators would change the _image orientation_, not the
+_structure_. Maybe this is because my <span class="inline-src language-scheme" data-lang="scheme">`draw-lines`</span> makes recursively
 nested stacks of painter objects, rather than imperative calls to drawing
-procedures? Looking on the internet I see [[http://pipecode.blogspot.com/2013/04/sicp-exercise-252.html][someone else having the same
-results.]][fn:: http://pipecode.blogspot.com/2013/04/sicp-exercise-252.html]
+procedures? Looking on the internet I see [someone else having the same
+results.](http://pipecode.blogspot.com/2013/04/sicp-exercise-252.html)[^fn:5]
 
-** 2.3.1: Quotation
-:PROPERTIES:
-:ID:       f1cb5c0f-0137-4642-878c-242ff44b91cb
-:CUSTOM-ID: f1cb5c0f-0137-4642-878c-242ff44b91cb
-:END:
+
+### <span class="section-num">3.60</span> 2.3.1: Quotation {#2-dot-3-dot-1-quotation}
 
 Syntactic vs semantic use in Lisp:
-#+BEGIN_SRC scheme
+
+```scheme
 (define dog 123)
 (+ dog dog) ;; semantic usage
 (quote dog) ;; syntactic usage
-#+END_SRC
+```
 
 This was introduced by famous LISP scientists, Abbott and Costello.
 
-** Exercise 2.53
-:PROPERTIES:
-:ID:       258696d9-05d2-49ec-b35e-3edb680427a2
-:CUSTOM-ID: 258696d9-05d2-49ec-b35e-3edb680427a2
-:END:
 
-*** Question
-:PROPERTIES:
-:ID:       e0034d4c-fbfe-4a87-ae13-ed845db2b81e
-:CUSTOM-ID: e0034d4c-fbfe-4a87-ae13-ed845db2b81e
-:END:
+### <span class="section-num">3.61</span> Exercise 2.53 {#exercise-2-dot-53}
 
-#+begin_quote
-What would the interpreter print
-in response to evaluating each of the following expressions?
-#+end_quote
 
-#+BEGIN_SRC scheme -n
+#### <span class="section-num">3.61.1</span> Question {#question}
+
+> What would the interpreter print
+> in response to evaluating each of the following expressions?
+
+```scheme { linenos=true, linenostart=1 }
 (list 'a 'b 'c)
 (list (list 'george))
 (cdr '((x1 x2) (y1 y2)))
@@ -12512,15 +10432,12 @@ in response to evaluating each of the following expressions?
 (pair? (car '(a short list)))
 (memq 'red '((red shoes) (blue socks)))
 (memq 'red '(red shoes blue socks))
-#+END_SRC
+```
 
-*** Answer
-:PROPERTIES:
-:ID:       582a441c-1a57-40e9-bb8d-c382dabbaa86
-:CUSTOM-ID: 582a441c-1a57-40e9-bb8d-c382dabbaa86
-:END:
 
-#+BEGIN_SRC scheme -n
+#### <span class="section-num">3.61.2</span> Answer {#answer}
+
+```scheme { linenos=true, linenostart=1 }
 (list 'a 'b 'c) ;; (a b c)
 (list (list 'george)) ;; ((george))
 (cdr '((x1 x2) (y1 y2))) ;; ((y1 y2))
@@ -12528,49 +10445,37 @@ in response to evaluating each of the following expressions?
 (pair? (car '(a short list))) ;; false
 (memq 'red '((red shoes) (blue socks))) ;; false
 (memq 'red '(red shoes blue socks)) ;; (red shoes blue socks)
-#+END_SRC
+```
 
-** Exercise 2.54
-:PROPERTIES:
-:ID:       29527ad8-cc9f-4d2e-9d8a-6475e783dc85
-:CUSTOM-ID: 29527ad8-cc9f-4d2e-9d8a-6475e783dc85
-:END:
 
-#+begin_quote
-Two lists are said to be src_scheme{equal?} if they contain equal elements
-arranged in the same order. For example,
-#+end_quote
+### <span class="section-num">3.62</span> Exercise 2.54 {#exercise-2-dot-54}
 
-#+BEGIN_SRC scheme
+> Two lists are said to be <span class="inline-src language-scheme" data-lang="scheme">`equal?`</span> if they contain equal elements
+> arranged in the same order. For example,
+
+```scheme
 (equal? '(this is a list) '(this is a list))
-#+END_SRC
+```
 
-#+begin_quote
-is true, but
-#+end_quote
+> is true, but
 
-#+BEGIN_SRC scheme
+```scheme
 (equal? '(this is a list) '(this (is a) list))
-#+END_SRC
+```
 
-#+begin_quote
-is false. To be more precise, we can define src_scheme{equal?} recursively in
-terms of the basic src_scheme{eq?} equality of symbols by saying that
-src_scheme{a} and src_scheme{b} are src_scheme{equal?} if they are both symbols
-and the symbols are src_scheme{eq?}, or if they are both lists such that
-src_scheme{(car a)} is src_scheme{equal?} to src_scheme{(car b)} and
-src_scheme{(cdr a)} is src_scheme{equal?} to src_scheme{(cdr b)}. Using this
-idea, implement src_scheme{equal?} as a procedure.
-#+end_quote
+> is false. To be more precise, we can define <span class="inline-src language-scheme" data-lang="scheme">`equal?`</span> recursively in
+> terms of the basic <span class="inline-src language-scheme" data-lang="scheme">`eq?`</span> equality of symbols by saying that
+> <span class="inline-src language-scheme" data-lang="scheme">`a`</span> and <span class="inline-src language-scheme" data-lang="scheme">`b`</span> are <span class="inline-src language-scheme" data-lang="scheme">`equal?`</span> if they are both symbols
+> and the symbols are <span class="inline-src language-scheme" data-lang="scheme">`eq?`</span>, or if they are both lists such that
+> <span class="inline-src language-scheme" data-lang="scheme">`(car a)`</span> is <span class="inline-src language-scheme" data-lang="scheme">`equal?`</span> to <span class="inline-src language-scheme" data-lang="scheme">`(car b)`</span> and
+> <span class="inline-src language-scheme" data-lang="scheme">`(cdr a)`</span> is <span class="inline-src language-scheme" data-lang="scheme">`equal?`</span> to <span class="inline-src language-scheme" data-lang="scheme">`(cdr b)`</span>. Using this
+> idea, implement <span class="inline-src language-scheme" data-lang="scheme">`equal?`</span> as a procedure.
 
-*** Answer
-:PROPERTIES:
-:ID:       3043a43e-7468-4b14-96e8-49490e3056f2
-:CUSTOM-ID: 3043a43e-7468-4b14-96e8-49490e3056f2
-:END:
 
-#+NAME: my-equal?
-#+BEGIN_SRC scheme -n :eval no-export :results silent
+#### <span class="section-num">3.62.1</span> Answer {#answer}
+
+<a id="code-snippet--my-equal?"></a>
+```scheme { linenos=true, linenostart=1 }
 (define (equal? a b)
   (cond ((and (symbol? a)
               (symbol? b))
@@ -12580,9 +10485,9 @@ idea, implement src_scheme{equal?} as a procedure.
          (and (equal? (car a) (car b))
               (equal? (cdr a) (cdr b))))
         (else #f)))
-#+END_SRC
+```
 
-#+BEGIN_SRC scheme -n :eval no-export :results output
+```scheme { linenos=true, linenostart=1 }
 (load "mattcheck2.scm")
 (let ((a '(this is a list))
       (aa '(this is a list))
@@ -12594,105 +10499,88 @@ idea, implement src_scheme{equal?} as a procedure.
   (mattcheck "equal? false"
              (equal? a b)
              #f))
-#+END_SRC
+```
 
-#+RESULTS[d1cdfcb742c0d48a6430788621584446115ff02c]:
-#+begin_EXAMPLE
+```text
 SUCCEED at equal? true
 SUCCEED at equal? trick question
 SUCCEED at equal? false
-#+end_EXAMPLE
+```
 
-** Exercise 2.55
-:PROPERTIES:
-:ID:       00be831b-8f4c-425f-bcb1-7ad613ddb06f
-:CUSTOM-ID: 00be831b-8f4c-425f-bcb1-7ad613ddb06f
-:END:
 
-*** Question
-:PROPERTIES:
-:ID:       87cfa7f0-088a-4d47-9203-bb587ca4d503
-:CUSTOM-ID: 87cfa7f0-088a-4d47-9203-bb587ca4d503
-:END:
+### <span class="section-num">3.63</span> Exercise 2.55 {#exercise-2-dot-55}
+
+
+#### <span class="section-num">3.63.1</span> Question {#question}
 
 Eva Lu Ator types to the interpreter the expression
 
-#+BEGIN_SRC scheme
+```scheme
 (car ''abracadabra)
-#+END_SRC
+```
 
-To her surprise, the interpreter prints back src_scheme{quote}. Explain.
+To her surprise, the interpreter prints back <span class="inline-src language-scheme" data-lang="scheme">`quote`</span>. Explain.
 
-*** Answer
-:PROPERTIES:
-:ID:       567cc140-30bf-40bf-8fff-889862d517cb
-:CUSTOM-ID: 567cc140-30bf-40bf-8fff-889862d517cb
-:END:
+
+#### <span class="section-num">3.63.2</span> Answer {#answer}
 
 You're quoting quote, silly! Who's on first?
 
-** 2.3.2: Example: Symbolic differentiator
-:PROPERTIES:
-:ID:       1f159d89-0a02-4726-9872-bbbc527ab559
-:CUSTOM-ID: 1f159d89-0a02-4726-9872-bbbc527ab559
-:END:
+
+### <span class="section-num">3.64</span> 2.3.2: Example: Symbolic differentiator {#2-dot-3-dot-2-example-symbolic-differentiator}
 
 I needed to get some help, but I think I have some understanding now.
 
-The *derivative* of an expression \(E\), relative to the variable \(x\),
-describes the rate of change (or \(\delta\) *delta*) of that expression with
-relation to \(x\). Mathematicians symbolize it like this:
+The **derivative** of an expression \\(E\\), relative to the variable \\(x\\),
+describes the rate of change (or \\(\delta\\) **delta**) of that expression with
+relation to \\(x\\). Mathematicians symbolize it like this:
 
-\[\frac{dE}{dx}\]
+$$\frac{dE}{dx}$$
 
 Two stumbling blocks about this notation:
-1. This is not division. I understand why this notation would make sense to an
-   experienced mathematician, since you factor out things by dividing an
-   expression. For example:
-   \[\frac{3x}{x} = 3\]
-   \[\frac{3x}{3} = x\]
-   But it's still confusing.
-2. \(dx\) is not some variable \(d\) times some variable \(x\).
-   \(\frac{d(x+3)}{dx}\) means "the derivative of \(x+3\) with respect to
-   \(x\)."
 
-The process of finding the derivative is called *differentiation*.
+1.  This is not division. I understand why this notation would make sense to an
+    experienced mathematician, since you factor out things by dividing an
+    expression. For example:
+    $$\frac{3x}{x} = 3$$
+    $$\frac{3x}{3} = x$$
+    But it's still confusing.
+2.  \\(dx\\) is not some variable \\(d\\) times some variable \\(x\\).
+    \\(\frac{d(x+3)}{dx}\\) means "the derivative of \\(x+3\\) with respect to
+    \\(x\\)."
+
+The process of finding the derivative is called **differentiation**.
 
 The rules the book puts forward, rephrased in plain English, are these:
 
-- If the expression is a constant, the derivative must be 0.
-- If the expression is \(x\), the derivative must be 1.
-- If the expression is \(u + v\), the derivative is the sum of two
-  derivatives:
-  1. The derivative of \(u\) with respect to \(x\).
-  2. The derivative of \(v\) with respect to \(x\).
-- If the expression is \(u \times v\), the derivative is the sum of:
-  1. \(u\) times the derivative of \(v\) with respect to \(x\)
-  2. \(v\) times the derivative of \(u\) with respect to \(x\)
+-   If the expression is a constant, the derivative must be 0.
+-   If the expression is \\(x\\), the derivative must be 1.
+-   If the expression is \\(u + v\\), the derivative is the sum of two
+    derivatives:
+    1.  The derivative of \\(u\\) with respect to \\(x\\).
+    2.  The derivative of \\(v\\) with respect to \\(x\\).
+-   If the expression is \\(u \times v\\), the derivative is the sum of:
+    1.  \\(u\\) times the derivative of \\(v\\) with respect to \\(x\\)
+    2.  \\(v\\) times the derivative of \\(u\\) with respect to \\(x\\)
 
 Later:
-- If the expression is \(u^0\), the result is 1, which is a constant, so the
-  rate of change is 0.
-- If the expression is \(u^1\), the result is u, so the rate of change is 1.
-- Else, if the expression is \(u^n\), the derivative is the product of these:
-  1. \(n\)
-  2. \(u\) to the power of \(n-1\)
-  3. The derivative of \(u\) with respect to \(x\).
 
-** Exercise 2.56: Differentiating exponentiation
-:PROPERTIES:
-:ID:       6be5f14d-c225-46d2-a1d4-1864083a8c76
-:CUSTOM-ID: 6be5f14d-c225-46d2-a1d4-1864083a8c76
-:END:
+-   If the expression is \\(u^0\\), the result is 1, which is a constant, so the
+    rate of change is 0.
+-   If the expression is \\(u^1\\), the result is u, so the rate of change is 1.
+-   Else, if the expression is \\(u^n\\), the derivative is the product of these:
+    1.  \\(n\\)
+    2.  \\(u\\) to the power of \\(n-1\\)
+    3.  The derivative of \\(u\\) with respect to \\(x\\).
 
-*** Text definitions
-:PROPERTIES:
-:ID:       b0b61dc7-4677-4b9f-8249-edf8beb99189
-:CUSTOM-ID: b0b61dc7-4677-4b9f-8249-edf8beb99189
-:END:
 
-#+NAME: deriv-basic-txt
-#+BEGIN_SRC scheme :eval no-export :results output
+### <span class="section-num">3.65</span> Exercise 2.56: Differentiating exponentiation {#exercise-2-dot-56-differentiating-exponentiation}
+
+
+#### <span class="section-num">3.65.1</span> Text definitions {#text-definitions}
+
+<a id="code-snippet--deriv-basic-txt"></a>
+```scheme
 (define (variable? x) (symbol? x))
 (define (same-variable? v1 v2)
   (and (variable? v1) (variable? v2) (eq? v1 v2)))
@@ -12729,35 +10617,27 @@ Later:
                          (multiplicand exp))))
         (else
          (error "unknown expression type: DERIV" exp))))
-#+END_SRC
+```
 
-*** Question
-:PROPERTIES:
-:ID:       c2acf981-29fc-4cf7-9afd-56f7764b11d8
-:CUSTOM-ID: c2acf981-29fc-4cf7-9afd-56f7764b11d8
-:END:
 
-#+begin_quote
-Show how to extend the basic differentiator to handle more kinds of expressions.
-For instance, implement the differentiation rule
+#### <span class="section-num">3.65.2</span> Question {#question}
 
-\[ \frac{\it d\,(u^n\,)}{\it dx} = nu^{n-1} \frac{\it du}{\it dx} \]
+> Show how to extend the basic differentiator to handle more kinds of expressions.
+> For instance, implement the differentiation rule
+>
+> $$ \frac{\it d\\,(u^n\\,)}{\it dx} = nu^{n-1} \frac{\it du}{\it dx} $$
+>
+> by adding a new clause to the <span class="inline-src language-scheme" data-lang="scheme">`deriv`</span> program and defining appropriate
+> procedures <span class="inline-src language-scheme" data-lang="scheme">`exponentiation?`</span>, <span class="inline-src language-scheme" data-lang="scheme">`base`</span>, <span class="inline-src language-scheme" data-lang="scheme">`exponent`</span>,
+> and <span class="inline-src language-scheme" data-lang="scheme">`make-exponentiation`</span>. (You may use the symbol <span class="inline-src language-scheme" data-lang="scheme">`**`</span> to
+> denote exponentiation.) Build in the rules that anything raised to the power 0
+> is 1 and anything raised to the power 1 is the thing itself.
 
-by adding a new clause to the src_scheme{deriv} program and defining appropriate
-procedures src_scheme{exponentiation?}, src_scheme{base}, src_scheme{exponent},
-and src_scheme{make-exponentiation}. (You may use the symbol src_scheme{**} to
-denote exponentiation.) Build in the rules that anything raised to the power 0
-is 1 and anything raised to the power 1 is the thing itself.
-#+end_quote
 
-*** Answer
-:PROPERTIES:
-:ID:       5943cb2c-8dd3-4789-ab52-9d74eee215aa
-:CUSTOM-ID: 5943cb2c-8dd3-4789-ab52-9d74eee215aa
-:END:
+#### <span class="section-num">3.65.3</span> Answer {#answer}
 
-#+NAME: deriv-exp
-#+BEGIN_SRC scheme :eval no-export :results silent
+<a id="code-snippet--deriv-exp"></a>
+```scheme
 (define (exponentiation? x) (and (pair? x) (eq? (car x) '**)))
 (define (base e) (cadr e))
 (define (exponent e) (caddr e))
@@ -12779,18 +10659,19 @@ is 1 and anything raised to the power 1 is the thing itself.
           (make-product (deriv (multiplier exp) var)
                         (multiplicand exp))))
         ((exponentiation? exp)
-         (make-product  
-          (make-product  
-           (exponent exp) 
-           (make-exponentiation (base exp) 
-                                (make-sum (exponent exp) -1)))                                                                                               
+         (make-product
+          (make-product
+           (exponent exp)
+           (make-exponentiation (base exp)
+                                (make-sum (exponent exp) -1)))
           (deriv (base exp) var)))
         (else
          (error "unknown expression type: DERIV" exp))))
-#+END_SRC
+```
 
 First I'll make sure the textbook examples work as expected.
-#+BEGIN_SRC scheme :eval no-export :results output
+
+```scheme
 <<deriv-basic-txt>>
 <<deriv-exp>>
 (load "mattcheck2.scm")
@@ -12821,10 +10702,9 @@ First I'll make sure the textbook examples work as expected.
 (mattcheck "deriv: exponentiation 2"
            (deriv (make-exponentiation 'a 'b) 'a)
            '(* b (** a (+ b -1))))
-#+END_SRC
+```
 
-#+RESULTS[f03030997b698de68cc80a8c5df94fd3fba52420]:
-#+begin_EXAMPLE
+```text
 SUCCEED at deriv: basic addition
 SUCCEED at deriv: basic multiplication
 SUCCEED at deriv: bad simplification
@@ -12833,41 +10713,32 @@ SUCCEED at make-exponentiation 2
 SUCCEED at make-exponentiation 3
 SUCCEED at deriv: exponentiation 1
 SUCCEED at deriv: exponentiation 2
-#+end_EXAMPLE
+```
 
-** Exercise 2.57: Differentiating arbitrary-length expressions
-:PROPERTIES:
-:ID:       47f5c525-98f5-403f-9dd1-df43fd4b5155
-:CUSTOM-ID: 47f5c525-98f5-403f-9dd1-df43fd4b5155
-:END:
 
-*** Question
-:PROPERTIES:
-:ID:       a73afb4a-3e3b-4d8a-b908-3e9f2bc051f4
-:CUSTOM-ID: a73afb4a-3e3b-4d8a-b908-3e9f2bc051f4
-:END:
+### <span class="section-num">3.66</span> Exercise 2.57: Differentiating arbitrary-length expressions {#exercise-2-dot-57-differentiating-arbitrary-length-expressions}
+
+
+#### <span class="section-num">3.66.1</span> Question {#question}
 
 Extend the differentiation program to handle sums and products of arbitrary
 numbers of (two or more) terms. Then the last example above could be expressed
 as
 
-#+BEGIN_SRC scheme
+```scheme
 (deriv '(* x y (+ x 3)) 'x)
-#+END_SRC
+```
 
 Try to do this by changing only the representation for sums and products,
-without changing the src_scheme{deriv} procedure at all. For example, the
-src_scheme{addend} of a sum would be the first term, and the src_scheme{augend}
+without changing the <span class="inline-src language-scheme" data-lang="scheme">`deriv`</span> procedure at all. For example, the
+<span class="inline-src language-scheme" data-lang="scheme">`addend`</span> of a sum would be the first term, and the <span class="inline-src language-scheme" data-lang="scheme">`augend`</span>
 would be the sum of the rest of the terms.
 
-*** Answer
-:PROPERTIES:
-:ID:       e970b43b-d753-43e1-b844-7ee3e342a2dc
-:CUSTOM-ID: e970b43b-d753-43e1-b844-7ee3e342a2dc
-:END:
 
-#+NAME: deriv-longer
-#+BEGIN_SRC scheme :eval no-export :results silent
+#### <span class="section-num">3.66.2</span> Answer {#answer}
+
+<a id="code-snippet--deriv-longer"></a>
+```scheme
 (define (sum? x) (and (pair? x) (eq? (car x) '+)))
 (define (addend s) (cadr s))
 (define (augend s)
@@ -12899,9 +10770,9 @@ would be the sum of the rest of the terms.
         ((and (number? m1) (number? m2))
          (* m1 m2))
         (else (list '* m1 m2))))
-#+END_SRC
+```
 
-#+BEGIN_SRC scheme :eval no-export :results output 
+```scheme
 <<deriv-basic-txt>>
 <<deriv-exp>>
 <<deriv-longer>>
@@ -12912,18 +10783,18 @@ would be the sum of the rest of the terms.
 (mattcheck "deriv: longer multiplication"
            (deriv '(* x y (+ x 3)) 'x)
            '(+ (* x y) (* y (+ x 3))))
-#+END_SRC
+```
 
-#+RESULTS[a935fb245ae93253ae6d92dec944d916ee020b06]:
-#+begin_EXAMPLE
+```text
 SUCCEED at deriv: longer addition
 SUCCEED at deriv: longer multiplication
-#+end_EXAMPLE
+```
 
 I had to look up the solution for this one. The commented sections in
-src_scheme{augend} and src_scheme{multiplicand} were the answers I was trying to
+<span class="inline-src language-scheme" data-lang="scheme">`augend`</span> and <span class="inline-src language-scheme" data-lang="scheme">`multiplicand`</span> were the answers I was trying to
 make work:
-#+BEGIN_SRC scheme :eval no-export :results silent
+
+```scheme
 (define (augend s)
   (let ((rest (cddr s)))
     (if (null? (cdr rest))
@@ -12931,51 +10802,39 @@ make work:
 ;        (make-sum (addend rest)
 ;                  (augend (cons '+ rest))))))
         (cons '+ rest))))
-#+END_SRC
+```
 
 It's taking a bunch of steps that weren't ultimately helping, but it didn't
 occur to me that the solution was to go simpler rather than more complicated.
 I'll have to keep watch for problem-solving dead-ends like this.
 
-** Exercise 2.58: Processing expressions with infix notation
-:PROPERTIES:
-:ID:       0c266a88-a666-42f8-8da6-758186f84570
-:CUSTOM-ID: 0c266a88-a666-42f8-8da6-758186f84570
-:END:
 
-*** Question
-:PROPERTIES:
-:ID:       435005e1-fd26-4326-a1ab-827d7f6e9ca8
-:CUSTOM-ID: 435005e1-fd26-4326-a1ab-827d7f6e9ca8
-:END:
+### <span class="section-num">3.67</span> Exercise 2.58: Processing expressions with infix notation {#exercise-2-dot-58-processing-expressions-with-infix-notation}
+
+
+#### <span class="section-num">3.67.1</span> Question {#question}
 
 Suppose we want to modify the differentiation program so that it works with
-ordinary mathematical notation, in which src_scheme{+} and src_scheme{*} are
+ordinary mathematical notation, in which <span class="inline-src language-scheme" data-lang="scheme">`+`</span> and <span class="inline-src language-scheme" data-lang="scheme">`*`</span> are
 infix rather than prefix operators. Since the differentiation program is defined
 in terms of abstract data, we can modify it to work with different
 representations of expressions solely by changing the predicates, selectors, and
 constructors that define the representation of the algebraic expressions on
 which the differentiator is to operate.
 
-*** Part 1
-:PROPERTIES:
-:ID:       e9680d8c-53f0-4d51-a89e-0ceedb068100
-:CUSTOM-ID: e9680d8c-53f0-4d51-a89e-0ceedb068100
-:END:
+
+#### <span class="section-num">3.67.2</span> Part 1 {#part-1}
 
 Show how to do this in order to differentiate algebraic expressions presented
-in infix form, such as src_scheme{(x + (3 * (x + (y + 2))))}.  To simplify the task,
-assume that src_scheme{+} and src_scheme{*} always take two arguments and that
+in infix form, such as <span class="inline-src language-scheme" data-lang="scheme">`(x + (3 * (x + (y + 2))))`</span>.  To simplify the task,
+assume that <span class="inline-src language-scheme" data-lang="scheme">`+`</span> and <span class="inline-src language-scheme" data-lang="scheme">`*`</span> always take two arguments and that
 expressions are fully parenthesized.
 
-*** Answer 1
-:PROPERTIES:
-:ID:       b54640f3-881c-46d2-977d-ee14cc6f8664
-:CUSTOM-ID: b54640f3-881c-46d2-977d-ee14cc6f8664
-:END:
 
-#+NAME: deriv-infix
-#+BEGIN_SRC scheme :eval no-export :results silent
+#### <span class="section-num">3.67.3</span> Answer 1 {#answer-1}
+
+<a id="code-snippet--deriv-infix"></a>
+```scheme
 (define (variable? x) (symbol? x))
 (define (same-variable? v1 v2)
   (and (variable? v1) (variable? v2) (eq? v1 v2)))
@@ -13012,8 +10871,9 @@ expressions are fully parenthesized.
                          (multiplicand exp))))
         (else
          (error "unknown expression type: DERIV" exp))))
-#+END_SRC
-#+BEGIN_SRC scheme :eval no-export :results output
+```
+
+```scheme
 <<deriv-infix>>
 (load "mattcheck2.scm")
 (mattcheck "deriv: basic addition"
@@ -13025,46 +10885,40 @@ expressions are fully parenthesized.
 (mattcheck "deriv: bad simplification"
            (deriv '((x * y) * (x + 3)) 'x)
            '((x * y) + (y * (x + 3))))
-#+END_SRC
+```
 
-#+RESULTS[3b0624a3e904d1886756baf55d604bc6e92ed1a7]:
-#+begin_EXAMPLE
+```text
 SUCCEED at deriv: basic addition
 SUCCEED at deriv: basic multiplication
 SUCCEED at deriv: bad simplification
-#+end_EXAMPLE
+```
 
-*** Part 2
-:PROPERTIES:
-:ID:       e13be4f0-5c38-4da2-9c98-453a90730e1d
-:CUSTOM-ID: e13be4f0-5c38-4da2-9c98-453a90730e1d
-:END:
+
+#### <span class="section-num">3.67.4</span> Part 2 {#part-2}
 
 The problem becomes substantially harder if we allow standard algebraic
-notation, such as src_scheme{(x + 3 * (x + y + 2))}, which drops unnecessary
+notation, such as <span class="inline-src language-scheme" data-lang="scheme">`(x + 3 * (x + y + 2))`</span>, which drops unnecessary
 parentheses and assumes that multiplication is done before addition. Can you
 design appropriate predicates, selectors, and constructors for this notation
 such that our derivative program still works?
 
-*** Answer 2
-:PROPERTIES:
-:ID:       2e7a512e-72a1-4728-bc06-e6a140c70867
-:CUSTOM-ID: 2e7a512e-72a1-4728-bc06-e6a140c70867
-:END:
+
+#### <span class="section-num">3.67.5</span> Answer 2 {#answer-2}
 
 Ok, I think I can do the long-form list objective, since that would be a
 combination of two earlier exercises. But as I write I feel clueless how to
 make multiplication happen before addition -- my first impulse is that this
 would mean I would need to either:
-a. Change how Lisp's evaluation works (obviously overkill)
-b. Make statements be evaluated twice, once for multiplication and then once for
-   addition. And I think that would require modifications to src_scheme{deriv}.
+
+1.  Change how Lisp's evaluation works (obviously overkill)
+2.  Make statements be evaluated twice, once for multiplication and then once for
+    addition. And I think that would require modifications to <span class="inline-src language-scheme" data-lang="scheme">`deriv`</span>.
 
 I'll just start working on the long-form feature and see if I can think of
 anything.
 
-#+NAME: deriv-algebraic
-#+BEGIN_SRC scheme :eval no-export :results silent
+<a id="code-snippet--deriv-algebraic"></a>
+```scheme
 (define (variable? x) (symbol? x))
 (define (same-variable? v1 v2)
   (and (variable? v1) (variable? v2) (eq? v1 v2)))
@@ -13113,8 +10967,9 @@ anything.
                         (multiplicand exp))))
         (else
          (error "unknown expression type: DERIV" exp))))
-#+END_SRC
-#+BEGIN_SRC scheme :eval no-export :results output
+```
+
+```scheme
 <<deriv-algebraic>>
 (load "mattcheck2.scm")
 (mattcheck "deriv: basic addition"
@@ -13151,10 +11006,9 @@ anything.
 (mattcheck "deriv: mult prioritization 4b"
            (deriv '(y * 2 + x + 3 + x) 'x)
            2)
-#+END_SRC
+```
 
-#+RESULTS[8a2358372e6ee2a367f43b82581da8654df2a646]:
-#+begin_EXAMPLE
+```text
 <unknown-location>: warning: possibly unbound variable `mattcheck'
 SUCCEED at deriv: basic addition
 SUCCEED at deriv: basic multiplication
@@ -13168,15 +11022,15 @@ SUCCEED at deriv: mult prioritization 4a
 FAIL at deriv: mult prioritization 4b
 expected: 2
 returned: (y * 2)
-#+end_EXAMPLE
+```
 
-Above is my first solution. I modified src_scheme{make-sum} to
+Above is my first solution. I modified <span class="inline-src language-scheme" data-lang="scheme">`make-sum`</span> to
 check the operator after the current one, see if it was a multiplication, and
-if so to evaluate it with src_scheme{make-product} before doing the current
+if so to evaluate it with <span class="inline-src language-scheme" data-lang="scheme">`make-product`</span> before doing the current
 addition. The "immutable variable" ways of problem solving makes this pretty
 easy:
 
-#+BEGIN_SRC scheme -n
+```scheme { linenos=true, linenostart=1 }
 ;; I want to do f to the first item of x, unless some-condition? in the second
 ;; item, in which case do g to the 2nd item before x to the first
 (define (foo x)
@@ -13184,15 +11038,15 @@ easy:
       (f (cons (car x)
                (g (cdr x))))
       (f x)))
-#+END_SRC
+```
 
 If I were doing this with mutable variables, where I needed to perform these
 modifications in-place in one data structure, I might not have the tools to
 solve that problem.
 
-However, I came back to this problem after continuing on ahead so far as [[id:1653578d-c9b3-443c-8cc9-2495778dd9b1][Exercise 2.91: division of polynomials]], when someone on the
+However, I came back to this problem after continuing on ahead so far as [Exercise 2.91: division of polynomials](#1-dot-3-dot-4-procedures-as-returned-values), when someone on the
 Discord asked for help. Upon re-examination I realized that this first solution
-does /not/ solve the problem in an algebraically equivalent way, as you can see
+does _not_ solve the problem in an algebraically equivalent way, as you can see
 by the last two tests I added above. I had assumed that because addition and
 multiplication were commutative, that I only needed to account for immediately
 adjacent operations. This was not the case. I must solve the higher-priority
@@ -13200,8 +11054,8 @@ operations in a list first before starting any of the lower ones.
 
 TODO:
 
-#+NAME: deriv-algebraic-fixed
-#+BEGIN_SRC scheme :eval no-export :results silent
+<a id="code-snippet--deriv-algebraic-fixed"></a>
+```scheme
 (define func-list '(product? sum?))
 (define priority-list '(* +))
 (define (solve-in-order exp func-list)
@@ -13258,8 +11112,9 @@ TODO:
                         (multiplicand exp))))
         (else
          (error "unknown expression type: DERIV" exp))))
-#+END_SRC
-#+BEGIN_SRC scheme :eval no-export :results output
+```
+
+```scheme
 <<deriv-algebraic-fixed>>
 (load "mattcheck2.scm")
 (mattcheck "deriv: basic addition"
@@ -13296,22 +11151,16 @@ TODO:
 (mattcheck "deriv: mult prioritization 4b"
            (deriv '(y * 2 + x + 3 + x) 'x)
            2)
-#+END_SRC
+```
 
-** Exercise 2.59: Representing sets
-:PROPERTIES:
-:ID:       ecbb093d-99c4-44c1-9891-ab68c5dd3c31
-:CUSTOM-ID: ecbb093d-99c4-44c1-9891-ab68c5dd3c31
-:END:
 
-*** Text definitions
-:PROPERTIES:
-:ID:       9e32f631-f5d6-4528-96fb-9899c3ad835b
-:CUSTOM-ID: 9e32f631-f5d6-4528-96fb-9899c3ad835b
-:END:
+### <span class="section-num">3.68</span> Exercise 2.59: Representing sets {#exercise-2-dot-59-representing-sets}
 
-#+NAME: sets-txt
-#+BEGIN_SRC scheme :eval no-export :results silent
+
+#### <span class="section-num">3.68.1</span> Text definitions {#text-definitions}
+
+<a id="code-snippet--sets-txt"></a>
+```scheme
 (define (element-of-set?-manual x set)
   (cond ((null? set) #f)
         ((equal? x (car set)) #t)
@@ -13324,38 +11173,31 @@ TODO:
       (cons x set)))
 
 (define (intersection-set set1 set2)
-  (cond ((or (null? set1) (null? set2)) 
+  (cond ((or (null? set1) (null? set2))
          '())
         ((element-of-set? (car set1) set2)
          (cons (car set1)
-               (intersection-set (cdr set1) 
+               (intersection-set (cdr set1)
                                  set2)))
-        (else (intersection-set (cdr set1) 
+        (else (intersection-set (cdr set1)
                                 set2))))
-#+END_SRC
+```
 
-*** Question
-:PROPERTIES:
-:ID:       e4853186-1af6-495c-96f7-008add26ce22
-:CUSTOM-ID: e4853186-1af6-495c-96f7-008add26ce22
-:END:
 
-Implement the src_scheme{union-set} operation for the unordered-list representation of sets.
+#### <span class="section-num">3.68.2</span> Question {#question}
 
-*** Answer
-:PROPERTIES:
-:ID:       8d7e0c34-2dd5-40f9-ac98-4b3abb8c4c58
-:CUSTOM-ID: 8d7e0c34-2dd5-40f9-ac98-4b3abb8c4c58
-:END:
+Implement the <span class="inline-src language-scheme" data-lang="scheme">`union-set`</span> operation for the unordered-list representation of sets.
 
-src_scheme{union-set} at a first glance looks like the opposite of
-src_scheme{intersection-set}, since the logic looks like "merge two sets, and if
+
+#### <span class="section-num">3.68.3</span> Answer {#answer}
+
+<span class="inline-src language-scheme" data-lang="scheme">`union-set`</span> at a first glance looks like the opposite of
+<span class="inline-src language-scheme" data-lang="scheme">`intersection-set`</span>, since the logic looks like "merge two sets, and if
 an element exists in both than don't include it". However it's actually just
 avoiding putting a symbol in twice.
 
-
-#+NAME: union-set
-#+BEGIN_SRC scheme :eval no-export :results silent
+<a id="code-snippet--union-set"></a>
+```scheme
 (define (union-set-rec set1 set2)
   (cond ((or (null? set1) (null? set2))
          set2)
@@ -13377,9 +11219,9 @@ avoiding putting a symbol in twice.
                          result)))))
     (append (iter set1 '())
             set2))
-#+END_SRC
+```
 
-#+BEGIN_SRC scheme :eval no-export :results output
+```scheme
 <<sets-txt>>
 <<union-set>>
 (load "mattcheck2.scm")
@@ -13392,16 +11234,15 @@ avoiding putting a symbol in twice.
   (mattcheck "union-set"
              (union-set set1 set2)
              set-union))
-#+END_SRC
+```
 
-#+RESULTS[971bc3eeb461037d460405c861033b95f51440e6]:
-#+begin_EXAMPLE
+```text
 SUCCEED at union-set-rec
 SUCCEED at union-set
-#+end_EXAMPLE
+```
 
-#+NAME: union-set-benched
-#+begin_src scheme -n :eval no-export :results silent :tangle 2/Ex59.scheme
+<a id="code-snippet--union-set-benched"></a>
+```scheme { linenos=true, linenostart=1 }
 <<enumerate-interval>>
 <<sets-txt>>
 <<union-set>>
@@ -13416,51 +11257,41 @@ SUCCEED at union-set
             (cadr (mattbench2 (lambda()(union-set set1 set2)) 10000))))
 
   (test))
-#+END_SRC
+```
 
-#+RESULT:
-#+BEGIN_EXAMPLE
+```text
 recursive union-sets: 4704343.6974
 iterative union-sets: 4755592.2304
-#+END_EXAMPLE
+```
 
 Man, my "optimized" versions never work. I would blame it on the Scheme compiler
 but I'm a new programmer so it's probably a skill issue.
 
-** Exercise 2.59: Sets with duplicates
-:PROPERTIES:
-:ID:       56d38582-cfa6-474e-acf8-7788a2e54b9f
-:CUSTOM-ID: 56d38582-cfa6-474e-acf8-7788a2e54b9f
-:END:
 
-*** Question
-:PROPERTIES:
-:ID:       77e25c2d-043a-4ff1-a60e-5201a853288e
-:CUSTOM-ID: 77e25c2d-043a-4ff1-a60e-5201a853288e
-:END:
+### <span class="section-num">3.69</span> Exercise 2.59: Sets with duplicates {#exercise-2-dot-59-sets-with-duplicates}
+
+
+#### <span class="section-num">3.69.1</span> Question {#question}
 
 We specified that a set would be represented as a list with no duplicates. Now
-suppose we allow duplicates. For instance, the set \(\{1, 2, 3\}\) could be
-represented as the list src_scheme{(2 3 2 1 3 2 2)}. Design procedures
-src_scheme{element-of-set?}, src_scheme{adjoin-set}, src_scheme{union-set}, and
-src_scheme{intersection-set} that operate on this representation. How does the
+suppose we allow duplicates. For instance, the set \\(\\{1, 2, 3\\}\\) could be
+represented as the list <span class="inline-src language-scheme" data-lang="scheme">`(2 3 2 1 3 2 2)`</span>. Design procedures
+<span class="inline-src language-scheme" data-lang="scheme">`element-of-set?`</span>, <span class="inline-src language-scheme" data-lang="scheme">`adjoin-set`</span>, <span class="inline-src language-scheme" data-lang="scheme">`union-set`</span>, and
+<span class="inline-src language-scheme" data-lang="scheme">`intersection-set`</span> that operate on this representation. How does the
 efficiency of each compare with the corresponding procedure for the
 non-duplicate representation? Are there applications for which you would use
 this representation in preference to the non-duplicate one?
 
-*** Answer
-:PROPERTIES:
-:ID:       49bfc1b6-e8c0-4833-9be1-e535e23b5e1b
-:CUSTOM-ID: 49bfc1b6-e8c0-4833-9be1-e535e23b5e1b
-:END:
 
-src_scheme{element-of-set} can be left unchanged. The others are a matter of
-getting sloppy: src_scheme{adjoin-set} can just be a src_scheme{cons}, and
-src_scheme{union-set} can be an append. Now the remaining question is, how to
-make src_scheme{intersection-set} keep the duplicates?
+#### <span class="section-num">3.69.2</span> Answer {#answer}
 
-#+NAME: set-dupes
-#+BEGIN_SRC scheme :eval no-export :results silent
+<span class="inline-src language-scheme" data-lang="scheme">`element-of-set`</span> can be left unchanged. The others are a matter of
+getting sloppy: <span class="inline-src language-scheme" data-lang="scheme">`adjoin-set`</span> can just be a <span class="inline-src language-scheme" data-lang="scheme">`cons`</span>, and
+<span class="inline-src language-scheme" data-lang="scheme">`union-set`</span> can be an append. Now the remaining question is, how to
+make <span class="inline-src language-scheme" data-lang="scheme">`intersection-set`</span> keep the duplicates?
+
+<a id="code-snippet--set-dupes"></a>
+```scheme
 (define (adjoin-set-dupes x set)
   (cons x set))
 
@@ -13476,9 +11307,9 @@ make src_scheme{intersection-set} keep the duplicates?
   (let ((inter (intersection-set set1 set2)) ;; yes, we're calling the non-duplicate version
         (inter2 (intersection-set set2 set1)))
     (append inter inter2)))
-#+END_SRC
+```
 
-#+BEGIN_SRC scheme :eval no-export :results output
+```scheme
 <<sets-txt>>
 <<union-set>>
 <<set-dupes>>
@@ -13506,19 +11337,18 @@ make src_scheme{intersection-set} keep the duplicates?
   (mattcheck "intersection-set-dupes2"
              (intersection-set-dupes2 set1 set2)
              set-intersection-dupes))
-#+END_SRC
+```
 
-#+RESULTS[9aec8f2110e6e79ea7f4dea07511544bdf270e99]:
-#+begin_EXAMPLE
+```text
 SUCCEED at union-set-dupes
 SUCCEED at union-set
 SUCCEED at intersection-set
 SUCCEED at intersection-set-dupes
 SUCCEED at intersection-set-dupes2
-#+end_EXAMPLE
+```
 
-#+NAME: union-set-benched
-#+begin_src scheme -n :results output :tangle 2/Ex60.scheme
+<a id="code-snippet--union-set-benched"></a>
+```scheme { linenos=true, linenostart=1 }
 <<enumerate-interval>>
 <<sets-txt>>
 <<union-set>>
@@ -13542,47 +11372,37 @@ SUCCEED at intersection-set-dupes2
     )
 
   (test))
-#+END_SRC
+```
 
-#+RESULTS:
-#+begin_example
+```text
 union-sets: 4734892.3798
 union-sets-dupes: 40132.52
 intersection-set: 4673425.9196
 intersection-set-dupes: 10325053.8432
 intersection-set-dupes2: 10872996.2555
-#+end_example
+```
 
-So for src_scheme{union-sets} a significant speedup, while in algorithms that
-need to check for duplicates like src_scheme{intersection-set} it's much more
-time. Also, in a no-duplicate implementation src_scheme{element-of-set}, it
+So for <span class="inline-src language-scheme" data-lang="scheme">`union-sets`</span> a significant speedup, while in algorithms that
+need to check for duplicates like <span class="inline-src language-scheme" data-lang="scheme">`intersection-set`</span> it's much more
+time. Also, in a no-duplicate implementation <span class="inline-src language-scheme" data-lang="scheme">`element-of-set`</span>, it
 wouldn't be wasting time checking duplicates.
 
-** Exercise 2.61: Ordered sets
-:PROPERTIES:
-:ID:       63d00424-b2ae-4c03-ba2d-7211587d0d58
-:CUSTOM-ID: 63d00424-b2ae-4c03-ba2d-7211587d0d58
-:END:
 
-*** Question
-:PROPERTIES:
-:ID:       7835acdf-8bb9-400f-8e74-f74f17a5269c
-:CUSTOM-ID: 7835acdf-8bb9-400f-8e74-f74f17a5269c
-:END:
+### <span class="section-num">3.70</span> Exercise 2.61: Ordered sets {#exercise-2-dot-61-ordered-sets}
 
-Give an implementation of src_scheme{adjoin-set} using the ordered
-representation. By analogy with src_scheme{element-of-set?} show how to take
+
+#### <span class="section-num">3.70.1</span> Question {#question}
+
+Give an implementation of <span class="inline-src language-scheme" data-lang="scheme">`adjoin-set`</span> using the ordered
+representation. By analogy with <span class="inline-src language-scheme" data-lang="scheme">`element-of-set?`</span> show how to take
 advantage of the ordering to produce a procedure that requires on the average
 about half as many steps as with the unordered representation.
 
-*** Answer
-:PROPERTIES:
-:ID:       af210971-9110-42e6-a672-daed9e8c92a6
-:CUSTOM-ID: af210971-9110-42e6-a672-daed9e8c92a6
-:END:
 
-#+NAME: set-ordered
-#+BEGIN_SRC scheme :eval no-export :results silent
+#### <span class="section-num">3.70.2</span> Answer {#answer}
+
+<a id="code-snippet--set-ordered"></a>
+```scheme
 (define (element-of-set?-ordered x set)
   (cond ((null? set) #f)
         ((= x (car set)) #t)
@@ -13601,9 +11421,9 @@ about half as many steps as with the unordered representation.
           (else (append (reverse checked)
                         (cons x rest)))))
   (iter '() set))
-#+END_SRC
+```
 
-#+BEGIN_SRC scheme :eval no-export :results output
+```scheme
 <<sets-txt>>
 <<union-set>>
 <<set-ordered>>
@@ -13613,36 +11433,26 @@ about half as many steps as with the unordered representation.
   (mattcheck "adjoin-set-ordered"
              (adjoin-set-ordered 3 set)
              answer))
-#+END_SRC
+```
 
-#+RESULTS[b958861e53e89ae15586f74de993afc93ce213b7]:
-#+begin_EXAMPLE
+```text
 SUCCEED at adjoin-set-ordered
-#+end_EXAMPLE
+```
 
-** Exercise 2.62: ~union-set~ ordered
-:PROPERTIES:
-:ID:       0f2a00ea-9015-4740-bd3f-dbd5d698b918
-:CUSTOM-ID: 0f2a00ea-9015-4740-bd3f-dbd5d698b918
-:END:
 
-*** Question
-:PROPERTIES:
-:ID:       12c67368-0159-4d19-856e-8f4f9f35f3a3
-:CUSTOM-ID: 12c67368-0159-4d19-856e-8f4f9f35f3a3
-:END:
+### <span class="section-num">3.71</span> Exercise 2.62: `union-set` ordered {#exercise-2-dot-62-union-set-ordered}
 
-Give a \(\Theta(n)\) implementation of src_scheme{union-set} for sets
+
+#### <span class="section-num">3.71.1</span> Question {#question}
+
+Give a \\(\Theta(n)\\) implementation of <span class="inline-src language-scheme" data-lang="scheme">`union-set`</span> for sets
 represented as ordered lists.
 
-*** Answer
-:PROPERTIES:
-:ID:       8bab316a-a45a-4005-8d5d-330b4d1ea2e2
-:CUSTOM-ID: 8bab316a-a45a-4005-8d5d-330b4d1ea2e2
-:END:
 
-#+NAME: union-set-ordered
-#+BEGIN_SRC scheme :eval no-export :results silent
+#### <span class="section-num">3.71.2</span> Answer {#answer}
+
+<a id="code-snippet--union-set-ordered"></a>
+```scheme
 (define (union-set-ordered set1 set2)
   (define (iter s1 s2 result)
     (cond ((null? s1)
@@ -13662,9 +11472,9 @@ represented as ordered lists.
                     (iter s1 (cdr s2)
                           (cons s2a result))))))))
   (iter set1 set2 '()))
-#+END_SRC
+```
 
-#+BEGIN_SRC scheme :eval no-export :results output
+```scheme
 <<sets-txt>>
 <<union-set>>
 <<set-ordered>>
@@ -13676,14 +11486,13 @@ represented as ordered lists.
   (mattcheck "union-set-ordered"
              (union-set-ordered set1 set2)
              answer))
-#+END_SRC
+```
 
-#+RESULTS[6e9f3027584203f12d47bab998f4fbe43ecc3cd2]:
-#+begin_EXAMPLE
+```text
 SUCCEED at union-set-ordered
-#+end_EXAMPLE
+```
 
-#+begin_src scheme -n :results output :tangle 2/Ex62.scheme
+```scheme { linenos=true, linenostart=1 }
 <<enumerate-interval>>
 <<sets-txt>>
 <<union-set>>
@@ -13692,27 +11501,27 @@ SUCCEED at union-set-ordered
 (load "../mattbench.scm")
 
 ;; http://community.schemewiki.org/?sicp-ex-2.62
-(define (union-set-alt set1 set2) 
-  (cond  ((null? set1) set2) 
-         ((null? set2) set1) 
-         (else  
-          (let ((x1 (car set1)) 
-                (x2 (car set2))) 
-            (cond ((= x1 x2) (cons x1 (union-set-alt (cdr set1) (cdr set2)))) 
-                  ((< x1 x2) (cons x1 (union-set-alt (cdr set1) set2))) 
+(define (union-set-alt set1 set2)
+  (cond  ((null? set1) set2)
+         ((null? set2) set1)
+         (else
+          (let ((x1 (car set1))
+                (x2 (car set2)))
+            (cond ((= x1 x2) (cons x1 (union-set-alt (cdr set1) (cdr set2))))
+                  ((< x1 x2) (cons x1 (union-set-alt (cdr set1) set2)))
                   (else (cons x2 (union-set-alt set1 (cdr set2)))))))))
-(define (union-set-alt2 set1 set2) 
-  (cond ((null? set1) set2) 
-        ((null? set2) set1) 
-        (else 
-         (let ((x1 (car set1)) 
-               (x2 (car set2))) 
-           (cons (min x1 x2) 
-                 (union-set-alt2 (if (> x1 x2) 
-                                     set1 
-                                     (cdr set1)) 
-                                 (if (> x2 x1) 
-                                     set2 
+(define (union-set-alt2 set1 set2)
+  (cond ((null? set1) set2)
+        ((null? set2) set1)
+        (else
+         (let ((x1 (car set1))
+               (x2 (car set2)))
+           (cons (min x1 x2)
+                 (union-set-alt2 (if (> x1 x2)
+                                     set1
+                                     (cdr set1))
+                                 (if (> x2 x1)
+                                     set2
                                      (cdr set2))))))))
 
 (let ((set1 (enumerate-interval 1 1000))
@@ -13729,48 +11538,38 @@ SUCCEED at union-set-ordered
     )
 
   (test))
-#+END_SRC
+```
 
-#+RESULTS:
-#+BEGIN_EXAMPLE
+```text
 union-set: 4758999.4984
 union-set-ordered: 107784.3673
 union-set-alt: 45441.7717
 union-set-alt2: 66262.4295
-#+END_EXAMPLE
+```
 
-** Exercise 2.63: binary trees
-:PROPERTIES:
-:ID:       ab85e21b-827b-48eb-9ad2-58f6315bfddb
-:CUSTOM-ID: ab85e21b-827b-48eb-9ad2-58f6315bfddb
-:END:
 
-*** Text definitions
-:PROPERTIES:
-:ID:       89e7156c-1d4d-4407-8f5c-376c8612f1fa
-:CUSTOM-ID: 89e7156c-1d4d-4407-8f5c-376c8612f1fa
-:END:
+### <span class="section-num">3.72</span> Exercise 2.63: binary trees {#exercise-2-dot-63-binary-trees}
 
-#+NAME: make-tree
-#+BEGIN_SRC scheme -n :eval no-export :results silent
+
+#### <span class="section-num">3.72.1</span> Text definitions {#text-definitions}
+
+<a id="code-snippet--make-tree"></a>
+```scheme { linenos=true, linenostart=1 }
 (define (entry tree) (car tree))
 (define (left-branch tree) (cadr tree))
 (define (right-branch tree) (caddr tree))
 (define (make-tree entry left right)
   (list entry left right))
-#+END_SRC
+```
 
-*** Question A
-:PROPERTIES:
-:ID:       175a45f6-69ab-46d4-981b-61dc99016c1e
-:CUSTOM-ID: 175a45f6-69ab-46d4-981b-61dc99016c1e
-:END:
+
+#### <span class="section-num">3.72.2</span> Question A {#question-a}
 
 Each of the following two
 procedures converts a binary tree to a list.
 
-#+NAME: tree-to-list
-#+BEGIN_SRC scheme -n :eval no-export :results silent
+<a id="code-snippet--tree-to-list"></a>
+```scheme { linenos=true, linenostart=1 }
 <<make-tree>>
 (define (tree->list-1 tree)
   (if (null? tree)
@@ -13789,23 +11588,20 @@ procedures converts a binary tree to a list.
                               (right-branch tree)
                               result-list)))))
   (copy-to-list tree '()))
-#+END_SRC
+```
 
-a. Do the two procedures produce the same result for every tree? If not, how do
-   the results differ? What lists do the two procedures produce for the trees in
-   Figure 2.16?
+1.  Do the two procedures produce the same result for every tree? If not, how do
+    the results differ? What lists do the two procedures produce for the trees in
+    Figure 2.16?
 
-*** Answer A
-:PROPERTIES:
-:ID:       49b808cb-71b0-4866-b1d7-1dda7ab4495a
-:CUSTOM-ID: 49b808cb-71b0-4866-b1d7-1dda7ab4495a
-:END:
+
+#### <span class="section-num">3.72.3</span> Answer A {#answer-a}
 
 First let's check whether the arrangement of the input tree impacts the output
 list. I'd like a couple functions for generating lists.
 
-#+NAME: tree-makers
-#+BEGIN_SRC scheme -n :eval no-export :results silent
+<a id="code-snippet--tree-makers"></a>
+```scheme { linenos=true, linenostart=1 }
 (define (rightward-tree list)
   (if (null? list)
       '()
@@ -13833,8 +11629,9 @@ list. I'd like a couple functions for generating lists.
                             (rec (list-head list halfway))
                             (rec (list-tail list (1+ halfway))))))))
   (rec list))
-#+END_SRC
-#+BEGIN_SRC scheme -n :eval no-export :results output
+```
+
+```scheme { linenos=true, linenostart=1 }
 <<echo>>
 <<tree-to-list>>
 <<tree-makers>>
@@ -13858,45 +11655,38 @@ list. I'd like a couple functions for generating lists.
   (echo "tree-middle:" tree-middle)
   (echo "tree-middle list 1:" (tree->list-1 tree-middle))
   (echo "tree-middle list 2:" (tree->list-2 tree-middle)))
-#+END_SRC
+```
 
-#+RESULTS[3173e532dbff288efab93f5caf6e615a7dd98977]:
-#+begin_EXAMPLE
-tree-right: (1 () (2 () (3 () (4 () ())))) 
-tree-right list 1: (1 2 3 4) 
-tree-right list 2: (1 2 3 4) 
+```text
+tree-right: (1 () (2 () (3 () (4 () ()))))
+tree-right list 1: (1 2 3 4)
+tree-right list 2: (1 2 3 4)
 
-tree-left: (1 (2 (3 (4 () ()) ()) ()) ()) 
-tree-left list 1: (4 3 2 1) 
-tree-left list 2: (4 3 2 1) 
+tree-left: (1 (2 (3 (4 () ()) ()) ()) ())
+tree-left list 1: (4 3 2 1)
+tree-left list 2: (4 3 2 1)
 
-tree-middle: (5 (2 (1 (0 () ()) ()) (4 (3 () ()) ())) (8 (7 (6 () ()) ()) (9 () ()))) 
-tree-middle list 1: (0 1 2 3 4 5 6 7 8 9) 
-tree-middle list 2: (0 1 2 3 4 5 6 7 8 9) 
-#+end_EXAMPLE
+tree-middle: (5 (2 (1 (0 () ()) ()) (4 (3 () ()) ())) (8 (7 (6 () ()) ()) (9 () ())))
+tree-middle list 1: (0 1 2 3 4 5 6 7 8 9)
+tree-middle list 2: (0 1 2 3 4 5 6 7 8 9)
+```
 
 So, the lists are the same for both.
 
-Fun fact: Emacs org-babel has suddenly stopped accepting the \lambda character
+Fun fact: Emacs org-babel has suddenly stopped accepting the &lambda; character
 in source code.
 
-*** Question B
-:PROPERTIES:
-:ID:       6a43ff28-bb10-4e54-b692-59f258015af4
-:CUSTOM-ID: 6a43ff28-bb10-4e54-b692-59f258015af4
-:END:
+
+#### <span class="section-num">3.72.4</span> Question B {#question-b}
 
 Do the two procedures have the same order of growth in the number of steps
-required to convert a balanced tree with \(n\) elements to a list? If not, which
+required to convert a balanced tree with \\(n\\) elements to a list? If not, which
 one grows more slowly?
 
-*** Answer B
-:PROPERTIES:
-:ID:       dd34d29c-8a86-4455-84ea-5e56510c2dd4
-:CUSTOM-ID: dd34d29c-8a86-4455-84ea-5e56510c2dd4
-:END:
 
-#+BEGIN_SRC scheme -n :eval no-export :results silent
+#### <span class="section-num">3.72.5</span> Answer B {#answer-b}
+
+```scheme { linenos=true, linenostart=1 }
 ;; tree->list-1 evaluating the following tree:
 ;;     7
 ;;    / \
@@ -13959,29 +11749,26 @@ one grows more slowly?
         nil
         '(3 5 7 9 11))))
 '(1 3 5 7 9 11)
-#+END_SRC
+```
 
-So, assuming the evaluation isn't as slow as operations like src_scheme{append},
+So, assuming the evaluation isn't as slow as operations like <span class="inline-src language-scheme" data-lang="scheme">`append`</span>,
 the second is definitely faster -- it's basically just evaluating to a series of
-src_scheme{cons} statements. The internet suggests that the first is
-\(\Theta(n\log{n})\) while the second is \(\Theta(n)\).
+<span class="inline-src language-scheme" data-lang="scheme">`cons`</span> statements. The internet suggests that the first is
+\\(\Theta(n\log{n})\\) while the second is \\(\Theta(n)\\).
 
-** Exercise 2.64: Making a balanced binary tree
-:PROPERTIES:
-:ID:       b748b886-879d-465d-87e6-c816cb02c4dd
-:CUSTOM-ID: b748b886-879d-465d-87e6-c816cb02c4dd
-:END:
 
-The following procedure src_scheme{list->tree} converts an ordered list to a
-balanced binary tree. The helper procedure src_scheme{partial-tree} takes as
-arguments an integer \(n\) and list of at least \(n\) elements and constructs a
-balanced tree containing the first \(n\) elements of the list. The result
-returned by src_scheme{partial-tree} is a pair (formed with src_scheme{cons})
-whose src_scheme{car} is the constructed tree and whose src_scheme{cdr} is the
+### <span class="section-num">3.73</span> Exercise 2.64: Making a balanced binary tree {#exercise-2-dot-64-making-a-balanced-binary-tree}
+
+The following procedure <span class="inline-src language-scheme" data-lang="scheme">`list->tree`</span> converts an ordered list to a
+balanced binary tree. The helper procedure <span class="inline-src language-scheme" data-lang="scheme">`partial-tree`</span> takes as
+arguments an integer \\(n\\) and list of at least \\(n\\) elements and constructs a
+balanced tree containing the first \\(n\\) elements of the list. The result
+returned by <span class="inline-src language-scheme" data-lang="scheme">`partial-tree`</span> is a pair (formed with <span class="inline-src language-scheme" data-lang="scheme">`cons`</span>)
+whose <span class="inline-src language-scheme" data-lang="scheme">`car`</span> is the constructed tree and whose <span class="inline-src language-scheme" data-lang="scheme">`cdr`</span> is the
 list of elements not included in the tree.
 
-#+NAME: list-to-tree
-#+BEGIN_SRC scheme -n :eval no-export :results silent :tangle 2/Ex64-a.scheme
+<a id="code-snippet--list-to-tree"></a>
+```scheme { linenos=true, linenostart=1 }
 <<make-tree>>
 (define (list->tree elements)
   (car (partial-tree elements (length elements))))
@@ -14006,27 +11793,21 @@ list of elements not included in the tree.
                                  left-tree
                                  right-tree)
                       remaining-elts))))))))
-#+END_SRC
+```
 
-*** Question A
-:PROPERTIES:
-:ID:       bac079c0-fcdc-4ce9-ba35-22f22f0aeb7c
-:CUSTOM-ID: bac079c0-fcdc-4ce9-ba35-22f22f0aeb7c
-:END:
+
+#### <span class="section-num">3.73.1</span> Question A {#question-a}
 
 Write a short paragraph explaining as clearly as you can how
-src_scheme{partial-tree} works. Draw the tree produced by src_scheme{list->tree}
-for the list src_scheme{(1 3 5 7 9 11)}.
+<span class="inline-src language-scheme" data-lang="scheme">`partial-tree`</span> works. Draw the tree produced by <span class="inline-src language-scheme" data-lang="scheme">`list->tree`</span>
+for the list <span class="inline-src language-scheme" data-lang="scheme">`(1 3 5 7 9 11)`</span>.
 
-*** Answer A
-:PROPERTIES:
-:ID:       47ba4b88-3df4-40f4-ad3c-b7481e660ce1
-:CUSTOM-ID: 47ba4b88-3df4-40f4-ad3c-b7481e660ce1
-:END:
 
-For my own sake, I'll reorganize this with src_scheme{let*}.
+#### <span class="section-num">3.73.2</span> Answer A {#answer-a}
 
-#+BEGIN_SRC scheme -n :eval no-export :results silent
+For my own sake, I'll reorganize this with <span class="inline-src language-scheme" data-lang="scheme">`let*`</span>.
+
+```scheme { linenos=true, linenostart=1 }
 (define (partial-tree elts n)
   (if (= n 0)
       (cons '() elts)
@@ -14048,91 +11829,66 @@ For my own sake, I'll reorganize this with src_scheme{let*}.
                          right-tree)
               remaining-elts))))
 
-#+END_SRC
+```
 
-Say we're evaluating src_scheme{'(1 3 5 7 9 11)}. We define
-src_scheme{left-size} as \(\lfloor n/2 \rfloor\). src_scheme{partial-tree} recurses
-until hitting \(n=0\), at which point it returns the starting list with
-src_scheme{'()} prepended to it. This is used as the empty left branch for the
+Say we're evaluating <span class="inline-src language-scheme" data-lang="scheme">`'(1 3 5 7 9 11)`</span>. We define
+<span class="inline-src language-scheme" data-lang="scheme">`left-size`</span> as \\(\lfloor n/2 \rfloor\\). <span class="inline-src language-scheme" data-lang="scheme">`partial-tree`</span> recurses
+until hitting \\(n=0\\), at which point it returns the starting list with
+<span class="inline-src language-scheme" data-lang="scheme">`'()`</span> prepended to it. This is used as the empty left branch for the
 second-to-the-bottom row of the tree, in this case for the tree node of
-src_scheme{1}. That empty tree branch is saved in src_scheme{left-tree},
-src_scheme{this-entry} (src_scheme{1}) is defined, then we recurse to the right
-branch, finding a bottom to place src_scheme{3}. Finally, the tree with only 3
-is returned, it becomes the right branch off src_scheme{1}, making
-src_scheme{(make-tree 1 '() (make-tree 3 '() '()))}. This gets
-src_scheme{cons}'d to the remaining list, src_scheme{'(5 7 9 11)}. Upon
-returning the new list, this will become the src_scheme{left-tree} of its parent
+<span class="inline-src language-scheme" data-lang="scheme">`1`</span>. That empty tree branch is saved in <span class="inline-src language-scheme" data-lang="scheme">`left-tree`</span>,
+<span class="inline-src language-scheme" data-lang="scheme">`this-entry`</span> (<span class="inline-src language-scheme" data-lang="scheme">`1`</span>) is defined, then we recurse to the right
+branch, finding a bottom to place <span class="inline-src language-scheme" data-lang="scheme">`3`</span>. Finally, the tree with only 3
+is returned, it becomes the right branch off <span class="inline-src language-scheme" data-lang="scheme">`1`</span>, making
+<span class="inline-src language-scheme" data-lang="scheme">`(make-tree 1 '() (make-tree 3 '() '()))`</span>. This gets
+<span class="inline-src language-scheme" data-lang="scheme">`cons`</span>'d to the remaining list, <span class="inline-src language-scheme" data-lang="scheme">`'(5 7 9 11)`</span>. Upon
+returning the new list, this will become the <span class="inline-src language-scheme" data-lang="scheme">`left-tree`</span> of its parent
 process. All in all, this is a recursive algorithm that kind of solves itself
-with minimal logic. Note its evaluation always comes back to src_scheme{cons}
+with minimal logic. Note its evaluation always comes back to <span class="inline-src language-scheme" data-lang="scheme">`cons`</span>
 operations.
 
 This is very elegant. However, I am left wondering how clear this is in
 comparison with some C routine that does the same thing.
 
-#+BEGIN_SRC dot -n :eval no-export :file 2/fig/Ex64.png :exports results
-digraph {
-        "5" -> "1" [label="L"]
-        "1" -> "3" [label="LR"]
-        "5" -> "9" [label="R"]
-        "9" -> "7" [label="RL"]
-        "9" -> "11" [label="RR"]
-}
-#+END_SRC
+{{< figure src="/ox-hugo/Ex64.png" >}}
 
-#+RESULTS[7d444e0b76efcca23a8a5e91a1c99ff11e123b5a]:
-:results:
-[[file:2/fig/Ex64.png]]
-:end:
 
-*** Question B
-:PROPERTIES:
-:ID:       c1c44972-e7a2-47ef-bd00-8a4ab612e98f
-:CUSTOM-ID: c1c44972-e7a2-47ef-bd00-8a4ab612e98f
-:END:
+#### <span class="section-num">3.73.3</span> Question B {#question-b}
 
 What is the order of growth in the number of steps required by
-src_scheme{list->tree} to convert a list of \(n\) elements?
+<span class="inline-src language-scheme" data-lang="scheme">`list->tree`</span> to convert a list of \\(n\\) elements?
 
-*** Answer B
-:PROPERTIES:
-:ID:       2d8751a2-ce68-4f57-adb3-3288009981c9
-:CUSTOM-ID: 2d8751a2-ce68-4f57-adb3-3288009981c9
-:END:
 
-I'm going to estimate that it's \(\Theta(n)\) because of the src_scheme{cons}
+#### <span class="section-num">3.73.4</span> Answer B {#answer-b}
+
+I'm going to estimate that it's \\(\Theta(n)\\) because of the <span class="inline-src language-scheme" data-lang="scheme">`cons`</span>
 operations being the cornerstone of the procedure. The internet appears to agree
 in this case.
 
-** Exercise 2.65: Sets as binary trees
-:PROPERTIES:
-:ID:       adb5b85a-5b2d-4981-ae2a-ad03df26bbb1
-:CUSTOM-ID: adb5b85a-5b2d-4981-ae2a-ad03df26bbb1
-:END:
 
-*** Textbook Definitions
-:PROPERTIES:
-:ID:       0290682f-9b5f-41e8-8c2a-ca12aefab68d
-:CUSTOM-ID: 0290682f-9b5f-41e8-8c2a-ca12aefab68d
-:END:
+### <span class="section-num">3.74</span> Exercise 2.65: Sets as binary trees {#exercise-2-dot-65-sets-as-binary-trees}
 
-#+NAME: tree-sets-txt
-#+BEGIN_SRC scheme -n :eval no-export :results silen
+
+#### <span class="section-num">3.74.1</span> Textbook Definitions {#textbook-definitions}
+
+<a id="code-snippet--tree-sets-txt"></a>
+```scheme { linenos=true, linenostart=1 }
 (define (element-of-set?-tree x set)
   (cond ((null? set) #f)
         ((= x (entry set)) #t)
         ((< x (entry set))
          (element-of-set?-tree
-          x 
+          x
           (left-branch set)))
         ((> x (entry set))
          (element-of-set?-tree
-          x 
+          x
           (right-branch set)))))
 (define (adjoin-set-tree x set)
   (cond ((null? set) (make-tree x '() '()))
         ((= x (entry set)) set)
         ((< x (entry set))
-         (make-tree 
+         (make-tree
           (entry set)
           (adjoin-set-tree x (left-branch set))
           (right-branch set)))
@@ -14141,29 +11897,23 @@ in this case.
           (entry set)
           (left-branch set)
           (adjoin-set-tree x (right-branch set))))))
-#+END_SRC
+```
 
-*** Question
-:PROPERTIES:
-:ID:       566edfbe-2c03-4fa3-a6bc-df4359dfb663
-:CUSTOM-ID: 566edfbe-2c03-4fa3-a6bc-df4359dfb663
-:END:
 
-Use the results of Exercise 2.63 and Exercise 2.64 to give \(\Theta(n)\)
-implementations of src_scheme{union-set} and src_scheme{intersection-set} for
+#### <span class="section-num">3.74.2</span> Question {#question}
+
+Use the results of Exercise 2.63 and Exercise 2.64 to give \\(\Theta(n)\\)
+implementations of <span class="inline-src language-scheme" data-lang="scheme">`union-set`</span> and <span class="inline-src language-scheme" data-lang="scheme">`intersection-set`</span> for
 sets implemented as (balanced) binary trees.
 
-*** Answer
-:PROPERTIES:
-:ID:       77574b95-ad69-4f55-8216-bc7bb3f30473
-:CUSTOM-ID: 77574b95-ad69-4f55-8216-bc7bb3f30473
-:END:
+
+#### <span class="section-num">3.74.3</span> Answer {#answer}
 
 Ok, now that's stretching my brain for sure. Hmm...
 
-I think I need to look closer at how src_scheme{tree->list} works.
+I think I need to look closer at how <span class="inline-src language-scheme" data-lang="scheme">`tree->list`</span> works.
 
-#+BEGIN_SRC scheme -n :eval no-export :results output
+```scheme { linenos=true, linenostart=1 }
 (define (tree->list-debug tree)
   (define (copy-to-list tree result-list)
     (if (null? tree)
@@ -14182,10 +11932,9 @@ I think I need to look closer at how src_scheme{tree->list} works.
           (echo "<< leaving tree at" (entry tree) "results" result-list)
           result)))
   (copy-to-list tree '()))
-#+END_SRC
+```
 
-#+RESULTS:
-#+BEGIN_EXAMPLE
+```text
 >> entering tree at 5 results ()
 we'll cons 5
 >> entering tree at 9 results ()
@@ -14211,14 +11960,14 @@ we'll cons 3
 << leaving tree at 1 results (5 7 9 11)
 << leaving tree at 5 results ()
 (1 3 5 7 9 11)
-#+END_EXAMPLE
+```
 
-What's really holding me up is the \(\Theta(n)\) complexity. Since I'm probably
+What's really holding me up is the \\(\Theta(n)\\) complexity. Since I'm probably
 not going to figure this out easily, let's try doing it the "wrong" way first,
 by using previously made algorithms.
 
-#+NAME: sets-as-trees
-#+BEGIN_SRC scheme -n :eval no-export :results silent :tangle 2/Ex65.scheme
+<a id="code-snippet--sets-as-trees"></a>
+```scheme { linenos=true, linenostart=1 }
 <<make-tree>>
 <<list-to-tree>>
 <<tree-to-list>>
@@ -14314,9 +12063,9 @@ by using previously made algorithms.
                           (right-branch tree)
                           result-tree))))))
     (copy-to-tree set1 '()))
-#+END_SRC
+```
 
-#+BEGIN_SRC scheme -n :eval no-export :results output
+```scheme { linenos=true, linenostart=1 }
 <<sets-as-trees>>
 <<echo>>
 (load "mattcheck2.scm")
@@ -14346,28 +12095,27 @@ by using previously made algorithms.
              (intersection-set-tree-wrong1 set1 set2)
              int-unbal)
   (echo (tree->list-debug set1)))
-#+END_SRC
+```
 
-#+RESULTS[fbef205489d14bb8a8e7dfef03cd0bc5bead6020]:
-#+begin_EXAMPLE
+```text
 SUCCEED at element-of-set?-tree true
 SUCCEED at element-of-set?-tree true
 SUCCEED at element-of-set?-tree false
 SUCCEED at union-set-tree-wrong2
 SUCCEED at intersection-set-tree-wrong1
-#+end_EXAMPLE
+```
 
 I can't really think of a better way to do it. Time to look up the answer!
 
 And... To my surprise, the answer most internet people have given is what I
-called the "wrong" one. In their case, using src_scheme{tree->list} and
-src_scheme{list->tree} to apply the list-based src_scheme{union-set} and
-src_scheme{intersection-set}, saying it's \(\Theta(n)\). I also notice that they
-didn't use src_scheme{element-of-set?} and src_scheme{adjoin-to-set} like I did.
+called the "wrong" one. In their case, using <span class="inline-src language-scheme" data-lang="scheme">`tree->list`</span> and
+<span class="inline-src language-scheme" data-lang="scheme">`list->tree`</span> to apply the list-based <span class="inline-src language-scheme" data-lang="scheme">`union-set`</span> and
+<span class="inline-src language-scheme" data-lang="scheme">`intersection-set`</span>, saying it's \\(\Theta(n)\\). I also notice that they
+didn't use <span class="inline-src language-scheme" data-lang="scheme">`element-of-set?`</span> and <span class="inline-src language-scheme" data-lang="scheme">`adjoin-to-set`</span> like I did.
 
 Let's compare.
 
-#+BEGIN_SRC scheme -n :noeval :results both :tangle 2/Ex65-bench.scheme
+```scheme { linenos=true, linenostart=1 }
 (use-modules (ice-9 format))
 (load "../mattbench.scm")
 <<sets-txt>>
@@ -14440,10 +12188,9 @@ Let's compare.
            (/ base-repeats 2))
 (test-with (make-2sets 10000)
            (/ base-repeats 4))
-#+END_SRC
+```
 
-#+RESULTS:
-#+BEGIN_EXAMPLE
+```text
 union-set-tree-wrong2: 159831.3273
 union-set-l2t: 49633.5962
 intersection-set-tree-wrong1: 42577.4905
@@ -14456,84 +12203,39 @@ union-set-tree-wrong2: 1393227860.116
 union-set-l2t: 195546567.7616
 intersection-set-tree-wrong1: 361923468.7844
 intersection-set-l2t: 195366120.9524
-#+END_EXAMPLE
+```
 
-#+NAME: set-tree-benches
-#+BEGIN_SRC scheme -n :eval no-export :results value table :exports none
-(list (list "set size" "union-set-tree-wrong2" "union-set-l2t"
-            "intersection-set-tree-wrong1" "intersection-set-l2t")
-      (list 100 159831.3273 49633.5962
-            42577.4905 33261.5268)
-      (list 1000 12648028.8732 2196015.1536
-            3165935.4476 2015603.052)
-      (list 10000 1393227860.116 195546567.7616
-            361923468.7844 195366120.9524))
-#+END_SRC
+{{< figure src="/ox-hugo/2-65.png" >}}
 
-#+RESULTS[69bb64860dbd8795aaaa2e7d42299f939880e16e]: set-tree-benches
-| set size | union-set-tree-wrong2 |  union-set-l2t | intersection-set-tree-wrong1 | intersection-set-l2t |
-|      100 |           159831.3273 |     49633.5962 |                   42577.4905 |           33261.5268 |
-|     1000 |         12648028.8732 |   2196015.1536 |                 3165935.4476 |          2015603.052 |
-|    10000 |        1393227860.116 | 195546567.7616 |               361923468.7844 |       195366120.9524 |
-
-#+begin_src gnuplot :var data=set-tree-benches :file 2/fig/2-65.png :exports results :rownames no :colnames no :hlines no :cache no :eval no-export
-reset
-set key autotitle columnheader
-set logscale y
-set xlabel 'average time taken'
-#set xtics (2, 4, 8, 16, 24, 32, 36, 49, 64)
-set ylabel 'set sizes'
-set title 'time taken to merge sets'
-
-plot data using 2:xticlabels(1) with linespoints, \
-     data using 3:xticlabels(1) with linespoints, \
-     data using 4:xticlabels(1) with linespoints, \
-     data using 5:xticlabels(1) with linespoints
-#+end_src
-
-#+RESULTS:
-:results:
-[[file:2/fig/2-65.png]]
-:end:
-
-Not really enough datapoints, but you can at least see that the ~l2t~ variants
+Not really enough datapoints, but you can at least see that the `l2t` variants
 are faster.
 
-** Exercise 2.66: binary tree ~lookup~
-:PROPERTIES:
-:ID:       7789edb1-b8d0-4587-b61b-4335abfc9485
-:CUSTOM-ID: 7789edb1-b8d0-4587-b61b-4335abfc9485
-:END:
 
-*** Question
-:PROPERTIES:
-:ID:       28c9b15a-b445-4efd-8a49-bb40f8cba291
-:CUSTOM-ID: 28c9b15a-b445-4efd-8a49-bb40f8cba291
-:END:
+### <span class="section-num">3.75</span> Exercise 2.66: binary tree `lookup` {#exercise-2-dot-66-binary-tree-lookup}
 
-Implement the src_scheme{lookup} procedure for the case where the set of records
+
+#### <span class="section-num">3.75.1</span> Question {#question}
+
+Implement the <span class="inline-src language-scheme" data-lang="scheme">`lookup`</span> procedure for the case where the set of records
 is structured as a binary tree, ordered by the numerical values of the keys.
 
-*** Answer
-:PROPERTIES:
-:ID:       5ef7e3f8-f4db-474d-8e9e-5fd60a22a411
-:CUSTOM-ID: 5ef7e3f8-f4db-474d-8e9e-5fd60a22a411
-:END:
+
+#### <span class="section-num">3.75.2</span> Answer {#answer}
 
 First let's define what these records look like.
 
-#+NAME: make-record
-#+BEGIN_SRC scheme -n :eval no-export :results silent
+<a id="code-snippet--make-record"></a>
+```scheme { linenos=true, linenostart=1 }
 (define (make-record key value)
   (cons key value))
 (define (key record)
   (car record))
 (define (value record)
   (cdr record))
-#+END_SRC
+```
 
-#+NAME: lookup-tree
-#+BEGIN_SRC scheme -n :eval no-export :results silent
+<a id="code-snippet--lookup-tree"></a>
+```scheme { linenos=true, linenostart=1 }
 <<make-tree>>
 <<make-record>>
 (define (lookup given-key tree-of-records)
@@ -14544,16 +12246,16 @@ First let's define what these records look like.
         ((< given-key
             (key (entry tree-of-records)))
          (lookup
-          given-key 
+          given-key
           (left-branch tree-of-records)))
         ((> given-key
             (key (entry tree-of-records)))
          (lookup
-          given-key 
+          given-key
           (right-branch tree-of-records)))))
-#+END_SRC
+```
 
-#+BEGIN_SRC scheme -n :eval no-export :results output
+```scheme { linenos=true, linenostart=1 }
 <<lookup-tree>>
 <<list-to-tree>>
 <<echo>>
@@ -14568,27 +12270,20 @@ First let's define what these records look like.
   (mattcheck "lookup retrieves correct record"
              (lookup 9 set1)
              (make-record 9 'e)))
-#+END_SRC
+```
 
-#+RESULTS[cf752c53cb3f389968afc12d5da222d0655272e5]:
-#+begin_EXAMPLE
+```text
 SUCCEED at lookup retrieves correct record
-#+end_EXAMPLE
+```
 
-** Exercise 2.67: decoding Huffman tree messages
-:PROPERTIES:
-:ID:       b996c47a-9e4d-4f41-ae7a-ebfd48fa2be4
-:CUSTOM-ID: b996c47a-9e4d-4f41-ae7a-ebfd48fa2be4
-:END:
 
-*** Text definitions
-:PROPERTIES:
-:ID:       798df0ce-bc84-4113-9a95-5d6861590639
-:CUSTOM-ID: 798df0ce-bc84-4113-9a95-5d6861590639
-:END:
+### <span class="section-num">3.76</span> Exercise 2.67: decoding Huffman tree messages {#exercise-2-dot-67-decoding-huffman-tree-messages}
 
-#+NAME: huffman-trees-txt
-#+BEGIN_SRC scheme -n :eval no-export :results silent
+
+#### <span class="section-num">3.76.1</span> Text definitions {#text-definitions}
+
+<a id="code-snippet--huffman-trees-txt"></a>
+```scheme { linenos=true, linenostart=1 }
 ;; huffman-trees-txt
 (define (make-leaf symbol weight)
   (list 'leaf
@@ -14647,25 +12342,19 @@ SUCCEED at lookup retrieves correct record
         (adjoin-set (make-leaf (car pair)
                                (cadr pair))
                     (make-leaf-set (cdr pairs))))))
-#+END_SRC
+```
 
-*** Question
-:PROPERTIES:
-:ID:       de18de6a-5926-4df4-aac7-ef6f625be186
-:CUSTOM-ID: de18de6a-5926-4df4-aac7-ef6f625be186
-:END:
 
-Define an encoding tree and a sample message. Use the src_scheme{decode}
+#### <span class="section-num">3.76.2</span> Question {#question}
+
+Define an encoding tree and a sample message. Use the <span class="inline-src language-scheme" data-lang="scheme">`decode`</span>
 procedure to decode the message, and give the result.
 
-*** Answer
-:PROPERTIES:
-:ID:       f3e5d321-b4a5-4e10-b4d6-f12b7905ff23
-:CUSTOM-ID: f3e5d321-b4a5-4e10-b4d6-f12b7905ff23
-:END:
 
-#+NAME: test-encoding
-#+BEGIN_SRC scheme -n :eval no-export :results output
+#### <span class="section-num">3.76.3</span> Answer {#answer}
+
+<a id="code-snippet--test-encoding"></a>
+```scheme { linenos=true, linenostart=1 }
 <<huffman-trees-txt>>
 <<echo>>
 (define sample-tree
@@ -14687,54 +12376,44 @@ procedure to decode the message, and give the result.
 (define whos-on-first-message '(0 1 0 1 1 0 1 1 1))
 (echo (decode sample-message sample-tree))
 (echo (decode whos-on-first-message whos-on-first-tree))
-#+END_SRC
+```
 
-#+RESULTS[b69978fc5a0100e929fc07fd073f6318d2d7092f]: test-encoding
-#+begin_EXAMPLE
-(A D A B B C A) 
-(who what Idontknow why) 
-#+end_EXAMPLE
+```text
+(A D A B B C A)
+(who what Idontknow why)
+```
 
-** Exercise 2.68: encoding Huffman tree messages
-:PROPERTIES:
-:ID:       dad2b9f6-25ac-4de0-8d65-5ae120a639de
-:CUSTOM-ID: dad2b9f6-25ac-4de0-8d65-5ae120a639de
-:END:
 
-*** Question
-:PROPERTIES:
-:ID:       e10cf171-3127-4b9f-b240-0ad0b2db52ee
-:CUSTOM-ID: e10cf171-3127-4b9f-b240-0ad0b2db52ee
-:END:
+### <span class="section-num">3.77</span> Exercise 2.68: encoding Huffman tree messages {#exercise-2-dot-68-encoding-huffman-tree-messages}
 
-The src_scheme{encode} procedure takes as arguments a message and a tree and
+
+#### <span class="section-num">3.77.1</span> Question {#question}
+
+The <span class="inline-src language-scheme" data-lang="scheme">`encode`</span> procedure takes as arguments a message and a tree and
 produces the list of bits that gives the encoded message.
 
-#+NAME: encode-txt
-#+BEGIN_SRC scheme -n :eval no-export :results silent
+<a id="code-snippet--encode-txt"></a>
+```scheme { linenos=true, linenostart=1 }
 ;; encode-txt
 (define (encode message tree)
   (if (null? message)
       '()
       (append (encode-symbol (car message) tree)
               (encode (cdr message) tree))))
-#+END_SRC
+```
 
-src_scheme{encode-symbol} is a procedure, which you must write, that returns the
+<span class="inline-src language-scheme" data-lang="scheme">`encode-symbol`</span> is a procedure, which you must write, that returns the
 list of bits that encodes a given symbol according to a given tree. You should
-design src_scheme{encode-symbol} so that it signals an error if the symbol is
+design <span class="inline-src language-scheme" data-lang="scheme">`encode-symbol`</span> so that it signals an error if the symbol is
 not in the tree at all. Test your procedure by encoding the result you obtained
 in Exercise 2.67 with the sample tree and seeing whether it is the same as the
 original sample message.
 
-*** Answer
-:PROPERTIES:
-:ID:       d20f06fa-24db-44eb-8aa8-7fc4382abbe3
-:CUSTOM-ID: d20f06fa-24db-44eb-8aa8-7fc4382abbe3
-:END:
 
-#+NAME: encode-symbol
-#+BEGIN_SRC scheme -n :eval no-export :results silent
+#### <span class="section-num">3.77.2</span> Answer {#answer}
+
+<a id="code-snippet--encode-symbol"></a>
+```scheme { linenos=true, linenostart=1 }
 ;; encode-symbol
 (define element-of-set? member)
 (define (encode-symbol symbol tree)
@@ -14755,10 +12434,10 @@ original sample message.
   (if (element-of-set? symbol (symbols tree))
       (rec tree)
       (error "encode-symbol: symbol not in tree")))
-#+END_SRC
+```
 
-#+NAME: encoding-test
-#+BEGIN_SRC scheme -n :eval no-export :results output
+<a id="code-snippet--encoding-test"></a>
+```scheme { linenos=true, linenostart=1 }
 <<huffman-trees-txt>>
 <<encode-txt>>
 <<encode-symbol>>
@@ -14788,49 +12467,39 @@ original sample message.
            whos-on-first-message
            (encode '(who what Idontknow why)
                    whos-on-first-tree))
-#+END_SRC
+```
 
-#+RESULTS[e0389c0f4592094839653db202c8e700b43d4e23]: encoding-test
-#+begin_EXAMPLE
+```text
 SUCCEED at sample encoded message
 SUCCEED at who's on first encoded message
-#+end_EXAMPLE
+```
 
-** Exercise 2.69: Generating Huffman trees
-:PROPERTIES:
-:ID:       08c0f6d4-2c04-4004-a7a4-6b22abba623a
-:CUSTOM-ID: 08c0f6d4-2c04-4004-a7a4-6b22abba623a
-:END:
 
-*** Question
-:PROPERTIES:
-:ID:       04f74d6f-2e1e-4bb2-925c-43eb2bca5a03
-:CUSTOM-ID: 04f74d6f-2e1e-4bb2-925c-43eb2bca5a03
-:END:
+### <span class="section-num">3.78</span> Exercise 2.69: Generating Huffman trees {#exercise-2-dot-69-generating-huffman-trees}
+
+
+#### <span class="section-num">3.78.1</span> Question {#question}
 
 The following procedure takes as its argument a list of symbol-frequency pairs
 (where no symbol appears in more than one pair) and generates a Huffman encoding
 tree according to the Huffman algorithm.
 
-#+BEGIN_SRC scheme
+```scheme
 (define (generate-huffman-tree pairs)
   (successive-merge (make-leaf-set pairs)))
-#+END_SRC
+```
 
-src_scheme{make-leaf-set} is the procedure given above that transforms the list
-of pairs into an ordered set of leaves. src_scheme{successive-merge} is the
-procedure you must write, using src_scheme{make-code-tree} to successively merge
+<span class="inline-src language-scheme" data-lang="scheme">`make-leaf-set`</span> is the procedure given above that transforms the list
+of pairs into an ordered set of leaves. <span class="inline-src language-scheme" data-lang="scheme">`successive-merge`</span> is the
+procedure you must write, using <span class="inline-src language-scheme" data-lang="scheme">`make-code-tree`</span> to successively merge
 the smallest-weight elements of the set until there is only one element left,
 which is the desired Huffman tree. (This procedure is slightly tricky, but not
 really complicated. If you find yourself designing a complex procedure, then you
 are almost certainly doing something wrong. You can take significant advantage
 of the fact that we are using an ordered set representation.)
 
-*** Answer
-:PROPERTIES:
-:ID:       fcbe5685-f1b4-4e54-a262-7c5378db7985
-:CUSTOM-ID: fcbe5685-f1b4-4e54-a262-7c5378db7985
-:END:
+
+#### <span class="section-num">3.78.2</span> Answer {#answer}
 
 This one took a while. The whole in-place-reorganization of the list seems
 tricky, since adding branches together makes a new branch which is higher value
@@ -14838,8 +12507,8 @@ than the later entries. In a C language I'd be solving the problem by "moving" a
 play-head forward and back, but here I'll have to coerce the evaluator into
 doing it.
 
-#+NAME: generate-huffman-tree
-#+BEGIN_SRC scheme -n :eval no-export :results silent
+<a id="code-snippet--generate-huffman-tree"></a>
+```scheme { linenos=true, linenostart=1 }
 ;; generate-huffman-tree
 (use-srfis '(1))
 (define element-of-set? member)
@@ -14876,10 +12545,10 @@ doing it.
   (define (successive-merge leaves)
     (successivemerge-iter (cons (car leaves) '())
                           (cdr leaves)))
-#+END_SRC
+```
 
-#+NAME: gen-huff-trees-test
-#+BEGIN_SRC scheme -n :eval no-export :results output  :tangle 2/Ex69.scheme
+<a id="code-snippet--gen-huff-trees-test"></a>
+```scheme { linenos=true, linenostart=1 }
 <<huffman-trees-txt>>
 <<encode-txt>>
 <<encode-symbol>>
@@ -14909,24 +12578,23 @@ doing it.
              (successive-merge pairs)
              answer)
   (echo (successive-merge pairs)))
-#+END_SRC
+```
 
-#+RESULTS[55428e0035118004f53c2be22e9fcf2432b59663]: gen-huff-trees-test
-#+begin_EXAMPLE
+```text
 FAIL at successive-merge
 expected: ((leaf A 8) (((leaf B 3) ((leaf C 1) (leaf D 1) (C D) 2) (B C D) 5) (# …) …) …)
 returned: (((((leaf H 1) (leaf G 1) (H G) 2) ((leaf F 1) (leaf E 1) (F E) 2) (…) …) …) …)
 (((((leaf H 1) (leaf G 1) (H G) 2) ((leaf F 1) (leaf E 1) (F E) 2) (H G F E) 4)
   (((leaf D 1) (leaf C 1) (D C) 2) (leaf B 3) (D C B) 5) (H G F E D C B) 9)
-    (leaf A 8) (H G F E D C B A) 17) 
-#+end_EXAMPLE
+    (leaf A 8) (H G F E D C B A) 17)
+```
 
-And the tree is /backwards/. But it is correct. \begin{tiny}Sigh.\end{tiny}
+And the tree is _backwards_. But it is correct. \begin{tiny}Sigh.\end{tiny}
 
 Time to be embarrassed by the internet's solution.
 
-#+NAME: s-merge-small
-#+BEGIN_SRC scheme -n :eval no-export :results silent
+<a id="code-snippet--s-merge-small"></a>
+```scheme { linenos=true, linenostart=1 }
 ;; see 2.67
 (define (adjoin-set x set)
   (cond ((null? set) (list x))
@@ -14956,95 +12624,61 @@ Time to be embarrassed by the internet's solution.
         (make-code-tree (car leaves)
                         (cadr leaves))
         (cddr leaves)))))
-#+END_SRC
+```
 
-Comparing my above code with the code for src_scheme{adjoin-set}, mine is
+Comparing my above code with the code for <span class="inline-src language-scheme" data-lang="scheme">`adjoin-set`</span>, mine is
 definitely unnecessarily complicated. How does the performance stack up?
 
-#+NAME: gen-huff-trees-bench
-#+BEGIN_SRC scheme -n :noeval :results output :exports results :tangle 2/Ex69-bench.scheme
-<<huffman-trees-txt>>
-<<encode-txt>>
-<<encode-symbol>>
-<<generate-huffman-tree>>
-<<s-merge-small>>
-<<echo>>
-(load "../mattbench.scm")
-
-(let ((pairs
-       (make-leaf-set '((A 8)(B 3)(C 1)(D 1)
-                        (E 1)(F 1)(G 1)(H 1))))
-      (reps 10000000))
-  (echo "Mine:"
-        (cadr (mattbench2 (lambda()
-                            (successive-merge pairs))
-                          reps)))
-  (echo "Theirs:"
-        (cadr (mattbench2 (lambda()
-                            (successive-merge-small pairs))
-                          reps))))
-#+END_SRC
-
-#+RESULTS[2160310f6b0a0dc9fe69528e4e2f901fdb22a270]: gen-huff-trees-bench
-#+begin_EXAMPLE
+```text
 Mine: 4453.0773347
 Theirs: 4554.0141235
-#+end_EXAMPLE
+```
 
 So for all that unnecessary complexity it's still about the same.
 
 The lesson I keep failing to learn is remembering past work (i.e.
-src_scheme{adjoin-set}), since this book loves to integrate past exercises.
+<span class="inline-src language-scheme" data-lang="scheme">`adjoin-set`</span>), since this book loves to integrate past exercises.
 
-** Exercise 2.70: encoding 1950s rock songs
-:PROPERTIES:
-:ID:       315bef96-b4d4-41b1-ad8a-7d7b90a8fa96
-:CUSTOM-ID: 315bef96-b4d4-41b1-ad8a-7d7b90a8fa96
-:END:
 
-*** Question
-:PROPERTIES:
-:ID:       2a294aed-baaa-4e9c-9dbc-f66ddf33c7bf
-:CUSTOM-ID: 2a294aed-baaa-4e9c-9dbc-f66ddf33c7bf
-:END:
+### <span class="section-num">3.79</span> Exercise 2.70: encoding 1950s rock songs {#exercise-2-dot-70-encoding-1950s-rock-songs}
+
+
+#### <span class="section-num">3.79.1</span> Question {#question}
 
 The following eight-symbol alphabet with associated relative frequencies was
 designed to efficiently encode the lyrics of 1950s rock songs. (Note that the
 “symbols” of an “alphabet” need not be individual letters.)
 
-
 | A    | 2 | NA  | 16 |
-| BOOM | 1 | SHA |  3 |
-| GET  | 2 | YIP |  9 |
-| JOB  | 2 | WAH |  1 |
+|------|---|-----|----|
+| BOOM | 1 | SHA | 3  |
+| GET  | 2 | YIP | 9  |
+| JOB  | 2 | WAH | 1  |
 
-Use src_scheme{generate-huffman-tree} to generate a corresponding Huffman tree,
-and use src_scheme{encode} to encode the following message:
+Use <span class="inline-src language-scheme" data-lang="scheme">`generate-huffman-tree`</span> to generate a corresponding Huffman tree,
+and use <span class="inline-src language-scheme" data-lang="scheme">`encode`</span> to encode the following message:
 
-#+begin_example
+```text
 Get a job
 Sha na na na na na na na na
 
 Get a job
 Sha na na na na na na na na
 
-Wah yip yip yip yip 
+Wah yip yip yip yip
 yip yip yip yip yip
 Sha boom
-#+end_example
+```
 
 How many bits are required for the encoding? What is the smallest number of bits
 that would be needed to encode this song if we used a fixed-length code for the
 eight-symbol alphabet?
 
-*** Answer
-:PROPERTIES:
-:ID:       180ceb80-51bc-4898-8b9c-bd6f712391e5
-:CUSTOM-ID: 180ceb80-51bc-4898-8b9c-bd6f712391e5
-:END:
 
-#+NAME: hippie-trees
-#+BEGIN_SRC scheme -n :eval no-export :results silent
+#### <span class="section-num">3.79.2</span> Answer {#answer}
+
+<a id="code-snippet--hippie-trees"></a>
+```scheme { linenos=true, linenostart=1 }
 (define hippie-set
   '((NA 16)(YIP 9)(SHA 3)(A 2)
     (GET 2)(JOB 2)(BOOM 1)(WAH 1)))
@@ -15061,9 +12695,10 @@ eight-symbol alphabet?
 (define hippie-encoded
   (encode hippie-plaintext
           hippie-tree))
-#+END_SRC
-#+NAME: hippie-encoding
-#+BEGIN_SRC scheme -n :eval no-export :results output
+```
+
+<a id="code-snippet--hippie-encoding"></a>
+```scheme { linenos=true, linenostart=1 }
 <<huffman-trees-txt>>
 <<encode-txt>>
 <<encode-symbol>>
@@ -15083,26 +12718,25 @@ eight-symbol alphabet?
 (echo "Length of unencoded message is" (length hippie-plaintext) "words.")
 (echo "Length of encoded message is" (length hippie-encoded) "bits")
 (echo "Unencoded message (newlines added):" (decode hippie-encoded hippie-tree))
-#+END_SRC
+```
 
-#+RESULTS[2f2a669ae0d73d34081c4841b143434dedf560e1]: hippie-encoding
-#+begin_EXAMPLE
-Length of unencoded message is 36 words. 
-Length of encoded message is 84 bits 
+```text
+Length of unencoded message is 36 words.
+Length of encoded message is 84 bits
 Unencoded message (newlines added):
 (GET A JOB
 SHA NA NA NA NA NA NA NA NA
 GET A JOB SHA NA NA NA NA NA NA NA NA
 WAH YIP YIP YIP YIP
 YIP YIP YIP YIP YIP
-SHA BOOM) 
-#+end_EXAMPLE
+SHA BOOM)
+```
 
 A fixed-length alphabet would take 3 bits per word, or 108 bits. So the VLE is
 77% the size of anything else.
 
-#+NAME: hippie-encoded-message
-#+BEGIN_SRC scheme -n :eval no-export :results value table :exports output
+<a id="code-snippet--hippie-encoded-message"></a>
+```scheme { linenos=true, linenostart=1 }
 <<huffman-trees-txt>>
 <<encode-txt>>
 <<encode-symbol>>
@@ -15124,10 +12758,10 @@ A fixed-length alphabet would take 3 bits per word, or 108 bits. So the VLE is
               (rec (list-tail ll x)))))
   (rec list))
 (split-list-every-x hippie-encoded 7)
-#+END_SRC
+```
 
-#+RESULTS[5869ee5ed800f0edeb0c20e905c87712a2b63252]: hippie-encoded-message
 | 1 | 1 | 1 | 1 | 1 | 1 | 1 |
+|---|---|---|---|---|---|---|
 | 0 | 0 | 1 | 1 | 1 | 1 | 0 |
 | 1 | 1 | 1 | 0 | 0 | 0 | 0 |
 | 0 | 0 | 0 | 0 | 0 | 1 | 1 |
@@ -15139,65 +12773,37 @@ A fixed-length alphabet would take 3 bits per word, or 108 bits. So the VLE is
 | 1 | 0 | 1 | 0 | 1 | 0 | 1 |
 | 0 | 1 | 0 | 1 | 0 | 1 | 1 |
 | 1 | 0 | 1 | 1 | 0 | 1 | 1 |
-|---+---+---+---+---+---+---|
+
+{{< figure src="/ox-hugo/2-70.png" >}}
 
 
-#+begin_src gnuplot :var data=hippie-encoded-message :file 2/fig/2-70.png :exports results :rownames no :colnames no :hlines no :cache no :eval no-export
-reset
-set title '50s slander'
-set xtics (0, 1, 2, 3, 4, 5, 6)
-set ytics (0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11)
-unset colorbox
-set palette defined (0 "white", 1 "black")
+### <span class="section-num">3.80</span> Exercise 2.71 {#exercise-2-dot-71}
 
-plot data matrix with image
-#+END_SRC
 
-#+RESULTS:
-:results:
-[[file:2/fig/2-70.png]]
-:end:
+#### <span class="section-num">3.80.1</span> Questions {#questions}
 
-** Exercise 2.71
-:PROPERTIES:
-:ID:       b5005366-1d37-4ed6-89a5-bc8634e54d57
-:CUSTOM-ID: b5005366-1d37-4ed6-89a5-bc8634e54d57
-:END:
-
-*** Questions
-:PROPERTIES:
-:ID:       8eb2252c-8049-4cea-bdb5-792718bc1a77
-:CUSTOM-ID: 8eb2252c-8049-4cea-bdb5-792718bc1a77
-:END:
-
-Suppose we have a Huffman tree for an alphabet of \(n\) symbols, and that the
-relative frequencies of the symbols are \(1, 2, 4, \dots, 2^{n-1}\). Sketch the
-tree for \(n=5\); for \(n=10\). In such a tree (for general \(n\)) how many bits
+Suppose we have a Huffman tree for an alphabet of \\(n\\) symbols, and that the
+relative frequencies of the symbols are \\(1, 2, 4, \dots, 2^{n-1}\\). Sketch the
+tree for \\(n=5\\); for \\(n=10\\). In such a tree (for general \\(n\\)) how many bits
 are required to encode the most frequent symbol? The least frequent symbol?
 
-*** Answers
-:PROPERTIES:
-:ID:       8e12f06c-63c2-4ec4-9616-698443a28b7f
-:CUSTOM-ID: 8e12f06c-63c2-4ec4-9616-698443a28b7f
-:END:
 
-In this type of tree, the most frequent symbol takes 1 bit. The \(n\)th symbol
-takes \(n\) bits. If it's the least frequent symbol and \(n\) is even, it takes
-\(n-1\) bits.
+#### <span class="section-num">3.80.2</span> Answers {#answers}
 
-** Exercise 2.72: order of growth of ~encode~
-:PROPERTIES:
-:ID:       39a59b4b-6baf-4145-ab76-ba936dc46191
-:CUSTOM-ID: 39a59b4b-6baf-4145-ab76-ba936dc46191
-:END:
+In this type of tree, the most frequent symbol takes 1 bit. The \\(n\\)th symbol
+takes \\(n\\) bits. If it's the least frequent symbol and \\(n\\) is even, it takes
+\\(n-1\\) bits.
 
-Let's take a look at src_scheme{encode-symbol}. 
 
-#+BEGIN_SRC scheme -n :noeval
+### <span class="section-num">3.81</span> Exercise 2.72: order of growth of `encode` {#exercise-2-dot-72-order-of-growth-of-encode}
+
+Let's take a look at <span class="inline-src language-scheme" data-lang="scheme">`encode-symbol`</span>.
+
+```scheme { linenos=true, linenostart=1 }
 ;; encode-symbol
 (define (encode-symbol symbol tree)
   (define (rec t) ;; rec is O(log n)
-    (cond ((and (leaf? t) 
+    (cond ((and (leaf? t)
                 (eq? (symbol-leaf t)
                      symbol)) ; O(1)
            '())
@@ -15213,74 +12819,68 @@ Let's take a look at src_scheme{encode-symbol}.
   (if (element-of-set? symbol (symbols tree)) ;; O(symbols)
       (rec tree) ;; rec is O(log n)
       (error "encode-symbol: symbol not in tree")))
-#+END_SRC
+```
 
 I'm not expecting to get a correct answer,but here's what I'm able to derive.
-src_scheme{encode-symbol} uses binary search to find the symbol, which is
-\(\Theta(\log{n})\). However, at each step it needs to perform a \(\Theta(n)\)
+<span class="inline-src language-scheme" data-lang="scheme">`encode-symbol`</span> uses binary search to find the symbol, which is
+\\(\Theta(\log{n})\\). However, at each step it needs to perform a \\(\Theta(n)\\)
 search of the left branch. If the symbol isn't found, it will execute a
-\(\Theta(n)\) search of the right branch. So these searches have a varying cost
+\\(\Theta(n)\\) search of the right branch. So these searches have a varying cost
 depending on if the tree is biased to the left or the right. So in the worst
-case of being right-biased, the searches will incur an order of \(\Theta(n2)\),
-while doing the overall binary search of \(\Theta(\log{n})\). So I think this
-simplifies to \(\Theta(n \log{n})\). Time to check my answer...
+case of being right-biased, the searches will incur an order of \\(\Theta(n2)\\),
+while doing the overall binary search of \\(\Theta(\log{n})\\). So I think this
+simplifies to \\(\Theta(n \log{n})\\). Time to check my answer...
 
-While I see a couple answers[fn:1] agreeing with mine, I see more saying that
-~encode-symbol~ is \(\Theta(1)\) for the most frequent symbol, and \(\Theta(n)\)
-for the average case. Some also say[fn:2] that in the worst case (the least
+While I see a couple answers[^fn:6] agreeing with mine, I see more saying that
+`encode-symbol` is \\(\Theta(1)\\) for the most frequent symbol, and \\(\Theta(n)\\)
+for the average case. Some also say[^fn:7] that in the worst case (the least
 frequent symbol), you may have to visit every non-leaf node for a complexity of
-\(\Theta(n^2)\).
+\\(\Theta(n^2)\\).
 
-[fn:1] see the answer of =aos= here:
-http://community.schemewiki.org/?sicp-ex-2.72
-[fn:2] https://mk12.github.io/sicp/exercise/2/3.html#ex2.72 and others.
 
-** 2.4: Multiple Representations for Abstract Data
-:PROPERTIES:
-:ID:       c3c0cc87-1e03-41c1-995d-4656c2d60e9d
-:CUSTOM-ID: c3c0cc87-1e03-41c1-995d-4656c2d60e9d
-:END:
+### <span class="section-num">3.82</span> 2.4: Multiple Representations for Abstract Data {#2-dot-4-multiple-representations-for-abstract-data}
 
 We have learned how to abstract "higher" and "lower" parts of a system. Now we
 will talk about having multiple simultaneous representations of data in the same
 system. This could be considered "side-by-side" abstraction. The authors tout
-the 
+the
 
 To allow programmers to add and remove representations at will without modifying
 the original code, the authors suggest using a table lookup system to keep track
 of representations and their related methods. For example:
 
-#+attr_latex: align "|l||l|l|"
-| Operations | Polar Type      | Rectangular Type      |
-|------------+-----------------+-----------------------|
-| /          | <               |                       |
-| real-part  | real-part-polar | real-part-rectangular |
-| imag-part  | imag-part-polar | imag-part-rectangular |
-| magnitude  | magnitude-polar | magnitude-rectangular |
-| angle      | angle-polar     | angle-rectangular     |
+| Operations || Polar Type      | Rectangular Type      |
+|------------|-----------------|-----------------------|
+| real-part  || real-part-polar | real-part-rectangular |
+| imag-part  || imag-part-polar | imag-part-rectangular |
+| magnitude  || magnitude-polar | magnitude-rectangular |
+| angle      || angle-polar     | angle-rectangular     |
 
-- data-directed programming :: designing programs to organize their behaviors
-  by a table of operations like the one above.
-- principle of least commitment :: abstracting a system so it can work with
+data-directed programming
+: designing programs to organize their behaviors
+    by a table of operations like the one above.
+
+principle of least commitment
+: abstracting a system so it can work with
+
 many possible representations of data without being rewritten.
 
-The book introduces two methods, src_scheme{(put 'operation 'type lambda)} to
-add such a method to the table, and src_scheme{(get 'operation 'type)} to fetch
-the saved lambda. I'll use Guile's native [[https://www.gnu.org/software/guile/manual/html_node/Hash-Table-Reference.html][hash tables]][fn::
-https://www.gnu.org/software/guile/manual/html_node/Hash-Table-Reference.html]
+The book introduces two methods, <span class="inline-src language-scheme" data-lang="scheme">`(put 'operation 'type lambda)`</span> to
+add such a method to the table, and <span class="inline-src language-scheme" data-lang="scheme">`(get 'operation 'type)`</span> to fetch
+the saved lambda. I'll use Guile's native [hash tables](https://www.gnu.org/software/guile/manual/html_node/Hash-Table-Reference.html)[^fn:8]
 to implement this.
 
-#+NAME: op-table
-#+BEGIN_SRC scheme -n :eval no-export :results silent
+<a id="code-snippet--op-table"></a>
+```scheme { linenos=true, linenostart=1 }
 (define op-table (make-hash-table))
 
 (define (put operation type f)
   (hash-set! op-table (cons operation type) f))
 (define (get operation type)
   (hash-ref op-table (cons operation type)))
-#+END_SRC
+```
 
-#+BEGIN_SRC scheme -n :eval no-export :results output
+```scheme { linenos=true, linenostart=1 }
 ;; basic test of lambda storage
 <<op-table>>
 <<echo>>
@@ -15291,43 +12891,39 @@ to implement this.
 (echo ((get 'A 'X))
       ((get 'B 'Y))
       ((get 'C 'Z)))
-#+END_SRC
+```
 
-#+RESULTS[bf3d6e8c9239ce678bb3cce8f3c822ed667dc2fc]:
-#+begin_EXAMPLE
-AX BY CZ 
-#+end_EXAMPLE
+```text
+AX BY CZ
+```
 
-One method to distinguish these types of items is called *type tagging*. Take this code as an example:
+One method to distinguish these types of items is called **type tagging**. Take this code as an example:
 
-#+NAME: type-tagging
-#+BEGIN_SRC scheme -n :eval no-export :results silent
+<a id="code-snippet--type-tagging"></a>
+```scheme { linenos=true, linenostart=1 }
 (define (attach-tag type-tag contents)
   (cons type-tag contents))
 
 (define (type-tag datum)
   (if (pair? datum)
       (car datum)
-      (error "Bad tagged datum: 
+      (error "Bad tagged datum:
               TYPE-TAG" datum)))
 
 (define (contents datum)
   (if (pair? datum)
       (cdr datum)
-      (error "Bad tagged datum: 
+      (error "Bad tagged datum:
               CONTENTS" datum)))
-#+END_SRC
+```
 
-** Exercise 2.73: Data-driven symbolic differentiator
-:PROPERTIES:
-:ID:       4e21bd2c-be0f-45ed-9721-d185ca6173aa
-:CUSTOM-ID: 4e21bd2c-be0f-45ed-9721-d185ca6173aa
-:END:
 
-[[id:1f159d89-0a02-4726-9872-bbbc527ab559][2.3.2: Example: Symbolic differentiator]] described a program that performs
+### <span class="section-num">3.83</span> Exercise 2.73: Data-driven symbolic differentiator {#exercise-2-dot-73-data-driven-symbolic-differentiator}
+
+[2.3.2: Example: Symbolic differentiator](#2-dot-3-dot-2-example-symbolic-differentiator) described a program that performs
 symbolic differentiation:
 
-#+begin_src scheme -n
+```scheme { linenos=true, linenostart=1 }
 (define (deriv exp var)
   (cond ((number? exp) 0)
         ((variable? exp)
@@ -15345,15 +12941,15 @@ symbolic differentiation:
         ;; more rules can be added here
         (else (error "unknown expression type:
                       DERIV" exp))))
-#+end_src
+```
 
 We can regard this program as performing a dispatch on the type of the
 expression to be differentiated. In this situation the ''type tag'' of the datum
-is the algebraic operator symbol (such as src_scheme{+}) and the operation being
-performed is src_scheme{deriv}. We can transform this program into data-directed
+is the algebraic operator symbol (such as <span class="inline-src language-scheme" data-lang="scheme">`+`</span>) and the operation being
+performed is <span class="inline-src language-scheme" data-lang="scheme">`deriv`</span>. We can transform this program into data-directed
 style by rewriting the basic derivative procedure as
 
-#+begin_src scheme -n
+```scheme { linenos=true, linenostart=1 }
 (define (deriv exp var)
   (cond ((number? exp) 0)
         ((variable? exp) (if (same-variable? exp var) 1 0))
@@ -15361,52 +12957,40 @@ style by rewriting the basic derivative procedure as
                (operands exp) var))))
 (define (operator exp) (car exp))
 (define (operands exp) (cdr exp))
-#+end_src
+```
 
-*** Question A
-:PROPERTIES:
-:ID:       1e6e078f-5590-4b44-b5c0-29ac728a95a3
-:CUSTOM-ID: 1e6e078f-5590-4b44-b5c0-29ac728a95a3
-:END:
+
+#### <span class="section-num">3.83.1</span> Question A {#question-a}
 
 Explain what was done above. Why can't we assimilate the predicates
-src_scheme{number?} and src_scheme{variable?} into the data-directed dispatch?
+<span class="inline-src language-scheme" data-lang="scheme">`number?`</span> and <span class="inline-src language-scheme" data-lang="scheme">`variable?`</span> into the data-directed dispatch?
 
-*** Answer A
-:PROPERTIES:
-:ID:       bfd90785-9393-464a-87ac-a742a38b183c
-:CUSTOM-ID: bfd90785-9393-464a-87ac-a742a38b183c
-:END:
+
+#### <span class="section-num">3.83.2</span> Answer A {#answer-a}
 
 This rewrite removes the predicate-based tests for sums, products, etc,
-replacing them with the src_scheme{get}-based lookup system explained earlier.
+replacing them with the <span class="inline-src language-scheme" data-lang="scheme">`get`</span>-based lookup system explained earlier.
 
-The call to ~get~ requires using the ~operator~ procedures on ~exp~, which would
-fail on a single-item ~exp~. So it is necessary to handle the number and
-variable checks before calling ~deriv~.
+The call to `get` requires using the `operator` procedures on `exp`, which would
+fail on a single-item `exp`. So it is necessary to handle the number and
+variable checks before calling `deriv`.
 
-*** Questions B and C
-:PROPERTIES:
-:ID:       9d2c846d-4a29-4663-a8f0-4d65bd18d3c9
-:CUSTOM-ID: 9d2c846d-4a29-4663-a8f0-4d65bd18d3c9
-:END:
 
-- Write the procedures for derivatives of sums and products, and the auxiliary
-  code required to install them in the table used by the program above.
-- Choose any additional differentiation rule that you like, such as the one for
-  exponents ([[id:6be5f14d-c225-46d2-a1d4-1864083a8c76][Exercise 2.56: Differentiating exponentiation]]), and install it in
-  this data-directed system.
+#### <span class="section-num">3.83.3</span> Questions B and C {#questions-b-and-c}
 
-*** Answer B & C version 1
-:PROPERTIES:
-:ID:       c1d2539e-32a5-4253-89dc-a007380a8d0a
-:CUSTOM-ID: c1d2539e-32a5-4253-89dc-a007380a8d0a
-:END:
+-   Write the procedures for derivatives of sums and products, and the auxiliary
+    code required to install them in the table used by the program above.
+-   Choose any additional differentiation rule that you like, such as the one for
+    exponents ([Exercise 2.56: Differentiating exponentiation](#exercise-2-dot-56-differentiating-exponentiation)), and install it in
+    this data-directed system.
+
+
+#### <span class="section-num">3.83.4</span> Answer B &amp; C version 1 {#answer-b-and-c-version-1}
 
 Here's my first solution, which is functional, but not at all idiomatic like the textbook's examples of such a system.
 
-#+NAME: deriv-datadriven
-#+BEGIN_SRC scheme -n :eval no-export :results silent
+<a id="code-snippet--deriv-datadriven"></a>
+```scheme { linenos=true, linenostart=1 }
 (define (variable? x) (symbol? x))
 (define (same-variable? v1 v2)
   (and (variable? v1) (variable? v2) (eq? v1 v2)))
@@ -15460,14 +13044,15 @@ Here's my first solution, which is functional, but not at all idiomatic like the
                   (multiplicand ops)))))
 (put 'deriv '**
      (lambda (ops var)
-         (make-product  
-          (make-product  
-           (exponent ops) 
-           (make-exponentiation (base ops) 
-                                (make-sum (exponent ops) -1)))                                                                                               
+         (make-product
+          (make-product
+           (exponent ops)
+           (make-exponentiation (base ops)
+                                (make-sum (exponent ops) -1)))
           (deriv (base ops) var))))
-#+end_src
-#+BEGIN_SRC scheme :eval no-export :results output
+```
+
+```scheme
 <<op-table>>
 <<deriv-datadriven>>
 (load "mattcheck2.scm")
@@ -15484,24 +13069,20 @@ Here's my first solution, which is functional, but not at all idiomatic like the
 (mattcheck "deriv: exponentiation 2"
            (deriv (make-exponentiation 'a 'b) 'a)
            '(* b (** a (+ b -1))))
-#+END_SRC
+```
 
-#+RESULTS[5288240f64805e9fcb3c507e8acc8ac2a355c5ad]:
-#+begin_EXAMPLE
+```text
 SUCCEED at deriv: basic addition
 SUCCEED at deriv: basic multiplication
 SUCCEED at deriv: exponentiation 1
 SUCCEED at deriv: exponentiation 2
-#+end_EXAMPLE
+```
 
-*** Answer B & C version 2
-:PROPERTIES:
-:ID:       816f36f8-f2e3-40e0-b8af-3a0374b47b02
-:CUSTOM-ID: 816f36f8-f2e3-40e0-b8af-3a0374b47b02
-:END:
 
-#+NAME: deriv-datadriven2
-#+BEGIN_SRC scheme -n :eval no-export :results silent
+#### <span class="section-num">3.83.5</span> Answer B &amp; C version 2 {#answer-b-and-c-version-2}
+
+<a id="code-snippet--deriv-datadriven2"></a>
+```scheme { linenos=true, linenostart=1 }
 (define (deriv exp var)
   (define (variable? x) (symbol? x))
   (define (same-variable? v1 v2)
@@ -15562,10 +13143,10 @@ SUCCEED at deriv: exponentiation 2
     (define (exponent e) (cadr e))
     (put 'deriv '**
          (lambda (ops var)
-           (make-product  
-            (make-product  
-             (exponent ops) 
-             (make-exponentiation (base ops) 
+           (make-product
+            (make-product
+             (exponent ops)
+             (make-exponentiation (base ops)
                                   (make-sum (exponent ops)
                                             -1)))
             (deriv (base ops) var)))))
@@ -15577,8 +13158,9 @@ SUCCEED at deriv: exponentiation 2
          (install-mult-package))
         ((eqv? choice 'exp)
          (install-exp-package))))
-#+end_src
-#+BEGIN_SRC scheme :eval no-export :results output
+```
+
+```scheme
 <<op-table>>
 <<type-tagging>>
 <<deriv-datadriven2>>
@@ -15599,58 +13181,45 @@ SUCCEED at deriv: exponentiation 2
 (mattcheck "deriv: exponentiation 2"
            (deriv '(** a b) 'a)
            '(* b (** a (+ b -1))))
-#+END_SRC
+```
 
-#+RESULTS[648190c3e65622d195f73e9b5c1662c7fce221a3]:
-#+begin_EXAMPLE
+```text
 SUCCEED at deriv: basic addition
 SUCCEED at deriv: basic multiplication
 SUCCEED at deriv: exponentiation 1
 SUCCEED at deriv: exponentiation 2
-#+end_EXAMPLE
+```
 
 It's notable that Scheme doesn't let you access the sub-definitions inside
 definitions, so I had to change my tests above. It makes me miss the dot
 notation that future languages would use for accessing children of objects. It
 also makes debugging processes less informative, not showing entries in the
-src_scheme{,trace foo} system call.
+<span class="inline-src language-scheme" data-lang="scheme">`,trace foo`</span> system call.
 
-*** Question D
-:PROPERTIES:
-:ID:       21a3dd2e-03a3-4f11-9602-fa2138d03614
-:CUSTOM-ID: 21a3dd2e-03a3-4f11-9602-fa2138d03614
-:END:
+
+#### <span class="section-num">3.83.6</span> Question D {#question-d}
 
 In this simple algebraic manipulator the type of an expression is the algebraic
 operator that binds it together. Suppose, however, we indexed the procedures in
-the opposite way, so that the dispatch line in src_scheme{deriv} looked like
+the opposite way, so that the dispatch line in <span class="inline-src language-scheme" data-lang="scheme">`deriv`</span> looked like
 
-#+BEGIN_SRC scheme
+```scheme
 ((get (operator exp) 'deriv)
  (operands exp) var)
-#+END_SRC
+```
 
 What corresponding changes to the derivative system are required?
 
-*** Answer D
-:PROPERTIES:
-:ID:       5e34ebcd-6c84-426b-a4fc-55936d499a1a
-:CUSTOM-ID: 5e34ebcd-6c84-426b-a4fc-55936d499a1a
-:END:
 
-Besides the change given in the example above, all the src_scheme{put} calls would need their arguments switched.
+#### <span class="section-num">3.83.7</span> Answer D {#answer-d}
 
-** Exercise 2.74: Multi-division record storage
-:PROPERTIES:
-:ID:       394db043-6005-497c-aefe-65664c787b0f
-:CUSTOM-ID: 394db043-6005-497c-aefe-65664c787b0f
-:END:
+Besides the change given in the example above, all the <span class="inline-src language-scheme" data-lang="scheme">`put`</span> calls would need their arguments switched.
 
-*** Questions ABC
-:PROPERTIES:
-:ID:       0bf46397-0039-4444-9cd5-66e4d57b2993
-:CUSTOM-ID: 0bf46397-0039-4444-9cd5-66e4d57b2993
-:END:
+
+### <span class="section-num">3.84</span> Exercise 2.74: Multi-division record storage {#exercise-2-dot-74-multi-division-record-storage}
+
+
+#### <span class="section-num">3.84.1</span> Questions ABC {#questions-abc}
 
 Insatiable Enterprises, Inc., is a highly decentralized conglomerate company
 consisting of a large number of independent divisions located all over the
@@ -15670,37 +13239,37 @@ an example, suppose that each division's personnel records consist of a single
 file, which contains a set of records keyed on employees' names. The structure
 of the set varies from division to division. Furthermore, each employee's record
 is itself a set (structured differently from division to division) that contains
-information keyed under identifiers such as src_scheme{address} and
-src_scheme{salary}. In particular:
+information keyed under identifiers such as <span class="inline-src language-scheme" data-lang="scheme">`address`</span> and
+<span class="inline-src language-scheme" data-lang="scheme">`salary`</span>. In particular:
 
-1. Implement for headquarters a src_scheme{get-record} procedure that retrieves
-   a specified employee's record from a specified personnel file. The procedure
-   should be applicable to any division's file. Explain how the individual
-   divisions' files should be structured. In particular, what type information
-   must be supplied?
+1.  Implement for headquarters a <span class="inline-src language-scheme" data-lang="scheme">`get-record`</span> procedure that retrieves
+    a specified employee's record from a specified personnel file. The procedure
+    should be applicable to any division's file. Explain how the individual
+    divisions' files should be structured. In particular, what type information
+    must be supplied?
 
-2. Implement for headquarters a src_scheme{get-salary} procedure that returns
-   the salary information from a given employee's record from any division's
-   personnel file. How should the record be structured in order to make this
-   operation work?
+2.  Implement for headquarters a <span class="inline-src language-scheme" data-lang="scheme">`get-salary`</span> procedure that returns
+    the salary information from a given employee's record from any division's
+    personnel file. How should the record be structured in order to make this
+    operation work?
 
-3. Implement for headquarters a src_scheme{find-employee-record} procedure. This
-   should search all the divisions' files for the record of a given employee and
-   return the record. Assume that this procedure takes as arguments an
-   employee's name and a list of all the divisions' files.
+3.  Implement for headquarters a <span class="inline-src language-scheme" data-lang="scheme">`find-employee-record`</span> procedure. This
+    should search all the divisions' files for the record of a given employee and
+    return the record. Assume that this procedure takes as arguments an
+    employee's name and a list of all the divisions' files.
 
-*** Answers ABC
-:PROPERTIES:
-:ID:       bde07dab-86b0-4f2d-97f8-6ae7f6d69f11
-:CUSTOM-ID: bde07dab-86b0-4f2d-97f8-6ae7f6d69f11
-:END:
+
+#### <span class="section-num">3.84.2</span> Answers ABC {#answers-abc}
 
 Let's talk assumptions:
-- Assume every division has one file
-- Assume HQ wants a consistent schema returned
 
-#+NAME: insatiable
-#+BEGIN_SRC scheme -n :eval no-export :results silent
+-   Assume every division has one file
+-   Assume HQ wants a consistent schema returned
+
+<!--listend-->
+
+<a id="code-snippet--insatiable"></a>
+```scheme { linenos=true, linenostart=1 }
 <<make-tree>>
 <<make-record>>
 <<op-table>>
@@ -15736,7 +13305,7 @@ Let's talk assumptions:
                      (list (employee-salary-east e)))
                #f))))
   (put 'employee-salary 'East
-       (lambda(id) 
+       (lambda(id)
          (employee-salary-east (find-employee-east id)))))
 
 ;; records as lookup trees (Ex 2.66)
@@ -15787,7 +13356,7 @@ Let's talk assumptions:
              (car ll))
             (else (iter (cdr ll)))))
     (iter South-Employee-File))
-  
+
   (put 'employee-record 'West
        (lambda(id)
          (let ((e (find-employee-south id)))
@@ -15821,68 +13390,49 @@ Let's talk assumptions:
         (if result
             result
             (find-employee-record (cdr list-of-divisions))))))
-#+END_SRC
-
+```
 
 In retrospect I should have designed it so each file had a type tag for the division, methods took a file, and dispatch was made on the file's tag. This makes more sense in a real-world context.
 
-*** Question D
-:PROPERTIES:
-:ID:       2aae8544-ff80-43e7-8326-e15c9ae2b4e3
-:CUSTOM-ID: 2aae8544-ff80-43e7-8326-e15c9ae2b4e3
-:END:
+
+#### <span class="section-num">3.84.3</span> Question D {#question-d}
 
 When Insatiable takes over a new company, what changes must be made in order to
 incorporate the new personnel information into the central system?
 
-*** Answer D
-:PROPERTIES:
-:ID:       c436ede2-c1b0-4d63-bb88-09dc8e628301
-:CUSTOM-ID: c436ede2-c1b0-4d63-bb88-09dc8e628301
-:END:
 
-The new division must provide appropriate methods for src_scheme{get-record} and
-src_scheme{get-salary} to use.
+#### <span class="section-num">3.84.4</span> Answer D {#answer-d}
 
-** 2.4.3: Data-directed and message-passing programs
-:PROPERTIES:
-:ID:       8d2953ca-9c50-48b9-9fea-f1c4debc5109
-:CUSTOM-ID: 8d2953ca-9c50-48b9-9fea-f1c4debc5109
-:END:
+The new division must provide appropriate methods for <span class="inline-src language-scheme" data-lang="scheme">`get-record`</span> and
+<span class="inline-src language-scheme" data-lang="scheme">`get-salary`</span> to use.
+
+
+### <span class="section-num">3.85</span> 2.4.3: Data-directed and message-passing programs {#2-dot-4-dot-3-data-directed-and-message-passing-programs}
 
 Altogether the book has introduced 3 ways to organize functions and data types:
 
-1. Generic operations with explicit dispatch: functions which each include
-   src_scheme{case} statements to dispatch depending on type of data provided.
-   Bulk of the book so far.
-2. Data-directed style: given a tagged object and a desired operation, lookup
-   what function to call.
-3. Message-passing style: package operations with their appropriate data
-   objects, then fetch those operations from the object.
+1.  Generic operations with explicit dispatch: functions which each include
+    <span class="inline-src language-scheme" data-lang="scheme">`case`</span> statements to dispatch depending on type of data provided.
+    Bulk of the book so far.
+2.  Data-directed style: given a tagged object and a desired operation, lookup
+    what function to call.
+3.  Message-passing style: package operations with their appropriate data
+    objects, then fetch those operations from the object.
 
-** Exercise 2.75: Message-passing styled imaginary numbers
-:PROPERTIES:
-:ID:       b20622b4-2811-4ee0-9762-76072a23893c
-:CUSTOM-ID: b20622b4-2811-4ee0-9762-76072a23893c
-:END:
 
-*** Question
-:PROPERTIES:
-:ID:       642c7cfe-cff7-4534-8350-dd8ecff11555
-:CUSTOM-ID: 642c7cfe-cff7-4534-8350-dd8ecff11555
-:END:
+### <span class="section-num">3.86</span> Exercise 2.75: Message-passing styled imaginary numbers {#exercise-2-dot-75-message-passing-styled-imaginary-numbers}
 
-Implement the constructor src_scheme{make-from-mag-ang} in message-passing
-style. This procedure should be analogous to the src_scheme{make-from-real-imag}
+
+#### <span class="section-num">3.86.1</span> Question {#question}
+
+Implement the constructor <span class="inline-src language-scheme" data-lang="scheme">`make-from-mag-ang`</span> in message-passing
+style. This procedure should be analogous to the <span class="inline-src language-scheme" data-lang="scheme">`make-from-real-imag`</span>
 procedure given above.
 
-*** Answer
-:PROPERTIES:
-:ID:       d54e5762-74e3-41b4-b389-2c3996b91dd6
-:CUSTOM-ID: d54e5762-74e3-41b4-b389-2c3996b91dd6
-:END:
 
-#+BEGIN_SRC scheme -n :eval no-export :results silent
+#### <span class="section-num">3.86.2</span> Answer {#answer}
+
+```scheme { linenos=true, linenostart=1 }
 (define (make-from-mag-ang r a)
   (define (dispatch op)
     (cond ((eq? op 'magnitude) r)
@@ -15894,19 +13444,13 @@ procedure given above.
           (else (error "Unknown op: MAKE-FROM-MAG-ANG" op))))
 
   dispatch)
-#+END_SRC
+```
 
-** Exercise 2.76: comparing generic operation solutions
-:PROPERTIES:
-:ID:       f56af310-38ac-4949-b7cb-b0a0d395ac43
-:CUSTOM-ID: f56af310-38ac-4949-b7cb-b0a0d395ac43
-:END:
 
-*** Question
-:PROPERTIES:
-:ID:       c4940adc-aea1-4c5a-b331-3a25eab26018
-:CUSTOM-ID: c4940adc-aea1-4c5a-b331-3a25eab26018
-:END:
+### <span class="section-num">3.87</span> Exercise 2.76: comparing generic operation solutions {#exercise-2-dot-76-comparing-generic-operation-solutions}
+
+
+#### <span class="section-num">3.87.1</span> Question {#question}
 
 As a large system with generic operations evolves, new types of data objects or
 new operations may be needed. For each of the three strategies---generic
@@ -15916,86 +13460,75 @@ order to add new types or new operations. Which organization would be most
 appropriate for a system in which new types must often be added? Which would be
 most appropriate for a system in which new operations must often be added?
 
-*** Answer
-:PROPERTIES:
-:ID:       19f0c03b-522f-423a-a39b-a19e1a91560a
-:CUSTOM-ID: 19f0c03b-522f-423a-a39b-a19e1a91560a
-:END:
 
-The most important part of this is where code /doesn't/ need to be changed.
+#### <span class="section-num">3.87.2</span> Answer {#answer}
 
-- Generic operations with explicit dispatch :: let you add new functions without
-  changing existing code.
-- Message-passing style :: let you add new data types without modifying existing
-  code.
-- Data-directed table-lookups :: let you add new data types /and/ functions
-  without modifying existing code.
+The most important part of this is where code _doesn't_ need to be changed.
+
+Generic operations with explicit dispatch
+: let you add new functions without
+    changing existing code.
+
+Message-passing style
+: let you add new data types without modifying existing
+    code.
+
+Data-directed table-lookups
+: let you add new data types _and_ functions
+    without modifying existing code.
 
 Let's be clear: this does not really save you much code, only the cognitive load
-imposed when you have to enter old code to modify it. Let's say \(T\) is how
-many data types you have, \(O\) is how many desired operations you have. All of
-these are \(O\times T\), the key is where the code is being stored and what it
+imposed when you have to enter old code to modify it. Let's say \\(T\\) is how
+many data types you have, \\(O\\) is how many desired operations you have. All of
+these are \\(O\times T\\), the key is where the code is being stored and what it
 effects.
 
 This issue of one change requiring traveling across your code to change dozens
-of definitions is described as the [[http://c2.com/cgi/wiki?ExpressionProblem][Expression Problem]][fn::
-http://c2.com/cgi/wiki?ExpressionProblem]. Data-directed table lookups appear to
-solve the problem, as discussed by [[http://community.schemewiki.org/?sicp-ex-2.76][torinmr in this Scheme wiki solution]][fn::
-http://community.schemewiki.org/?sicp-ex-2.76].
+of definitions is described as the [Expression Problem](http://c2.com/cgi/wiki?ExpressionProblem)[^fn:9]. Data-directed table lookups appear to
+solve the problem, as discussed by [torinmr in this Scheme wiki solution](http://community.schemewiki.org/?sicp-ex-2.76)[^fn:10].
 
-#+begin_quote
-"Old code should not stop working when you add new code." -Brian Harvey
-#+end_quote
+> "Old code should not stop working when you add new code." -Brian Harvey
 
 Also of note is that this kind of decision-making between generic operations and
 generic datatypes is commonplace in modern OO programming. I wonder what the old
 heads from this time period think about OO as it stands today.
 
-** Exercise 2.77: generic arithmetic package
-:PROPERTIES:
-:ID:       1aba7a5c-481a-4903-8ae0-46e0f6c55dd0
-:CUSTOM-ID: 1aba7a5c-481a-4903-8ae0-46e0f6c55dd0
-:END:
 
-*** Question
-:PROPERTIES:
-:ID:       e1caa9bd-b3a1-4713-ad39-68c8e292c703
-:CUSTOM-ID: e1caa9bd-b3a1-4713-ad39-68c8e292c703
-:END:
+### <span class="section-num">3.88</span> Exercise 2.77: generic arithmetic package {#exercise-2-dot-77-generic-arithmetic-package}
 
-Louis Reasoner tries to evaluate the expression src_scheme{(magnitude z)} where
-src_scheme{z} is the object shown in Figure 2.24. To his surprise, instead of
-the answer 5 he gets an error message from src_scheme{apply-generic}, saying
-there is no method for the operation src_scheme{magnitude} on the types
-src_scheme{(complex)}. He shows this interaction to Alyssa P. Hacker, who says
+
+#### <span class="section-num">3.88.1</span> Question {#question}
+
+Louis Reasoner tries to evaluate the expression <span class="inline-src language-scheme" data-lang="scheme">`(magnitude z)`</span> where
+<span class="inline-src language-scheme" data-lang="scheme">`z`</span> is the object shown in Figure 2.24. To his surprise, instead of
+the answer 5 he gets an error message from <span class="inline-src language-scheme" data-lang="scheme">`apply-generic`</span>, saying
+there is no method for the operation <span class="inline-src language-scheme" data-lang="scheme">`magnitude`</span> on the types
+<span class="inline-src language-scheme" data-lang="scheme">`(complex)`</span>. He shows this interaction to Alyssa P. Hacker, who says
 "The problem is that the complex-number selectors were never defined for
-src_scheme{complex} numbers, just for src_scheme{polar} and
-src_scheme{rectangular} numbers. All you have to do to make this work is add the
-following to the src_scheme{complex} package":
+<span class="inline-src language-scheme" data-lang="scheme">`complex`</span> numbers, just for <span class="inline-src language-scheme" data-lang="scheme">`polar`</span> and
+<span class="inline-src language-scheme" data-lang="scheme">`rectangular`</span> numbers. All you have to do to make this work is add the
+following to the <span class="inline-src language-scheme" data-lang="scheme">`complex`</span> package":
 
-#+BEGIN_SRC scheme -n
+```scheme { linenos=true, linenostart=1 }
 (put 'real-part '(complex) real-part)
 (put 'imag-part '(complex) imag-part)
 (put 'magnitude '(complex) magnitude)
 (put 'angle '(complex) angle)
-#+END_SRC
+```
 
 Describe in detail why this works. As an example, trace through all the
-procedures called in evaluating the expression src_scheme{(magnitude z)} where
-src_scheme{z} is the object shown in Figure 2.24. In particular, how many times
-is src_scheme{apply-generic} invoked? What procedure is dispatched to in each
+procedures called in evaluating the expression <span class="inline-src language-scheme" data-lang="scheme">`(magnitude z)`</span> where
+<span class="inline-src language-scheme" data-lang="scheme">`z`</span> is the object shown in Figure 2.24. In particular, how many times
+is <span class="inline-src language-scheme" data-lang="scheme">`apply-generic`</span> invoked? What procedure is dispatched to in each
 case?
 
-*** Answer
-:PROPERTIES:
-:ID:       48f39e76-e54e-4d18-b482-704d7aaa56db
-:CUSTOM-ID: 48f39e76-e54e-4d18-b482-704d7aaa56db
-:END:
 
-Surprised to find I never actually imported src_scheme{apply-generic}.
+#### <span class="section-num">3.88.2</span> Answer {#answer}
 
-#+NAME: apply-generic-table
-#+BEGIN_SRC scheme -n :eval no-export :results silent
+Surprised to find I never actually imported <span class="inline-src language-scheme" data-lang="scheme">`apply-generic`</span>.
+
+<a id="code-snippet--apply-generic-table"></a>
+```scheme { linenos=true, linenostart=1 }
 <<op-table>>
 (define (apply-generic op . args)
   (let ((type-tags (map type-tag args)))
@@ -16005,9 +13538,10 @@ Surprised to find I never actually imported src_scheme{apply-generic}.
           (error
             "No method for these types: APPLY-GENERIC"
             (list op type-tags))))))
-#+END_SRC
-#+NAME: generic-arithmetic
-#+BEGIN_SRC scheme -n :eval no-export :results silent
+```
+
+<a id="code-snippet--generic-arithmetic"></a>
+```scheme { linenos=true, linenostart=1 }
 (define (square x) (* x 2))
 (define (add x y) (apply-generic 'add x y))
 (define (sub x y) (apply-generic 'sub x y))
@@ -16157,9 +13691,10 @@ Surprised to find I never actually imported src_scheme{apply-generic}.
   ((get 'make-from-real-imag 'complex) x y))
 (define (make-complex-from-mag-ang r a)
   ((get 'make-from-mag-ang 'complex) r a))
-#+END_SRC
-#+NAME: scheme-number-package
-#+BEGIN_SRC scheme -n :eval no-export :results silent
+```
+
+<a id="code-snippet--scheme-number-package"></a>
+```scheme { linenos=true, linenostart=1 }
 (define (make-scheme-number n)
   ((get 'make 'scheme-number) n))
 (define (install-scheme-number-package)
@@ -16174,11 +13709,11 @@ Surprised to find I never actually imported src_scheme{apply-generic}.
        (lambda (x y) (tag (/ x y))))
   (put 'make 'scheme-number (lambda (x) (tag x)))
   'done)
-#+END_SRC
+```
 
 First I want to do sanity checks on the system.
 
-#+BEGIN_SRC scheme :eval no-export :results output
+```scheme
 <<type-tagging>>
 <<generic-arithmetic>>
 <<scheme-number-package>>
@@ -16192,37 +13727,36 @@ First I want to do sanity checks on the system.
 (install-scheme-number-package)
 
 <<gen-math-tests>>
-#+END_SRC
+```
 
-#+RESULTS[be80a0abe0b56abc26596013fa7d6c4a005216db]:
-#+begin_EXAMPLE
-5+5 = (scheme-number . 10) 
-5-5 = (scheme-number . 0) 
-5*5 = (scheme-number . 25) 
-5/5 = (scheme-number . 1) 
-1/2 + 1/2 = (rational 1 . 1) 
-1/2 - 1/2 = (rational 0 . 1) 
-1/2 * 1/2 = (rational 1 . 4) 
-1/2 / 1/2 = (rational 1 . 1) 
-3+4i + 3+4i = (complex rectangular 6 . 8) 
-3+4i - 3+4i = (complex rectangular 0 . 0) 
-3+4i * 3+4i = (complex polar 14.0 . 1.8545904360032244) 
-3+4i / 3+4i = (complex polar 1.0 . 0.0) 
-3m+4deg + 3m+4deg = (complex rectangular -3.921861725181672 . -4.540814971847569) 
-3m+4deg - 3m+4deg = (complex rectangular 0.0 . 0.0) 
-3m+4deg * 3m+4deg = (complex polar 9 . 8) 
-3m+4deg / 3m+4deg = (complex polar 1 . 0) 
-#+end_EXAMPLE
+```text
+5+5 = (scheme-number . 10)
+5-5 = (scheme-number . 0)
+5*5 = (scheme-number . 25)
+5/5 = (scheme-number . 1)
+1/2 + 1/2 = (rational 1 . 1)
+1/2 - 1/2 = (rational 0 . 1)
+1/2 * 1/2 = (rational 1 . 4)
+1/2 / 1/2 = (rational 1 . 1)
+3+4i + 3+4i = (complex rectangular 6 . 8)
+3+4i - 3+4i = (complex rectangular 0 . 0)
+3+4i * 3+4i = (complex polar 14.0 . 1.8545904360032244)
+3+4i / 3+4i = (complex polar 1.0 . 0.0)
+3m+4deg + 3m+4deg = (complex rectangular -3.921861725181672 . -4.540814971847569)
+3m+4deg - 3m+4deg = (complex rectangular 0.0 . 0.0)
+3m+4deg * 3m+4deg = (complex polar 9 . 8)
+3m+4deg / 3m+4deg = (complex polar 1 . 0)
+```
 
 Now let's run this:
-#+BEGIN_SRC scheme :eval no-export :results output
+
+```scheme
 ,trace (magnitude (make-complex-from-real-imag 3 4))
-#+END_SRC
+```
 
 I've heavily pared down this from the real debug output.
 
-#+RESULTS:
-#+begin_EXAMPLE
+```text
 (make-complex-from-real-imag 3 4)
 |  (get make-from-real-imag complex)
 |  #<procedure 1ca8ad0 at <unknown port>:166:4 (x y)>
@@ -16258,46 +13792,37 @@ I've heavily pared down this from the real debug output.
 |  (square 4)
 |  8
 3.7416573867739413
-#+end_EXAMPLE
+```
 
-The procedures in src_scheme{apply-generic 'complex} are only proxies to other
+The procedures in <span class="inline-src language-scheme" data-lang="scheme">`apply-generic 'complex`</span> are only proxies to other
 procedures at the moment. However they could be useful for other procedures that
-should need to know very little about the ~complex~ package.
+should need to know very little about the `complex` package.
 
-** Exercise 2.78: native scheme numbers
-:PROPERTIES:
-:ID:       b6c4fadc-2d78-4784-8975-91661ee5c2d1
-:CUSTOM-ID: b6c4fadc-2d78-4784-8975-91661ee5c2d1
-:END:
 
-*** Question
-:PROPERTIES:
-:ID:       06442f66-6f3d-490b-9b82-a5f9a2f9fb9f
-:CUSTOM-ID: 06442f66-6f3d-490b-9b82-a5f9a2f9fb9f
-:END:
+### <span class="section-num">3.89</span> Exercise 2.78: native scheme numbers {#exercise-2-dot-78-native-scheme-numbers}
 
-The internal procedures in the src_scheme{scheme-number} package are essentially
-nothing more than calls to the primitive procedures src_scheme{+},
-src_scheme{-}, etc. It was not possible to use the primitives of the language
+
+#### <span class="section-num">3.89.1</span> Question {#question}
+
+The internal procedures in the <span class="inline-src language-scheme" data-lang="scheme">`scheme-number`</span> package are essentially
+nothing more than calls to the primitive procedures <span class="inline-src language-scheme" data-lang="scheme">`+`</span>,
+<span class="inline-src language-scheme" data-lang="scheme">`-`</span>, etc. It was not possible to use the primitives of the language
 directly because our type-tag system requires that each data object have a type
 attached to it. In fact, however, all Lisp implementations do have a type
 system, which they use internally. Primitive predicates such as
-src_scheme{symbol?} and src_scheme{number?} determine whether data objects have
-particular types. Modify the definitions of src_scheme{type-tag},
-src_scheme{contents}, and src_scheme{attach-tag} from 2.4.2 so that our
+<span class="inline-src language-scheme" data-lang="scheme">`symbol?`</span> and <span class="inline-src language-scheme" data-lang="scheme">`number?`</span> determine whether data objects have
+particular types. Modify the definitions of <span class="inline-src language-scheme" data-lang="scheme">`type-tag`</span>,
+<span class="inline-src language-scheme" data-lang="scheme">`contents`</span>, and <span class="inline-src language-scheme" data-lang="scheme">`attach-tag`</span> from 2.4.2 so that our
 generic system takes advantage of Scheme's internal type system. That is to say,
 the system should work as before except that ordinary numbers should be
-represented simply as Scheme numbers rather than as pairs whose src_scheme{car}
-is the symbol src_scheme{scheme-number}.
+represented simply as Scheme numbers rather than as pairs whose <span class="inline-src language-scheme" data-lang="scheme">`car`</span>
+is the symbol <span class="inline-src language-scheme" data-lang="scheme">`scheme-number`</span>.
 
-*** Answer
-:PROPERTIES:
-:ID:       53716102-7937-4d59-9d2d-3be9a511caa4
-:CUSTOM-ID: 53716102-7937-4d59-9d2d-3be9a511caa4
-:END:
 
-#+NAME: smarter-type-tagging
-#+BEGIN_SRC scheme -n :eval no-export :results silent
+#### <span class="section-num">3.89.2</span> Answer {#answer}
+
+<a id="code-snippet--smarter-type-tagging"></a>
+```scheme { linenos=true, linenostart=1 }
 (define (attach-tag type-tag contents)
   (if (number? contents)
       contents
@@ -16308,7 +13833,7 @@ is the symbol src_scheme{scheme-number}.
          (car datum))
         ((number? datum)
          'scheme-number)
-        (else (error "Bad tagged datum: 
+        (else (error "Bad tagged datum:
               TYPE-TAG" datum))))
 
 (define (contents datum)
@@ -16316,12 +13841,12 @@ is the symbol src_scheme{scheme-number}.
          (cdr datum))
         ((number? datum)
          datum)
-        (else (error "Bad tagged datum: 
+        (else (error "Bad tagged datum:
               CONTENTS" datum))))
-#+END_SRC
+```
 
-#+NAME: gen-math-tests
-#+BEGIN_SRC scheme -n :eval no-export :results silent
+<a id="code-snippet--gen-math-tests"></a>
+```scheme { linenos=true, linenostart=1 }
 (define msn make-scheme-number)
 (echo "5+5 =" (add (msn 5) (msn 5)))
 (echo "5-5 =" (sub (msn 5) (msn 5)))
@@ -16345,8 +13870,9 @@ is the symbol src_scheme{scheme-number}.
   (echo "3m+4deg - 3m+4deg =" (sub p p))
   (echo "3m+4deg * 3m+4deg =" (mul p p))
   (echo "3m+4deg / 3m+4deg =" (div p p)))
-#+END_SRC
-#+BEGIN_SRC scheme -n :eval no-export :results output
+```
+
+```scheme { linenos=true, linenostart=1 }
 <<sqrt>>
 <<square>>
 <<echo>>
@@ -16362,54 +13888,44 @@ is the symbol src_scheme{scheme-number}.
 (install-scheme-number-package)
 
 <<gen-math-tests>>
-#+END_SRC
+```
 
-#+RESULTS[c529c1e2dbf70c1782dc16d5f0a261f7a595cab0]:
-#+begin_EXAMPLE
-5+5 = 10 
-5-5 = 0 
-5*5 = 25 
-5/5 = 1 
-1/2 + 1/2 = (rational 1 . 1) 
-1/2 - 1/2 = (rational 0 . 1) 
-1/2 * 1/2 = (rational 1 . 4) 
-1/2 / 1/2 = (rational 1 . 1) 
-3+4i + 3+4i = (complex rectangular 6 . 8) 
-3+4i - 3+4i = (complex rectangular 0 . 0) 
-3+4i * 3+4i = (complex polar 14.0 . 1.8545904360032244) 
-3+4i / 3+4i = (complex polar 1.0 . 0.0) 
-3m+4deg + 3m+4deg = (complex rectangular -3.921861725181672 . -4.540814971847569) 
-3m+4deg - 3m+4deg = (complex rectangular 0.0 . 0.0) 
-3m+4deg * 3m+4deg = (complex polar 9 . 8) 
-3m+4deg / 3m+4deg = (complex polar 1 . 0) 
-#+end_EXAMPLE
+```text
+5+5 = 10
+5-5 = 0
+5*5 = 25
+5/5 = 1
+1/2 + 1/2 = (rational 1 . 1)
+1/2 - 1/2 = (rational 0 . 1)
+1/2 * 1/2 = (rational 1 . 4)
+1/2 / 1/2 = (rational 1 . 1)
+3+4i + 3+4i = (complex rectangular 6 . 8)
+3+4i - 3+4i = (complex rectangular 0 . 0)
+3+4i * 3+4i = (complex polar 14.0 . 1.8545904360032244)
+3+4i / 3+4i = (complex polar 1.0 . 0.0)
+3m+4deg + 3m+4deg = (complex rectangular -3.921861725181672 . -4.540814971847569)
+3m+4deg - 3m+4deg = (complex rectangular 0.0 . 0.0)
+3m+4deg * 3m+4deg = (complex polar 9 . 8)
+3m+4deg / 3m+4deg = (complex polar 1 . 0)
+```
 
 Confirmed by debugging that these calls aren't adding any tags.
 
-** Exercise 2.79: generic equality
-:PROPERTIES:
-:ID:       9f746c37-73b7-4a0b-b5a4-ef7a6c84c573
-:CUSTOM-ID: 9f746c37-73b7-4a0b-b5a4-ef7a6c84c573
-:END:
 
-*** Question
-:PROPERTIES:
-:ID:       fca46553-9125-4444-9397-9ce4f275660a
-:CUSTOM-ID: fca46553-9125-4444-9397-9ce4f275660a
-:END:
+### <span class="section-num">3.90</span> Exercise 2.79: generic equality {#exercise-2-dot-79-generic-equality}
 
-Define a generic equality predicate src_scheme{equ?} that tests the equality of
+
+#### <span class="section-num">3.90.1</span> Question {#question}
+
+Define a generic equality predicate <span class="inline-src language-scheme" data-lang="scheme">`equ?`</span> that tests the equality of
 two numbers, and install it in the generic arithmetic package. This operation
 should work for ordinary numbers, rational numbers, and complex numbers.
 
-*** Answer
-:PROPERTIES:
-:ID:       c7860a27-c8ec-4d8e-9ed7-3d4aeeac3b95
-:CUSTOM-ID: c7860a27-c8ec-4d8e-9ed7-3d4aeeac3b95
-:END:
 
-#+NAME: equ?
-#+BEGIN_SRC scheme -n :eval no-export :results silent
+#### <span class="section-num">3.90.2</span> Answer {#answer}
+
+<a id="code-snippet--equ?"></a>
+```scheme { linenos=true, linenostart=1 }
 (define (equ? x y) (apply-generic 'equ? x y))
 (define (install-equ?)
   (put 'equ? '(scheme-number scheme-number)
@@ -16437,9 +13953,9 @@ should work for ordinary numbers, rational numbers, and complex numbers.
                  ((get 'denom '(rational)) y)))))
   (put 'equ? '(real real)
        (lambda(x y) (= x y))))
-#+END_SRC
+```
 
-#+BEGIN_SRC scheme -n :eval no-export :results output :tangle 2/Ex79.scheme
+```scheme { linenos=true, linenostart=1 }
 <<sqrt>>
 <<square>>
 <<echo>>
@@ -16472,10 +13988,9 @@ should work for ordinary numbers, rational numbers, and complex numbers.
                                       (make-rational 2 3)) #t)
 (mattcheck "rational equ? false" (equ? (make-rational 2 3)
                                        (make-rational 2 5)) #f)
-#+END_SRC
+```
 
-#+RESULTS[464f15d5f40c1c1f8ff7ae4d287e15a4cf80c689]:
-#+begin_EXAMPLE
+```text
 <gen-math-tests output>
 SUCCEED at basic equ? true
 SUCCEED at basic equ? false
@@ -16485,32 +14000,23 @@ SUCCEED at polar equ? true
 SUCCEED at polar equ? false
 SUCCEED at rational equ? true
 SUCCEED at rational equ? false
-#+end_EXAMPLE
+```
 
-** Exercise 2.80: Generic testing for zero
-:PROPERTIES:
-:ID:       fe2432b6-f0a4-4691-9cf4-456d9542d1ee
-:CUSTOM-ID: fe2432b6-f0a4-4691-9cf4-456d9542d1ee
-:END:
 
-*** Question
-:PROPERTIES:
-:ID:       c2cd7c47-7c6e-43d6-9094-adbb67edb78f
-:CUSTOM-ID: c2cd7c47-7c6e-43d6-9094-adbb67edb78f
-:END:
+### <span class="section-num">3.91</span> Exercise 2.80: Generic testing for zero {#exercise-2-dot-80-generic-testing-for-zero}
 
-Define a generic predicate src_scheme{=zero?} that tests if its argument is
+
+#### <span class="section-num">3.91.1</span> Question {#question}
+
+Define a generic predicate <span class="inline-src language-scheme" data-lang="scheme">`=zero?`</span> that tests if its argument is
 zero, and install it in the generic arithmetic package. This operation should
 work for ordinary numbers, rational numbers, and complex numbers.
 
-*** Answer
-:PROPERTIES:
-:ID:       69ef5aa7-491e-41e2-9b2c-96b93dfa4594
-:CUSTOM-ID: 69ef5aa7-491e-41e2-9b2c-96b93dfa4594
-:END:
 
-#+NAME: eqzero?
-#+BEGIN_SRC scheme -n :eval no-export :results silent
+#### <span class="section-num">3.91.2</span> Answer {#answer}
+
+<a id="code-snippet--eqzero?"></a>
+```scheme { linenos=true, linenostart=1 }
 (define (=zero? x) (apply-generic '=zero? x))
 (define (install-=zero?)
   (put '=zero? '(scheme-number)
@@ -16532,9 +14038,9 @@ work for ordinary numbers, rational numbers, and complex numbers.
        (lambda(x)
          (or (= 0 ((get 'numer '(rational)) x))
              (= 0 ((get 'denom '(rational)) x))))))
-#+END_SRC
+```
 
-#+BEGIN_SRC scheme -n :eval no-export :results output :tangle 2/Ex80.scheme
+```scheme { linenos=true, linenostart=1 }
 <<sqrt>>
 <<square>>
 <<echo>>
@@ -16562,10 +14068,9 @@ work for ordinary numbers, rational numbers, and complex numbers.
 (mattcheck "polar =zero? false" (=zero? (make-complex-from-mag-ang 2 0)) #f)
 (mattcheck "rational =zero? true" (=zero? (make-rational 0 3)) #t)
 (mattcheck "rational =zero? false" (=zero? (make-rational 2 3)) #f)
-#+END_SRC
+```
 
-#+RESULTS[f6541b2f3f66c988411b9bcfa385c6f73b8bb3b7]:
-#+begin_EXAMPLE
+```text
 <gen-math-tests output>
 
 SUCCEED at basic =zero? true
@@ -16576,13 +14081,10 @@ SUCCEED at polar =zero? true
 SUCCEED at polar =zero? false
 SUCCEED at rational =zero? true
 SUCCEED at rational =zero? false
-#+end_EXAMPLE
+```
 
-** 2.4.3: Combining Data of Different Types
-:PROPERTIES:
-:ID:       a05905d5-b680-4c93-b5fa-00fb5b961efd
-:CUSTOM-ID: a05905d5-b680-4c93-b5fa-00fb5b961efd
-:END:
+
+### <span class="section-num">3.92</span> 2.4.3: Combining Data of Different Types {#2-dot-4-dot-3-combining-data-of-different-types}
 
 So far, the generic type system has had all types be completely independent.
 However, all of these number systems have relations between each other,
@@ -16590,12 +14092,12 @@ specifically they can be converted in this order:
 
 integers \rarrow rational \rarrow real \rarrow complex
 
-Converting types to each other is called **coercion**. With changes to
-src_scheme{apply-generic}, the system can automatically find compatible
-coercions and use them. For example, \(\frac{1}{3}\times3\) is now possible.
+Converting types to each other is called ****coercion****. With changes to
+<span class="inline-src language-scheme" data-lang="scheme">`apply-generic`</span>, the system can automatically find compatible
+coercions and use them. For example, \\(\frac{1}{3}\times3\\) is now possible.
 
-#+NAME: apply-generic-coercive
-#+BEGIN_SRC scheme -n :eval no-export :results silent
+<a id="code-snippet--apply-generic-coercive"></a>
+```scheme { linenos=true, linenostart=1 }
 (define (apply-generic op . args)
   (let ((type-tags (map type-tag args)))
     (let ((proc (get op type-tags)))
@@ -16606,145 +14108,124 @@ coercions and use them. For example, \(\frac{1}{3}\times3\) is now possible.
                     (type2 (cadr type-tags))
                     (a1 (car args))
                     (a2 (cadr args)))
-                (let ((t1->t2 
+                (let ((t1->t2
                        (get-coercion type1
                                      type2))
-                      (t2->t1 
-                       (get-coercion type2 
+                      (t2->t1
+                       (get-coercion type2
                                      type1)))
                   (cond (t1->t2
-                         (apply-generic 
+                         (apply-generic
                           op (t1->t2 a1) a2))
                         (t2->t1
-                         (apply-generic 
+                         (apply-generic
                           op a1 (t2->t1 a2)))
                         (else
-                         (error 
-                          "No method for 
+                         (error
+                          "No method for
                            these types"
-                          (list 
-                           op 
+                          (list
+                           op
                            type-tags))))))
-              (error 
+              (error
                "No method for these types"
                (list op type-tags)))))))
-#+END_SRC
+```
 
-This assumes src_scheme{put-coercion} and src_scheme{get-coercion}.
+This assumes <span class="inline-src language-scheme" data-lang="scheme">`put-coercion`</span> and <span class="inline-src language-scheme" data-lang="scheme">`get-coercion`</span>.
 
-#+NAME: type-table
-#+BEGIN_SRC scheme -n :eval no-export :results silent
+<a id="code-snippet--type-table"></a>
+```scheme { linenos=true, linenostart=1 }
 (define type-table (make-hash-table))
 
 (define (put-coercion type1 type2 f)
   (hash-set! type-table (cons type1 type2) f))
 (define (get-coercion type1 type2)
   (hash-ref type-table (cons type1 type2)))
-#+END_SRC
+```
 
 Authors observe that much work in programs using object-oriented languages is
 around type coercion.
 
-To write coercion procedures between every type would require \(n^2\) routines.
+To write coercion procedures between every type would require \\(n^2\\) routines.
 However, by keeping track of the relations between types (similarly to a tree or
 graph), we can find paths through multiple coercion routines at once. i.e. we
-can coerce type A to type D by coercion routines A->B, B->C, and C->D.
+can coerce type A to type D by coercion routines A-&gt;B, B-&gt;C, and C-&gt;D.
 
-** Exercise 2.81: Louis' ~apply-generic~
-:PROPERTIES:
-:ID:       4f44b71f-1d6d-4776-829e-4475404c5fb3
-:CUSTOM-ID: 4f44b71f-1d6d-4776-829e-4475404c5fb3
-:END:
 
-Louis Reasoner has noticed that src_scheme{apply-generic} may try to coerce the
+### <span class="section-num">3.93</span> Exercise 2.81: Louis' `apply-generic` {#exercise-2-dot-81-louis-apply-generic}
+
+Louis Reasoner has noticed that <span class="inline-src language-scheme" data-lang="scheme">`apply-generic`</span> may try to coerce the
 arguments to each other's type even if they already have the same type.
 Therefore, he reasons, we need to put procedures in the coercion table to coerce
 arguments of each type to their own type. For example, in addition to the
-src_scheme{scheme-number->complex} coercion shown above, he would do:
+<span class="inline-src language-scheme" data-lang="scheme">`scheme-number->complex`</span> coercion shown above, he would do:
 
-#+NAME: louis-scheme-num-coerce
-#+BEGIN_SRC scheme -n :eval no-export :results silent
+<a id="code-snippet--louis-scheme-num-coerce"></a>
+```scheme { linenos=true, linenostart=1 }
 (define (scheme-number->scheme-number n) n)
 (define (complex->complex z) z)
 (put-coercion 'scheme-number
               'scheme-number
               scheme-number->scheme-number)
 (put-coercion 'complex 'complex complex->complex)
-#+END_SRC
+```
 
-*** Question A
-:PROPERTIES:
-:ID:       00de09fa-c220-4daf-a59e-6334cc49d2f6
-:CUSTOM-ID: 00de09fa-c220-4daf-a59e-6334cc49d2f6
-:END:
+
+#### <span class="section-num">3.93.1</span> Question A {#question-a}
+
 With Louis's coercion procedures installed, what happens if
-src_scheme{apply-generic} is called with two arguments of type
-src_scheme{scheme-number} or two arguments of type src_scheme{complex} for an
+<span class="inline-src language-scheme" data-lang="scheme">`apply-generic`</span> is called with two arguments of type
+<span class="inline-src language-scheme" data-lang="scheme">`scheme-number`</span> or two arguments of type <span class="inline-src language-scheme" data-lang="scheme">`complex`</span> for an
 operation that is not found in the table for those types? For example, assume
 that we've defined a generic exponentiation operation:
 
-#+NAME: exp-generic
-#+BEGIN_SRC scheme -n :eval no-export :results silent
+<a id="code-snippet--exp-generic"></a>
+```scheme { linenos=true, linenostart=1 }
 (define (exp x y) (apply-generic 'exp x y))
-#+END_SRC
+```
 
 and have put a procedure for exponentiation in the Scheme-number package but not
 in any other package:
 
-#+NAME: exp-gen-scheme-number
-#+BEGIN_SRC scheme -n :eval no-export :results silent
+<a id="code-snippet--exp-gen-scheme-number"></a>
+```scheme { linenos=true, linenostart=1 }
 ;; following added to Scheme-number package
 (put 'exp '(scheme-number scheme-number)
      (lambda (x y) (tag (expt x y))))
      ; using primitive expt
-#+END_SRC
+```
 
-What happens if we call src_scheme{exp} with two complex numbers as arguments?
+What happens if we call <span class="inline-src language-scheme" data-lang="scheme">`exp`</span> with two complex numbers as arguments?
 
-*** Answer A
-:PROPERTIES:
-:ID:       7102b5d7-b1a0-4348-bb55-9c7e0a193359
-:CUSTOM-ID: 7102b5d7-b1a0-4348-bb55-9c7e0a193359
-:END:
 
-I think it will loop infinitely at the first nested src_scheme{apply-generic}
-call, seen in the block after src_scheme{t1->t2}.
+#### <span class="section-num">3.93.2</span> Answer A {#answer-a}
 
-*** Question B
-:PROPERTIES:
-:ID:       72dd7fdb-49d3-46f6-86f4-81faecac354b
-:CUSTOM-ID: 72dd7fdb-49d3-46f6-86f4-81faecac354b
-:END:
+I think it will loop infinitely at the first nested <span class="inline-src language-scheme" data-lang="scheme">`apply-generic`</span>
+call, seen in the block after <span class="inline-src language-scheme" data-lang="scheme">`t1->t2`</span>.
 
+
+#### <span class="section-num">3.93.3</span> Question B {#question-b}
 
 Is Louis correct that something had to be done about coercion with arguments of
-the same type, or does src_scheme{apply-generic} work correctly as is?
+the same type, or does <span class="inline-src language-scheme" data-lang="scheme">`apply-generic`</span> work correctly as is?
 
-*** Answer B
-:PROPERTIES:
-:ID:       3afc606b-b683-45fd-84dc-beefcb87f989
-:CUSTOM-ID: 3afc606b-b683-45fd-84dc-beefcb87f989
-:END:
+
+#### <span class="section-num">3.93.4</span> Answer B {#answer-b}
 
 He is correct. The predicate which determines whether type coercion is attempted is only a check to if the requested procedure exists. This is a problem if, as seen in the last problem, the data types are compatible but the operation does not exist.
 
-*** Question C
-:PROPERTIES:
-:ID:       e037f8aa-5896-4027-a672-1f2716061497
-:CUSTOM-ID: e037f8aa-5896-4027-a672-1f2716061497
-:END:
 
-Modify src_scheme{apply-generic} so that it doesn't try coercion if the two
+#### <span class="section-num">3.93.5</span> Question C {#question-c}
+
+Modify <span class="inline-src language-scheme" data-lang="scheme">`apply-generic`</span> so that it doesn't try coercion if the two
 arguments have the same type.
 
-*** Answer C
-:PROPERTIES:
-:ID:       bd571c23-5886-4424-bd91-96fd8b9125c1
-:CUSTOM-ID: bd571c23-5886-4424-bd91-96fd8b9125c1
-:END:
 
-#+NAME: apply-generic-coerce-fixed
-#+BEGIN_SRC scheme -n :eval no-export :results silent
+#### <span class="section-num">3.93.6</span> Answer C {#answer-c}
+
+<a id="code-snippet--apply-generic-coerce-fixed"></a>
+```scheme { linenos=true, linenostart=1 }
 (define (apply-generic op . args)
   (let ((type-tags (map type-tag args)))
     (let ((proc (get op type-tags)))
@@ -16757,33 +14238,34 @@ arguments have the same type.
                     (a2 (cadr args)))
                 (if (equal? type1 type2)
                   ;      'failgood ; proving correct operation
-                        (error 
+                        (error
                      "No method for this type"
                      (list op type-tags))
-                    (let ((t1->t2 
+                    (let ((t1->t2
                            (get-coercion type1
                                          type2))
-                          (t2->t1 
-                           (get-coercion type2 
+                          (t2->t1
+                           (get-coercion type2
                                          type1)))
                       (cond (t1->t2
-                             (apply-generic 
+                             (apply-generic
                               op (t1->t2 a1) a2))
                             (t2->t1
-                             (apply-generic 
+                             (apply-generic
                               op a1 (t2->t1 a2)))
                             (else
-                             (error 
+                             (error
                               "No coercion method for these types"
-                              (list 
-                               op 
+                              (list
+                               op
                                type-tags)))))))
-              (error 
+              (error
                "No method for these types"
                (list op type-tags)))))))
-#+END_SRC
-#+NAME: basic-coercions
-#+BEGIN_SRC scheme -n :eval no-export :results silent
+```
+
+<a id="code-snippet--basic-coercions"></a>
+```scheme { linenos=true, linenostart=1 }
 (put-coercion 'scheme-number 'rational
               (lambda(num)
                 (make-rational num 1)))
@@ -16797,9 +14279,9 @@ arguments have the same type.
 (put-coercion 'scheme-number 'complex
               (lambda(num)
                 (make-complex-from-real-imag num 0)))
-#+END_SRC
+```
 
-#+BEGIN_SRC scheme -n :noeval :results output
+```scheme { linenos=true, linenostart=1 }
 <<op-table>>
 <<type-table>>
 <<sqrt>>
@@ -16830,27 +14312,20 @@ arguments have the same type.
 (mattcheck "bad coercion test"
            (apply-generic 'foobar 8 9)
            'failgood)
-#+END_SRC
+```
 
-#+RESULTS[c0530395a63ee325701dc0ea8cd10e9b4b9a48fa]:
-#+begin_EXAMPLE
+```text
 SUCCEED at good coercion test
 SUCCEED at bad coercion test
-#+end_EXAMPLE
+```
 
-** Exercise 2.82: ~apply-generic~ with multiple coerced arguments
-:PROPERTIES:
-:ID:       eb0495b5-c171-40a9-8934-569e450dc3d8
-:CUSTOM-ID: eb0495b5-c171-40a9-8934-569e450dc3d8
-:END:
 
-*** Question
-:PROPERTIES:
-:ID:       01e6a7c6-23a3-439b-ac95-233a870b2f1d
-:CUSTOM-ID: 01e6a7c6-23a3-439b-ac95-233a870b2f1d
-:END:
+### <span class="section-num">3.94</span> Exercise 2.82: `apply-generic` with multiple coerced arguments {#exercise-2-dot-82-apply-generic-with-multiple-coerced-arguments}
 
-Show how to generalize src_scheme{apply-generic} to handle coercion in the
+
+#### <span class="section-num">3.94.1</span> Question {#question}
+
+Show how to generalize <span class="inline-src language-scheme" data-lang="scheme">`apply-generic`</span> to handle coercion in the
 general case of multiple arguments. One strategy is to attempt to coerce all the
 arguments to the type of the first argument, then to the type of the second
 argument, and so on. Give an example of a situation where this strategy (and
@@ -16858,28 +14333,25 @@ likewise the two-argument version given above) is not sufficiently general.
 (Hint: Consider the case where there are some suitable mixed-type operations
 present in the table that will not be tried.)
 
-*** Answer
-:PROPERTIES:
-:ID:       964bfcf4-d8d5-4acb-942e-b34e11b4c04a
-:CUSTOM-ID: 964bfcf4-d8d5-4acb-942e-b34e11b4c04a
-:END:
+
+#### <span class="section-num">3.94.2</span> Answer {#answer}
 
 These strategies are not sufficient when a path to the correct type will require
-multiple coercions. Say you want to coerce arguments of types \(ABCD\). There
-are coercions for \( A \rightarrow B \), \( B \rightarrow C \), \( A \rightarrow
-D \), \( C \rightarrow A \) but /not/ \( C \rightarrow D \). If fed arguments of
-types \( ABCD \), ~apply-generic~ will first coerce A to B, then B to C, and
-then fail to find a coercion from C to D despite a path \( C \rightarrow A
-\rightarrow D \) existing.
+multiple coercions. Say you want to coerce arguments of types \\(ABCD\\). There
+are coercions for \\( A \rightarrow B \\), \\( B \rightarrow C \\), \\( A \rightarrow
+D \\), \\( C \rightarrow A \\) but _not_ \\( C \rightarrow D \\). If fed arguments of
+types \\( ABCD \\), `apply-generic` will first coerce A to B, then B to C, and
+then fail to find a coercion from C to D despite a path \\( C \rightarrow A
+\rightarrow D \\) existing.
 
 The other scenario is if there is a different type not included in the original
-set which all types could convert to. For example if coercions to \(E\) exist
-for all \(ABCD\), this would not be checked for.
+set which all types could convert to. For example if coercions to \\(E\\) exist
+for all \\(ABCD\\), this would not be checked for.
 
 Here's an implementation of the first strategy, which is a mess:
 
-#+NAME: apply-generic-coerce-varargs-naive
-#+BEGIN_SRC scheme -n :eval no-export :results silent
+<a id="code-snippet--apply-generic-coerce-varargs-naive"></a>
+```scheme { linenos=true, linenostart=1 }
 (use-srfis '(1))
 ;; Version of apply-generic that look for coercion functions
 ;; that work for the entire list
@@ -16902,7 +14374,7 @@ Here's an implementation of the first strategy, which is a mess:
          (list op types))
         (let ((tries (coercions-for-list ll (car ll))))
           (if (every procedure? tries); if all coercions found, apply them
-              (map (lambda(f x) (f x))  
+              (map (lambda(f x) (f x))
                    tries args)
               (map-coercions (cdr ll)))))) ; else keep trying
   (let ((proc (get op types)))
@@ -16911,11 +14383,11 @@ Here's an implementation of the first strategy, which is a mess:
         (let ((coerced (map-coercions types)))
           (apply (get op (map type-tag coerced))
                  (map contents coerced))))))
-#+END_SRC
+```
 
 Testing my code:
 
-#+BEGIN_SRC scheme -n :eval no-export :results output
+```scheme { linenos=true, linenostart=1 }
 <<op-table>>
 <<type-table>>
 <<sqrt>>
@@ -16947,27 +14419,25 @@ Testing my code:
            (mul (make-complex-from-real-imag 8 0)
                 (make-complex-from-real-imag 2 3))
            (mul 8 (make-complex-from-real-imag 2 3)))
-#+END_SRC
+```
 
-#+RESULTS[f88f798e03d9974d8307306e0ce2826bc5054373]:
-#+begin_EXAMPLE
+```text
 SUCCEED at num -> frac coercion test
 SUCCEED at num -> complex coercion test
-#+end_EXAMPLE
+```
 
 The strategy I implemented was "search the list and find one type which all
-others coerce to." However, a superior strategy, [[https://github.com/danielpi/SICP-Exercises/blob/46a6b38fd83faae21db239f40d913ff24062d2e6/Racket/Ex%202.82%20Generalized%20apply-generic.rkt#L269][as implemented by danielpi on
-GitHub]][fn:: starting on line 269
-https://github.com/danielpi/SICP-Exercises/blob/46a6b38fd83faae21db239f40d913ff24062d2e6/Racket/Ex%202.82%20Generalized%20apply-generic.rkt#L269]
+others coerce to." However, a superior strategy, [as implemented by danielpi on
+GitHub](https://github.com/danielpi/SICP-Exercises/blob/46a6b38fd83faae21db239f40d913ff24062d2e6/Racket/Ex%202.82%20Generalized%20apply-generic.rkt#L269)[^fn:11]
 is to iterate through the list's types, attempting every coercion that works,
 and leaving unmodified every number that doesn't have one. In a linear "tower"
 structure, the types will raise as far as is necessary -- assuming the types are
 ordered lowest-to-highest.
 
-Here's my attempt at a much simplified version. 
+Here's my attempt at a much simplified version.
 
-#+NAME: apply-generic-coerce-less-naive
-#+BEGIN_SRC scheme -n :eval no-export :results silent
+<a id="code-snippet--apply-generic-coerce-less-naive"></a>
+```scheme { linenos=true, linenostart=1 }
 (use-srfis '(1))
 ;; Version of apply-generic that tries to coerce each variable
 ;; into each type represebted in args.
@@ -16984,7 +14454,7 @@ Here's my attempt at a much simplified version.
                     item)
                    (else (coerce item)))))
          items))
-  
+
   (let ((proc (get op types)))
     (if proc ; is this already doable?
         (apply proc (map contents args))
@@ -16993,9 +14463,9 @@ Here's my attempt at a much simplified version.
           (apply (get op (map type-tag coerced))
                  (map contents coerced))))))
 ;; However this won't actually handle multiple arguments
-#+END_SRC
+```
 
-#+BEGIN_SRC scheme -n :eval no-export :results output
+```scheme { linenos=true, linenostart=1 }
 <<op-table>>
 <<type-table>>
 <<sqrt>>
@@ -17030,25 +14500,21 @@ Here's my attempt at a much simplified version.
 (mattcheck "multiple arguments test"
            (false-if-exception (apply-generic 'add 8 (make-rational 2 3)
                                               (make-complex-from-real-imag 2 3))))
-#+END_SRC
+```
 
-#+RESULTS[aa987f0ee5a7ce7068b3f0885f61a58b0f67ee5c]:
-#+begin_EXAMPLE
+```text
 SUCCEED at num -> frac coercion test
 SUCCEED at num -> complex coercion test
 FAIL at multiple arguments test
 expected: "boolean true"
 returned: "boolean false"
-#+end_EXAMPLE
+```
 
-*** Answer with vararg support
-:PROPERTIES:
-:ID:       b1595a6e-8318-4314-819c-97f62ea09b03
-:CUSTOM-ID: b1595a6e-8318-4314-819c-97f62ea09b03
-:END:
 
-#+NAME: apply-generic-coerce-varargs
-#+BEGIN_SRC scheme -n :eval no-export :results silent
+#### <span class="section-num">3.94.3</span> Answer with vararg support {#answer-with-vararg-support}
+
+<a id="code-snippet--apply-generic-coerce-varargs"></a>
+```scheme { linenos=true, linenostart=1 }
 (use-srfis '(1))
 ;; Version of apply-generic that tries to coerce each variable
 ;; into each type represebted in args.
@@ -17065,7 +14531,7 @@ returned: "boolean false"
                     item)
                    (else (coerce item)))))
          items))
-  
+
   (let ((proc (get op types)))
     (if proc ; is this already doable?
         (apply proc (map contents args))
@@ -17079,9 +14545,9 @@ returned: "boolean false"
               (reduce (lambda(elem previous)
                         (apply-generic op previous elem))
                       "ERROR" coerced))))))
-#+END_SRC
+```
 
-#+BEGIN_SRC scheme -n :eval no-export :results output
+```scheme { linenos=true, linenostart=1 }
 <<op-table>>
 <<type-table>>
 <<sqrt>>
@@ -17118,10 +14584,9 @@ returned: "boolean false"
            (false-if-exception
             (apply-generic 'add 8 (make-rational 2 3)
             (make-complex-from-real-imag 2 3))))
-#+END_SRC
+```
 
-#+RESULTS[b742b1dc80842a1e75fa2f553d525b41605e7283]:
-#+begin_EXAMPLE
+```text
 <unknown-location>: warning: possibly unbound variable `fold'
 <unknown-location>: warning: possibly unbound variable `reduce'
 <unknown-location>: warning: possibly unbound variable `mattcheck'
@@ -17130,58 +14595,49 @@ SUCCEED at multiple arguments test 2
 FAIL at multiple arguments coercion test
 expected: "boolean true"
 returned: "boolean false"
-#+end_EXAMPLE
+```
 
 The second test fails because of the rational being nested within the complex
 number type. Taking this any further would involve reworking earlier procedures
-(such as src_scheme{add-complex}) and likely writing the future src_scheme{drop}
+(such as <span class="inline-src language-scheme" data-lang="scheme">`add-complex`</span>) and likely writing the future <span class="inline-src language-scheme" data-lang="scheme">`drop`</span>
 procedure anyway.
 
 So let's move on.
 
-** Exercise 2.83: ~raise~
-:PROPERTIES:
-:ID:       26a42618-c607-4abc-a7cc-affbf2779db7
-:CUSTOM-ID: 26a42618-c607-4abc-a7cc-affbf2779db7
-:END:
 
-*** Question
-:PROPERTIES:
-:ID:       3bd63c9b-5ff5-4e04-8d6f-1cfaa936313a
-:CUSTOM-ID: 3bd63c9b-5ff5-4e04-8d6f-1cfaa936313a
-:END:
+### <span class="section-num">3.95</span> Exercise 2.83: `raise` {#exercise-2-dot-83-raise}
+
+
+#### <span class="section-num">3.95.1</span> Question {#question}
 
 Suppose you are designing a generic arithmetic system for dealing with the tower
 of types shown in Figure 2.25: integer, rational, real, complex. For each type
 (except complex), design a procedure that raises objects of that type one level
-in the tower. Show how to install a generic src_scheme{raise} operation that
+in the tower. Show how to install a generic <span class="inline-src language-scheme" data-lang="scheme">`raise`</span> operation that
 will work for each type (except complex).
 
-*** Answer
-:PROPERTIES:
-:ID:       63a891c8-a46b-4d71-b238-5050140f737c
-:CUSTOM-ID: 63a891c8-a46b-4d71-b238-5050140f737c
-:END:
+
+#### <span class="section-num">3.95.2</span> Answer {#answer}
 
 I'm again getting the feeling that the authors are asking for a theoretical
 exercise, but one that I'm not satisfied leaving to theory. First we need a
 structure to clarify the promotional possibilities of the tower. Then we need
 coercions for each type which can be used when following the tower.
 
-Something which I haven't defined before but will now is a src_scheme{'real}
+Something which I haven't defined before but will now is a <span class="inline-src language-scheme" data-lang="scheme">`'real`</span>
 type. A real number is a superset of ints and rationals, but isn't fundamentally
 different from these until a non-zero imaginary part is added. So my first
-instinct was to make it an untagged type like src_scheme{'scheme-number} that is
-detected by src_scheme{type-tag} with the builtin predicate src_scheme{real?}.
+instinct was to make it an untagged type like <span class="inline-src language-scheme" data-lang="scheme">`'scheme-number`</span> that is
+detected by <span class="inline-src language-scheme" data-lang="scheme">`type-tag`</span> with the builtin predicate <span class="inline-src language-scheme" data-lang="scheme">`real?`</span>.
 However after thinking about it some more I think I'll just implement it in the
 type table and have it pass its arguments off to the "real" types.
 
-=Real numbers are a superset of integers, rationals, and **irrational** numbers,
+`Real numbers are a superset of integers, rationals, and **irrational** numbers,
 which are not a part of this system yet. Also it turns out this module expected
-a "real" number to be a decimal. -Matt=
+a "real" number to be a decimal. -Matt`
 
-#+NAME: eqnumber
-#+BEGIN_SRC scheme -n :eval no-export :results silent
+<a id="code-snippet--eqnumber"></a>
+```scheme { linenos=true, linenostart=1 }
 (define (=number? x y)
   (and (number? x)
        (number? y)
@@ -17192,9 +14648,10 @@ a "real" number to be a decimal. -Matt=
        (integer? x)
        (integer? y)
        (= x y)))
-#+END_SRC
-#+NAME: basic-tower-coercions
-#+BEGIN_SRC scheme -n :eval no-export :results silent
+```
+
+<a id="code-snippet--basic-tower-coercions"></a>
+```scheme { linenos=true, linenostart=1 }
 (define tower
   '(scheme-number rational real complex))
 
@@ -17220,10 +14677,10 @@ a "real" number to be a decimal. -Matt=
               (lambda(num)
                 (make-complex-from-real-imag
                  num 0)))
-#+END_SRC
+```
 
-#+NAME: real-package
-#+BEGIN_SRC scheme -n :eval no-export :results silent
+<a id="code-snippet--real-package"></a>
+```scheme { linenos=true, linenostart=1 }
 (define (install-real-package)
   ;; interface to rest of the system
   (define (tag x) (attach-tag 'real x))
@@ -17241,9 +14698,9 @@ a "real" number to be a decimal. -Matt=
 
 (define (make-real r)
   ((get 'make 'real) r))
-#+END_SRC
+```
 
-#+BEGIN_SRC scheme -n :eval no-export :results output :tangle 2/Ex83.scheme
+```scheme { linenos=true, linenostart=1 }
 <<op-table>>
 <<type-table>>
 <<sqrt>>
@@ -17276,62 +14733,52 @@ a "real" number to be a decimal. -Matt=
         (echo "Done")
         (begin (echo x2)
                (recurse x2)))))
-#+END_SRC
+```
 
-#+RESULTS[69156083a1e47c209d1ee268f3575929dcb0abc0]:
-#+begin_EXAMPLE
+```text
 <unknown-location>: warning: possibly unbound variable `fold'
-5+5 = 10 
-5-5 = 0 
-5*5 = 25 
-5/5 = 1 
-1/2 + 1/2 = (rational 1 . 1) 
-1/2 - 1/2 = (rational 0 . 1) 
-1/2 * 1/2 = (rational 1 . 4) 
-1/2 / 1/2 = (rational 1 . 1) 
-3+4i + 3+4i = (complex rectangular 6 . 8) 
-3+4i - 3+4i = (complex rectangular 0 . 0) 
-3+4i * 3+4i = (complex polar 14.0 . 1.8545904360032244) 
-3+4i / 3+4i = (complex polar 1.0 . 0.0) 
-3m+4deg + 3m+4deg = (complex rectangular -3.921861725181672 . -4.540814971847569) 
-3m+4deg - 3m+4deg = (complex rectangular 0.0 . 0.0) 
-3m+4deg * 3m+4deg = (complex polar 9 . 8) 
-3m+4deg / 3m+4deg = (complex polar 1 . 0) 
-(rational 42 . 1) 
-(real . 42.0) 
-(complex rectangular (real . 42.0) . 0) 
-Done 
-#+end_EXAMPLE
-    
-** Exercise 2.84: ~append-generic~ with ~raise~
-:PROPERTIES:
-:ID:       83cb8c70-5e8d-4462-b9e2-90859e74437e
-:CUSTOM-ID: 83cb8c70-5e8d-4462-b9e2-90859e74437e
-:END:
+5+5 = 10
+5-5 = 0
+5*5 = 25
+5/5 = 1
+1/2 + 1/2 = (rational 1 . 1)
+1/2 - 1/2 = (rational 0 . 1)
+1/2 * 1/2 = (rational 1 . 4)
+1/2 / 1/2 = (rational 1 . 1)
+3+4i + 3+4i = (complex rectangular 6 . 8)
+3+4i - 3+4i = (complex rectangular 0 . 0)
+3+4i * 3+4i = (complex polar 14.0 . 1.8545904360032244)
+3+4i / 3+4i = (complex polar 1.0 . 0.0)
+3m+4deg + 3m+4deg = (complex rectangular -3.921861725181672 . -4.540814971847569)
+3m+4deg - 3m+4deg = (complex rectangular 0.0 . 0.0)
+3m+4deg * 3m+4deg = (complex polar 9 . 8)
+3m+4deg / 3m+4deg = (complex polar 1 . 0)
+(rational 42 . 1)
+(real . 42.0)
+(complex rectangular (real . 42.0) . 0)
+Done
+```
 
-*** Question
-:PROPERTIES:
-:ID:       f9313bf5-f209-4100-9284-7ef68e4977fc
-:CUSTOM-ID: f9313bf5-f209-4100-9284-7ef68e4977fc
-:END:
 
-Using the src_scheme{raise} operation of Exercise 2.83, modify the
-src_scheme{apply-generic} procedure so that it coerces its arguments to have the
+### <span class="section-num">3.96</span> Exercise 2.84: `append-generic` with `raise` {#exercise-2-dot-84-append-generic-with-raise}
+
+
+#### <span class="section-num">3.96.1</span> Question {#question}
+
+Using the <span class="inline-src language-scheme" data-lang="scheme">`raise`</span> operation of Exercise 2.83, modify the
+<span class="inline-src language-scheme" data-lang="scheme">`apply-generic`</span> procedure so that it coerces its arguments to have the
 same type by the method of successive raising, as discussed in this section. You
 will need to devise a way to test which of two types is higher in the tower. Do
-this in a manner that is ``compatible'' with the rest of the system and will not
+this in a manner that is \`\`compatible'' with the rest of the system and will not
 lead to problems in adding new levels to the tower.
 
-*** Answer
-:PROPERTIES:
-:ID:       d0b5e765-1af3-403e-8209-b05550e178da
-:CUSTOM-ID: d0b5e765-1af3-403e-8209-b05550e178da
-:END:
+
+#### <span class="section-num">3.96.2</span> Answer {#answer}
 
 First some (unnecessarily general) ways to find items in a list.
 
-#+NAME: list-indices
-#+BEGIN_SRC scheme -n :eval no-export :results silent
+<a id="code-snippet--list-indices"></a>
+```scheme { linenos=true, linenostart=1 }
 (use-srfis '(1))
 ;; list, items to find -> list of indices
 ;; example: (list-indices '(c b a) a b c z)
@@ -17363,7 +14810,7 @@ First some (unnecessarily general) ways to find items in a list.
                         lst)
             '())
       (cdr (fold folder (cons 0
-                              (make-list (length items) #f))    
+                              (make-list (length items) #f))
                  lst))))
 (define (max-index lst)
   (define (folder x result)
@@ -17398,11 +14845,12 @@ First some (unnecessarily general) ways to find items in a list.
 ;
 ;  (max-i (fold folder (list -1 0 0)
 ;               lst)))
-#+END_SRC
+```
 
 The new apply-generic and helper functions.
-#+NAME: tower-predicates
-#+BEGIN_SRC scheme -n :eval no-export :results silent
+
+<a id="code-snippet--tower-predicates"></a>
+```scheme { linenos=true, linenostart=1 }
 ;; type, type -> bool
 ;; Return true if type a is the lowest, false otherwise.
 (define (is-earlier-in-tower? a b)
@@ -17424,9 +14872,10 @@ The new apply-generic and helper functions.
         (error "type missing from tower!"
                "args" args "types" types "result" result)
         (list-ref types (max-index result)))))
-#+END_SRC
-#+NAME: apply-generic-raise
-#+BEGIN_SRC scheme -n :eval no-export :results silent
+```
+
+<a id="code-snippet--apply-generic-raise"></a>
+```scheme { linenos=true, linenostart=1 }
 (use-srfis '(1))
 ;; Version of apply-generic that tries raising
 ;; its arguments.
@@ -17439,12 +14888,12 @@ The new apply-generic and helper functions.
           (if (not raised)
               (error "map-raise: could not raise:" item highest-type)
               (map-raise highest-type raised)))))
-  
+
   (let ((proc (get op types)))
     (if proc ; is this already doable?
         (apply proc (map contents args))
                                         ; if not, try type coercion
-  
+
         (let* ((highest-type (apply latest-in-tower types))
                (map-raise-prime (lambda(item)(map-raise highest-type item)))
                (raised (map map-raise-prime args)))
@@ -17456,19 +14905,19 @@ The new apply-generic and helper functions.
               (reduce (lambda(elem previous)
                         (apply-generic op previous elem))
                       "ERROR" raised))))))
-#+END_SRC
+```
 
 I discovered that the prior method for avoiding tagging scheme-numbers also keeps you from tagging other things. Here's one that avoids the problem:
 
-#+NAME: attach-tag-fixed
-#+BEGIN_SRC scheme -n :eval no-export :results silent
+<a id="code-snippet--attach-tag-fixed"></a>
+```scheme { linenos=true, linenostart=1 }
 (define (attach-tag type-tag contents)
   (if (eqv? type-tag 'scheme-number)
       contents
       (cons type-tag contents)))
-#+END_SRC
+```
 
-#+BEGIN_SRC scheme -n :eval no-export :results output :tangle 2/Ex84.scheme
+```scheme { linenos=true, linenostart=1 }
 (load "mattcheck2.scm")
 <<op-table>>
 <<type-table>>
@@ -17530,26 +14979,25 @@ I discovered that the prior method for avoiding tagging scheme-numbers also keep
            (add (make-real 2)
                 (make-complex-from-mag-ang 3 5))
            (make-complex-from-real-imag 2.850986556389679 -2.8767728239894153))
-#+END_SRC
+```
 
-#+RESULTS[ab1dc934267ff91923330d7c39cdb2b0a3205480]:
-#+begin_EXAMPLE
-5+5 = 10 
-5-5 = 0 
-5*5 = 25 
-5/5 = 1 
-1/2 + 1/2 = (rational 1 . 1) 
-1/2 - 1/2 = (rational 0 . 1) 
-1/2 * 1/2 = (rational 1 . 4) 
-1/2 / 1/2 = (rational 1 . 1) 
-3+4i + 3+4i = (complex rectangular 6 . 8) 
-3+4i - 3+4i = (complex rectangular 0 . 0) 
-3+4i * 3+4i = (complex polar 14.0 . 1.8545904360032244) 
-3+4i / 3+4i = (complex polar 1.0 . 0.0) 
-3m+4deg + 3m+4deg = (complex rectangular -3.921861725181672 . -4.540814971847569) 
-3m+4deg - 3m+4deg = (complex rectangular 0.0 . 0.0) 
-3m+4deg * 3m+4deg = (complex polar 9 . 8) 
-3m+4deg / 3m+4deg = (complex polar 1 . 0) 
+```text
+5+5 = 10
+5-5 = 0
+5*5 = 25
+5/5 = 1
+1/2 + 1/2 = (rational 1 . 1)
+1/2 - 1/2 = (rational 0 . 1)
+1/2 * 1/2 = (rational 1 . 4)
+1/2 / 1/2 = (rational 1 . 1)
+3+4i + 3+4i = (complex rectangular 6 . 8)
+3+4i - 3+4i = (complex rectangular 0 . 0)
+3+4i * 3+4i = (complex polar 14.0 . 1.8545904360032244)
+3+4i / 3+4i = (complex polar 1.0 . 0.0)
+3m+4deg + 3m+4deg = (complex rectangular -3.921861725181672 . -4.540814971847569)
+3m+4deg - 3m+4deg = (complex rectangular 0.0 . 0.0)
+3m+4deg * 3m+4deg = (complex polar 9 . 8)
+3m+4deg / 3m+4deg = (complex polar 1 . 0)
 SUCCEED at is-earlier-in-tower? true
 SUCCEED at is-earlier-in-tower? false
 SUCCEED at max-index
@@ -17561,31 +15009,31 @@ SUCCEED at raise success
 SUCCEED at raise fail
 SUCCEED at apply-generic 1
 SUCCEED at apply-generic 2
-#+end_EXAMPLE
+```
 
 In this implementation, In order to add a new type, all that will be needed is
-to replace the tower variable (the horrors of =setq=...) and add a coercion to
+to replace the tower variable (the horrors of `setq`...) and add a coercion to
 the respective type.
 
-My first attempt at this exercise had a problem from src_scheme{'real} and above,
+My first attempt at this exercise had a problem from <span class="inline-src language-scheme" data-lang="scheme">`'real`</span> and above,
 where numbers passed to math primitives would fail, because of receiving numbers tagged
-src_scheme{'real}.
+<span class="inline-src language-scheme" data-lang="scheme">`'real`</span>.
 
-#+BEGIN_SRC scheme -n :eval no-export :results silent
+```scheme { linenos=true, linenostart=1 }
 (add (make-real 2)
      (make-complex-from-mag-ang 3 5))
 ;; eventually reaches...
 (add-complex (rectangular (real . 2) . 0)
              (polar 3 . 5))
 ;; which resulfs in...
-#+END_SRC
+```
 
-#+begin_EXAMPLE
+```text
 ice-9/boot-9.scm:1685:16: In procedure raise-exception:
 In procedure +: Wrong type argument in position 1: (real . 2)
-#+end_EXAMPLE
+```
 
-This issue was caused by not consuming the src_scheme{'real} tag when being
+This issue was caused by not consuming the <span class="inline-src language-scheme" data-lang="scheme">`'real`</span> tag when being
 coerced to a new type.
 
 My code also had an issue where real numbers raised from rational couldn't be
@@ -17593,53 +15041,42 @@ operated on because they were always nested inside the real number. This is
 solved by reducing the fraction to a decimal number, which fixes a few "bugs" in
 the book's code as well.
 
-** Exercise 2.85: ~append-generic~ with ~drop~
-:PROPERTIES:
-:ID:       88d8ef57-42ba-4e4c-b810-b40cbc67a912
-:CUSTOM-ID: 88d8ef57-42ba-4e4c-b810-b40cbc67a912
-:END:
 
-*** Question
-:PROPERTIES:
-:ID:       c9389dd5-56c5-44d0-8869-dafbd36e54ba
-:CUSTOM-ID: c9389dd5-56c5-44d0-8869-dafbd36e54ba
-:END:
+### <span class="section-num">3.97</span> Exercise 2.85: `append-generic` with `drop` {#exercise-2-dot-85-append-generic-with-drop}
+
+
+#### <span class="section-num">3.97.1</span> Question {#question}
 
 This section mentioned a method for "simplifying" a data object by lowering it
-in the tower of types as far as possible. Design a procedure src_scheme{drop}
+in the tower of types as far as possible. Design a procedure <span class="inline-src language-scheme" data-lang="scheme">`drop`</span>
 that accomplishes this for the tower described in Exercise 2.83. The key is to
 decide, in some general way, whether an object can be lowered. For example, the
-complex number \(1.5 + 0i\) can be lowered as far as src_scheme{real}, the
-complex number \(1 + 0i\) can be lowered as far as src_scheme{integer}, and the
-complex number \(2 + 3i\) cannot be lowered at all. Here is a plan for
+complex number \\(1.5 + 0i\\) can be lowered as far as <span class="inline-src language-scheme" data-lang="scheme">`real`</span>, the
+complex number \\(1 + 0i\\) can be lowered as far as <span class="inline-src language-scheme" data-lang="scheme">`integer`</span>, and the
+complex number \\(2 + 3i\\) cannot be lowered at all. Here is a plan for
 determining whether an object can be lowered: Begin by defining a generic
-operation src_scheme{project} that "pushes" an object down in the tower. For
+operation <span class="inline-src language-scheme" data-lang="scheme">`project`</span> that "pushes" an object down in the tower. For
 example, projecting a complex number would involve throwing away the imaginary
-part. Then a number can be dropped if, when we src_scheme{project} it and
-src_scheme{raise} the result back to the type we started with, we end up with
+part. Then a number can be dropped if, when we <span class="inline-src language-scheme" data-lang="scheme">`project`</span> it and
+<span class="inline-src language-scheme" data-lang="scheme">`raise`</span> the result back to the type we started with, we end up with
 something equal to what we started with. Show how to implement this idea in
-detail, by writing a src_scheme{drop} procedure that drops an object as far as
-possible. You will need to design the various projection operations[fn:: A real
-number can be projected to an integer using the src_scheme{round} primitive,
-which returns the closest integer to its argument.] and install
-src_scheme{project} as a generic operation in the system. You will also need to
+detail, by writing a <span class="inline-src language-scheme" data-lang="scheme">`drop`</span> procedure that drops an object as far as
+possible. You will need to design the various projection operations[^fn:12] and install
+<span class="inline-src language-scheme" data-lang="scheme">`project`</span> as a generic operation in the system. You will also need to
 make use of a generic equality predicate, such as described in Exercise 2.79.
-Finally, use src_scheme{drop} to rewrite src_scheme{apply-generic} from Exercise
+Finally, use <span class="inline-src language-scheme" data-lang="scheme">`drop`</span> to rewrite <span class="inline-src language-scheme" data-lang="scheme">`apply-generic`</span> from Exercise
 2.84 so that it "simplifies" its answers.
 
-*** Answer
-:PROPERTIES:
-:ID:       fc350f55-cb72-435a-a521-5d64f3fa45d6
-:CUSTOM-ID: fc350f55-cb72-435a-a521-5d64f3fa45d6
-:END:
 
-The question asks to install ~project~ as a generic operation in the system, and
-I assume that means a ~project~ function in the ops table. At first I thought it
-would be a function in the same way ~raise~ is, with coercions in the coercion
+#### <span class="section-num">3.97.2</span> Answer {#answer}
+
+The question asks to install `project` as a generic operation in the system, and
+I assume that means a `project` function in the ops table. At first I thought it
+would be a function in the same way `raise` is, with coercions in the coercion
 table. However upon consideration, it might be for the purpose of handling the type tags, as I encountered in previous exercises.
 
-#+NAME: drop-project
-#+BEGIN_SRC scheme -n :eval no-export :results silent
+<a id="code-snippet--drop-project"></a>
+```scheme { linenos=true, linenostart=1 }
 (define (project x)
   (let ((t1 (type-tag x)))
     (let ((p (get 'project t1)))
@@ -17668,10 +15105,10 @@ table. However upon consideration, it might be for the purpose of handling the t
      (lambda(num)
        (make-real
         ((get 'real-part '(complex)) num))))
-#+END_SRC
+```
 
-#+NAME: apply-generic-drop
-#+BEGIN_SRC scheme -n :eval no-export :results silent
+<a id="code-snippet--apply-generic-drop"></a>
+```scheme { linenos=true, linenostart=1 }
 (use-srfis '(1))
 ;; Version of apply-generic that tries to drop its type
 ;; when returning
@@ -17684,13 +15121,13 @@ table. However upon consideration, it might be for the purpose of handling the t
           (if (not raised)
               (error "MAP-RAISE: could not raise" item highest-type)
               (map-raise highest-type raised)))))
-  
+
   (drop
    (let ((proc (get op types)))
      (if proc ; is this already doable?
          (apply proc (map contents args))
                                         ; if not, try type coercion
-         
+
          (let* ((highest-type (apply latest-in-tower types))
                 (map-raise-prime (lambda(item)(map-raise highest-type item)))
                 (raised (map map-raise-prime args)))
@@ -17704,9 +15141,9 @@ table. However upon consideration, it might be for the purpose of handling the t
                (reduce (lambda(elem previous)
                          (apply-generic op previous elem))
                        "ERROR" raised)))))))
-#+END_SRC
+```
 
-#+BEGIN_SRC scheme -n :eval no-export :results output :tangle 2/Ex85.scheme
+```scheme { linenos=true, linenostart=1 }
 (load "mattcheck2.scm")
 <<op-table>>
 <<type-table>>
@@ -17759,26 +15196,25 @@ table. However upon consideration, it might be for the purpose of handling the t
 (mattcheck "drop 3"
            (drop (make-rational 5 1))
            5)
-#+END_SRC
+```
 
-#+RESULTS[8fc258db1d0a4659af73c32b2601e58cdb3b0f18]:
-#+begin_EXAMPLE
-5+5 = 10 
-5-5 = 0 
-5*5 = 25 
-5/5 = 1 
-1/2 + 1/2 = 1 
-1/2 - 1/2 = 0 
-1/2 * 1/2 = (rational 1 . 4) 
-1/2 / 1/2 = 1 
-3+4i + 3+4i = (complex rectangular 6 . 8) 
-3+4i - 3+4i = 0 
-3+4i * 3+4i = (complex polar 14.0 . 1.8545904360032244) 
-3+4i / 3+4i = 1.0 
-3m+4deg + 3m+4deg = (complex rectangular -3.921861725181672 . -4.540814971847569) 
-3m+4deg - 3m+4deg = 0.0 
-3m+4deg * 3m+4deg = (complex polar 9 . 8) 
-3m+4deg / 3m+4deg = 1 
+```text
+5+5 = 10
+5-5 = 0
+5*5 = 25
+5/5 = 1
+1/2 + 1/2 = 1
+1/2 - 1/2 = 0
+1/2 * 1/2 = (rational 1 . 4)
+1/2 / 1/2 = 1
+3+4i + 3+4i = (complex rectangular 6 . 8)
+3+4i - 3+4i = 0
+3+4i * 3+4i = (complex polar 14.0 . 1.8545904360032244)
+3+4i / 3+4i = 1.0
+3m+4deg + 3m+4deg = (complex rectangular -3.921861725181672 . -4.540814971847569)
+3m+4deg - 3m+4deg = 0.0
+3m+4deg * 3m+4deg = (complex polar 9 . 8)
+3m+4deg / 3m+4deg = 1
 SUCCEED at raise success
 SUCCEED at raise fail
 SUCCEED at apply-generic 1
@@ -17786,54 +15222,45 @@ SUCCEED at apply-generic 2
 SUCCEED at drop 1
 SUCCEED at drop 2
 SUCCEED at drop 3
-#+end_EXAMPLE
+```
 
-Compare the gen-math-tests output here with that of the [[id:b6c4fadc-2d78-4784-8975-91661ee5c2d1][first run in Ex 2.77]].
+Compare the gen-math-tests output here with that of the [first run in Ex 2.77](#exercise-2-dot-78-native-scheme-numbers).
 They are being correctly simplified.
 
 After getting these solutions working, I have to say I'm really reaping what
 I've sown. I've been very inconsistent with my tagging and untagging. Some
 functions in the type system expected tagged numbers, others expect untagged
-src_scheme{contents}, which means those functions cannot be used in the same
+<span class="inline-src language-scheme" data-lang="scheme">`contents`</span>, which means those functions cannot be used in the same
 places. I've had to run over the system and make sure I'm doing it at the right
 time.
 
-** Exercise 2.86: complex numbers with flexible types
-:PROPERTIES:
-:ID:       6f4359f5-e417-4d70-b75d-be454205cc69
-:CUSTOM-ID: 6f4359f5-e417-4d70-b75d-be454205cc69
-:END:
 
-*** Question
-:PROPERTIES:
-:ID:       855bd300-42b2-44a7-bbb6-6aae4c0c813e
-:CUSTOM-ID: 855bd300-42b2-44a7-bbb6-6aae4c0c813e
-:END:
+### <span class="section-num">3.98</span> Exercise 2.86: complex numbers with flexible types {#exercise-2-dot-86-complex-numbers-with-flexible-types}
+
+
+#### <span class="section-num">3.98.1</span> Question {#question}
 
 Suppose we want to handle complex numbers whose real parts, imaginary parts,
 magnitudes, and angles can be either ordinary numbers, rational numbers, or
 other numbers we might wish to add to the system. Describe and implement the
 changes to the system needed to accommodate this. You will have to define
-operations such as src_scheme{sine} and src_scheme{cosine} that are generic over
+operations such as <span class="inline-src language-scheme" data-lang="scheme">`sine`</span> and <span class="inline-src language-scheme" data-lang="scheme">`cosine`</span> that are generic over
 ordinary numbers and rational numbers.
 
-*** Answer
-:PROPERTIES:
-:ID:       fa40dd78-50ab-4eb3-8637-7f4286dbc7d6
-:CUSTOM-ID: fa40dd78-50ab-4eb3-8637-7f4286dbc7d6
-:END:
+
+#### <span class="section-num">3.98.2</span> Answer {#answer}
 
 We'll need the internal procedures in the complex package to themselves be calls
-to src_scheme{apply-generic}, so that calculations with our new data types can
+to <span class="inline-src language-scheme" data-lang="scheme">`apply-generic`</span>, so that calculations with our new data types can
 be handled.
 
 In the real and complex parts of the tower, I had assumed that the return of
-src_scheme{real-part} would always be of tagged type src_scheme{'real}. However,
+<span class="inline-src language-scheme" data-lang="scheme">`real-part`</span> would always be of tagged type <span class="inline-src language-scheme" data-lang="scheme">`'real`</span>. However,
 in this version it may be either real or rational, so I'll want to adjust the
-src_scheme{project} procedures accordingly.
+<span class="inline-src language-scheme" data-lang="scheme">`project`</span> procedures accordingly.
 
-#+NAME: generic-arithmetic-complex-parts
-#+BEGIN_SRC scheme -n :eval no-export :results silent
+<a id="code-snippet--generic-arithmetic-complex-parts"></a>
+```scheme { linenos=true, linenostart=1 }
 (define (add x y) (apply-generic 'add x y))
 (define (sub x y) (apply-generic 'sub x y))
 (define (mul x y) (apply-generic 'mul x y))
@@ -18085,9 +15512,9 @@ src_scheme{project} procedures accordingly.
                  ((get 'denom '(rational)) y)))))
   (put 'equ? '(real real)
        (lambda(x y) (= x y))))
-#+END_SRC
+```
 
-#+BEGIN_SRC scheme -n :eval no-export :results output :tangle 2/Ex86.scheme
+```scheme { linenos=true, linenostart=1 }
 (load "mattcheck2.scm")
 <<op-table>>
 <<type-table>>
@@ -18145,20 +15572,16 @@ src_scheme{project} procedures accordingly.
            (cons 'complex (cons 'rectangular
                  (cons (cons 'rational (cons 8.751559490358574 5))
                        (cons 'rational (cons 28.639461402385223 25))))))
-#+END_SRC
+```
 
-#+RESULTS[5cf08ac865e0198aad8907b7c105bcb047b21b4e]:
-#+begin_EXAMPLE
+```text
 (etc)
 SUCCEED at complex with nested rational
 SUCCEED at math on complex with nested rational
-#+end_EXAMPLE
+```
 
-** 2.5: Symbolic Algebra
-:PROPERTIES:
-:ID:       29ffdd17-f543-432c-a51c-06d0154dafb5
-:CUSTOM-ID: 29ffdd17-f543-432c-a51c-06d0154dafb5
-:END:
+
+### <span class="section-num">3.99</span> 2.5: Symbolic Algebra {#2-dot-5-symbolic-algebra}
 
 In this section, we implement an addition to the generic math system we have
 been building by adding support for polynomials (with only addition and
@@ -18167,8 +15590,8 @@ multiplication involved) to start.
 I'm going to split the polynomial package into two blocks so I can insert code
 inside without needing to copy the whole block again.
 
-#+NAME: polynomials-package-top
-#+BEGIN_SRC scheme -n :eval no-export :results silent
+<a id="code-snippet--polynomials-package-top"></a>
+```scheme { linenos=true, linenostart=1 }
 (define (install-polynomial-package)
   ;; internal procedures
   ;; representation of poly
@@ -18231,11 +15654,11 @@ inside without needing to copy the whole block again.
        (lambda (p1 p2) (tag (mul-poly p1 p2))))
   (put 'make 'polynomial
        (lambda (var terms) (tag (make-poly var terms))))
-  
-#+END_SRC
 
-#+NAME: mul-term-by-all-terms
-#+BEGIN_SRC scheme -n :eval no-export :results silent
+```
+
+<a id="code-snippet--mul-term-by-all-terms"></a>
+```scheme { linenos=true, linenostart=1 }
   (define (mul-term-by-all-terms t1 L)
     (if (empty-termlist? L)
         (the-empty-termlist)
@@ -18244,50 +15667,41 @@ inside without needing to copy the whole block again.
            (make-term (+ (order t1) (order t2))
                       (mul (coeff t1) (coeff t2)))
            (mul-term-by-all-terms t1 (rest-terms L))))))
-#+END_SRC
-#+NAME: polynomials-package-bottom
-#+BEGIN_SRC scheme -n :eval no-export :results silent
+```
+
+<a id="code-snippet--polynomials-package-bottom"></a>
+```scheme { linenos=true, linenostart=1 }
   'done)
 
 (define (make-polynomial var terms)
   ((get 'make 'polynomial) var terms))
-#+END_SRC
+```
 
-** Exercise 2.87: ~=zero?~ for polynomials
-:PROPERTIES:
-:ID:       d930cb60-1e02-40df-a494-9b3a53d7bf17
-:CUSTOM-ID: d930cb60-1e02-40df-a494-9b3a53d7bf17
-:END:
 
-*** Question
-:PROPERTIES:
-:ID:       32f9ab8e-9e11-416b-97dd-88612f57c7d8
-:CUSTOM-ID: 32f9ab8e-9e11-416b-97dd-88612f57c7d8
-:END:
+### <span class="section-num">3.100</span> Exercise 2.87: `=zero?` for polynomials {#exercise-2-dot-87-zero-for-polynomials}
 
-Install src_scheme{=zero?} for polynomials in the generic arithmetic package.
-This will allow src_scheme{adjoin-term} to work for polynomials with
+
+#### <span class="section-num">3.100.1</span> Question {#question}
+
+Install <span class="inline-src language-scheme" data-lang="scheme">`=zero?`</span> for polynomials in the generic arithmetic package.
+This will allow <span class="inline-src language-scheme" data-lang="scheme">`adjoin-term`</span> to work for polynomials with
 coefficients that are themselves polynomials.
 
-*** Answer
-:PROPERTIES:
-:ID:       fd96d044-5030-4dc1-9b7f-d2eb1a80f403
-:CUSTOM-ID: fd96d044-5030-4dc1-9b7f-d2eb1a80f403
-:END:
 
-After testing, I see a problem. src_scheme{add}ing nested polynomials works
+#### <span class="section-num">3.100.2</span> Answer {#answer}
+
+After testing, I see a problem. <span class="inline-src language-scheme" data-lang="scheme">`add`</span>ing nested polynomials works
 fine. However, when a coefficient is a polynomial,
-src_scheme{mul-term-by-all-terms} will call src_scheme{mul} with the types
-src_scheme{'(polynomial scheme-number)}. If I added polynomials to the type
-tower and used src_scheme{raise} to make it into a src_scheme{'(polynomial
-polynomial)} call, I then need to specify a matching variable for the raised
-number, which is not available in src_scheme{raise}. It seems like I'll need to
-modify the src_scheme{mul-term-by-all-terms} procedure to detect when one item
+<span class="inline-src language-scheme" data-lang="scheme">`mul-term-by-all-terms`</span> will call <span class="inline-src language-scheme" data-lang="scheme">`mul`</span> with the types
+<span class="inline-src language-scheme" data-lang="scheme">`'(polynomial scheme-number)`</span>. If I added polynomials to the type
+tower and used <span class="inline-src language-scheme" data-lang="scheme">`raise`</span> to make it into a <span class="inline-src language-scheme" data-lang="scheme">`'(polynomial polynomial)`</span> call, I then need to specify a matching variable for the raised
+number, which is not available in <span class="inline-src language-scheme" data-lang="scheme">`raise`</span>. It seems like I'll need to
+modify the <span class="inline-src language-scheme" data-lang="scheme">`mul-term-by-all-terms`</span> procedure to detect when one item
 is a polynomial and the other isn't, and turn the non-polynomial entry into a
-polynomial before calling src_scheme{mul}.
+polynomial before calling <span class="inline-src language-scheme" data-lang="scheme">`mul`</span>.
 
-#+NAME: mul-term-by-all-terms-mine
-#+BEGIN_SRC scheme -n :eval no-export :results silent
+<a id="code-snippet--mul-term-by-all-terms-mine"></a>
+```scheme { linenos=true, linenostart=1 }
 (define (if-1st-poly-make-2nd-poly t1 t2)
   (if (and (eqv? 'polynomial (type-tag t1))
            (not (eqv? 'polynomial (type-tag t2))))
@@ -18299,15 +15713,15 @@ polynomial before calling src_scheme{mul}.
       (let* ((t2 (first-term L)) ;; If one coeff is a poly, make the other a poly
              (t1-coeff (if-1st-poly-make-2nd-poly (coeff t2) (coeff t1)))
              (t2-coeff (if-1st-poly-make-2nd-poly (coeff t1) (coeff t2))))
-        
+
         (adjoin-term
          (make-term (+ (order t1) (order t2))
                     (mul t1-coeff t2-coeff))
          (mul-term-by-all-terms t1 (rest-terms L))))))
-#+END_SRC
+```
 
-#+NAME: poly-terms-eqzero
-#+BEGIN_SRC scheme -n :eval no-export :results silent
+<a id="code-snippet--poly-terms-eqzero"></a>
+```scheme { linenos=true, linenostart=1 }
   (define (terms-=zero? L)
     (or (empty-termlist? L)
         (and (=zero? (coeff (first-term L)))
@@ -18315,9 +15729,9 @@ polynomial before calling src_scheme{mul}.
   (define (poly-=zero? p)
     (terms-=zero? (terms p)))
   (put '=zero? '(polynomial) poly-=zero?)
-#+END_SRC
+```
 
-#+BEGIN_SRC scheme -n :eval no-export :results output :tangle 2/Ex87.scheme
+```scheme { linenos=true, linenostart=1 }
 (load "mattcheck2.scm")
 <<op-table>>
 <<type-table>>
@@ -18403,10 +15817,9 @@ polynomial before calling src_scheme{mul}.
              (mul (make-polynomial 'x p2)
                   (make-polynomial 'x p1))
              '(polynomial x (107 (polynomial x (3 2))) (9 (polynomial x (3 4))) (7 (polynomial x (3 2))))))
-#+END_SRC
+```
 
-#+RESULTS[7ab70e73da7bf304da6bc176274d9bcfff75c983]:
-#+begin_EXAMPLE
+```text
 (etc...)
 SUCCEED at polynomial = zero
 SUCCEED at polynomial != zero
@@ -18414,31 +15827,22 @@ SUCCEED at polynomial addition
 SUCCEED at polynomial multiplication
 SUCCEED at nested polynomial addition
 SUCCEED at nested polynomial mult
-#+end_EXAMPLE
+```
 
-** Exercise 2.88: negation, subtracting polynomials
-:PROPERTIES:
-:ID:       4a4f3f20-e863-4637-bbcb-37072d4d0dba
-:CUSTOM-ID: 4a4f3f20-e863-4637-bbcb-37072d4d0dba
-:END:
 
-*** Question
-:PROPERTIES:
-:ID:       7183e9d9-de4c-418b-9810-122eb8ff5bd5
-:CUSTOM-ID: 7183e9d9-de4c-418b-9810-122eb8ff5bd5
-:END:
+### <span class="section-num">3.101</span> Exercise 2.88: negation, subtracting polynomials {#exercise-2-dot-88-negation-subtracting-polynomials}
+
+
+#### <span class="section-num">3.101.1</span> Question {#question}
 
 Extend the polynomial system to include subtraction of polynomials. (Hint: You
 may find it helpful to define a generic negation operation.)
 
-*** Answer
-:PROPERTIES:
-:ID:       4d03f69b-46f7-400b-a40a-e55c14072281
-:CUSTOM-ID: 4d03f69b-46f7-400b-a40a-e55c14072281
-:END:
 
-#+NAME: generic-negation
-#+BEGIN_SRC scheme -n :eval no-export :results silent
+#### <span class="section-num">3.101.2</span> Answer {#answer}
+
+<a id="code-snippet--generic-negation"></a>
+```scheme { linenos=true, linenostart=1 }
 (define (neg x)
   (apply-generic 'neg x))
 (define (install-negation)
@@ -18458,9 +15862,10 @@ may find it helpful to define a generic negation operation.)
                                     ((get 'angle '(polar)) C))))
   (put 'neg '(complex)
        (lambda(C) (apply-generic 'neg C))))
-#+END_SRC
-#+NAME: polynomial-subtraction
-#+BEGIN_SRC scheme -n :eval no-export :results silent
+```
+
+<a id="code-snippet--polynomial-subtraction"></a>
+```scheme { linenos=true, linenostart=1 }
     ;; inserted in install routine
     (define (neg-poly p)
     (make-poly (variable p)
@@ -18475,8 +15880,9 @@ may find it helpful to define a generic negation operation.)
         (error "Polys not in same var: SUB-POLY" (list p1 p2))))
     (put 'sub '(polynomial polynomial)
         (lambda (p1 p2) (tag (sub-poly p1 p2))))
-#+END_SRC
-#+BEGIN_SRC scheme -n :eval no-export :results output :tangle 2/Ex88.scheme
+```
+
+```scheme { linenos=true, linenostart=1 }
 (load "mattcheck2.scm")
 <<op-table>>
 <<type-table>>
@@ -18590,10 +15996,9 @@ may find it helpful to define a generic negation operation.)
              (sub (make-polynomial 'x p1)
                   (make-polynomial 'x p3))
              '(polynomial x (2 1) (0 -2))))
-#+END_SRC
+```
 
-#+RESULTS[30769e279f9495bbb6756dcf0e114d9d0ecf6297]:
-#+begin_EXAMPLE
+```text
 (etc...)
 SUCCEED at negation scheme-number
 SUCCEED at negation rational
@@ -18601,37 +16006,28 @@ SUCCEED at negation rectangular complex
 SUCCEED at negation polar complex
 SUCCEED at negation polynomials
 SUCCEED at polynomial subtraction
-#+end_EXAMPLE
+```
 
-** Exercise 2.89: an abstraction for dense polynomials
-:PROPERTIES:
-:ID:       2339a4e3-dac4-481c-bc64-02351946664c
-:CUSTOM-ID: 2339a4e3-dac4-481c-bc64-02351946664c
-:END:
 
-*** Question
-:PROPERTIES:
-:ID:       a0d98187-5b82-43d6-b1ee-7b9467e612f3
-:CUSTOM-ID: a0d98187-5b82-43d6-b1ee-7b9467e612f3
-:END:
+### <span class="section-num">3.102</span> Exercise 2.89: an abstraction for dense polynomials {#exercise-2-dot-89-an-abstraction-for-dense-polynomials}
+
+
+#### <span class="section-num">3.102.1</span> Question {#question}
 
 Define procedures that implement the term-list representation described above as
 appropriate for dense polynomials.
 
-*** Answer
-:PROPERTIES:
-:ID:       5ebf9444-331d-403b-b080-4ad16a6e720b
-:CUSTOM-ID: 5ebf9444-331d-403b-b080-4ad16a6e720b
-:END:
 
-At first I thought I needed to rewrite the ~order~ and ~coeff~ procedures. Then
+#### <span class="section-num">3.102.2</span> Answer {#answer}
+
+At first I thought I needed to rewrite the `order` and `coeff` procedures. Then
 I realized these are only called with one term, and thus don't have the term
 list available, which means the order can't be learned. It's much simpler to
-make a new ~first-term~ selector that gets the needed info and always returns
-the sparse term format, so long as ~adjoin-set~ is modified so it will convert
+make a new `first-term` selector that gets the needed info and always returns
+the sparse term format, so long as `adjoin-set` is modified so it will convert
 back when adding to a sparse term list.
 
-#+BEGIN_SRC scheme -n :eval no-export :results silent
+```scheme { linenos=true, linenostart=1 }
 (define (sparse-termlist? term-list)
   (let ((t (car term-list)))
     (cond ((and (list? t)
@@ -18650,58 +16046,49 @@ back when adding to a sparse term list.
   (if (sparse-termlist? term-list)
       (sparse-first-term term-list)
       (dense-first-term term-list)))
-#+END_SRC
+```
 
-** Exercise 2.90: dense polynomials integrated into the system
-:PROPERTIES:
-:ID:       d313a504-3248-4855-92b5-e0bfb2461517
-:CUSTOM-ID: d313a504-3248-4855-92b5-e0bfb2461517
-:END:
 
-*** Question
-:PROPERTIES:
-:ID:       fcc174bc-c27a-47a4-abe5-82ef200c1e85
-:CUSTOM-ID: fcc174bc-c27a-47a4-abe5-82ef200c1e85
-:END:
+### <span class="section-num">3.103</span> Exercise 2.90: dense polynomials integrated into the system {#exercise-2-dot-90-dense-polynomials-integrated-into-the-system}
+
+
+#### <span class="section-num">3.103.1</span> Question {#question}
 
 Suppose we want to have a polynomial system that is efficient for both sparse
 and dense polynomials. One way to do this is to allow both kinds of term-list
 representations in our system. The situation is analogous to the complex-number
-example of [[id:c3c0cc87-1e03-41c1-995d-4656c2d60e9d][2.4: Multiple Representations for Abstract Data]], where we allowed
+example of [2.4: Multiple Representations for Abstract Data](#2-dot-4-multiple-representations-for-abstract-data), where we allowed
 both rectangular and polar representations. To do this we must distinguish
 different types of term lists and make the operations on term lists generic.
 Redesign the polynomial system to implement this generalization. This is a major
 effort, not a local change.
 
-*** Answer
-:PROPERTIES:
-:ID:       4a1b260a-bddb-4377-9979-51611ddb83ad
-:CUSTOM-ID: 4a1b260a-bddb-4377-9979-51611ddb83ad
-:END:
+
+#### <span class="section-num">3.103.2</span> Answer {#answer}
 
 Although I was debating using tags to distinguish the two types, it occurs to me
 they can be told apart just by checking the contents. A valid coefficient is
 either a number or a list for a nested type. If the first item of the list is a
-list whose ~car~ is a number and whose ~cadr~ is a number or list, assume it's
+list whose `car` is a number and whose `cadr` is a number or list, assume it's
 sparse. On the other hand, if the first item is a number, or list that doesn't
-match that previous description, assume it's dense. This format would /not/ be
+match that previous description, assume it's dense. This format would _not_ be
 adequate if we had any potential nested types that happened to look similar, and
 especially not if the term-lists were meant for external use.
 
 The new implementations are abstracted such that average procedures using
-src_scheme{first-term}, src_scheme{rest-term} and src_scheme{adjoin-term} are
+<span class="inline-src language-scheme" data-lang="scheme">`first-term`</span>, <span class="inline-src language-scheme" data-lang="scheme">`rest-term`</span> and <span class="inline-src language-scheme" data-lang="scheme">`adjoin-term`</span> are
 totally unaffected.
 
-Whenever a procedure requests a ~first-term~, a sparse representation is
-returned (pair of src_scheme{(order coeff)}). Then, when ~adjoin-term~ is run,
+Whenever a procedure requests a `first-term`, a sparse representation is
+returned (pair of <span class="inline-src language-scheme" data-lang="scheme">`(order coeff)`</span>). Then, when `adjoin-term` is run,
 the list is appended-to appropriately whether it is sparse or dense. When
-src_scheme{make-poly} is run, the statistics of the term list are measured to
+<span class="inline-src language-scheme" data-lang="scheme">`make-poly`</span> is run, the statistics of the term list are measured to
 decide which implementation should be used. If there are more zero-terms than
-\(\frac{1}{2}\) of the highest order in the term, the sparse implementation is
+\\(\frac{1}{2}\\) of the highest order in the term, the sparse implementation is
 used.
 
-#+NAME: polynomial-sparse-dense-top
-#+BEGIN_SRC scheme -n :eval no-export :results silent
+<a id="code-snippet--polynomial-sparse-dense-top"></a>
+```scheme { linenos=true, linenostart=1 }
 (use-srfis '(1))
 (define (install-polynomial-package)
   ;; internal procedures
@@ -18722,7 +16109,7 @@ used.
   (define (variable? x) (symbol? x))
   (define (same-variable? v1 v2)
     (and (variable? v1) (variable? v2) (eq? v1 v2)))
-  
+
   ;; representation of terms and term lists
   (define (sparse-termlist? term-list)
     (let ((t (car term-list)))
@@ -18876,7 +16263,7 @@ used.
         (the-empty-termlist)
         (add-terms (mul-term-by-all-terms (first-term L1) L2)
                    (mul-terms (rest-terms L1) L2))))
-  
+
   ;; interface to rest of the system
   (define (tag p) (attach-tag 'polynomial p))
   (put 'add '(polynomial polynomial)
@@ -18896,7 +16283,7 @@ used.
         (let* ((t2 (first-term L)) ;; If one coeff is a poly, make the other a poly
                (t1-coeff (if-1st-poly-make-2nd-poly (coeff t2) (coeff t1)))
                (t2-coeff (if-1st-poly-make-2nd-poly (coeff t1) (coeff t2))))
-          
+
           (adjoin-term
            (make-sparse-term (+ (order t1) (order t2))
                              (mul t1-coeff t2-coeff))
@@ -18926,15 +16313,16 @@ used.
     (add-poly p1 (neg-poly p2)))
   (put 'sub '(polynomial polynomial)
        (lambda (p1 p2) (tag (sub-poly p1 p2))))
-#+END_SRC
-#+NAME: polynomial-sparse-dense-bottom
-#+BEGIN_SRC scheme -n :eval no-export :results silent
+```
+
+<a id="code-snippet--polynomial-sparse-dense-bottom"></a>
+```scheme { linenos=true, linenostart=1 }
   'done)
 (define (make-polynomial var terms)
   ((get 'make 'polynomial) var terms))
-#+END_SRC
+```
 
-#+BEGIN_SRC scheme -n :eval no-export :results output :tangle 2/Ex90.scheme
+```scheme { linenos=true, linenostart=1 }
 (load "mattcheck2.scm")
 <<op-table>>
 <<type-table>>
@@ -19045,31 +16433,24 @@ used.
              (sub (make-polynomial 'x p1)
                   (make-polynomial 'x p3))
              '(polynomial x 1 0 -2)))
-#+END_SRC
+```
 
-#+RESULTS[0813252c3fa267e516271075870241ced06c4560]:
-#+begin_EXAMPLE
+```text
 (etc...)
 SUCCEED at negation polynomials
 SUCCEED at polynomial subtraction
-#+end_EXAMPLE
+```
 
-** Exercise 2.91: division of polynomials
-:PROPERTIES:
-:ID:       1b96bdbf-924e-4fd5-a614-b8bde734c694
-:CUSTOM-ID: 1b96bdbf-924e-4fd5-a614-b8bde734c694
-:END:
 
-*** Question
-:PROPERTIES:
-:ID:       affbc03d-488d-457b-8c85-b13bd76bb601
-:CUSTOM-ID: affbc03d-488d-457b-8c85-b13bd76bb601
-:END:
+### <span class="section-num">3.104</span> Exercise 2.91: division of polynomials {#exercise-2-dot-91-division-of-polynomials}
+
+
+#### <span class="section-num">3.104.1</span> Question {#question}
 
 A univariate polynomial can be divided by another one to produce a polynomial
 quotient and a polynomial remainder. For example,
 
-\(\frac{x^5 - 1}{x^2 - 1} = x^3 + x, \hbox{  remainder  } x - 1\)
+\\(\frac{x^5 - 1}{x^2 - 1} = x^3 + x, \hbox{  remainder  } x - 1\\)
 
 Division can be performed via long division.  That is, divide the highest-order
 term of the dividend by the highest-order term of the divisor.  The result is
@@ -19080,21 +16461,21 @@ divisor exceeds the order of the dividend and declare the dividend to be the
 remainder.  Also, if the dividend ever becomes zero, return zero as both
 quotient and remainder.
 
-We can design a src_scheme{div-poly} procedure on the model of
-src_scheme{add-poly} and src_scheme{mul-poly}. The procedure checks to see if
-the two polys have the same variable. If so, src_scheme{div-poly} strips off the
-variable and passes the problem to src_scheme{div-terms}, which performs the
-division operation on term lists. src_scheme{div-poly} finally reattaches the
-variable to the result supplied by src_scheme{div-terms}. It is convenient to
-design src_scheme{div-terms} to compute both the quotient and the remainder of a
-division. src_scheme{div-terms} can take two term lists as arguments and return
+We can design a <span class="inline-src language-scheme" data-lang="scheme">`div-poly`</span> procedure on the model of
+<span class="inline-src language-scheme" data-lang="scheme">`add-poly`</span> and <span class="inline-src language-scheme" data-lang="scheme">`mul-poly`</span>. The procedure checks to see if
+the two polys have the same variable. If so, <span class="inline-src language-scheme" data-lang="scheme">`div-poly`</span> strips off the
+variable and passes the problem to <span class="inline-src language-scheme" data-lang="scheme">`div-terms`</span>, which performs the
+division operation on term lists. <span class="inline-src language-scheme" data-lang="scheme">`div-poly`</span> finally reattaches the
+variable to the result supplied by <span class="inline-src language-scheme" data-lang="scheme">`div-terms`</span>. It is convenient to
+design <span class="inline-src language-scheme" data-lang="scheme">`div-terms`</span> to compute both the quotient and the remainder of a
+division. <span class="inline-src language-scheme" data-lang="scheme">`div-terms`</span> can take two term lists as arguments and return
 a list of the quotient term list and the remainder term list.
 
-Complete the following definition of src_scheme{div-terms} by filling in the
-missing expressions. Use this to implement src_scheme{div-poly}, which takes two
+Complete the following definition of <span class="inline-src language-scheme" data-lang="scheme">`div-terms`</span> by filling in the
+missing expressions. Use this to implement <span class="inline-src language-scheme" data-lang="scheme">`div-poly`</span>, which takes two
 polys as arguments and returns a list of the quotient and remainder polys.
 
-#+BEGIN_SRC scheme -n
+```scheme { linenos=true, linenostart=1 }
 (define (div-terms L1 L2)
   (if (empty-termlist? L1)
       (list (the-empty-termlist) (the-empty-termlist))
@@ -19109,17 +16490,13 @@ polys as arguments and returns a list of the quotient and remainder polys.
                      ))
                 ;;<form complete result>
                 ))))))
-#+END_SRC
+```
 
 
-*** Answer
-:PROPERTIES:
-:ID:       cc69778d-81de-4551-9734-fd0c56437f3a
-:CUSTOM-ID: cc69778d-81de-4551-9734-fd0c56437f3a
-:END:
+#### <span class="section-num">3.104.2</span> Answer {#answer}
 
-#+NAME: polynomial-division
-#+BEGIN_SRC scheme -n :eval no-export :results silent
+<a id="code-snippet--polynomial-division"></a>
+```scheme { linenos=true, linenostart=1 }
 (define (div-terms L1 L2)
   ;; termlist, termlist -> list of two termlists
   ;; returns quotient terms and remainder terms
@@ -19156,9 +16533,9 @@ polys as arguments and returns a list of the quotient and remainder polys.
               (remainder (cadr result)))
          (list (tag quotient)
                (tag remainder)))))
-#+END_SRC
+```
 
-#+BEGIN_SRC scheme -n :eval no-export :results output :tangle 2/Ex91.scheme
+```scheme { linenos=true, linenostart=1 }
 (load "mattcheck2.scm")
 <<op-table>>
 <<type-table>>
@@ -19286,60 +16663,54 @@ polys as arguments and returns a list of the quotient and remainder polys.
              (div (make-polynomial 'x p66)
                   (make-polynomial 'x p77))
              '((polynomial x 1 -1 1) (polynomial x))))
-#+END_SRC
+```
 
-#+RESULTS[a05233f0035edf345086d3c751b80c5106e23d30]:
-#+begin_EXAMPLE
+```text
 (etc...)
 SUCCEED at polynomial division 1
 SUCCEED at polynomial division 2
 SUCCEED at polynomial division 3
-#+end_EXAMPLE
+```
 
-** Exercise 2.92: operating on polys in different variables
-:PROPERTIES:
-:ID:       42444d8c-8e71-4d6e-8bb0-b88a65777808
-:CUSTOM-ID: 42444d8c-8e71-4d6e-8bb0-b88a65777808
-:END:
 
-*** Question
-:PROPERTIES:
-:ID:       7960a7b0-063b-40b6-b708-bd1c8e209c3b
-:CUSTOM-ID: 7960a7b0-063b-40b6-b708-bd1c8e209c3b
-:END:
+### <span class="section-num">3.105</span> Exercise 2.92: operating on polys in different variables {#exercise-2-dot-92-operating-on-polys-in-different-variables}
+
+
+#### <span class="section-num">3.105.1</span> Question {#question}
 
 By imposing an ordering on variables, extend the polynomial package so that
 addition and multiplication of polynomials works for polynomials in different
 variables. (This is not easy!)
 
-*** Answer
-:PROPERTIES:
-:ID:       7b686824-168f-4264-9ee9-d936202ac19f
-:CUSTOM-ID: 7b686824-168f-4264-9ee9-d936202ac19f
-:END:
 
-#+begin_center
-//Unfortunately, I've spent a lot of time on this without making progress. For
+#### <span class="section-num">3.105.2</span> Answer {#answer}
+
+<style>.org-center { margin-left: auto; margin-right: auto; text-align: center; }</style>
+
+<div class="org-center">
+
+__Unfortunately, I've spent a lot of time on this without making progress. For
 some reason it's really screwed with my brain. I'm going to move on to
-[[id:ac394e5f-9b65-4a8e-b1f5-0a65df778f94][Exercise 2.93]]//
-#+end_center
+[Exercise 2.93](#exercise-2-dot-93-extending-make-rational-for-rational-functions)__
+
+</div>
 
 If I understand the previous section correctly, I need to change the polynomial
-procedures so that when given two polys which include similar terms, say \(x\)
-with coefficients in \(y\) and \(y\) with coefficients in \(x\), I need to pick
+procedures so that when given two polys which include similar terms, say \\(x\\)
+with coefficients in \\(y\\) and \\(y\\) with coefficients in \\(x\\), I need to pick
 one variable to be priority, and convert the other expression to match that
 priority. I suppose this would also need to work with multiple layers of
-polynomials, say a poly of \(w\) with nested coefficients \(x^y^z\) and \(y\)
-with \(w^z^y\).
+polynomials, say a poly of \\(w\\) with nested coefficients \\(x^y^z\\) and \\(y\\)
+with \\(w^z^y\\).
 
-I've also decided to upgrade my src_scheme{adjoin-terms} procedures so that they
+I've also decided to upgrade my <span class="inline-src language-scheme" data-lang="scheme">`adjoin-terms`</span> procedures so that they
 can adjoin to the middle of lists, or attempt to add two coefficients of the
 same order.
 
-I've /also/ also decided to add polynomials to the type coercion tower. This
+I've _also_ also decided to add polynomials to the type coercion tower. This
 will require putting a variable on the new polynomial, but it will be a poly of
 one term of the 0'th order, which isn't really a polynomial. I'll need to add a
-check, src_scheme{trivial-poly?}, which will allow the procedures to ignore the
+check, <span class="inline-src language-scheme" data-lang="scheme">`trivial-poly?`</span>, which will allow the procedures to ignore the
 variable of such a polynomial.
 
 My earlier choice to not tag sparse and dense lists may be coming back to bite
@@ -19349,10 +16720,10 @@ In the process of reorganizing polynomials, I'll make a hash table, and find the
 terms in the poly which are not dependent on the top variable, and split them
 into their own keys in the table. So for any terms of order 0, if it's a poly
 it'll get keyed to the variable of the poly, and if it's not it'll be keyed to
-the symbol src_scheme{'ZEROTH}.
+the symbol <span class="inline-src language-scheme" data-lang="scheme">`'ZEROTH`</span>.
 
-#+NAME: tower-coercions-polynomial
-#+BEGIN_SRC scheme -n :eval no-export :results silent
+<a id="code-snippet--tower-coercions-polynomial"></a>
+```scheme { linenos=true, linenostart=1 }
 (define tower
   '(scheme-number rational real complex polynomial))
 
@@ -19385,17 +16756,18 @@ the symbol src_scheme{'ZEROTH}.
                 (let ((dropped-num (drop (attach-tag 'complex num))))
                   (make-polynomial 'DISCARD-ME
                                    (list (list 0 dropped-num))))))
-#+END_SRC
+```
 
-#+NAME: mem-index
-#+BEGIN_SRC scheme -n :eval no-export :results silent
+<a id="code-snippet--mem-index"></a>
+```scheme { linenos=true, linenostart=1 }
 (use-srfis '(1))
 (define (mem-index item ll)
   (list-index (lambda(x)(equal? item x))
               ll))
-#+END_SRC
-#+NAME: polynomial-mixed-variables-top
-#+BEGIN_SRC scheme -n :eval no-export :results silent
+```
+
+<a id="code-snippet--polynomial-mixed-variables-top"></a>
+```scheme { linenos=true, linenostart=1 }
 (use-srfis '(1))
 (define (install-polynomial-package) 'no)
 ;; internal procedures
@@ -19521,7 +16893,7 @@ the symbol src_scheme{'ZEROTH}.
                     (let ((result (add-sparse-term-to-sparse-term term
                                                                   (sparse-first-term term-list))))
                       (cons result
-                            (rest-terms term-list))))) 
+                            (rest-terms term-list)))))
                (else (adjoin-term-sparse (sparse-first-term term-list)
                                          (adjoin-term-sparse term
                                                              (rest-terms term-list))))))))
@@ -19531,7 +16903,7 @@ the symbol src_scheme{'ZEROTH}.
     (cond ((= (1+ top-order) (order term))
            ;; if term is 1 order above top of list, adjoin
            (cons (coeff term) term-list))
-          ;; if term shares order with top of list, 
+          ;; if term shares order with top of list,
           ((= top-order (order term))
            (if (=zero? (coeff (dense-first-term term-list)))
                ;; replace if it's zero
@@ -20029,7 +17401,7 @@ the symbol src_scheme{'ZEROTH}.
       (let* ((t2 (first-term L)) ;; If one coeff is a poly, make the other a poly
              (t1-coeff (if-1st-poly-make-2nd-poly (coeff t2) (coeff t1)))
              (t2-coeff (if-1st-poly-make-2nd-poly (coeff t1) (coeff t2))))
-        
+
         (adjoin-term
          (make-sparse-term (+ (order t1) (order t2))
                            (mul t1-coeff t2-coeff))
@@ -20063,15 +17435,16 @@ the symbol src_scheme{'ZEROTH}.
               (remainder (cadr result)))
          (list (tag quotient)
                (tag remainder)))))
-#+END_SRC
-#+NAME: polynomial-mixed-variables-bottom
-#+BEGIN_SRC scheme -n :eval no-export :results silent
+```
+
+<a id="code-snippet--polynomial-mixed-variables-bottom"></a>
+```scheme { linenos=true, linenostart=1 }
 ;  'done)
 (define (make-polynomial var terms)
   ((get 'make 'polynomial) var terms))
-#+END_SRC
+```
 
-#+BEGIN_SRC scheme -n :eval no-export :results output :tangle 2/Ex92.scheme
+```scheme { linenos=true, linenostart=1 }
 (load "../mattcheck2.scm")
 <<op-table>>
 <<type-table>>
@@ -20227,44 +17600,35 @@ the symbol src_scheme{'ZEROTH}.
            (add (make-polynomial 'x p1)
                 (make-polynomial 'y p1))
            'unknown)
-#+END_SRC
+```
 
-** Exercise 2.93: extending ~make-rational~ for rational functions
-:PROPERTIES:
-:ID:       ac394e5f-9b65-4a8e-b1f5-0a65df778f94
-:CUSTOM-ID: ac394e5f-9b65-4a8e-b1f5-0a65df778f94
-:END:
 
-*** Question
-:PROPERTIES:
-:ID:       a947991a-1b17-40f1-9ba8-d1ddedb5a9ad
-:CUSTOM-ID: a947991a-1b17-40f1-9ba8-d1ddedb5a9ad
-:END:
+### <span class="section-num">3.106</span> Exercise 2.93: extending `make-rational` for rational functions {#exercise-2-dot-93-extending-make-rational-for-rational-functions}
 
-Modify the ~rational-arithmetic~ package to use generic operations, but change
-src_scheme{make-rat} so that it does not attempt to reduce fractions to lowest
-terms. Test your system by calling src_scheme{make-rational} on two polynomials
+
+#### <span class="section-num">3.106.1</span> Question {#question}
+
+Modify the `rational-arithmetic` package to use generic operations, but change
+<span class="inline-src language-scheme" data-lang="scheme">`make-rat`</span> so that it does not attempt to reduce fractions to lowest
+terms. Test your system by calling <span class="inline-src language-scheme" data-lang="scheme">`make-rational`</span> on two polynomials
 to produce a rational function:
 
-#+BEGIN_SRC scheme
+```scheme
 (define p1 (make-polynomial 'x '((2 1) (0 1))))
 (define p2 (make-polynomial 'x '((3 1) (0 1))))
 (define rf (make-rational p2 p1))
-#+END_SRC
+```
 
-Now add src_scheme{rf} to itself, using src_scheme{add}. You will observe that
+Now add <span class="inline-src language-scheme" data-lang="scheme">`rf`</span> to itself, using <span class="inline-src language-scheme" data-lang="scheme">`add`</span>. You will observe that
 this addition procedure does not reduce fractions to lowest terms.
 
-*** Answer
-:PROPERTIES:
-:ID:       dbfb8cf0-80c3-478b-ba96-7b44e8b8fa1a
-:CUSTOM-ID: dbfb8cf0-80c3-478b-ba96-7b44e8b8fa1a
-:END:
 
-~raise~-ing a rational function doesn't work, so I'll need a way around that.
+#### <span class="section-num">3.106.2</span> Answer {#answer}
 
-#+NAME: tower-coercions-rf
-#+BEGIN_SRC scheme -n :eval no-export :results silent
+`raise`-ing a rational function doesn't work, so I'll need a way around that.
+
+<a id="code-snippet--tower-coercions-rf"></a>
+```scheme { linenos=true, linenostart=1 }
 (define tower
   '(scheme-number rational real complex polynomial))
 
@@ -20327,9 +17691,10 @@ this addition procedure does not reduce fractions to lowest terms.
   (put-coercion 'complex 'polynomial
                 (lambda(num)
                   (raised-poly num 'complex))))
-#+END_SRC
-#+NAME: apply-generic-raiseto
-#+BEGIN_SRC scheme -n :eval no-export :results silent
+```
+
+<a id="code-snippet--apply-generic-raiseto"></a>
+```scheme { linenos=true, linenostart=1 }
 (use-srfis '(1))
 ;; Version of apply-generic that tries to drop its type
 ;; when returning
@@ -20342,13 +17707,13 @@ this addition procedure does not reduce fractions to lowest terms.
           (if (not raised)
               (error "MAP-RAISE: could not raise" item highest-type)
               (map-raise highest-type raised)))))
-  
+
   (drop
    (let ((proc (get op types)))
      (if proc ; is this already doable?
          (apply proc (map contents args))
                                         ; if not, try type coercion
-         
+
          (let* ((highest-type (apply latest-in-tower types))
                 (map-raise-prime (lambda(item)(map-raise highest-type item)))
                 (raised (map map-raise-prime args)))
@@ -20362,9 +17727,10 @@ this addition procedure does not reduce fractions to lowest terms.
                (reduce (lambda(elem previous)
                          (apply-generic op previous elem))
                        "ERROR" raised)))))))
-#+END_SRC
-#+NAME: polynomial-rf-top
-#+BEGIN_SRC scheme -n :eval no-export :results silent
+```
+
+<a id="code-snippet--polynomial-rf-top"></a>
+```scheme { linenos=true, linenostart=1 }
 (use-srfis '(1))
 (define (install-polynomial-package) 'no)
   ;; internal procedures
@@ -20388,7 +17754,7 @@ this addition procedure does not reduce fractions to lowest terms.
   (define (variable? x) (symbol? x))
   (define (same-variable? v1 v2)
     (and (variable? v1) (variable? v2) (eq? v1 v2)))
-  
+
   ;; representation of terms and term lists
 (define (sparse-termlist? term-list)
   (let ((t (car term-list)))
@@ -20548,7 +17914,7 @@ this addition procedure does not reduce fractions to lowest terms.
         (the-empty-termlist)
         (add-terms (mul-term-by-all-terms (first-term L1) L2)
                    (mul-terms (rest-terms L1) L2))))
-  
+
   ;; interface to rest of the system
   (define (tag p) (attach-tag 'polynomial p))
   (put 'add '(polynomial polynomial)
@@ -20568,7 +17934,7 @@ this addition procedure does not reduce fractions to lowest terms.
         (let* ((t2 (first-term L)) ;; If one coeff is a poly, make the other a poly
                (t1-coeff (if-1st-poly-make-2nd-poly (coeff t2) (coeff t1)))
                (t2-coeff (if-1st-poly-make-2nd-poly (coeff t1) (coeff t2))))
-          
+
           (adjoin-term
            (make-sparse-term (+ (order t1) (order t2))
                              (mul t1-coeff t2-coeff))
@@ -20598,9 +17964,10 @@ this addition procedure does not reduce fractions to lowest terms.
     (add-poly p1 (neg-poly p2)))
   (put 'sub '(polynomial polynomial)
        (lambda (p1 p2) (tag (sub-poly p1 p2))))
-#+END_SRC
-#+NAME: polynomial-projection
-#+BEGIN_SRC scheme -n :eval no-export :results silent
+```
+
+<a id="code-snippet--polynomial-projection"></a>
+```scheme { linenos=true, linenostart=1 }
 (define (trivial-poly? poly)
   (and (= 1 (length (terms poly)))
        (= 0 (order (first-term (terms poly))))))
@@ -20645,16 +18012,18 @@ this addition procedure does not reduce fractions to lowest terms.
         (else (error "different vars not supported yet : EQU?-POLY" p q))))
 (put 'equ? '(polynomial polynomial)
      equ?-poly)
-#+END_SRC
-#+NAME: polynomial-rf-bottom
-#+BEGIN_SRC scheme -n :eval no-export :results silent
+```
+
+<a id="code-snippet--polynomial-rf-bottom"></a>
+```scheme { linenos=true, linenostart=1 }
 ;; polynomial procedures
 ;  'done)
 (define (make-polynomial var terms)
   ((get 'make 'polynomial) var terms))
-#+END_SRC
-#+NAME: generic-arithmetic-rational-functions
-#+BEGIN_SRC scheme -n :eval no-export :results silent
+```
+
+<a id="code-snippet--generic-arithmetic-rational-functions"></a>
+```scheme { linenos=true, linenostart=1 }
 (define (add x y) (apply-generic 'add x y))
 (define (sub x y) (apply-generic 'sub x y))
 (define (mul x y) (apply-generic 'mul x y))
@@ -20902,9 +18271,10 @@ this addition procedure does not reduce fractions to lowest terms.
                  ((get 'denom '(rational)) y)))))
   (put 'equ? '(real real)
        (lambda(x y) (= x y))))
-#+END_SRC
-#+NAME: eqzero?-rf
-#+BEGIN_SRC scheme -n :eval no-export :results silent
+```
+
+<a id="code-snippet--eqzero?-rf"></a>
+```scheme { linenos=true, linenostart=1 }
 (define (=zero? x) (apply-generic '=zero? x))
 (define (install-=zero?)
   (put '=zero? '(scheme-number)
@@ -20926,9 +18296,9 @@ this addition procedure does not reduce fractions to lowest terms.
        (lambda(x)
          (or (=zero? ((get 'numer '(rational)) x))
              (=zero? ((get 'denom '(rational)) x))))))
-#+END_SRC
+```
 
-#+BEGIN_SRC scheme -n :eval no-export :results output :tangle 2/Ex93.scheme
+```scheme { linenos=true, linenostart=1 }
 (load "mattcheck2.scm")
 <<op-table>>
 <<type-table>>
@@ -21064,48 +18434,50 @@ this addition procedure does not reduce fractions to lowest terms.
   (mattcheck "rational functions"
              (add p98 p98)
              '(rational (polynomial x 2 0 2 2 0 2) (polynomial x 1 0 2 0 1)))
-#+END_SRC
+```
 
-#+RESULTS[29ad82544d6258c414a21c78029944950962e29f]:
-#+begin_EXAMPLE
+```text
 <...>
 SUCCEED at rational functions
-#+end_EXAMPLE
+```
 
-** Exercise 2.94: GCD of polynomials
 
-*** Question
+### <span class="section-num">3.107</span> Exercise 2.94: GCD of polynomials {#exercise-2-dot-94-gcd-of-polynomials}
 
-Using src_scheme{div-terms}, implement the procedure src_scheme{remainder-terms}
-and use this to define src_scheme{gcd-terms} as above. Now write a procedure
-src_scheme{gcd-poly} that computes the polynomial GCD of two polys. (The
+
+#### <span class="section-num">3.107.1</span> Question {#question}
+
+Using <span class="inline-src language-scheme" data-lang="scheme">`div-terms`</span>, implement the procedure <span class="inline-src language-scheme" data-lang="scheme">`remainder-terms`</span>
+and use this to define <span class="inline-src language-scheme" data-lang="scheme">`gcd-terms`</span> as above. Now write a procedure
+<span class="inline-src language-scheme" data-lang="scheme">`gcd-poly`</span> that computes the polynomial GCD of two polys. (The
 procedure should signal an error if the two polys are not in the same variable.)
-Install in the system a generic operation src_scheme{greatest-common-divisor}
-that reduces to src_scheme{gcd-poly} for polynomials and to ordinary
-src_scheme{gcd} for ordinary numbers. As a test, try
+Install in the system a generic operation <span class="inline-src language-scheme" data-lang="scheme">`greatest-common-divisor`</span>
+that reduces to <span class="inline-src language-scheme" data-lang="scheme">`gcd-poly`</span> for polynomials and to ordinary
+<span class="inline-src language-scheme" data-lang="scheme">`gcd`</span> for ordinary numbers. As a test, try
 
-#+BEGIN_SRC scheme -n
+```scheme { linenos=true, linenostart=1 }
 (define p1 (make-polynomial
             'x '((4 1) (3 -1) (2 -2) (1 2))))
 (define p2 (make-polynomial 'x '((3 1) (1 -1))))
 (greatest-common-divisor p1 p2)
-#+END_SRC
+```
 
 and check your result by hand.
 
-*** Answer
+
+#### <span class="section-num">3.107.2</span> Answer {#answer}
 
 An important change had to be made here. Dense termlists are padded with zeroes,
 while sparse ones are not. This is fine for addition (and subtraction on the
-right side) but it can be a problem otherwise. So ~dense-first-term~ needs to
-find the first non-zero coefficient to return, ~rest-terms~ needs to chop off
-leading zeroes for dense lists, and ~adjoin-term-sparse~ should probably be
+right side) but it can be a problem otherwise. So `dense-first-term` needs to
+find the first non-zero coefficient to return, `rest-terms` needs to chop off
+leading zeroes for dense lists, and `adjoin-term-sparse` should probably be
 amended to skip zeroes so this doesn't happen with sparse lists.
 
-I've also had to rescue some "refugees" from [[id:42444d8c-8e71-4d6e-8bb0-b88a65777808][Exercise 2.92]], such as ~map-terms~. 
+I've also had to rescue some "refugees" from [Exercise 2.92](#exercise-2-dot-92-operating-on-polys-in-different-variables), such as `map-terms`.
 
-#+NAME: polynomial-densepadding-top
-#+BEGIN_SRC scheme -n :eval no-export :results silent
+<a id="code-snippet--polynomial-densepadding-top"></a>
+```scheme { linenos=true, linenostart=1 }
 (use-srfis '(1))
 (define (install-polynomial-package) 'no)
 ;; internal procedures
@@ -21250,7 +18622,7 @@ I've also had to rescue some "refugees" from [[id:42444d8c-8e71-4d6e-8bb0-b88a65
                     (let ((result (add-sparse-term-to-sparse-term term
                                                                   (sparse-first-term term-list))))
                       (cons result
-                            (rest-terms term-list))))) 
+                            (rest-terms term-list)))))
                (else (adjoin-term-sparse (sparse-first-term term-list)
                                          (adjoin-term-sparse term
                                                              (rest-terms term-list))))))))
@@ -21260,7 +18632,7 @@ I've also had to rescue some "refugees" from [[id:42444d8c-8e71-4d6e-8bb0-b88a65
     (cond ((= (1+ top-order) (order term))
            ;; if term is 1 order above top of list, adjoin
            (cons (coeff term) term-list))
-          ;; if term shares order with top of list, 
+          ;; if term shares order with top of list,
           ((= top-order (order term))
            (if (=zero? (coeff (dense-first-term term-list)))
                ;; replace if it's zero
@@ -21369,7 +18741,7 @@ I've also had to rescue some "refugees" from [[id:42444d8c-8e71-4d6e-8bb0-b88a65
       (let* ((t2 (first-term L)) ;; If one coeff is a poly, make the other a poly
              (t1-coeff (if-1st-poly-make-2nd-poly (coeff t2) (coeff t1)))
              (t2-coeff (if-1st-poly-make-2nd-poly (coeff t1) (coeff t2))))
-        
+
         (adjoin-term
          (make-sparse-term (+ (order t1) (order t2))
                            (mul t1-coeff t2-coeff))
@@ -21396,9 +18768,10 @@ I've also had to rescue some "refugees" from [[id:42444d8c-8e71-4d6e-8bb0-b88a65
   (add-poly p1 (neg-poly p2)))
 (put 'sub '(polynomial polynomial)
      (lambda (p1 p2) (tag (sub-poly p1 p2))))
-#+END_SRC
-#+NAME: polynomial-gcd
-#+BEGIN_SRC scheme -n :eval no-export :results silent
+```
+
+<a id="code-snippet--polynomial-gcd"></a>
+```scheme { linenos=true, linenostart=1 }
 (define (remainder-terms tl1 tl2)
   (second (div-terms tl1 tl2)))
 (define (gcd-terms a b)
@@ -21418,9 +18791,10 @@ I've also had to rescue some "refugees" from [[id:42444d8c-8e71-4d6e-8bb0-b88a65
         (else (error "different vars not supported : GCD-POLY" p q))))
 (put 'greatest-common-divisor '(polynomial polynomial)
      (lambda (x y) (tag (gcd-poly x y))))
-#+END_SRC
-#+NAME: generic-gcd
-#+BEGIN_SRC scheme -n :eval no-export :results silent
+```
+
+<a id="code-snippet--generic-gcd"></a>
+```scheme { linenos=true, linenostart=1 }
 (define (install-gcd) 'no)
 (put 'greatest-common-divisor '(scheme-number scheme-number)
      (lambda (x y) (attach-tag 'scheme-number (gcd x y))))
@@ -21429,8 +18803,9 @@ I've also had to rescue some "refugees" from [[id:42444d8c-8e71-4d6e-8bb0-b88a65
 ;'done)
 (define (greatest-common-divisor a b)
   (apply-generic 'greatest-common-divisor a b))
-#+END_SRC
-#+BEGIN_SRC scheme -n :eval no-export :results output :tangle 2/Ex94.scheme
+```
+
+```scheme { linenos=true, linenostart=1 }
 (load "mattcheck2.scm")
 <<op-table>>
 <<type-table>>
@@ -21577,10 +18952,9 @@ I've also had to rescue some "refugees" from [[id:42444d8c-8e71-4d6e-8bb0-b88a65
   (mattcheck "GCD for polys"
              (greatest-common-divisor p10 p11)
              '(polynomial x -1 1 #f))
-#+END_SRC
+```
 
-#+RESULTS[228dfa6c289bf7f3c69b4472439b4bb1e25637cb]:
-#+begin_EXAMPLE
+```text
 <...>
 SUCCEED at polynomial subtraction
 SUCCEED at polynomial division 1
@@ -21589,43 +18963,42 @@ SUCCEED at polynomial division 3
 SUCCEED at rational functions
 SUCCEED at GCD for integers
 SUCCEED at GCD for polys
-#+end_EXAMPLE
+```
 
-** Exercise 2.95: a quirk in rational functions
-:PROPERTIES:
-:ID:       d3397d5d-5dbf-421c-95ce-f13b4c7cfa5e
-:END:
 
-*** Question
+### <span class="section-num">3.108</span> Exercise 2.95: a quirk in rational functions {#exercise-2-dot-95-a-quirk-in-rational-functions}
 
-Define \(P_1\), \(P_2\), and
-\(P_3\) to be the polynomials
 
-\[
+#### <span class="section-num">3.108.1</span> Question {#question}
+
+Define \\(P\_1\\), \\(P\_2\\), and
+\\(P\_3\\) to be the polynomials
+
+$$
+
 \begin{array}{l@{{}:}l}
-	P_1 	& \quad x^2 - 2x + 1, \\
-	P_2 	& \quad 11x^2 + 7, \\
-	P_3 	& \quad 13x + 5.
+	P\_1 	& \quad x^2 - 2x + 1, \\\\
+	P\_2 	& \quad 11x^2 + 7, \\\\
+	P\_3 	& \quad 13x + 5.
 \end{array}
-\]
 
-Now define \(Q_1\) to be the product of \(P_1\) and \(P_2\) and \(Q_2\) to be
-the product of \(P_1\) and \(P_3\), and use src_scheme{greatest-common-divisor}
-(@ref{Exercise 2.94}) to compute the GCD of \(Q_1\)
-and \(Q_2\).
+$$
 
-Note that the answer is not the same as \(P_1\). This example introduces
+Now define \\(Q\_1\\) to be the product of \\(P\_1\\) and \\(P\_2\\) and \\(Q\_2\\) to be
+the product of \\(P\_1\\) and \\(P\_3\\), and use <span class="inline-src language-scheme" data-lang="scheme">`greatest-common-divisor`</span>
+(@ref{Exercise 2.94}) to compute the GCD of \\(Q\_1\\)
+and \\(Q\_2\\).
+
+Note that the answer is not the same as \\(P\_1\\). This example introduces
 noninteger operations into the computation, causing difficulties with the GCD
-algorithm. [fn::In an implementation like MIT Scheme, this produces a polynomial
-that is indeed a divisor of \(Q_1\) and \(Q_2\), but with rational coefficients.
-In many other Scheme systems, in which division of integers can produce
-limited-precision decimal numbers, we may fail to get a valid divisor.] To
-understand what is happening, try tracing src_scheme{gcd-terms} while computing
+algorithm.&nbsp;[^fn:13] To
+understand what is happening, try tracing <span class="inline-src language-scheme" data-lang="scheme">`gcd-terms`</span> while computing
 the GCD or try performing the division by hand.
 
-*** Answer
 
-#+BEGIN_SRC scheme -n :eval no-export :results output :tangle 2/Ex95.scheme
+#### <span class="section-num">3.108.2</span> Answer {#answer}
+
+```scheme { linenos=true, linenostart=1 }
 (load "mattcheck2.scm")
 <<op-table>>
 <<type-table>>
@@ -21674,51 +19047,53 @@ the GCD or try performing the division by hand.
 (echo "Q1: " q1)
 (echo "Q2: " q2)
 (echo "GCD(Q1, Q2): " (greatest-common-divisor q1 q2))
-#+END_SRC
+```
 
-#+RESULTS[4c990820d69301c4b7adb2711bdbdc92444803c2]:
-#+begin_EXAMPLE
-P1:  (polynomial x 1 2 1) 
-P2:  (polynomial x 11 #f 7) 
-P3:  (polynomial x 13 5) 
-Q1:  (polynomial x 11 22 18 14 7) 
-Q2:  (polynomial x 13 31 23 5) 
-GCD(Q1, Q2):  (polynomial x 1458/169 2916/169 1458/169) 
-#+end_EXAMPLE
-
-** Exercise 2.96: pseudodivision of polynomials
-
-*** Text formulas
+```text
+P1:  (polynomial x 1 2 1)
+P2:  (polynomial x 11 #f 7)
+P3:  (polynomial x 13 5)
+Q1:  (polynomial x 11 22 18 14 7)
+Q2:  (polynomial x 13 31 23 5)
+GCD(Q1, Q2):  (polynomial x 1458/169 2916/169 1458/169)
+```
 
 
-More precisely, if \(P\) and \(Q\) are polynomials, let \(O_1\) be the order of
-\(P\) (i.e., the order of the largest term of \(P\)) and let \(O_2\) be the
-order of \(Q\). Let \(c\) be the leading coefficient of \(Q\). Then it can be
-shown that, if we multiply \(P\) by the *integerizing factor* \(c^{1 + O_1 -
-O_2}\), the resulting polynomial can be divided by \(Q\) by using the
-src_scheme{div-terms} algorithm without introducing any fractions. The operation
+### <span class="section-num">3.109</span> Exercise 2.96: pseudodivision of polynomials {#exercise-2-dot-96-pseudodivision-of-polynomials}
+
+
+#### <span class="section-num">3.109.1</span> Text formulas {#text-formulas}
+
+More precisely, if \\(P\\) and \\(Q\\) are polynomials, let \\(O\_1\\) be the order of
+\\(P\\) (i.e., the order of the largest term of \\(P\\)) and let \\(O\_2\\) be the
+order of \\(Q\\). Let \\(c\\) be the leading coefficient of \\(Q\\). Then it can be
+shown that, if we multiply \\(P\\) by the **integerizing factor** \\(c^{1 + O\_1 -
+O\_2}\\), the resulting polynomial can be divided by \\(Q\\) by using the
+<span class="inline-src language-scheme" data-lang="scheme">`div-terms`</span> algorithm without introducing any fractions. The operation
 of multiplying the dividend by this constant and then dividing is sometimes
-called the *pseudodivision* of \(P\) by \(Q\). The remainder of the division is
-called the *pseudoremainder*.
+called the **pseudodivision** of \\(P\\) by \\(Q\\). The remainder of the division is
+called the **pseudoremainder**.
 
-*** Questions 1 and 2
 
-1. Implement the procedure src_scheme{pseudoremainder-terms}, which is just like
-   src_scheme{remainder-terms} except that it multiplies the dividend by the
-   integerizing factor described above before calling src_scheme{div-terms}.
-   Modify src_scheme{gcd-terms} to use src_scheme{pseudoremainder-terms}, and
-   verify that src_scheme{greatest-common-divisor} now produces an answer with
-   integer coefficients on the example in [[id:d3397d5d-5dbf-421c-95ce-f13b4c7cfa5e][Exercise 2.95]].
-   
-2. The GCD now has integer coefficients, but they are larger than those of
-   \(P_1\). Modify src_scheme{gcd-terms} so that it removes common factors from
-   the coefficients of the answer by dividing all the coefficients by their
-   (integer) greatest common divisor.
+#### <span class="section-num">3.109.2</span> Questions 1 and 2 {#questions-1-and-2}
 
-*** Answers 1 and 2
+1.  Implement the procedure <span class="inline-src language-scheme" data-lang="scheme">`pseudoremainder-terms`</span>, which is just like
+    <span class="inline-src language-scheme" data-lang="scheme">`remainder-terms`</span> except that it multiplies the dividend by the
+    integerizing factor described above before calling <span class="inline-src language-scheme" data-lang="scheme">`div-terms`</span>.
+    Modify <span class="inline-src language-scheme" data-lang="scheme">`gcd-terms`</span> to use <span class="inline-src language-scheme" data-lang="scheme">`pseudoremainder-terms`</span>, and
+    verify that <span class="inline-src language-scheme" data-lang="scheme">`greatest-common-divisor`</span> now produces an answer with
+    integer coefficients on the example in [Exercise 2.95](#exercise-2-dot-95-a-quirk-in-rational-functions).
 
-#+NAME: polynomial-gcd-pseudo
-#+BEGIN_SRC scheme -n :eval no-export :results silent
+2.  The GCD now has integer coefficients, but they are larger than those of
+    \\(P\_1\\). Modify <span class="inline-src language-scheme" data-lang="scheme">`gcd-terms`</span> so that it removes common factors from
+    the coefficients of the answer by dividing all the coefficients by their
+    (integer) greatest common divisor.
+
+
+#### <span class="section-num">3.109.3</span> Answers 1 and 2 {#answers-1-and-2}
+
+<a id="code-snippet--polynomial-gcd-pseudo"></a>
+```scheme { linenos=true, linenostart=1 }
 (define (remainder-terms tl1 tl2)
   (second (div-terms tl1 tl2)))
 (define (find-integerizing-factor p q)
@@ -21756,8 +19131,9 @@ called the *pseudoremainder*.
         (else (error "different vars not supported : GCD-POLY" p q))))
 (put 'greatest-common-divisor '(polynomial polynomial)
      (lambda (x y) (tag (gcd-poly x y))))
-#+END_SRC
-#+BEGIN_SRC scheme -n :eval no-export :results output :tangle 2/Ex96.scheme
+```
+
+```scheme { linenos=true, linenostart=1 }
 (load "mattcheck2.scm")
 <<op-table>>
 <<type-table>>
@@ -21912,51 +19288,51 @@ called the *pseudoremainder*.
   (mattcheck "greatest-common-divisor integerizing for polynomials"
              (greatest-common-divisor q1p q2p)
              p1p))
-#+END_SRC
+```
 
-#+RESULTS[c5f60e92ae33c1929c90754a1958ce8109e736d7]:
-#+begin_EXAMPLE
+```text
 <...>
 SUCCEED at greatest-common-divisor integerizing for polynomials
-#+end_EXAMPLE
+```
 
-** Exercise 2.97: reducing terms of rational functions
 
-*** Questions 1 and 2
+### <span class="section-num">3.110</span> Exercise 2.97: reducing terms of rational functions {#exercise-2-dot-97-reducing-terms-of-rational-functions}
 
-1. Implement this algorithm as a procedure src_scheme{reduce-terms} that takes
-   two term lists src_scheme{n} and src_scheme{d} as arguments and returns a
-   list src_scheme{nn}, src_scheme{dd}, which are src_scheme{n} and
-   src_scheme{d} reduced to lowest terms via the algorithm given above. Also
-   write a procedure src_scheme{reduce-poly}, analogous to src_scheme{add-poly},
-   that checks to see if the two polys have the same variable. If so,
-   src_scheme{reduce-poly} strips off the variable and passes the problem to
-   src_scheme{reduce-terms}, then reattaches the variable to the two term lists
-   supplied by src_scheme{reduce-terms}.
 
-2. Define a procedure analogous to src_scheme{reduce-terms} that does what the
-   original src_scheme{make-rat} did for integers:
-   
-   #+BEGIN_SRC scheme
-   (define (reduce-integers n d)
-     (let ((g (gcd n d)))
-       (list (/ n g) (/ d g))))
-   #+END_SRC
-   
-   and define src_scheme{reduce} as a generic operation that calls
-   src_scheme{apply-generic} to dispatch to either src_scheme{reduce-poly} (for
-   src_scheme{polynomial} arguments) or src_scheme{reduce-integers} (for
-   src_scheme{scheme-number} arguments). You can now easily make the
-   rational-arithmetic package reduce fractions to lowest terms by having
-   src_scheme{make-rat} call src_scheme{reduce} before combining the given
-   numerator and denominator to form a rational number. The system now handles
-   rational expressions in either integers or polynomials. To test your program,
-   try the example at the beginning of this extended exercise:
+#### <span class="section-num">3.110.1</span> Questions 1 and 2 {#questions-1-and-2}
 
-*** Answers 1 and 2
+1.  Implement this algorithm as a procedure <span class="inline-src language-scheme" data-lang="scheme">`reduce-terms`</span> that takes
+    two term lists <span class="inline-src language-scheme" data-lang="scheme">`n`</span> and <span class="inline-src language-scheme" data-lang="scheme">`d`</span> as arguments and returns a
+    list <span class="inline-src language-scheme" data-lang="scheme">`nn`</span>, <span class="inline-src language-scheme" data-lang="scheme">`dd`</span>, which are <span class="inline-src language-scheme" data-lang="scheme">`n`</span> and
+    <span class="inline-src language-scheme" data-lang="scheme">`d`</span> reduced to lowest terms via the algorithm given above. Also
+    write a procedure <span class="inline-src language-scheme" data-lang="scheme">`reduce-poly`</span>, analogous to <span class="inline-src language-scheme" data-lang="scheme">`add-poly`</span>,
+    that checks to see if the two polys have the same variable. If so,
+    <span class="inline-src language-scheme" data-lang="scheme">`reduce-poly`</span> strips off the variable and passes the problem to
+    <span class="inline-src language-scheme" data-lang="scheme">`reduce-terms`</span>, then reattaches the variable to the two term lists
+    supplied by <span class="inline-src language-scheme" data-lang="scheme">`reduce-terms`</span>.
 
-#+NAME: polynomial-gcd-reduce
-#+BEGIN_SRC scheme -n :eval no-export :results silent
+2.  Define a procedure analogous to <span class="inline-src language-scheme" data-lang="scheme">`reduce-terms`</span> that does what the
+    original <span class="inline-src language-scheme" data-lang="scheme">`make-rat`</span> did for integers:
+    ```scheme
+       (define (reduce-integers n d)
+         (let ((g (gcd n d)))
+           (list (/ n g) (/ d g))))
+    ```
+    and define <span class="inline-src language-scheme" data-lang="scheme">`reduce`</span> as a generic operation that calls
+    <span class="inline-src language-scheme" data-lang="scheme">`apply-generic`</span> to dispatch to either <span class="inline-src language-scheme" data-lang="scheme">`reduce-poly`</span> (for
+    <span class="inline-src language-scheme" data-lang="scheme">`polynomial`</span> arguments) or <span class="inline-src language-scheme" data-lang="scheme">`reduce-integers`</span> (for
+    <span class="inline-src language-scheme" data-lang="scheme">`scheme-number`</span> arguments). You can now easily make the
+    rational-arithmetic package reduce fractions to lowest terms by having
+    <span class="inline-src language-scheme" data-lang="scheme">`make-rat`</span> call <span class="inline-src language-scheme" data-lang="scheme">`reduce`</span> before combining the given
+    numerator and denominator to form a rational number. The system now handles
+    rational expressions in either integers or polynomials. To test your program,
+    try the example at the beginning of this extended exercise:
+
+
+#### <span class="section-num">3.110.2</span> Answers 1 and 2 {#answers-1-and-2}
+
+<a id="code-snippet--polynomial-gcd-reduce"></a>
+```scheme { linenos=true, linenostart=1 }
 (define (remainder-terms tl1 tl2)
   (second (div-terms tl1 tl2)))
 (define (find-integerizing-factor o1 o2 c)
@@ -22036,10 +19412,10 @@ SUCCEED at greatest-common-divisor integerizing for polynomials
        (let ((result (reduce-poly p q)))
          (list (tag (first result))
                (tag (second result))))))
-#+END_SRC
+```
 
-#+NAME: generic-reduce-function
-#+BEGIN_SRC scheme -n :eval no-export :results silent
+<a id="code-snippet--generic-reduce-function"></a>
+```scheme { linenos=true, linenostart=1 }
 (define (generic-reduce a b)
   (apply-generic 'reduce a b))
 (define (reduce-integers n d)
@@ -22050,9 +19426,10 @@ SUCCEED at greatest-common-divisor integerizing for polynomials
       (list n d)))
 (put 'reduce '(scheme-number scheme-number)
      reduce-integers)
-#+END_SRC
-#+NAME: generic-arithmetic-rf-reduce
-#+BEGIN_SRC scheme -n :eval no-export :results silent
+```
+
+<a id="code-snippet--generic-arithmetic-rf-reduce"></a>
+```scheme { linenos=true, linenostart=1 }
 (define (add x y) (apply-generic 'add x y))
 (define (sub x y) (apply-generic 'sub x y))
 (define (mul x y) (apply-generic 'mul x y))
@@ -22300,8 +19677,9 @@ SUCCEED at greatest-common-divisor integerizing for polynomials
                  ((get 'denom '(rational)) y)))))
   (put 'equ? '(real real)
        (lambda(x y) (= x y))))
-#+END_SRC
-#+BEGIN_SRC scheme -n :eval no-export :results output :tangle 2/Ex97.scheme
+```
+
+```scheme { linenos=true, linenostart=1 }
 (load "mattcheck2.scm")
 <<op-table>>
 <<type-table>>
@@ -22460,10 +19838,9 @@ SUCCEED at greatest-common-divisor integerizing for polynomials
 (mattcheck "rational functions (correctly simplified)"
            (add p98 p98)
            '(rational (polynomial x 1 #f #f 1) (polynomial x 1 #f 1)))
-#+END_SRC
+```
 
-#+RESULTS[8af3a739316fa29a204e5355ccdb9f55a4e17684]:
-#+begin_EXAMPLE
+```text
 <...>
 FAIL at rational functions (unsimplified, should fail)
 expected: (rational (polynomial x 2 #f 2 2 #f 2) (polynomial x 1 #f 2 #f 1))
@@ -22471,7 +19848,28 @@ returned: (rational (polynomial x 1 #f #f 1) (polynomial x 1 #f 1))
 <...>
 SUCCEED at greatest-common-divisor integerizing for polynomials
 SUCCEED at rational functions (correctly simplified)
-#+end_EXAMPLE
+```
 
 This exercise has been pretty exhausting. I'll likely take a step back here,
 maybe work on other projects a bit, and dive back in for Chapter 3.
+
+[^fn:1]: <https://codology.net/post/sicp-solution-exercise-1-14/>
+[^fn:2]: <https://youtu.be/MfN1lqArwAg>
+[^fn:3]: <https://wernerdegroot.wordpress.com/2015/08/01/sicp-exercise-2-43/>
+[^fn:4]: <https://git.elephly.net/gitweb.cgi?p=software/guile-picture-language.git;a=blob;f=pict.scm;h=54f0ce09f4ac33c3ecc3340f038d4c9da5f4a443;hb=HEAD>
+[^fn:5]: <http://pipecode.blogspot.com/2013/04/sicp-exercise-252.html>
+[^fn:6]: see the answer of `aos` here:
+    <http://community.schemewiki.org/?sicp-ex-2.72>
+[^fn:7]: <https://mk12.github.io/sicp/exercise/2/3.html#ex2.72> and others.
+[^fn:8]: <https://www.gnu.org/software/guile/manual/html_node/Hash-Table-Reference.html>
+[^fn:9]: <http://c2.com/cgi/wiki?ExpressionProblem>
+[^fn:10]: <http://community.schemewiki.org/?sicp-ex-2.76>
+[^fn:11]: starting on line 269
+    <https://github.com/danielpi/SICP-Exercises/blob/46a6b38fd83faae21db239f40d913ff24062d2e6/Racket/Ex%202.82%20Generalized%20apply-generic.rkt#L269>
+[^fn:12]: A real
+    number can be projected to an integer using the <span class="inline-src language-scheme" data-lang="scheme">`round`</span> primitive,
+    which returns the closest integer to its argument.
+[^fn:13]: In an implementation like MIT Scheme, this produces a polynomial
+    that is indeed a divisor of \\(Q\_1\\) and \\(Q\_2\\), but with rational coefficients.
+    In many other Scheme systems, in which division of integers can produce
+    limited-precision decimal numbers, we may fail to get a valid divisor.
